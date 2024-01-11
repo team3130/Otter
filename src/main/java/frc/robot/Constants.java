@@ -16,4 +16,9 @@ public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
+
+  public static class Climber {
+    public static final int kRLimitSwitch = 0; // TODO
+    public static final int kLLimitSwitch = 0; // TODO
+  }
 }
