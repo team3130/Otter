@@ -16,7 +16,15 @@ public class Climber extends SubsystemBase {
   private final DigitalInput m_limitSwitchL;
 
   private final WPI_TalonFX m_motorR;
-  private final WPI_TalonFX m_motorL; 
+  private final WPI_TalonFX m_motorL;
+
+  private boolean isZeroed = false;
+
+  public static double maxExtensionTicks = 18300; // TODO
+  public static double kExtensionDeadband = 0.1; //The % of max extension where it will slow down (works on both ends)
+  public static double percentage = 15;
+  public static double extensionTicksToArmDistance = 0; // TODO // conversion factor from ticks to distance of arm extension
+  public static double extensionFactorScalar = slowExtensionEndsDistance; // TODO
 
   public Climber() {
     m_motorR = new WPI_TalonFX(Constants.Climber.KRMotor);
@@ -31,20 +39,72 @@ public class Climber extends SubsystemBase {
     m_limitSwitchL = new DigitalInput(Constants.Climber.KRLimitSwitch);
   }
 
-  public boolean brokeLimitR() {
-    return !m_limitSwitchR.get();
+  public boolean brokeLimit() {
+    return !m_limitSwitchR.get() || !m_limitSwitchL.get();
   }
 
-  public boolean brokeLimitL() {
-    return !m_limitSwitchL.get();
+  public void setSpeed(double speed) {
+    m_motorR.set(speed);
+    m_motorL.set(speed);
   }
 
-  public void setSpeedR() {
-    m_motorR.set(0); // TODO
+  public void stop() {
+    m_motorR.set(ControlMode.PercentOutput, 0);
+    m_motorL.set(ControlMode.PercentOutput, 0);
   }
 
-  public void setSpeedL() {
-    m_motorL.set(0); // TODO
+  /**zeroes encoders*/
+  public void resetEncoders() {
+    m_motorL.setSelectedSensorPosition(0);
+    m_motorR.setSelectedSensorPosition(0);
+  }
+
+  public void setZeroed() {
+    isZeroed = true;
+  }
+
+  public boolean isZeroed() {
+    return isZeroed;
+  }
+
+  public double getMaxExtensionTicks(){
+    return maxExtensionTicks;
+  }
+
+  public void setMaxExtensionTicks(double x){
+    maxExtensionTicks = x;
+  }
+
+  public double getkExtensionDeadband(){
+    return kExtensionDeadband;
+  }
+
+  public void setkExtensionDeadband(double x){
+    kExtensionDeadband = x;
+  }
+
+  public double getExtensionTicksToArmDistance(){
+    return extensionTicksToArmDistance;
+  }
+
+  public void setExtensionTicksToArmDistance(double x){
+    extensionTicksToArmDistance = x;
+  }
+
+  public double getExtensionFactorScalar(){
+    return extensionFactorScalar;
+  }
+
+  public void setExtensionFactorScalar(double x){
+    extensionFactorScalar = x;
+  }
+
+  public double getPercentage() {
+    return percentage;
+  }
+
+  public double getJoystickValue() {
+    return -RobotContainer.m_WeaponsGamepad.getRawAxis(1);
   }
 
   @Override
