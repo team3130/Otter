@@ -13,7 +13,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.util.sendable.SendableRegistry;
-import frc.robot.Newman_Constants.Constants;
+import frc.robot.Constants;
 
 
 /**
@@ -40,12 +40,12 @@ public class SwerveModule implements Sendable {
         m_steerMotor = new TalonFX(Constants.turningId[side]);
         m_driveMotor = new TalonFX(Constants.spinningId[side]);
 
-        m_absoluteEncoder = new CANcoder(Constants.CANCoders[side]);
+        m_absoluteEncoder = new CANcoder(Constants.CANcoders[side]);
 
         turningPidController = new PIDController(Constants.SwerveKp[side], Constants.SwerveKi[side], Constants.SwerveKd[side]);
 
-        m_steerMotor.getConfigurator().apply(new TalonFXConfiguration());
-        m_steerMotor.setNeutralMode(neutralMode);
+        m_steerMotor.configFactoryDefault();
+        m_steerMotor.setNeutralMode(NeutralMode.Brake);
         m_steerMotor.configVoltageCompSaturation(Constants.kMaxSteerVoltage);
         m_steerMotor.enableVoltageCompensation(true);
         m_steerMotor.setInverted(true);
@@ -82,29 +82,21 @@ public class SwerveModule implements Sendable {
      * @return The position of the steering motor radians
      */
     public double getTurningPosition(){
-        // var rotorPosSignal = m_steerMotor.getRotorPosition(); // acquire a refreshed TalonFX rotor position signal
-        // rotorPosSignal.refresh(); because we are calling getRotorPosition() every loop, we do not need to call refresh()
-        // var rotorPos = rotorPosSignal.getValue(); // retrieve position value that we just refreshed, units in rotations
-        // var rotorPosLatency = rotorPosSignal.getTimestamp().getLatency(); // get latency of signal
-        // rotorPosSignal.waitForUpdate(0.020); // synchronously wait 20 ms for new data
-
-        return Constants.SteerTicksToRads * m_steerMotor.getRotorPosition(); //* Constants.SteerTicksToRads;
+        return Constants.SteerTicksToRads * m_steerMotor.getSelectedSensorPosition(); //* Constants.SteerTicksToRads;
     }
 
     /**
      * @return gets the velocity of the drive motor in m/s
      */
     public double getDriveVelocity() {
-        // return m_driveMotor.getSelectedSensorVelocity() * Constants.DriveTicksToMetersPerSecond;
-        return m_steerMotor.getDifferentialAverageVelocity() * Constants.DriveTicksToMetersPerSecond;
+        return m_driveMotor.getSelectedSensorVelocity() * Constants.DriveTicksToMetersPerSecond;
     }
 
     /**
      * @return gets the speed at which the steering motor turns in radians per second
      */
     public double getTurningVelocity() {
-        // return m_steerMotor.getSelectedSensorVelocity() * Constants.SteerTicksToRadsPerSecond;
-        return m_steerMotor.getDifferentialAverageVelocity() * Constants.SteerTicksToRadsPerSecond;
+        return m_steerMotor.getSelectedSensorVelocity() * Constants.SteerTicksToRadsPerSecond;
     }
 
     /**

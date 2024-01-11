@@ -28,43 +28,16 @@ import java.util.Arrays;
  * so we use wpilib SwerveDriveKinematics and SwerveDrivePoseEstimator as opposed to Differential Drive objects
  */
 public class Chassis extends SubsystemBase {
-    /** The geometry of the swerve modules */
-    private final SwerveDriveKinematics m_kinematics;
-    /** The odometry object */
-    private final SwerveDrivePoseEstimator m_odometry;
-
-    /** A list of the swerve modules (should be four */
-    private final SwerveModule[] modules;
-    /** Makes sure that the Navx Gyro is initialized */
-    private final Navx Gyro = Navx.GetInstance();
-
-    /** Whether it is field relative or robot oriented drive */
-    private boolean fieldRelative = true;
-
-    /** limelight object */
+    private final SwerveDriveKinematics kinematics; // geometry of swerve modules
+    private final SwerveDrivePoseEstimator odometry; // odometry object
+    private final SwerveModule[] modules; // list of four swerve modules
+    private final Navx Gyro = Navx.GetInstance(); // initialize Navx
+    private boolean fieldRelative = true; // field relative or robot oriented drive
     private final Limelight m_limelight;
-
-    /**
-     * Updated periodically with the maximum speed that has been read on any of the swerve modules
-     */
-    private double maxSpeedRead = 0;
-
-    /**
-     * A sendable that gets put on shuffleboard with the auton trajectory and the robots current position
-     */
-    private final Field2d field;
-
-    /**
-     * A comp network table entry for whether drivetrain is in field oriented or not
-     */
-    private final GenericEntry n_fieldOrriented;
-
-    /**
-     * Whether to update the odometry with the april tag or not.
-     * Usuallt used as a toggleable in auton commands.
-     * Default value is {@link Constants#useAprilTags} however is mutable.
-     */
-    protected boolean useAprilTags = Constants.useAprilTags;
+    private double maxSpeedRead = 0; // updated periodically with the maximum speed that has been read on any of the swerve modules
+    private final Field2d field; // sendable that gets put on shuffleboard with the auton trajectory and the robots current position
+    private final GenericEntry n_fieldOrriented; // comp network table entry for whether field oriented drivetrain
+    protected boolean useAprilTags = Constants.useAprilTags; // whether to update odometry with AprilTag or not
 
     /**
      * Makes a chassis that starts at 0, 0, 0
@@ -81,7 +54,7 @@ public class Chassis extends SubsystemBase {
      * @param limelight the limelight object which is used for updating odometry
      */
     public Chassis(Pose2d startingPos, Rotation2d startingRotation, Limelight limelight) {
-        m_kinematics = new SwerveDriveKinematics(Constants.moduleTranslations);
+        kinematics = new SwerveDriveKinematics(Constants.moduleTranslations);
 
         modules = new SwerveModule[4];
         modules[Constants.Side.LEFT_FRONT] = new SwerveModule(Constants.Side.LEFT_FRONT);
@@ -90,7 +63,7 @@ public class Chassis extends SubsystemBase {
         modules[Constants.Side.RIGHT_BACK] = new SwerveModule(Constants.Side.RIGHT_BACK);
 
         // odometry wrapper class that has functionality for cameras that report position with latency
-        m_odometry = new SwerveDrivePoseEstimator(m_kinematics, startingRotation, generatePoses(), startingPos);
+        odometry = new SwerveDrivePoseEstimator(kinematics, startingRotation, generatePoses(), startingPos);
 
         m_limelight = limelight;
 
@@ -120,7 +93,7 @@ public class Chassis extends SubsystemBase {
     public void resetOdometry(Pose2d pose) {
         resetEncoders();
         Navx.resetNavX();
-        m_odometry.resetPosition(Navx.getRotation(), generatePoses(), pose);
+        odometry.resetPosition(Navx.getRotation(), generatePoses(), pose);
     }
 
     /**
@@ -158,7 +131,7 @@ public class Chassis extends SubsystemBase {
      * @return the bot rotation
      */
     public Rotation2d getRotation2d(){
-      return m_odometry.getEstimatedPosition().getRotation();
+      return odometry.getEstimatedPosition().getRotation();
     }
 
     /**
@@ -179,7 +152,7 @@ public class Chassis extends SubsystemBase {
      * Also provides a timestamp that the update occurred
      */
     public void updateOdometryFromSwerve() {
-      m_odometry.updateWithTime(Timer.getFPGATimestamp(), Navx.getRotation(), generatePoses());
+      odometry.updateWithTime(Timer.getFPGATimestamp(), Navx.getRotation(), generatePoses());
     }
 
     /**
@@ -211,7 +184,7 @@ public class Chassis extends SubsystemBase {
     @Override
     public void periodic() {
         n_fieldOrriented.setBoolean(fieldRelative);
-        field.setRobotPose(m_odometry.getEstimatedPosition());
+        field.setRobotPose(odometry.getEstimatedPosition());
     }
 
   /**
@@ -229,7 +202,7 @@ public class Chassis extends SubsystemBase {
      * @return the geometry of the swerve modules
      */
     public SwerveDriveKinematics getKinematics() {
-      return m_kinematics;
+      return kinematics;
     }
 
     /**
@@ -268,7 +241,7 @@ public class Chassis extends SubsystemBase {
      * @return position according to odometry
      */
     public Pose2d getPose2d() {
-        return m_odometry.getEstimatedPosition();
+        return odometry.getEstimatedPosition();
     }
 
     /**
@@ -338,21 +311,21 @@ public class Chassis extends SubsystemBase {
      * @return the x position from odometry
      */
     private double getX() {
-        return m_odometry.getEstimatedPosition().getX();
+        return odometry.getEstimatedPosition().getX();
     }
 
     /**
      * @return the y position from odometry
      */
     private double getY() {
-        return m_odometry.getEstimatedPosition().getY();
+        return odometry.getEstimatedPosition().getY();
     }
 
     /**
      * @return the yaw from odometry
      */
     private double getYaw() {
-        return m_odometry.getEstimatedPosition().getRotation().getDegrees();
+        return odometry.getEstimatedPosition().getRotation().getDegrees();
     }
 
     /**
@@ -407,7 +380,7 @@ public class Chassis extends SubsystemBase {
      * @param refreshPosition time and position to set to
      */
     public void updateOdometryFromVision(OdoPosition refreshPosition) {
-        m_odometry.addVisionMeasurement(
+        odometry.addVisionMeasurement(
             new Pose2d(
                 refreshPosition.getPosition().getTranslation(), 
                 refreshPosition.getPosition().getRotation()), 
@@ -441,10 +414,10 @@ public class Chassis extends SubsystemBase {
      */
     public void drive(double x, double y, double theta, boolean fieldRelative) {
         if (fieldRelative) {
-            setModuleStates(m_kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(x, y, theta, getRotation2d())));
+            setModuleStates(kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(x, y, theta, getRotation2d())));
         }
         else {
-            setModuleStates(m_kinematics.toSwerveModuleStates(new ChassisSpeeds(x, y, theta)));
+            setModuleStates(kinematics.toSwerveModuleStates(new ChassisSpeeds(x, y, theta)));
         }
     }
 
