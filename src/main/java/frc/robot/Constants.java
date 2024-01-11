@@ -75,20 +75,20 @@ public final class Constants {
     public final static double kD_FrontLeft = 0.015;
     public final static double kF_FrontLeft = 0;
 
-    public final static double SwerveKpBackLeft = 1.6;
-    public final static double SwerveKiBackLeft = 0.01;
-    public final static double SwerveKdBackLeft = 0.015;
-    public final static double SwerveKfBackLeft = 0;
+    public final static double kP_BackLeft = 1.6;
+    public final static double kI_BackLeft = 0.01;
+    public final static double kD_BackLeft = 0.015;
+    public final static double kF_BackLeft = 0;
 
-    public final static double SwerveKpBackRight = 1.2;
-    public final static double SwerveKiBackRight = 0.05;
-    public final static double SwerveKdBackRight = 0;
-    public final static double SwerveKfBackRight = 0;
+    public final static double kP_BackRight = 1.2;
+    public final static double kI_BackRight = 0.05;
+    public final static double kD_BackRight = 0;
+    public final static double kF_BackRight = 0;
 
-    public final static double[] SwerveKp = new double[] {kP_FrontLeft, SwerveKpBackLeft, kP_FrontRight, SwerveKpBackRight};
-    public final static double[] SwerveKi = new double[] {kI_FrontLeft, SwerveKiBackLeft, kI_FrontRight, SwerveKiBackRight};
-    public final static double[] SwerveKd = new double[] {kD_FrontLeft, SwerveKdBackLeft, kD_FrontRight, SwerveKdBackRight};
-    public final static double[] SwerveKf = new double[] {kF_FrontLeft, SwerveKfBackLeft, kF_FrontRight, SwerveKfBackRight};
+    public final static double[] kP_Swerve = new double[] {kP_FrontLeft, kP_BackLeft, kP_FrontRight, kP_BackRight};
+    public final static double[] kI_Swerve = new double[] {kI_FrontLeft, kI_BackLeft, kI_FrontRight, kI_BackRight};
+    public final static double[] kD_Swerve = new double[] {kD_FrontLeft, kD_BackLeft, kD_FrontRight, kD_BackRight};
+    public final static double[] kF_Swerve = new double[] {kF_FrontLeft, kF_BackLeft, kF_FrontRight, kF_BackRight};
   }
 
   public static class EncoderOffsets {
@@ -98,6 +98,14 @@ public final class Constants {
     public static final double kBottomRightOffset = Math.toRadians(0);
     public static final double[] kCANCoderOffsets = new double[] {kTopLeftOffset, kBottomLeftOffset, kTopRightOffset, kBottomRightOffset};
 
+  }
+
+  // gear ratios and/or ticks per rev, etc.
+  public static class Conversions {
+    public final static double DriveTicksToMeters = kWheelDiameter * Math.PI * 1/(kEncoderResolution * kDriveGearRatio); // multiply by
+    public static final double SteerTicksToRads = 1/(kEncoderResolution * kSteerGearRatio) * Math.PI * 2; // multiply by position
+    public static final double DriveTicksToMetersPerSecond = DriveTicksToMeters * 10; // multiply by velocity
+    public static final double SteerTicksToRadsPerSecond = SteerTicksToRads * 10; // multiply by velocity
   }
 
   public static class OperatorConstants {

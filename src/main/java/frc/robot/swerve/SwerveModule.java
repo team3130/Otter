@@ -39,7 +39,7 @@ public class SwerveModule implements Sendable {
 
         m_absoluteEncoder = new CANcoder(Constants.CAN.CANCoders[side]);
 
-        turningPidController = new PIDController(Constants.SwerveKp[side], Constants.SwerveKi[side], Constants.SwerveKd[side]);
+        turningPidController = new PIDController(Constants.Swerve.kP_Swerve[side], Constants.Swerve.kI_Swerve[side], Constants.Swerve.kD_Swerve[side]);
 
         m_steerMotor.getConfigurator().apply(new TalonFXConfiguration()); // config factory default
         m_steerMotor.setNeutralMode(NeutralModeValue.Brake); // Brake mode
@@ -66,39 +66,41 @@ public class SwerveModule implements Sendable {
         SendableRegistry.addLW(this, name, name);
     }
 
-    /**
-     * @return the amount of distance that the drive motor has traveled in meters
-     */
-    public double getDrivePosition(){
-        return m_driveMotor.getSelectedSensorPosition() * Constants.DriveTicksToMeters;
-        m_driveMotor.setControl(m_request);
+    // returns the amount of distance the drive motor has travelled in meters
+    public double getDrivePosition() {
+        // TODO: refresh?
+        // because we are calling getRotorPosition() every loop,
+        // we do not need to call refresh()
+        // rotorPosSignal.refresh();
+
+
+        // refreshed TalonFX rotor position signal // position value that we just refreshed in rotations
+        // TODO: adjust for new rotations versus old ticks to meters
+        return m_driveMotor.getRotorPosition().getValue() * Constants.Conversions.DriveTicksToMeters;
     }
 
-    /**
-     * @return The position of the steering motor radians
-     */
-    public double getTurningPosition(){
-        return Constants.SteerTicksToRads * m_steerMotor.getSelectedSensorPosition(); //* Constants.SteerTicksToRads;
+    // returns the position of the steering motor radians
+    public double getTurningPosition() {
+        // TODO: change ticks to rotation
+        m_steerMotor.getPosition(); // TODO: WHATT?
+        return m_steerMotor.getRotorPosition().getValue() * Constants.Conversions.SteerTicksToRads;
     }
 
-    /**
-     * @return gets the velocity of the drive motor in m/s
-     */
+    // gets the velocity of the drive motor in m/s
     public double getDriveVelocity() {
-        return m_driveMotor.getSelectedSensorVelocity() * Constants.DriveTicksToMetersPerSecond;
+        return m_driveMotor.getRotorVelocity().getValue() * Constants.Conversions.DriveTicksToMetersPerSecond;
+        // TODO or driveMotor.getVelocity(); and adjust ticks to rotations
     }
 
-    /**
-     * @return gets the speed at which the steering motor turns in radians per second
-     */
+    // gets the speed at which the steering motor turns in radians per second
     public double getTurningVelocity() {
-        return m_steerMotor.getSelectedSensorVelocity() * Constants.SteerTicksToRadsPerSecond;
+        return m_steerMotor.getRotorVelocity().getValue() * Constants.Conversions.SteerTicksToRadsPerSecond;
+        //TODO or getVelocity()
     }
 
-    /**
-     * @return gets the position of the steering wheel according to the absolute encoders
-     */
+    // gets the position of the steering wheel according to the absolute encoders
     public double getAbsoluteEncoderRad() {
+        // TODO what?
         return Math.toRadians(m_absoluteEncoder.getAbsolutePosition());
     }
 
@@ -106,21 +108,18 @@ public class SwerveModule implements Sendable {
      * @return the position of the steering wheel in degrees
      */
     public double getAbsoluteEncoderDegrees() {
+        // TODO fix
         return m_absoluteEncoder.getAbsolutePosition();
     }
 
-    /**
-     * updates the steering PID controller
-     * @param p the new kP value
-     */
+    // updates steering PID controller
+    // param p is the new kP value
     public void updatePValue(double p) {
         turningPidController.setP(p);
     }
 
-    /**
-     * updates the steering PID controller
-     * @param d the new kD value
-     */
+    // updates the steering PID controller
+    // param d the new kD value
     public void updateDValue(double d) {
         turningPidController.setD(d);
     }
@@ -153,8 +152,8 @@ public class SwerveModule implements Sendable {
      * Default stop method to stop the motors
      */
     public void stop(){
-        m_steerMotor.set(ControlMode.PercentOutput, 0);
-        m_driveMotor.set(ControlMode.PercentOutput, 0);
+        m_steerMotor.setControl(steerMotorVoltRequest.withOutput(0));
+        m_driveMotor.setControl(steerMotorVoltRequest.withOutput(0));
     }
 
     /**

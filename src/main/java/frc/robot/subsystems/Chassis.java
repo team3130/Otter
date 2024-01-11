@@ -189,9 +189,7 @@ public class Chassis extends SubsystemBase {
         field.setRobotPose(odometry.getEstimatedPosition());
     }
 
-  /**
-   * Stops the devices connected to this subsystem
-   */
+  // Stops the devices connected to this subsystem
   public void stopModules(){
       modules[Constants.Side.LEFT_FRONT].stop();
       modules[Constants.Side.LEFT_BACK].stop();
