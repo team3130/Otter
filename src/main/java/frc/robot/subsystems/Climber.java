@@ -19,6 +19,14 @@ public class Climber extends SubsystemBase {
   private final WPI_TalonFX m_motorL; 
 
   public Climber() {
+    m_motorR = new WPI_TalonFX(Constants.Climber.KRMotor);
+    m_motorR.configFactoryDefault();
+    m_motorR.setInverted(false);
+
+    m_motorL = new WPI_TalonFX(Constants.Climber.KLMotor);
+    m_motorL.configFactoryDefault();
+    m_motorL.setInverted(false);
+
     m_limitSwitchR = new DigitalInput(Constants.Climber.KRLimitSwitch);
     m_limitSwitchL = new DigitalInput(Constants.Climber.KRLimitSwitch);
   }

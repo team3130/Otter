@@ -20,5 +20,8 @@ public final class Constants {
   public static class Climber {
     public static final int kRLimitSwitch = 0; // TODO
     public static final int kLLimitSwitch = 0; // TODO
+
+    public static final int KRMotor = 0; // TODO
+    public static final int KLMotor = 0; // TODO
   }
 }
