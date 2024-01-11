@@ -35,10 +35,10 @@ public class SwerveModule implements Sendable {
      * @param side is reflective in {@link Constants}
      */
     public SwerveModule(int side) {
-        m_steerMotor = new TalonFX(Constants.turningId[side]);
-        m_driveMotor = new TalonFX(Constants.spinningId[side]);
+        m_steerMotor = new TalonFX(Constants.CAN.turningID[side]);
+        m_driveMotor = new TalonFX(Constants.CAN.spinningID[side]);
 
-        m_absoluteEncoder = new CANcoder(Constants.CANcoders[side]);
+        m_absoluteEncoder = new CANcoder(Constants.CAN.CANCoders[side]);
 
         turningPidController = new PIDController(Constants.SwerveKp[side], Constants.SwerveKi[side], Constants.SwerveKd[side]);
 
