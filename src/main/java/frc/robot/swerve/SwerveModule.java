@@ -1,9 +1,11 @@
 package frc.robot.swerve;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.NeutralOut;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.motorcontrol.ControlMode;
-import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.confifgs.MotorOutputConfigs;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.controller.PIDController;
@@ -16,20 +18,16 @@ import edu.wpi.first.util.sendable.SendableRegistry;
 import frc.robot.Constants;
 
 
-/**
- * Swerve module that reflects the actual swerve modules
- */
+// Swerve module that reflects the actual swerve modules
 public class SwerveModule implements Sendable {
     private final TalonFX m_steerMotor; // the steering motor
     private final TalonFX m_driveMotor; // the driving motor
-
     private final CANcoder m_absoluteEncoder; // the can encoder attached to the shaft
-
     private final PIDController turningPidController; // PID controller for steering
-
     private final double absoluteEncoderOffset; // the absolute encoder offset from where 0 is to where it thinks it is
-
     private final int side; // the side that the bot is on
+    final VoltageOut steerMotorVoltRequest = new VoltageOut(0);
+    final VoltageOut driveMotorVoltRequest = new VoltageOut(0);
 
     /**
      * Initializes a swerve module and its motors.
@@ -44,16 +42,14 @@ public class SwerveModule implements Sendable {
 
         turningPidController = new PIDController(Constants.SwerveKp[side], Constants.SwerveKi[side], Constants.SwerveKd[side]);
 
-        m_steerMotor.configFactoryDefault();
-        m_steerMotor.setNeutralMode(NeutralMode.Brake);
-        m_steerMotor.configVoltageCompSaturation(Constants.kMaxSteerVoltage);
-        m_steerMotor.enableVoltageCompensation(true);
+        m_steerMotor.getConfigurator().apply(new TalonFXConfiguration()); // config factory default
+        m_steerMotor.setNeutralMode(NeutralModeValue.Brake); // Brake mode
+        m_steerMotor.setControl(steerMotorVoltRequest.withOutput(12.0)); // TODO: Constants.kMaxSteerVoltage
         m_steerMotor.setInverted(true);
 
-        m_driveMotor.configFactoryDefault();
-        m_driveMotor.setNeutralMode(NeutralMode.Brake);
-        m_driveMotor.configVoltageCompSaturation(Constants.kMaxDriveVoltage);
-        m_driveMotor.enableVoltageCompensation(true);
+        m_driveMotor.getConfigurator().apply(new TalonFXConfiguration());
+        m_driveMotor.setNeutralMode(NeutralModeValue.Brake);
+        m_driveMotor.setControl(driveMotorVoltRequest.withOutput(12.0)); // TODO: Constants.kMaxDriveVoltage
         m_driveMotor.setInverted(false);
 
         turningPidController.enableContinuousInput(-Math.PI, Math.PI); // wrap for circles
@@ -76,6 +72,7 @@ public class SwerveModule implements Sendable {
      */
     public double getDrivePosition(){
         return m_driveMotor.getSelectedSensorPosition() * Constants.DriveTicksToMeters;
+        m_driveMotor.setControl(m_request);
     }
 
     /**
