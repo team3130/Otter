@@ -1,7 +1,6 @@
 package frc.robot.swerve;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.motorcontrol.ControlMode;
@@ -55,7 +54,7 @@ public class SwerveModule implements Sendable {
         turningPidController.enableContinuousInput(-Math.PI, Math.PI); // wrap for circles
         turningPidController.setTolerance(0.0025, 0.05); // at position tolerance
 
-        absoluteEncoderOffset = Constants.kCanCoderOffsets[side];
+        absoluteEncoderOffset = Constants.EncoderOffsets.kCANCoderOffsets[side];
 
         this.side = side;
 
