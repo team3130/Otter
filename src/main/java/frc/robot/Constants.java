@@ -14,18 +14,34 @@ package frc.robot;
  */
 public final class Constants {
   public static class CAN {
-    public final static int CAN_LeftFrontSteer = 2;
-    public final static int CAN_LeftFrontDrive = 3;
-    public final static int CAN_RightFrontSteer = 4;
-    public final static int CAN_RightFrontDrive = 5;
+    public final static int leftFrontSteer = 2;
+    public final static int leftFrontDrive = 3;
+    public final static int rightFrontSteer = 4;
+    public final static int rightFrontDrive = 5;
+
+    public final static int leftBackSteer = 6;
+    public final static int leftBackDrive = 7;
+    public final static int rightBackSteer = 8;
+    public final static int rightBackDrive = 9;
+
+    public final static int CANCoderTopRight = 10;
+    public final static int CANCoderBottomRight = 11;
+    public final static int CANCoderTopLeft = 12;
+    public final static int CANCoderBottomLeft = 13;
 
     // Order should match side
-    public static final int[] turningID = new int[] {CAN_LeftFrontSteer, CAN_LeftBackSteer, CAN_RightFrontSteer, CAN_RightBackSteer};
-    public static final int[] spinningID = new int[] {CAN_LeftFrontDrive, CAN_LeftBackDrive, CAN_RightFrontDrive, CAN_RightBackDrive};
+    public static final int[] turningID = new int[] {leftFrontSteer, leftBackSteer, rightFrontSteer, rightBackSteer};
+    public static final int[] spinningID = new int[] {leftFrontDrive, leftBackDrive, rightFrontDrive, rightBackDrive};
     public final static int[] CANCoders = new int[] {CANCoderTopLeft, CANCoderBottomLeft, CANCoderTopRight, CANCoderBottomRight};
 
   }
+
+  public static class OperatorConstants {
+
+  }
+
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
+
 }
