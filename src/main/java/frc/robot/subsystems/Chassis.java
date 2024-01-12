@@ -4,7 +4,6 @@
 
 package frc.robot.subsystems;
 
-import com.pathplanner.lib.PathPlannerTrajectory;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -19,6 +18,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.sensors.Limelight;
 import frc.robot.sensors.Navx;
 import frc.robot.swerve.SwerveModule;
@@ -39,7 +39,6 @@ public class Chassis extends SubsystemBase {
     private double maxSpeedRead = 0; // updated periodically with the maximum speed that has been read on any of the swerve modules
     private final Field2d field; // sendable that gets put on shuffleboard with the auton trajectory and the robots current position
     private final GenericEntry n_fieldOrriented; // comp network table entry for whether field oriented drivetrain
-    protected boolean useAprilTags = Constants.useAprilTags; // whether to update odometry with AprilTag or not
 
     /**
      * Makes a chassis that starts at 0, 0, 0
@@ -56,13 +55,13 @@ public class Chassis extends SubsystemBase {
      * @param limelight the limelight object which is used for updating odometry
      */
     public Chassis(Pose2d startingPos, Rotation2d startingRotation, Limelight limelight) {
-        kinematics = new SwerveDriveKinematics(Constants.moduleTranslations);
+        kinematics = new SwerveDriveKinematics(Constants.Swerve.moduleTranslations);
 
         modules = new SwerveModule[4];
-        modules[Constants.Side.LEFT_FRONT] = new SwerveModule(Constants.Side.LEFT_FRONT);
-        modules[Constants.Side.LEFT_BACK] = new SwerveModule(Constants.Side.LEFT_BACK);
-        modules[Constants.Side.RIGHT_FRONT] = new SwerveModule(Constants.Side.RIGHT_FRONT);
-        modules[Constants.Side.RIGHT_BACK] = new SwerveModule(Constants.Side.RIGHT_BACK);
+        modules[Constants.Modules.leftFront] = new SwerveModule(Constants.Modules.leftFront);
+        modules[Constants.Modules.leftBack] = new SwerveModule(Constants.Modules.leftBack);
+        modules[Constants.Modules.rightFront] = new SwerveModule(Constants.Modules.rightFront);
+        modules[Constants.Modules.rightBack] = new SwerveModule(Constants.Modules.rightBack);
 
         // odometry wrapper class that has functionality for cameras that report position with latency
         odometry = new SwerveDrivePoseEstimator(kinematics, startingRotation, generatePoses(), startingPos);
@@ -79,10 +78,10 @@ public class Chassis extends SubsystemBase {
     * @return whether the wheels are zereod/PID controllers are done
     */
     public boolean turnToAnglePIDIsDone() {
-        return modules[Constants.Side.LEFT_FRONT].PIDisDone() &&
-        modules[Constants.Side.LEFT_BACK].PIDisDone() &&
-        modules[Constants.Side.RIGHT_FRONT].PIDisDone() &&
-        modules[Constants.Side.RIGHT_BACK].PIDisDone();
+        return modules[Constants.Modules.leftFront].PIDisDone() &&
+        modules[Constants.Modules.leftBack].PIDisDone() &&
+        modules[Constants.Modules.rightFront].PIDisDone() &&
+        modules[Constants.Modules.rightBack].PIDisDone();
     }
 
     /**
@@ -113,9 +112,7 @@ public class Chassis extends SubsystemBase {
       return fieldRelative;
     }
 
-    /**
-     * Zeros the Navx's heading
-     */
+    // Zeros the Navx's heading
     public void zeroHeading(){
       Navx.resetNavX();
     }
@@ -141,12 +138,12 @@ public class Chassis extends SubsystemBase {
      * @return the poses of each module
      */
     public SwerveModulePosition[] generatePoses() {
-           return new SwerveModulePosition[]{
-              modules[Constants.Side.LEFT_FRONT].getPosition(),
-              modules[Constants.Side.LEFT_BACK].getPosition(),
-              modules[Constants.Side.RIGHT_FRONT].getPosition(),
-              modules[Constants.Side.RIGHT_BACK].getPosition()
-      };
+        return new SwerveModulePosition[] {
+                modules[Constants.Modules.leftFront].getPosition(),
+                modules[Constants.Modules.leftBack].getPosition(),
+                modules[Constants.Modules.rightFront].getPosition(),
+                modules[Constants.Modules.rightBack].getPosition()
+        };
     }
 
     /**
@@ -157,24 +154,9 @@ public class Chassis extends SubsystemBase {
       odometry.updateWithTime(Timer.getFPGATimestamp(), Navx.getRotation(), generatePoses());
     }
 
-    /**
-     * Updates the odometry from vision if there is a new value to update position with
-     */
-    public void updateOdometryFromVision() {
-        OdoPosition position = refreshPosition();
-        if (position != null) {
-            updateOdometryFromVision(position);
-        }
-    }
-
-    /**
-     * Update odometry with swerve drive. Also updates odometry with vision if the {@link Constants#useAprilTags}'s flag true
-     */
+    // Update odometry with swerve drive
     public void updateOdometery() {
         updateOdometryFromSwerve();
-        if (Constants.useAprilTags && useAprilTags) {
-            updateOdometryFromVision();
-        }
     }
 
 
@@ -191,10 +173,10 @@ public class Chassis extends SubsystemBase {
 
   // Stops the devices connected to this subsystem
   public void stopModules(){
-      modules[Constants.Side.LEFT_FRONT].stop();
-      modules[Constants.Side.LEFT_BACK].stop();
-      modules[Constants.Side.RIGHT_FRONT].stop();
-      modules[Constants.Side.RIGHT_BACK].stop();
+      modules[Constants.Modules.leftFront].stop();
+      modules[Constants.Modules.leftBack].stop();
+      modules[Constants.Modules.rightFront].stop();
+      modules[Constants.Modules.rightBack].stop();
   }
 
     /**
@@ -210,12 +192,12 @@ public class Chassis extends SubsystemBase {
      * @param desiredStates the states to set the modules to
      */
     public void setModuleStates(SwerveModuleState[] desiredStates) {
-      SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.kPhysicalMaxSpeedMetersPerSecond);
+      SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
 
-      modules[Constants.Side.LEFT_FRONT].setDesiredState(desiredStates[Constants.Side.LEFT_FRONT]);
-      modules[Constants.Side.LEFT_BACK].setDesiredState(desiredStates[Constants.Side.LEFT_BACK]);
-      modules[Constants.Side.RIGHT_FRONT].setDesiredState(desiredStates[Constants.Side.RIGHT_FRONT]);
-      modules[Constants.Side.RIGHT_BACK].setDesiredState(desiredStates[Constants.Side.RIGHT_BACK]);
+      modules[Constants.Modules.leftFront].setDesiredState(desiredStates[Constants.Modules.leftFront]);
+      modules[Constants.Modules.leftBack].setDesiredState(desiredStates[Constants.Modules.leftBack]);
+      modules[Constants.Modules.rightFront].setDesiredState(desiredStates[Constants.Modules.rightFront]);
+      modules[Constants.Modules.rightBack].setDesiredState(desiredStates[Constants.Modules.rightBack]);
     }
 
     /**
@@ -376,35 +358,6 @@ public class Chassis extends SubsystemBase {
     }
 
     /**
-     * update odometry from april tags
-     * @param refreshPosition time and position to set to
-     */
-    public void updateOdometryFromVision(OdoPosition refreshPosition) {
-        odometry.addVisionMeasurement(
-            new Pose2d(
-                refreshPosition.getPosition().getTranslation(), 
-                refreshPosition.getPosition().getRotation()), 
-            refreshPosition.getTime()
-        );
-    }
-
-    /**
-     * Refreshes the position from limelight and it's median filter
-     * @return the odoPosition from limelight
-     */
-    public OdoPosition refreshPosition() {
-        return m_limelight.calculate();
-  }
-
-  /**
-   * updates the field object with a trajectory
-   * @param trajectory the trajectory to set the field object wtih
-   */
-    public void updateField2DFromTrajectory(PathPlannerTrajectory trajectory) {
-        field.getObject("traj").setTrajectory(trajectory);
-    }
-
-    /**
      * The same as {@link #drive(double, double, double)} except you pass in if you are field relative or not.
      * This method will drive the swerve modules based to x, y and theta vectors.
      * @param x velocity in the x dimension m/s
@@ -431,11 +384,4 @@ public class Chassis extends SubsystemBase {
         drive(x, y, theta, getFieldRelative());
     }
 
-    /**
-     * setter for april tags
-     * @param useAprilTags whether to use april tags or not
-     */
-    public void setAprilTagUsage(boolean useAprilTags) {
-        this.useAprilTags = useAprilTags;
-    }
 }

@@ -153,7 +153,7 @@ public class SwerveModule implements Sendable {
      */
     public void stop(){
         m_steerMotor.setControl(steerMotorVoltRequest.withOutput(0));
-        m_driveMotor.setControl(steerMotorVoltRequest.withOutput(0));
+        m_driveMotor.setControl(driveMotorVoltRequest.withOutput(0));
     }
 
     /**
@@ -170,7 +170,8 @@ public class SwerveModule implements Sendable {
         // max turn is 90 degrees optimization
         state = SwerveModuleState.optimize(state, getState().angle);
         // percent output of the drive motor that the swerve controller wants you to go to by the physical max speed the bot can travel
-        m_driveMotor.set(ControlMode.PercentOutput, state.speedMetersPerSecond / Constants.kPhysicalMaxSpeedMetersPerSecond);
+        // TODO: underneath set control voltage output is not real
+        m_driveMotor.setControl(driveMotorVoltRequest.withOutput(state.speedMetersPerSecond / Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond));
         // set the steering motor based off the output of the PID controller
         m_steerMotor.set(turningPidController.calculate(Math.IEEEremainder(getTurningPosition(), Math.PI * 2), state.angle.getRadians()));
     }

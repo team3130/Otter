@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.util.Units;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -55,15 +56,23 @@ public final class Constants {
    *  bottom left,
    */
   public static class Swerve {
+    // TODO: fix all of these values
+
+    /* Length and width as measured as distances between center of wheels */
+    // the left-to-right distance between the drivetrain wheels, should be measured from center to center
+    public static final double trackWidth = 0.61;
+    // the front-to-back distance between the drivetrain wheels, should be measured from center to center
+    public static final double wheelBase = 0.61;
+
     public static final Translation2d[] moduleTranslations = {
-            new Translation2d(wheelBase_m / 2.0, trackWidth_m / 2.0),
-            new Translation2d(-wheelBase_m / 2.0, trackWidth_m / 2.0),
-            new Translation2d(wheelBase_m / 2.0, -trackWidth_m / 2.0),
-            new Translation2d(-wheelBase_m / 2.0, -trackWidth_m / 2.0)
+            new Translation2d(wheelBase / 2.0, trackWidth / 2.0),
+            new Translation2d(-wheelBase / 2.0, trackWidth / 2.0),
+            new Translation2d(wheelBase / 2.0, -trackWidth / 2.0),
+            new Translation2d(-wheelBase / 2.0, -trackWidth / 2.0)
     };
 
     public static final boolean kNavxReversed = true;
-
+    public final static double kPhysicalMaxSpeedMetersPerSecond = 4.19; // 3.54 with 8 volts of voltage compensation and 4.19 with 10 volts
 
     public final static double kP_FrontRight = 1.35;
     public final static double kI_FrontRight = 0.05;
@@ -89,6 +98,15 @@ public final class Constants {
     public final static double[] kI_Swerve = new double[] {kI_FrontLeft, kI_BackLeft, kI_FrontRight, kI_BackRight};
     public final static double[] kD_Swerve = new double[] {kD_FrontLeft, kD_BackLeft, kD_FrontRight, kD_BackRight};
     public final static double[] kF_Swerve = new double[] {kF_FrontLeft, kF_BackLeft, kF_FrontRight, kF_BackRight};
+
+
+  }
+
+  public static class Modules {
+    public static final int leftFront = 0;
+    public static final int leftBack = 1;
+    public static final int rightFront = 2;
+    public static final int rightBack = 3;
   }
 
   public static class EncoderOffsets {
@@ -102,6 +120,10 @@ public final class Constants {
 
   // gear ratios and/or ticks per rev, etc.
   public static class Conversions {
+    public final static double kDriveGearRatio = 6.75; // checked 1/19
+    public final static double kSteerGearRatio = 150d/7d; // checked 1/19
+    public static final double kEncoderResolution = 2048;
+    public static final double kWheelDiameter = Units.inchesToMeters(3.86);
     public final static double DriveTicksToMeters = kWheelDiameter * Math.PI * 1/(kEncoderResolution * kDriveGearRatio); // multiply by
     public static final double SteerTicksToRads = 1/(kEncoderResolution * kSteerGearRatio) * Math.PI * 2; // multiply by position
     public static final double DriveTicksToMetersPerSecond = DriveTicksToMeters * 10; // multiply by velocity
