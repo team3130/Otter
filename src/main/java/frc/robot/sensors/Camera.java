@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Constants;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonPipelineResult;
@@ -37,7 +38,7 @@ public class Camera {
      * The limelight object will be full of null values if Constants.useAprilTags is false.
      */
     public Camera() {
-        if (Constants.useAprilTags) {
+        if (Constants.AprilTags.useAprilTags) {
             camera = new PhotonCamera("OV5647");
             try {
                 aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);
@@ -48,12 +49,14 @@ public class Camera {
                 DriverStation.reportError("error loading field position file", false);
             }
 
-            filter = new VisionMedianFilter(Constants.Camera.kMedianFilterWindowSize);
+            // filter = new VisionMedianFilter(Constants.AprilTags.kMedianFilterWindowSize);
 
+            /*
             if (Constants.debugMode) {
                 SendableRegistry.add(filter, "vision filter");
                 SmartDashboard.putData(filter);
             }
+            */
 
             n_yaw = Shuffleboard.getTab("PhotonVision").add("Yaw", 0).getEntry();
             n_pitch = Shuffleboard.getTab("PhotonVision").add("Pitch", 0).getEntry();

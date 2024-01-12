@@ -17,6 +17,7 @@ import edu.wpi.first.math.util.Units;
  */
 @SuppressWarnings("ALL")
 public final class Constants {
+  public static final boolean debugMode = false;
   public static class CAN {
     public final static int leftFrontSteer = 2;
     public final static int leftFrontDrive = 3;
@@ -38,6 +39,11 @@ public final class Constants {
     public static final int[] spinningID = new int[] {leftFrontDrive, leftBackDrive, rightFrontDrive, rightBackDrive};
     public final static int[] CANCoders = new int[] {CANCoderTopLeft, CANCoderBottomLeft, CANCoderTopRight, CANCoderBottomRight};
 
+  }
+
+  public static class AprilTags {
+    public static final boolean useAprilTags = false;
+    public final static int kMedianFilterWindowSize = 9; // median filter size
   }
 
   /**
@@ -131,10 +137,6 @@ public final class Constants {
     public static final double SteerTicksToRads = 1/(kEncoderResolution * kSteerGearRatio) * Math.PI * 2; // multiply by position
     public static final double DriveTicksToMetersPerSecond = DriveTicksToMeters * 10; // multiply by velocity
     public static final double SteerTicksToRadsPerSecond = SteerTicksToRads * 10; // multiply by velocity
-  }
-
-  public static class AprilTags {
-
   }
 
   public static class OperatorConstants {
