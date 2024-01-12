@@ -73,6 +73,9 @@ public final class Constants {
 
     public static final boolean kNavxReversed = true;
     public final static double kPhysicalMaxSpeedMetersPerSecond = 4.19; // 3.54 with 8 volts of voltage compensation and 4.19 with 10 volts
+    public final static double kMaxSteerVoltage = 5d;
+    public final static double kMaxDriveVoltage = 10d;
+
 
     public final static double kP_FrontRight = 1.35;
     public final static double kI_FrontRight = 0.05;
