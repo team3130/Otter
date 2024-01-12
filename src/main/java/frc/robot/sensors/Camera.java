@@ -12,10 +12,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Newman_Constants.Constants;
-import frc.robot.Newman_Constants.Constants.Camera;
-import frc.robot.supportingClasses.Vision.OdoPosition;
-import frc.robot.supportingClasses.Vision.VisionMedianFilter;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonPipelineResult;
@@ -24,13 +20,11 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 import java.io.IOException;
 import java.util.Optional;
 
-public class Limelight {
+public class Camera {
 
     protected PhotonCamera camera;
-
     private static final ShuffleboardTab tab = Shuffleboard.getTab("PhotonCamera");
     AprilTagFieldLayout aprilTagFieldLayout;
-    VisionMedianFilter filter;
     int successfulUpdates = 0;
 
     GenericEntry n_yaw;
@@ -42,7 +36,7 @@ public class Limelight {
      * Constructs a new Limelight object.
      * The limelight object will be full of null values if Constants.useAprilTags is false.
      */
-    public Limelight() {
+    public Camera() {
         if (Constants.useAprilTags) {
             camera = new PhotonCamera("OV5647");
             try {

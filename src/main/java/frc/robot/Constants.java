@@ -133,6 +133,10 @@ public final class Constants {
     public static final double SteerTicksToRadsPerSecond = SteerTicksToRads * 10; // multiply by velocity
   }
 
+  public static class AprilTags {
+
+  }
+
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
