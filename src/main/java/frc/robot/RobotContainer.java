@@ -5,6 +5,8 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
@@ -43,6 +45,20 @@ public class RobotContainer {
 
     chassis.setDefaultCommand(new TeleopDrive(chassis, driverGamepad));
     configureBindings();
+
+    vomitShuffleBoardData();
+  }
+
+
+  /**
+   * adds the subsystem {@link edu.wpi.first.util.sendable.Sendable} objects to a 'Subsystems' shuffleboard tab
+   */
+  public void vomitShuffleBoardData() {
+    if (Constants.debugMode) {
+      ShuffleboardTab tab = Shuffleboard.getTab("Subsystems");
+      tab.add(chassis);
+      chassis.shuffleboardVom(Shuffleboard.getTab("Swerve Modules"));
+    }
   }
 
   /**
