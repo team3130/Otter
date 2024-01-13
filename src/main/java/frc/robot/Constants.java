@@ -18,6 +18,8 @@ import edu.wpi.first.math.util.Units;
 @SuppressWarnings("ALL")
 public final class Constants {
   public static final boolean debugMode = false;
+  public static final boolean kNavxReversed = true;
+
   public static class CAN {
     public final static int leftFrontSteer = 2;
     public final static int leftFrontDrive = 3;
@@ -43,7 +45,25 @@ public final class Constants {
 
   public static class AprilTags {
     public static final boolean useAprilTags = false;
+
+    // The position and orientation of the camera in meters
+    public static final double xPos = Units.inchesToMeters(0);
+    public static final double yPos = Units.inchesToMeters(-4);
+    public static final double zPos = Units.inchesToMeters(-38);
+
+    // TODO: Find these values
+    public static final double pitch = Math.toRadians(-15);
+    public static final double yaw = Math.toRadians(0);
+    public static final double roll = Math.toRadians(0);
+
+    public static double confidenceN1 = 0; // I'm guessing x component confidence
+    public static double confidenceN2 = 0; // I'm guessing y component confidence
+    public static double confidenceN3 = 0; // I'm guessing theta component confidence
+
     public final static int kMedianFilterWindowSize = 9; // median filter size
+
+    public static double kCameraFOV = 0; // TODO: Find real value
+    public static final double AprilTagTrustDistance = 5;
   }
 
   /**

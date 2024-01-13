@@ -5,7 +5,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Newman_Constants.Constants;
+import frc.robot.Constants;
 
 public class Navx {
     //Instance Handling
@@ -13,7 +13,7 @@ public class Navx {
 
     private double angle = 0d;
 
-    private static double zeroPitch = Constants.Balance.defaultPitchZero;
+    // TODO: private static double zeroPitch = Constants.Balance.defaultPitchZero;
 
     public static Navx GetInstance() {
         if (m_pInstance == null) m_pInstance = new Navx();
@@ -153,13 +153,9 @@ public class Navx {
         return m_bNavXPresent;
     }
 
-    public static void setPitchZero(double val){
-        zeroPitch = val;
-    }
+    // TODO: public static void setPitchZero(double val) { zeroPitch = val;}
 
-    public static double getZeroPitch(){
-        return zeroPitch;
-    }
+    // TODO: public static double getZeroPitch() { return zeroPitch;}
 
     public static void outputToShuffleboard() {
         SmartDashboard.putNumber("NavX angle", getRotation().getDegrees());

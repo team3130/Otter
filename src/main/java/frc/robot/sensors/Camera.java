@@ -7,11 +7,9 @@ import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonUtils;
@@ -42,7 +40,8 @@ public class Camera {
             camera = new PhotonCamera("OV5647");
             try {
                 aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);
-                if (DriverStation.getAlliance() == DriverStation.Alliance.Red) {
+                // TODO: is this equals real?
+                if (DriverStation.getAlliance().equals(DriverStation.Alliance.Red)) {
                     aprilTagFieldLayout.setOrigin(AprilTagFieldLayout.OriginPosition.kRedAllianceWallRightSide);
                 } // TODO: check if blue is default or if we need to add Blueberry
             } catch (IOException e) {
@@ -65,15 +64,15 @@ public class Camera {
 
     /**
      * Calculates the position of the bot relative to an april tag.
-     * That calculation is then given to {@link VisionMedianFilter}. // giorgia and juhar this is inverse and incorrect !
+     * That calculation is then given to VisionMedianFilter. // giorgia and juhar this is inverse and incorrect !
      * The command will return null if there is no new information or if there are no targets in frame.
-     * This will add all the targets that are currently visible to the {@link VisionMedianFilter}.
-     * If {@link Constants#useAprilTags} is false, this will return null.
+     * This will add all the targets that are currently visible to the VisionMedianFilter.
+     * If {useAprilTags} is false, this will return null.
      *
      * @return the filtered camera position
      */
     public OdoPosition calculate() {
-        if (Constants.useAprilTags == false || camera.isConnected() == false) {
+        if (Constants.AprilTags.useAprilTags == false || camera.isConnected() == false) {
             return null;
         }
         // the most recent result as read by the camera
@@ -89,7 +88,7 @@ public class Camera {
         lastReadTime = result.getTimestampSeconds();
 
         // default value for what we will return
-        OdoPosition best = null;
+        OdoPosition bestpos = null;
 
         // for each target that is currently on the screen
         for (PhotonTrackedTarget target : result.getTargets()) { // what if this is null
@@ -97,14 +96,14 @@ public class Camera {
             Transform3d bestCameraToTarget = target.getBestCameraToTarget(); // juhar thinks this is the most accurate transformation done
 
             // if target is further away from robot in this case, (0, 0, 0), then move on to next target
-            if (bestCameraToTarget.getTranslation().getDistance(new Translation3d(0 ,0, 0)) > Constants.AprilTagTrustDistance) {
+            if (bestCameraToTarget.getTranslation().getDistance(new Translation3d(0, 0, 0)) > Constants.AprilTags.AprilTagTrustDistance) {
                 continue;
             }
 
             // the matrix transformation for the camera to the center of the bot
             Transform3d cameraToCenterOfBot = new Transform3d(
-                    new Translation3d(Camera.xPos, Camera.yPos, Camera.zPos),
-                    new Rotation3d(Camera.roll, Camera.pitch, Camera.yaw));
+                    new Translation3d(Constants.AprilTags.xPos, Constants.AprilTags.yPos, Constants.AprilTags.zPos),
+                    new Rotation3d(Constants.AprilTags.roll, Constants.AprilTags.pitch, Constants.AprilTags.yaw));
 
             Optional<Pose3d> pose3d = aprilTagFieldLayout.getTagPose(target.getFiducialId());
 
@@ -117,16 +116,15 @@ public class Camera {
                     bestCameraToTarget,
                     pose3d.get(),
                     cameraToCenterOfBot);
-
-            /* updates the best value that we will return on the last iteration,
+ /* updates the best value that we will return on the last iteration,
               also passes the read position into the {@link VisionMedianFilter)
              */
-            best = filter.getOdoPose(
-                    new OdoPosition(position.toPose2d(), result.getTimestampSeconds()));
+            //best = filter.getOdoPose(
+            //        new OdoPosition(position.toPose2d(), result.getTimestampSeconds()));
+            bestpos = new OdoPosition(position.toPose2d(), result.getTimestampSeconds());
         }
         // returns the last filtered value that we checked in the above for loop
-        return best;
+        return bestpos;
     }
-
 }
 
