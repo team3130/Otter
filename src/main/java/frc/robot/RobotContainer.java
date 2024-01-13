@@ -46,13 +46,12 @@ public class RobotContainer {
     chassis.setDefaultCommand(new TeleopDrive(chassis, driverGamepad));
     configureBindings();
 
-    vomitShuffleBoardData();
+    // vomitShuffleBoardData();
   }
 
 
   /**
    * adds the subsystem {@link edu.wpi.first.util.sendable.Sendable} objects to a 'Subsystems' shuffleboard tab
-   */
   public void vomitShuffleBoardData() {
     if (Constants.debugMode) {
       ShuffleboardTab tab = Shuffleboard.getTab("Subsystems");
@@ -60,6 +59,7 @@ public class RobotContainer {
       chassis.shuffleboardVom(Shuffleboard.getTab("Swerve Modules"));
     }
   }
+  /*
 
   /**
    * Use this method to define your trigger->command mappings. Triggers can be created via the

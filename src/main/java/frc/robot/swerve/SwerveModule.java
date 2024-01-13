@@ -54,14 +54,16 @@ public class SwerveModule implements Sendable {
 
         absoluteEncoderOffset = Constants.EncoderOffsets.kCANCoderOffsets[side];
 
-        this.side = side;
+        // this.side = side;
 
         resetEncoders();
 
+        /*
         String name = this.getClass().getSimpleName();
         name = name.substring(name.lastIndexOf('.') + 1);
         name += " " + side;
         SendableRegistry.addLW(this, name, name);
+        */
     }
 
     // returns the amount of distance the drive motor has travelled in meters
@@ -241,26 +243,43 @@ public class SwerveModule implements Sendable {
      * @return "Swerve module side: " + sideNumber: int
      */
     public String toString() {
-        return "Swerve module side: " + side;
+        return "Swerve module side: "; //+ side;
     }
 
     /**
      * Builds the sendable for shuffleboard
      * @param builder sendable builder
-     */
     @Override
     public void initSendable(SendableBuilder builder) {
         builder.setSmartDashboardType("Swerve Module " + side);
-/*        builder.addDoubleProperty("Drive position", this::getDrivePosition, null);
-        builder.addDoubleProperty("Drive velocity", this::getDriveVelocity, null);*/
+        builder.addDoubleProperty("Drive position", this::getDrivePosition, null);
+        builder.addDoubleProperty("Drive velocity", this::getDriveVelocity, null);
         builder.addDoubleProperty("Steer position", this::getSteerPositionWrapped, null);
-/*        builder.addDoubleProperty("Steer velocity", this::getTurningVelocity, null);
+        builder.addDoubleProperty("Steer velocity", this::getTurningVelocity, null);
         builder.addDoubleProperty("Steer relative", this::getRelativePositionDegrees, null);
-        builder.addDoubleProperty("Absolute encoder position", this::getAbsoluteEncoderDegrees, null);*/
+        builder.addDoubleProperty("Absolute encoder position", this::getAbsoluteEncoderDegrees, null);
         builder.addDoubleProperty("Swerve P " + side, this::getPValue, this::setPValue);
         builder.addDoubleProperty("Swerve I " + side, this::getIValue, this::setIValue);
         builder.addDoubleProperty("Swerve D " + side, this::getDValue, this::setDValue);
     }
+    */
+/**
+ * Builds the sendable for shuffleboard
+ * @param builder sendable builder
+ */
+@Override
+public void initSendable(SendableBuilder builder) {
+        builder.setSmartDashboardType("Swerve Module ");
+      // builder.addDoubleProperty("Drive position", this::getDrivePosition, null);
+        // builder.addDoubleProperty("Drive velocity", this::getDriveVelocity, null);
+        builder.addDoubleProperty("Steer position", this::getSteerPositionWrapped, null);
+      // builder.addDoubleProperty("Steer velocity", this::getTurningVelocity, null);
+        // builder.addDoubleProperty("Steer relative", this::getRelativePositionDegrees, null);
+        // builder.addDoubleProperty("Absolute encoder position", this::getAbsoluteEncoderDegrees, null);
+        builder.addDoubleProperty("Swerve P ", this::getPValue, this::setPValue);
+        builder.addDoubleProperty("Swerve I ", this::getIValue, this::setIValue);
+        builder.addDoubleProperty("Swerve D ", this::getDValue, this::setDValue);
+        }
 
     public double getSteerPositionWrapped() {
         return Math.IEEEremainder(getRelDegrees(), 360);
