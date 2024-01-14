@@ -39,7 +39,6 @@ public class Chassis extends SubsystemBase {
     private double maxSpeedRead = 0; // updated periodically with the maximum speed that has been read on any of the swerve modules
     private final Field2d field; // sendable that gets put on shuffleboard with the auton trajectory and the robots current position
     private final GenericEntry n_fieldOrriented; // comp network table entry for whether field oriented drivetrain
-    private final GenericEntry test;
 
     /**
      * Makes a chassis that starts at 0, 0, 0
@@ -70,10 +69,8 @@ public class Chassis extends SubsystemBase {
         m_limelight = limelight;
 
         field = new Field2d();
-
         Shuffleboard.getTab("Comp").add("field", field);
         n_fieldOrriented = Shuffleboard.getTab("Comp").add("field orriented", false).getEntry();
-        test = Shuffleboard.getTab("Comp").add("test", false).getEntry();
   }
 
     /**
