@@ -41,12 +41,10 @@ public class SwerveModule implements Sendable {
 
         m_steerMotor.getConfigurator().apply(new TalonFXConfiguration()); // config factory default
         m_steerMotor.setNeutralMode(NeutralModeValue.Brake); // Brake mode
-        m_steerMotor.setControl(steerMotorVoltRequest.withOutput(Constants.Swerve.kMaxSteerVoltage));
         m_steerMotor.setInverted(true);
 
         m_driveMotor.getConfigurator().apply(new TalonFXConfiguration());
         m_driveMotor.setNeutralMode(NeutralModeValue.Brake);
-        m_driveMotor.setControl(driveMotorVoltRequest.withOutput(Constants.Swerve.kMaxDriveVoltage));
         m_driveMotor.setInverted(false);
 
         turningPidController.enableContinuousInput(-Math.PI, Math.PI); // wrap for circles
