@@ -1,15 +1,20 @@
 package frc.robot.sensors;
 
+import com.ctre.phoenix6.mechanisms.swerve.utility.PhoenixPIDController;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.*;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.units.Distance;
+import edu.wpi.first.units.Measure;
+import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonUtils;
@@ -19,8 +24,64 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 import java.io.IOException;
 import java.util.Optional;
 
-public class Camera {
+import static edu.wpi.first.units.Units.Meters;
 
+public class Camera {
+    private static final ShuffleboardTab tab = Shuffleboard.getTab("PhotonVision");
+    AprilTagFieldLayout aprilTagFieldLayout;
+    PhotonCamera camera = new PhotonCamera("photonvision");
+    GenericEntry hasTargetQuestion;
+
+    PhotonPipelineResult result = camera.getLatestResult();
+    PhotonTrackedTarget target = result.getBestTarget();
+    public boolean hasTargets = result.hasTargets();
+    Pose2d targetPose = new Pose2d(0, 0, Rotation2d.fromRadians(0));
+    Transform2d cameraToRobot = new Transform2d(3, 0, Rotation2d.fromRadians(0));
+
+    public Camera() {
+        Shuffleboard.getTab("Camerapls").add("target", target);
+        hasTargetQuestion = Shuffleboard.getTab("Camerapls").add("hasTarget", hasTargets).getEntry();
+        hasTargetQuestion = Shuffleboard.getTab("Camerapls").add("targetYaw", targetYaw).getEntry();
+    }
+
+    /*
+    cameraToRobot The position of the robot relative to the camera. If the camera was
+    mounted 3 inches behind the "origin" (usually physical center) of the robot, this would be
+    Transform2d(3 inches, 0 inches, 0 degrees).
+    */
+    Pose2d robotPose = PhotonUtils.estimateFieldToRobot(
+            Constants.AprilTags.CAMERA_HEIGHT_METERS, Constants.AprilTags.TARGET_HEIGHT_METERS,
+            Constants.AprilTags.CAMERA_PITCH_RADIANS, Constants.AprilTags.kTargetPitch,
+            Rotation2d.fromDegrees(-target.getYaw()), Navx.getRotation(), targetPose, cameraToRobot);
+
+    Rotation2d targetYaw = PhotonUtils.getYawToPose(robotPose, targetPose);
+
+    // calculates Distance to Target
+    double range =
+            PhotonUtils.calculateDistanceToTargetMeters(
+                    Constants.AprilTags.CAMERA_HEIGHT_METERS,
+                    Constants.AprilTags.TARGET_HEIGHT_METERS,
+                    Constants.AprilTags.CAMERA_PITCH_RADIANS,
+                    Units.degreesToRadians(result.getBestTarget().getPitch()));
+
+    // this is not how Camera shuffleboard works :(
+    public void initSendable(SendableBuilder builder) {
+        builder.setSmartDashboardType("Camera");
+        builder.addBooleanProperty("hasTarget", this::hasTarget, null);
+        builder.addDoubleProperty("targetYaw", this::getTargetYaw, null);
+    }
+
+    private double getTargetYaw() {
+        return targetYaw.getRadians();
+    }
+
+    public boolean hasTarget() {
+        return hasTargets;
+    }
+}
+
+
+    /*
     protected PhotonCamera camera;
     private static final ShuffleboardTab tab = Shuffleboard.getTab("PhotonCamera");
     AprilTagFieldLayout aprilTagFieldLayout;
@@ -34,7 +95,7 @@ public class Camera {
     /**
      * Constructs a new Limelight object.
      * The limelight object will be full of null values if Constants.useAprilTags is false.
-     */
+
     public Camera() {
         if (Constants.AprilTags.useAprilTags) {
             camera = new PhotonCamera("OV5647");
@@ -50,81 +111,16 @@ public class Camera {
 
             // filter = new VisionMedianFilter(Constants.AprilTags.kMedianFilterWindowSize);
 
-            /*
+
             if (Constants.debugMode) {
                 SendableRegistry.add(filter, "vision filter");
                 SmartDashboard.putData(filter);
             }
-            */
+
 
             n_yaw = Shuffleboard.getTab("PhotonVision").add("Yaw", 0).getEntry();
             n_pitch = Shuffleboard.getTab("PhotonVision").add("Pitch", 0).getEntry();
         }   
     }
-
-    /**
-     * Calculates the position of the bot relative to an april tag.
-     * That calculation is then given to VisionMedianFilter. // giorgia and juhar this is inverse and incorrect !
-     * The command will return null if there is no new information or if there are no targets in frame.
-     * This will add all the targets that are currently visible to the VisionMedianFilter.
-     * If {useAprilTags} is false, this will return null.
-     *
-     * @return the filtered camera position
      */
-    public OdoPosition calculate() {
-        if (Constants.AprilTags.useAprilTags == false || camera.isConnected() == false) {
-            return null;
-        }
-        // the most recent result as read by the camera
-        PhotonPipelineResult result = camera.getLatestResult();
-
-        // if there is no new results or if there are no targets on the screen
-        if (result.getTimestampSeconds() == lastReadTime || !result.hasTargets()) {
-            return null;
-        }
-
-        // increment the amount of successful updates we have read
-        successfulUpdates++;
-        lastReadTime = result.getTimestampSeconds();
-
-        // default value for what we will return
-        OdoPosition bestpos = null;
-
-        // for each target that is currently on the screen
-        for (PhotonTrackedTarget target : result.getTargets()) { // what if this is null
-            // x is forward, y is left, z is up
-            Transform3d bestCameraToTarget = target.getBestCameraToTarget(); // juhar thinks this is the most accurate transformation done
-
-            // if target is further away from robot in this case, (0, 0, 0), then move on to next target
-            if (bestCameraToTarget.getTranslation().getDistance(new Translation3d(0, 0, 0)) > Constants.AprilTags.AprilTagTrustDistance) {
-                continue;
-            }
-
-            // the matrix transformation for the camera to the center of the bot
-            Transform3d cameraToCenterOfBot = new Transform3d(
-                    new Translation3d(Constants.AprilTags.xPos, Constants.AprilTags.yPos, Constants.AprilTags.zPos),
-                    new Rotation3d(Constants.AprilTags.roll, Constants.AprilTags.pitch, Constants.AprilTags.yaw));
-
-            Optional<Pose3d> pose3d = aprilTagFieldLayout.getTagPose(target.getFiducialId());
-
-            if (pose3d.isEmpty()) {
-                continue;
-            }
-
-            // the position of the bot relative to the april tag
-            Pose3d position = PhotonUtils.estimateFieldToRobotAprilTag(
-                    bestCameraToTarget,
-                    pose3d.get(),
-                    cameraToCenterOfBot);
- /* updates the best value that we will return on the last iteration,
-              also passes the read position into the {@link VisionMedianFilter)
-             */
-            //best = filter.getOdoPose(
-            //        new OdoPosition(position.toPose2d(), result.getTimestampSeconds()));
-            bestpos = new OdoPosition(position.toPose2d(), result.getTimestampSeconds());
-        }
-        // returns the last filtered value that we checked in the above for loop
-        return bestpos;
-    }
-}
 

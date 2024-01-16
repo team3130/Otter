@@ -30,7 +30,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final Chassis chassis;
-  private final Camera limelight = new Camera();
+  private final Camera camera;
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
@@ -39,8 +39,8 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-
-    chassis = new Chassis(limelight);
+    camera = new Camera();
+    chassis = new Chassis(camera);
     // Configure the trigger bindings
 
     chassis.setDefaultCommand(new TeleopDrive(chassis, driverGamepad));
