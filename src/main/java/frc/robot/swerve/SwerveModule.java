@@ -36,7 +36,6 @@ public class SwerveModule implements Sendable {
         m_driveMotor = new TalonFX(Constants.CAN.spinningID[side]);
 
         m_absoluteEncoder = new CANcoder(Constants.CAN.CANCoders[side]);
-
         turningPidController = new PIDController(Constants.Swerve.kP_Swerve[side], Constants.Swerve.kI_Swerve[side], Constants.Swerve.kD_Swerve[side]);
 
         m_steerMotor.getConfigurator().apply(new TalonFXConfiguration()); // config factory default
@@ -71,32 +70,31 @@ public class SwerveModule implements Sendable {
 
 
         // refreshed TalonFX rotor position signal // position value that we just refreshed in rotations
-        // TODO: adjust for new rotations versus old ticks to meters
-        return m_driveMotor.getPosition().getValue() * Constants.Conversions.DriveTicksToMeters;
+        return m_driveMotor.getPosition().getValue() * Constants.Conversions.DriveRotToMeters;
     }
 
     // returns the position of the steering motor radians
     public double getTurningPosition() {
         // TODO: change ticks to rotation
         m_steerMotor.getPosition(); // TODO: WHATT?
-        return m_steerMotor.getPosition().getValue() * Constants.Conversions.SteerTicksToRads;
+        return m_steerMotor.getPosition().getValue() * Constants.Conversions.SteerRotToRads;
     }
 
     // gets the velocity of the drive motor in m/s
     public double getDriveVelocity() {
-        return m_driveMotor.getVelocity().getValue() * Constants.Conversions.DriveTicksToMetersPerSecond;
+        return m_driveMotor.getVelocity().getValue() * Constants.Conversions.DriveRotToMetersPerSecond;
         // TODO or driveMotor.getVelocity(); and adjust ticks to rotations
     }
 
     // gets the speed at which the steering motor turns in radians per second
     public double getTurningVelocity() {
-        return m_steerMotor.getVelocity().getValue() * Constants.Conversions.SteerTicksToRadsPerSecond;
+        return m_steerMotor.getVelocity().getValue() * Constants.Conversions.SteerRotToRadsPerSecond;
         //TODO or getVelocity()
     }
 
     // gets the position of the steering wheel according to the absolute encoders
     public double getAbsoluteEncoderRad() {
-        return Math.toRadians(m_absoluteEncoder.getAbsolutePosition().getValue());
+        return Math.toRadians(m_absoluteEncoder.getAbsolutePosition().getValue() * 360);
     }
 
     /**
@@ -122,7 +120,7 @@ public class SwerveModule implements Sendable {
      * Resets the relative encoders according the absolute encoder involving the offset
      */
     public void resetEncoders() {
-        m_steerMotor.setPosition((getAbsoluteEncoderRad() - absoluteEncoderOffset) / Constants.Conversions.SteerTicksToRads);
+        m_steerMotor.setPosition((getAbsoluteEncoderRad()) - absoluteEncoderOffset / Constants.Conversions.SteerRotToRads);
         // m_driveMotor.setSelectedSensorPosition(0);
     }
 
