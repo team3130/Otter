@@ -7,12 +7,12 @@ package frc.robot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.Autos;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.commands.TeleopDrive;
-import frc.robot.commands.ZeroWheels;
+import frc.robot.commands.*;
 import frc.robot.sensors.Camera;
 import frc.robot.subsystems.Chassis;
 import frc.robot.subsystems.ExampleSubsystem;
@@ -79,7 +79,16 @@ public class RobotContainer {
     // cancelling on release.
     new POVButton(driverGamepad, Constants.Buttons.LST_POV_W).whileTrue(new ZeroWheels(chassis));
     m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+    new POVButton(driverGamepad, Constants.Buttons.LST_POV_N).whileTrue(new ZeroEverything(chassis));
+    new JoystickButton(driverGamepad, Constants.Buttons.LST_BTN_B).whileTrue(new FlipFieldOriented(chassis));
+
+    SmartDashboard.putData(new FlipFieldOriented(chassis));
   }
+
+  public Command resetEverything() {
+    return new ZeroEverything(chassis);
+  }
+
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
