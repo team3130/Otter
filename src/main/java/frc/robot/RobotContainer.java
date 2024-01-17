@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -33,8 +35,8 @@ public class RobotContainer {
   private final Camera limelight = new Camera();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_driverController =
-      new CommandXboxController(OperatorConstants.kDriverControllerPort);
+  //private final CommandXboxController m_driverController =
+    //  new CommandXboxController(OperatorConstants.kDriverControllerPort);
   private final XboxController driverGamepad = new XboxController(0);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -48,6 +50,7 @@ public class RobotContainer {
 
     vomitShuffleBoardData();
   }
+  public void periodic() {}
 
 
   /**
@@ -59,6 +62,12 @@ public class RobotContainer {
       tab.add(chassis);
       chassis.shuffleboardVom(Shuffleboard.getTab("Swerve Modules"));
     }
+  }
+  public void resetOdometryWithoutApril() {
+    chassis.resetOdometry(new Pose2d(0, 0, new Rotation2d()));
+  }
+  public void updateChassisPose() {
+    chassis.updateOdometery();
   }
 
   /**
@@ -78,7 +87,7 @@ public class RobotContainer {
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     new POVButton(driverGamepad, Constants.Buttons.LST_POV_W).whileTrue(new ZeroWheels(chassis));
-    m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+  //  m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
     new POVButton(driverGamepad, Constants.Buttons.LST_POV_N).whileTrue(new ZeroEverything(chassis));
     new JoystickButton(driverGamepad, Constants.Buttons.LST_BTN_B).whileTrue(new FlipFieldOriented(chassis));
 
