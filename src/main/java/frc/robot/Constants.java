@@ -59,7 +59,7 @@ public final class Constants {
 
 
 
-    public static final boolean useAprilTags = false;
+    public static final boolean useAprilTags = true;
 
     // The position and orientation of the camera in meters
     public static final double xPos = Units.inchesToMeters(0);

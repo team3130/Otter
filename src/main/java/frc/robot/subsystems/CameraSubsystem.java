@@ -31,42 +31,118 @@ public class CameraSubsystem extends SubsystemBase {
   protected PhotonCamera camera;
   private static final ShuffleboardTab tab = Shuffleboard.getTab("PhotonCamera");
   AprilTagFieldLayout aprilTagFieldLayout;
-  int successfulUpdates = 0;
-
-  GenericEntry n_yaw;
-  GenericEntry n_pitch;
-
-  protected double lastReadTime = 0;
+  Pose2d targetPose = new Pose2d(0, 0, Rotation2d.fromRadians(0));
+  Transform2d cameraToRobot = new Transform2d(3, 0, Rotation2d.fromRadians(0));
+  private double previousPipelineTimestamp = 0;
 
   /**
    * Constructs a new Limelight object.
    * The limelight object will be full of null values if Constants.useAprilTags is false.
    */
   public CameraSubsystem() {
-    if (Constants.AprilTags.useAprilTags) {
-      camera = new PhotonCamera("OV5647");
-      try {
-        aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);
-        if (DriverStation.getAlliance().equals(DriverStation.Alliance.Red)) {
-          aprilTagFieldLayout.setOrigin(AprilTagFieldLayout.OriginPosition.kRedAllianceWallRightSide);
-        } // TODO: check if blue is default or if we need to add Blueberry
-      } catch (IOException e) {
-        DriverStation.reportError("error loading field position file", false);
-      }
+    camera = new PhotonCamera("PhotonCamera");
+    ShuffleboardTab tab = Shuffleboard.getTab("Vision");
+    // Shuffleboard.getTab("Camerapls").add("target", target);
+    tab.addBoolean("hasTarget", this::hasTarget);
+    tab.addDouble("Target Yaw", this::getTargetYaw);
+    // SuppliedValueWidget<Double> targetYaw = tab.addDouble("Target Yaw", this::getTargetYaw);
+    // tab.addDouble("Target Yaw", this::getTargetYaw).withPosition(2, 0).withSize(6, 4)
 
-      n_yaw = Shuffleboard.getTab("PhotonVision").add("Yaw", 0).getEntry();
-      n_pitch = Shuffleboard.getTab("PhotonVision").add("Pitch", 0).getEntry();
-    }
+    // hasTargetQuestion = Shuffleboard.getTab("Camerapls").add("hasTarget", hasTargets).getEntry();
+    // hasTargetQuestion = Shuffleboard.getTab("Camerapls").add("targetYaw", targetYaw).getEntry();
   }
 
+  public PhotonTrackedTarget getTarget() {
+    PhotonPipelineResult result = camera.getLatestResult();
+    return result.getBestTarget();
+  }
 
+  public Pose2d findRobotPose() {
+    // cameraToRobot The position of the robot relative to the camera. If the camera was
+    // mounted 3 inches behind the "origin" (usually physical center) of the robot, this would be
+    // Transform2d(3 inches, 0 inches, 0 degrees).
+      return PhotonUtils.estimateFieldToRobot(
+            Constants.AprilTags.CAMERA_HEIGHT_METERS, Constants.AprilTags.TARGET_HEIGHT_METERS,
+            Constants.AprilTags.CAMERA_PITCH_RADIANS, Constants.AprilTags.kTargetPitch,
+            Rotation2d.fromDegrees(-getTarget().getYaw()), Navx.getRotation(), targetPose, cameraToRobot);
+  }
+
+  public boolean hasTarget() {
+    PhotonPipelineResult result = camera.getLatestResult();
+    return result.hasTargets();
+  }
+
+  public double getTargetYaw() {
+    Rotation2d targetYaw = PhotonUtils.getYawToPose(findRobotPose(), targetPose);
+    return targetYaw.getRadians();
+  }
+
+  public void initSendable(SendableBuilder builder) {
+    builder.setSmartDashboardType("Camera");
+    builder.addBooleanProperty("hasTarget", this::hasTarget, null);
+    builder.addDoubleProperty("targetYaw", this::getTargetYaw, null);
+  }
+
+  // This method will be called once per scheduler run
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    PhotonPipelineResult result = camera.getLatestResult();
+    double resultTimestamp = result.getTimestampSeconds();
+    if (resultTimestamp != previousPipelineTimestamp && result.hasTargets()) {
+      previousPipelineTimestamp = resultTimestamp;
+      PhotonTrackedTarget target = result.getBestTarget();
+      int fiducialID = getTarget().getFiducialId();
+    }
   }
 
   @Override
   public void simulationPeriodic() {
     // This method will be called once per scheduler run during simulation
   }
+
 }
+
+
+    /*
+    protected PhotonCamera camera;
+    private static final ShuffleboardTab tab = Shuffleboard.getTab("PhotonCamera");
+    AprilTagFieldLayout aprilTagFieldLayout;
+    int successfulUpdates = 0;
+
+    GenericEntry n_yaw;
+    GenericEntry n_pitch;
+
+    protected double lastReadTime = 0;
+
+    /**
+     * Constructs a new Limelight object.
+     * The limelight object will be full of null values if Constants.useAprilTags is false.
+
+    public Camera() {
+        if (Constants.AprilTags.useAprilTags) {
+            camera = new PhotonCamera("OV5647");
+            try {
+                aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);
+                // TODO: is this equals real?
+                if (DriverStation.getAlliance().equals(DriverStation.Alliance.Red)) {
+                    aprilTagFieldLayout.setOrigin(AprilTagFieldLayout.OriginPosition.kRedAllianceWallRightSide);
+                } // TODO: check if blue is default or if we need to add Blueberry
+            } catch (IOException e) {
+                DriverStation.reportError("error loading field position file", false);
+            }
+
+            // filter = new VisionMedianFilter(Constants.AprilTags.kMedianFilterWindowSize);
+
+
+            if (Constants.debugMode) {
+                SendableRegistry.add(filter, "vision filter");
+                SmartDashboard.putData(filter);
+            }
+
+
+            n_yaw = Shuffleboard.getTab("PhotonVision").add("Yaw", 0).getEntry();
+            n_pitch = Shuffleboard.getTab("PhotonVision").add("Pitch", 0).getEntry();
+        }
+    }
+     */
+
