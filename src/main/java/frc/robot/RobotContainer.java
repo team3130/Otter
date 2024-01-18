@@ -14,11 +14,14 @@ import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.TeleopDrive;
 import frc.robot.commands.ZeroWheels;
 import frc.robot.sensors.Camera;
+import frc.robot.subsystems.CameraSubsystem;
 import frc.robot.subsystems.Chassis;
 import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+
+import java.util.ArrayList;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -31,6 +34,7 @@ public class RobotContainer {
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final Chassis chassis;
   private final Camera camera;
+  private final CameraSubsystem cameraSubsystem;
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
@@ -40,6 +44,7 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     camera = new Camera();
+    cameraSubsystem = new CameraSubsystem();
     chassis = new Chassis(camera);
     // Configure the trigger bindings
 

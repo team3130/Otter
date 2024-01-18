@@ -31,6 +31,7 @@ public class Camera {
     AprilTagFieldLayout aprilTagFieldLayout;
     PhotonCamera camera = new PhotonCamera("photonvision");
     GenericEntry hasTargetQuestion;
+    GenericEntry targetYawShuff;
 
     PhotonPipelineResult result = camera.getLatestResult();
     PhotonTrackedTarget target = result.getBestTarget();
@@ -39,44 +40,29 @@ public class Camera {
     Transform2d cameraToRobot = new Transform2d(3, 0, Rotation2d.fromRadians(0));
 
     public Camera() {
-        Shuffleboard.getTab("Camerapls").add("target", target);
-        hasTargetQuestion = Shuffleboard.getTab("Camerapls").add("hasTarget", hasTargets).getEntry();
-        hasTargetQuestion = Shuffleboard.getTab("Camerapls").add("targetYaw", targetYaw).getEntry();
-    }
+        //Shuffleboard.getTab("Camerapls").add("target", target);
+        hasTargetQuestion = Shuffleboard.getTab("Camerapls").add("hasTarget", false).getEntry();
+        targetYawShuff = Shuffleboard.getTab("Camerapls").add("targetYaw", 0).getEntry();
+
+
+        if (target != null) {
+            Pose2d robotPose = PhotonUtils.estimateFieldToRobot(
+                    Constants.AprilTags.CAMERA_HEIGHT_METERS, Constants.AprilTags.TARGET_HEIGHT_METERS,
+                    Constants.AprilTags.CAMERA_PITCH_RADIANS, Constants.AprilTags.kTargetPitch,
+                    Rotation2d.fromDegrees(-target.getYaw()), Navx.getRotation(), targetPose, cameraToRobot);
+
+            Rotation2d targetYaw = PhotonUtils.getYawToPose(robotPose, targetPose);
+        }
+
 
     /*
     cameraToRobot The position of the robot relative to the camera. If the camera was
     mounted 3 inches behind the "origin" (usually physical center) of the robot, this would be
     Transform2d(3 inches, 0 inches, 0 degrees).
     */
-    Pose2d robotPose = PhotonUtils.estimateFieldToRobot(
-            Constants.AprilTags.CAMERA_HEIGHT_METERS, Constants.AprilTags.TARGET_HEIGHT_METERS,
-            Constants.AprilTags.CAMERA_PITCH_RADIANS, Constants.AprilTags.kTargetPitch,
-            Rotation2d.fromDegrees(-target.getYaw()), Navx.getRotation(), targetPose, cameraToRobot);
 
-    Rotation2d targetYaw = PhotonUtils.getYawToPose(robotPose, targetPose);
 
-    // calculates Distance to Target
-    double range =
-            PhotonUtils.calculateDistanceToTargetMeters(
-                    Constants.AprilTags.CAMERA_HEIGHT_METERS,
-                    Constants.AprilTags.TARGET_HEIGHT_METERS,
-                    Constants.AprilTags.CAMERA_PITCH_RADIANS,
-                    Units.degreesToRadians(result.getBestTarget().getPitch()));
-
-    // this is not how Camera shuffleboard works :(
-    public void initSendable(SendableBuilder builder) {
-        builder.setSmartDashboardType("Camera");
-        builder.addBooleanProperty("hasTarget", this::hasTarget, null);
-        builder.addDoubleProperty("targetYaw", this::getTargetYaw, null);
-    }
-
-    private double getTargetYaw() {
-        return targetYaw.getRadians();
-    }
-
-    public boolean hasTarget() {
-        return hasTargets;
+        // calculates Distance to Target
     }
 }
 
