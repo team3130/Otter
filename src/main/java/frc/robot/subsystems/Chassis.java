@@ -314,7 +314,7 @@ public class Chassis extends SubsystemBase {
      * A vomit onto shuffleboard of the {@link SwerveModule} objects in Chassis
      * @param tab the tab to add the {@link SwerveModule} objects
      */
-    public void shuffleboardVom(ShuffleboardTab tab) {
+    public void exportSwerveModData(ShuffleboardTab tab) {
         tab.add(modules[0]);
         tab.add(modules[1]);
         tab.add(modules[2]);
