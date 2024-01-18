@@ -164,10 +164,6 @@ public final class Constants {
     public static final double SteerRotToRadsPerSecond = SteerRotToRads * 10; // multiply by velocity
   }
 
-  public static class OperatorConstants {
-    public static final int kDriverControllerPort = 0;
-  }
-
   public static class Buttons {
     /**
      * Gamepad Button List
