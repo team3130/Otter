@@ -53,18 +53,27 @@ public class CameraSubsystem extends SubsystemBase {
   }
 
   public PhotonTrackedTarget getTarget() {
-    PhotonPipelineResult result = camera.getLatestResult();
-    return result.getBestTarget();
+    if (!hasTarget()) {
+      return null;
+    } else {
+      PhotonPipelineResult result = camera.getLatestResult();
+      return result.getBestTarget();
+    }
   }
 
   public Pose2d findRobotPose() {
     // cameraToRobot The position of the robot relative to the camera. If the camera was
     // mounted 3 inches behind the "origin" (usually physical center) of the robot, this would be
     // Transform2d(3 inches, 0 inches, 0 degrees).
+    if (!hasTarget()) {
+      return null;
+    } else {
       return PhotonUtils.estimateFieldToRobot(
-            Constants.AprilTags.CAMERA_HEIGHT_METERS, Constants.AprilTags.TARGET_HEIGHT_METERS,
-            Constants.AprilTags.CAMERA_PITCH_RADIANS, Constants.AprilTags.kTargetPitch,
-            Rotation2d.fromDegrees(-getTarget().getYaw()), Navx.getRotation(), targetPose, cameraToRobot);
+              Constants.AprilTags.CAMERA_HEIGHT_METERS, Constants.AprilTags.TARGET_HEIGHT_METERS,
+              Constants.AprilTags.CAMERA_PITCH_RADIANS, Constants.AprilTags.kTargetPitch,
+              Rotation2d.fromDegrees(-getTarget().getYaw()), Navx.getRotation(), targetPose, cameraToRobot);
+    }
+
   }
 
   public boolean hasTarget() {
@@ -73,8 +82,12 @@ public class CameraSubsystem extends SubsystemBase {
   }
 
   public double getTargetYaw() {
-    Rotation2d targetYaw = PhotonUtils.getYawToPose(findRobotPose(), targetPose);
-    return targetYaw.getRadians();
+    if (!hasTarget()) {
+      return 0.0;
+    } else {
+      Rotation2d targetYaw = PhotonUtils.getYawToPose(findRobotPose(), targetPose);
+      return targetYaw.getRadians();
+    }
   }
 
   public void initSendable(SendableBuilder builder) {

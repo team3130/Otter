@@ -45,7 +45,6 @@ public class RobotContainer {
 
     chassis.setDefaultCommand(new TeleopDrive(chassis, driverGamepad));
     configureBindings();
-
     vomitShuffleBoardData();
   }
 
@@ -57,6 +56,7 @@ public class RobotContainer {
     if (Constants.debugMode) {
       ShuffleboardTab tab = Shuffleboard.getTab("Subsystems");
       tab.add(chassis);
+      tab.add(cameraSubsystem);
       chassis.shuffleboardVom(Shuffleboard.getTab("Swerve Modules"));
     }
   }
