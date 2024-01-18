@@ -5,14 +5,16 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.util.sendable.SendableRegistry;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -22,55 +24,41 @@ import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
+import java.io.IOException;
+import java.util.Optional;
+
 public class CameraSubsystem extends SubsystemBase {
-  /** Creates a new ExampleSubsystem. */
-  public CameraSubsystem() {
-
-  }
-  private static final ShuffleboardTab tab = Shuffleboard.getTab("PhotonVision");
+  protected PhotonCamera camera;
+  private static final ShuffleboardTab tab = Shuffleboard.getTab("PhotonCamera");
   AprilTagFieldLayout aprilTagFieldLayout;
-  PhotonCamera camera = new PhotonCamera("photonvision");
+  int successfulUpdates = 0;
 
-  PhotonPipelineResult result = camera.getLatestResult();
-  PhotonTrackedTarget target = result.getBestTarget();
-  public boolean hasTargets = result.hasTargets();
-  Pose2d targetPose = new Pose2d(0, 0, Rotation2d.fromRadians(0));
-  Transform2d cameraToRobot = new Transform2d(3, 0, Rotation2d.fromRadians(0));
+  GenericEntry n_yaw;
+  GenericEntry n_pitch;
 
-  /*
-  cameraToRobot The position of the robot relative to the camera. If the camera was
-  mounted 3 inches behind the "origin" (usually physical center) of the robot, this would be
-  Transform2d(3 inches, 0 inches, 0 degrees).
-  */
-  Pose2d robotPose = PhotonUtils.estimateFieldToRobot(
-          Constants.AprilTags.CAMERA_HEIGHT_METERS, Constants.AprilTags.TARGET_HEIGHT_METERS,
-          Constants.AprilTags.CAMERA_PITCH_RADIANS, Constants.AprilTags.kTargetPitch,
-          Rotation2d.fromDegrees(-target.getYaw()), Navx.getRotation(), targetPose, cameraToRobot);
+  protected double lastReadTime = 0;
 
-  Rotation2d targetYaw = PhotonUtils.getYawToPose(robotPose, targetPose);
+  /**
+   * Constructs a new Limelight object.
+   * The limelight object will be full of null values if Constants.useAprilTags is false.
+   */
+  public CameraSubsystem() {
+    if (Constants.AprilTags.useAprilTags) {
+      camera = new PhotonCamera("OV5647");
+      try {
+        aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);
+        if (DriverStation.getAlliance().equals(DriverStation.Alliance.Red)) {
+          aprilTagFieldLayout.setOrigin(AprilTagFieldLayout.OriginPosition.kRedAllianceWallRightSide);
+        } // TODO: check if blue is default or if we need to add Blueberry
+      } catch (IOException e) {
+        DriverStation.reportError("error loading field position file", false);
+      }
 
-  // calculates Distance to Target
-  double range =
-          PhotonUtils.calculateDistanceToTargetMeters(
-                  Constants.AprilTags.CAMERA_HEIGHT_METERS,
-                  Constants.AprilTags.TARGET_HEIGHT_METERS,
-                  Constants.AprilTags.CAMERA_PITCH_RADIANS,
-                  Units.degreesToRadians(result.getBestTarget().getPitch()));
-
-  // this is not how Camera shuffleboard works :(
-  public void initSendable(SendableBuilder builder) {
-    builder.setSmartDashboardType("Camera");
-    builder.addBooleanProperty("hasTarget", this::hasTarget, null);
-    builder.addDoubleProperty("targetYaw", this::getTargetYaw, null);
+      n_yaw = Shuffleboard.getTab("PhotonVision").add("Yaw", 0).getEntry();
+      n_pitch = Shuffleboard.getTab("PhotonVision").add("Pitch", 0).getEntry();
+    }
   }
 
-  private double getTargetYaw() {
-    return targetYaw.getRadians();
-  }
-
-  public boolean hasTarget() {
-    return hasTargets;
-  }
 
   @Override
   public void periodic() {
