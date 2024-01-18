@@ -28,7 +28,7 @@ import java.io.IOException;
 import java.util.Optional;
 
 public class CameraSubsystem extends SubsystemBase {
-  protected PhotonCamera camera;
+  protected PhotonCamera camera = new PhotonCamera("cam");
   private static final ShuffleboardTab tab = Shuffleboard.getTab("PhotonCamera");
   AprilTagFieldLayout aprilTagFieldLayout;
   Pose2d targetPose = new Pose2d(0, 0, Rotation2d.fromRadians(0));
@@ -40,7 +40,6 @@ public class CameraSubsystem extends SubsystemBase {
    * The limelight object will be full of null values if Constants.useAprilTags is false.
    */
   public CameraSubsystem() {
-    camera = new PhotonCamera("PhotonCamera");
     ShuffleboardTab tab = Shuffleboard.getTab("Vision");
     // Shuffleboard.getTab("Camerapls").add("target", target);
     tab.addBoolean("hasTarget", this::hasTarget);
