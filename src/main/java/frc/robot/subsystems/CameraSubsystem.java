@@ -72,8 +72,9 @@ public class CameraSubsystem extends SubsystemBase {
               Constants.AprilTags.CAMERA_PITCH_RADIANS, Constants.AprilTags.kTargetPitch,
               Rotation2d.fromDegrees(-getTarget().getYaw()), Navx.getRotation(), targetPose, cameraToRobot);
     }
-
   }
+
+  // AprilTagFieldLayout.getTagPose(getTarget().getFiducialId())
 
   public boolean hasTarget() {
     PhotonPipelineResult result = camera.getLatestResult();
@@ -82,7 +83,7 @@ public class CameraSubsystem extends SubsystemBase {
 
   public double getTargetYaw() {
     if (!hasTarget()) {
-      return 0.0;
+      return 69.0;
     } else {
       Rotation2d targetYaw = PhotonUtils.getYawToPose(findRobotPose(), targetPose);
       return targetYaw.getRadians();
