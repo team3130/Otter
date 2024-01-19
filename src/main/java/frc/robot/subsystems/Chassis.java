@@ -4,6 +4,10 @@
 
 package frc.robot.subsystems;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -13,6 +17,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -40,6 +45,7 @@ public class Chassis extends SubsystemBase {
     private final Field2d field; // sendable that gets put on shuffleboard with the auton trajectory and the robots current position
     private final GenericEntry n_fieldOrriented; // comp network table entry for whether field oriented drivetrain
 
+    Rotation2d angleSetpoint = null;
     /**
      * Makes a chassis that starts at 0, 0, 0
      * @param limelight the limelight object that we can use for updating odometry
@@ -71,7 +77,67 @@ public class Chassis extends SubsystemBase {
         field = new Field2d();
         Shuffleboard.getTab("Comp").add("field", field);
         n_fieldOrriented = Shuffleboard.getTab("Comp").add("field orriented", false).getEntry();
-  }
+
+        AutoBuilder.configureHolonomic(
+                this::getPose2d, // Robot pose supplier
+                this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
+                this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+                //this::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+                (speeds) -> drive(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond, true),
+                new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
+                        // TODO: change constants below
+                        new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
+                        new PIDConstants(5.0, 0.0, 0.0), // Rotation PID constants
+                        4.5, // Max module speed, in m/s
+                        0.4, // Drive base radius in meters. Distance from robot center to furthest module.
+                        new ReplanningConfig() // Default path replanning config. See the API for the options here
+                ),
+                () -> {
+                    // Boolean supplier that controls when the path will be mirrored for the red alliance
+                    // This will flip the path being followed to the red side of the field.
+                    // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+
+                    var alliance = DriverStation.getAlliance();
+                    if (alliance.isPresent()) {
+                        return alliance.get() == DriverStation.Alliance.Red;
+                    }
+                    return false;
+                },
+                this // Reference to this subsystem to set requirements
+        );
+    }
+
+    // I genuinely dk
+    // also written to be runVelocity
+    /*
+    public void driveRobotRelative(ChassisSpeeds speeds) {
+        // Calculate module setpoints
+        ChassisSpeeds discreteSpeeds = ChassisSpeeds.discretize(speeds, 0.02);
+        SwerveModuleState[] setpointStates = kinematics.toSwerveModuleStates(discreteSpeeds);
+        SwerveDriveKinematics.desaturateWheelSpeeds(setpointStates, Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
+
+        // Send setpoints to modules
+        SwerveModuleState[] optimizedSetpointStates = new SwerveModuleState[4];
+        for (int i = 0; i < 4; i++) {
+            // The module returns the optimized state, useful for logging
+            optimizedSetpointStates[i] = modules[i].runSetpoint(setpointStates[i]);
+        }
+    }
+    */
+
+    /** Runs the module with the specified setpoint state. Returns the optimized state.
+    public SwerveModuleState runSetpoint(SwerveModuleState state) {
+        // Optimize state based on current angle
+        // Controllers run in "periodic" when the setpoint is not null
+        var optimizedState = SwerveModuleState.optimize(state, getRotation2d());
+
+        // Update setpoints, controllers run in "periodic"
+        angleSetpoint = optimizedState.angle;
+        speedSetpoint = optimizedState.speedMetersPerSecond;
+
+        return optimizedState;
+    }
+     */
 
     /**
     * If the PID controllers of the {@link SwerveModule}'s are all done
@@ -133,6 +199,11 @@ public class Chassis extends SubsystemBase {
       return odometry.getEstimatedPosition().getRotation();
     }
 
+    // method to reset the robot's odometry to the given pose
+    public void resetPose(Pose2d newPose) {
+        odometry.resetPosition(getRotation2d(), generatePoses(), newPose);
+    }
+
     /**
      * Generates the positions of the swerve modules
      * @return the poses of each module
@@ -185,6 +256,18 @@ public class Chassis extends SubsystemBase {
      */
     public SwerveDriveKinematics getKinematics() {
       return kinematics;
+    }
+
+    public ChassisSpeeds getRobotRelativeSpeeds() {
+        return kinematics.toChassisSpeeds(getModuleStates());
+    }
+
+    private SwerveModuleState[] getModuleStates() {
+        SwerveModuleState[] states = new SwerveModuleState[4];
+        for (int i = 0; i < 4; i++) {
+            states[i] = modules[i].getState();
+        }
+        return states;
     }
 
     /**
