@@ -33,7 +33,7 @@ public class Chassis extends SubsystemBase {
     private final SwerveDriveKinematics kinematics; // geometry of swerve modules
     private final SwerveDrivePoseEstimator odometry; // odometry object
     private final SwerveModule[] modules; // list of four swerve modules
-    private final Navx Gyro = Navx.GetInstance(); // initialize Navx
+    private final Navx navx = Navx.GetInstance(); // initialize Navx
     private boolean fieldRelative = true; // field relative or robot oriented drive
     private final Camera m_limelight;
     private double maxSpeedRead = 0; // updated periodically with the maximum speed that has been read on any of the swerve modules

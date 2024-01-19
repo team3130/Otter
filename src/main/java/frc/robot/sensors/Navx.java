@@ -8,41 +8,34 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 
 public class Navx {
-    //Instance Handling
-    private static Navx m_pInstance;
-
+    private static Navx pInstance;
+    private static AHRS navX;
+    private static boolean navXPresent;
     private double angle = 0d;
 
     // TODO: private static double zeroPitch = Constants.Balance.defaultPitchZero;
 
-    public static Navx GetInstance() {
-        if (m_pInstance == null) m_pInstance = new Navx();
-        return m_pInstance;
-    }
-
-    //Create necessary objects
-    private static AHRS m_navX;
-
-
-    //Create and define all standard data types needed
-    private static boolean m_bNavXPresent;
-
     private Navx() {
         try {
             //Connect to navX Gyro on MXP port.
-            m_navX = new AHRS(SPI.Port.kMXP);
-            m_bNavXPresent = true;
+            navX = new AHRS(SPI.Port.kMXP);
+            navXPresent = true;
         } catch (Exception ex) {
             //If connection fails log the error and fall back to encoder based angles.
             String str_error = "Error instantiating navX from MXP: " + ex.getLocalizedMessage();
             DriverStation.reportError(str_error, true);
-            m_bNavXPresent = false;
+            navXPresent = false;
         }
     }
 
+    public static Navx GetInstance() {
+        if (pInstance == null) pInstance = new Navx();
+        return pInstance;
+    }
+
     public static void resetNavX(){
-        m_navX.reset();
-        m_navX.zeroYaw();
+        navX.reset();
+        navX.zeroYaw();
     }
 
     /**
@@ -51,8 +44,8 @@ public class Navx {
      * @return angle in degrees
      */
     public static double getAngle() {
-        if (m_bNavXPresent) {
-            return Math.IEEEremainder((m_navX.getAngle() + 360) * (Constants.kNavxReversed ? -1.0 : 1.0), 720); // converts navx heading angle infinite values to -360 to 360 even tho thats stupid
+        if (navXPresent) {
+            return Math.IEEEremainder((navX.getAngle() + 360) * (Constants.kNavxReversed ? -1.0 : 1.0), 720); // converts navx heading angle infinite values to -360 to 360 even tho thats stupid
         }
         return -1;
     }
@@ -62,7 +55,7 @@ public class Navx {
      * @return the angle as a rotation 2d (in radians)
      */
     public static Rotation2d getRotation() {
-        return (m_bNavXPresent) ? m_navX.getRotation2d() : new Rotation2d(-1);
+        return (navXPresent) ? navX.getRotation2d() : new Rotation2d(-1);
     }
 
     /**
@@ -71,8 +64,8 @@ public class Navx {
      * @return angle in degrees (-180, 180)
      */
     public static double getYaw() {
-        if (m_bNavXPresent) {
-            return m_navX.getYaw();
+        if (navXPresent) {
+            return navX.getYaw();
         }
         return Double.NaN;
     }
@@ -83,8 +76,8 @@ public class Navx {
      * @return angle in degrees (-180, 180)
      */
     public static double getPitch() {
-        if (m_bNavXPresent) {
-            return m_navX.getPitch();
+        if (navXPresent) {
+            return navX.getPitch();
         }
         return Double.NaN;
     }
@@ -95,8 +88,8 @@ public class Navx {
      * @return angle in degrees (-180, 180)
      */
     public static double getPitchVelocity() {
-        if (m_bNavXPresent) {
-            return m_navX.getRawGyroX();
+        if (navXPresent) {
+            return navX.getRawGyroX();
         }
         return Double.NaN;
     }
@@ -107,8 +100,8 @@ public class Navx {
      * @return angle in degrees (-180, 180)
      */
     public static double getRoll() {
-        if (m_bNavXPresent) {
-            return m_navX.getRoll();
+        if (navXPresent) {
+            return navX.getRoll();
         }
         return Double.NaN;
     }
@@ -119,8 +112,8 @@ public class Navx {
      * @return angle in degrees (-180, 180)
      */
     public static double getRollVelocity() {
-        if (m_bNavXPresent) {
-            return m_navX.getRawGyroY();
+        if (navXPresent) {
+            return navX.getRawGyroY();
         }
         return Double.NaN;
     }
@@ -135,7 +128,7 @@ public class Navx {
      * @return the rate of change of the heading of the robot in degrees per second.
      */
     public static double getRate() {
-        if (m_bNavXPresent) return m_navX.getRate() * (Constants.kNavxReversed ? -1.0 : 1.0);
+        if (navXPresent) return navX.getRate() * (Constants.kNavxReversed ? -1.0 : 1.0);
         return -1;
     }
 
@@ -150,7 +143,7 @@ public class Navx {
     }
 
     public static boolean getNavxPresent() {
-        return m_bNavXPresent;
+        return navXPresent;
     }
 
     // TODO: public static void setPitchZero(double val) { zeroPitch = val;}

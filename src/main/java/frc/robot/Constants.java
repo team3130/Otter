@@ -107,7 +107,6 @@ public final class Constants {
     public final static double kMaxAccelerationDrive = 7;
     public final static double kMaxAccelerationAngularDrive = 4.0*Math.PI;
 
-
     public final static double kP_FrontRight = 1.35;
     public final static double kI_FrontRight = 0.05;
     public final static double kD_FrontRight = 0;
@@ -132,8 +131,6 @@ public final class Constants {
     public final static double[] kI_Swerve = new double[] {kI_FrontLeft, kI_BackLeft, kI_FrontRight, kI_BackRight};
     public final static double[] kD_Swerve = new double[] {kD_FrontLeft, kD_BackLeft, kD_FrontRight, kD_BackRight};
     public final static double[] kF_Swerve = new double[] {kF_FrontLeft, kF_BackLeft, kF_FrontRight, kF_BackRight};
-
-
   }
 
   public static class Modules {
@@ -149,7 +146,6 @@ public final class Constants {
     public static final double kTopRightOffset = Math.toRadians(129.3);
     public static final double kBottomRightOffset = Math.toRadians(0);
     public static final double[] kCANCoderOffsets = new double[] {kTopLeftOffset, kBottomLeftOffset, kTopRightOffset, kBottomRightOffset};
-
   }
 
   // gear ratios and/or ticks per rev, etc.
@@ -165,9 +161,7 @@ public final class Constants {
   }
 
   public static class Buttons {
-    /**
-     * Gamepad Button List
-     */
+    // Gamepad Button List
     public static final int LST_BTN_A = 1;
     public static final int LST_BTN_B = 2;
     public static final int LST_BTN_X = 3;
@@ -179,9 +173,7 @@ public final class Constants {
     public static final int LST_BTN_LJOYSTICKPRESS = 9;
     public static final int LST_BTN_RJOYSTICKPRESS = 10;
 
-    /**
-     * Gamepad POV List
-     */
+    // Gamepad POV List
     public static final int LST_POV_UNPRESSED = -1;
     public static final int LST_POV_N = 0;
     public static final int LST_POV_NE = 45;
@@ -192,9 +184,7 @@ public final class Constants {
     public static final int LST_POV_W = 270;
     public static final int LST_POV_NW = 315;
 
-    /**
-     * Gamepad Axis List
-     */
+    // Gamepad Axis List
     public static final int LST_AXS_LJOYSTICKX = 0;
     public static final int LST_AXS_LJOYSTICKY = 1;
     public static final int LST_AXS_LTRIGGER = 2;
@@ -202,5 +192,4 @@ public final class Constants {
     public static final int LST_AXS_RJOYSTICKX = 4;
     public static final int LST_AXS_RJOYSTICKY = 5;
   }
-
 }
