@@ -8,23 +8,14 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.Chassis;
 
 /**
- * A command that flips between robot and field oriented.
+ * A command that flips between robot and field oriented control
  * Requires chassis
  */
 public class FlipFieldOriented extends InstantCommand {
+  private final Chassis chassis;
 
-  /**
-   * The singleton for chassis. Is the only required subsystem for this command
-   */
-  private final Chassis m_chassis;
-
-  /**
-   * Creates a new command to flip between field and robot oriented control
-   *
-   * @param chassis The chassis subsystem
-   */
   public FlipFieldOriented(Chassis chassis) {
-    m_chassis = chassis;
+    this.chassis = chassis;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(chassis);
   }
@@ -34,6 +25,6 @@ public class FlipFieldOriented extends InstantCommand {
    */
   @Override
   public void initialize() {
-    m_chassis.flipFieldRelative();
+    chassis.flipFieldRelative();
   }
 }

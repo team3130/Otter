@@ -12,38 +12,23 @@ import frc.robot.subsystems.Chassis;
 
 /** A default command to drive in teleop based off the joysticks*/
 public class TeleopDrive extends Command {
+  private final Chassis chassis;
+  private final XboxController xboxController;
 
-  /**
-   * Chassis singleton which is used as the subsystem
-   */
-  private final Chassis m_chassis;
-
-  /**
-   * acceleration limiters for the x dimension, y dimension, and the holonomic rotation.
-   * These values are in m/s and rad/s respectively.
-   */
+  // acceleration limiters for the x dimension, y dimension, and the holonomic rotation.
+  // These values are in m/s and rad/s respectively
   private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
 
-  /**
-   * The controller that we use to drive
-   */
-  private final XboxController m_xboxController;
-
-  /**
-   * Creates a new TeleopDrive command
-   * Initializes slew rate limiters to limit acceleration
-   *
-   * @param chassis The subsystem used by this command.
-   * @param xboxController the controller that we use to drive
-   */
   public TeleopDrive(Chassis chassis, XboxController xboxController) {
-    m_chassis = chassis;
+    this.chassis = chassis;
+    this.xboxController = xboxController;
     // Use addRequirements() here to declare subsystem dependencies.
     m_requirements.add(chassis);
+
+    // Initializes slew rate limiters to limit acceleration
     xLimiter = new SlewRateLimiter(Constants.Swerve.kMaxAccelerationDrive);
     yLimiter = new SlewRateLimiter(Constants.Swerve.kMaxAccelerationDrive);
     turningLimiter = new SlewRateLimiter(Constants.Swerve.kMaxAccelerationAngularDrive);
-    m_xboxController = xboxController;
   }
 
   /**
@@ -61,9 +46,9 @@ public class TeleopDrive extends Command {
    */
   @Override
   public void execute() {
-    double y = m_xboxController.getRawAxis(Constants.Buttons.LST_AXS_LJOYSTICKX); // left stick y-axis (y-axis is inverted)
-    double x = m_xboxController.getRawAxis(Constants.Buttons.LST_AXS_LJOYSTICKY); // left stick x-axis
-    double theta = -m_xboxController.getRawAxis(Constants.Buttons.LST_AXS_RJOYSTICKX); // right stick x-axis
+    double y = xboxController.getRawAxis(Constants.Buttons.LST_AXS_LJOYSTICKX); // left stick y-axis (y-axis is inverted)
+    double x = xboxController.getRawAxis(Constants.Buttons.LST_AXS_LJOYSTICKY); // left stick x-axis
+    double theta = -xboxController.getRawAxis(Constants.Buttons.LST_AXS_RJOYSTICKX); // right stick x-axis
 
     // square the inputs
     y = y * Math.abs(y);
@@ -78,7 +63,7 @@ public class TeleopDrive extends Command {
     }
     theta = Math.abs(theta) > Constants.Swerve.kDeadband ? theta : 0.0;
 
-    if (!m_chassis.getFieldRelative()) {
+    if (!chassis.getFieldRelative()) {
       y = -y;
       x = -x;
     }
@@ -89,10 +74,10 @@ public class TeleopDrive extends Command {
     //TODO: why doesn't theta get scaled as well??
     theta = turningLimiter.calculate(theta) * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond;
 
-    m_chassis.drive(x,y,theta);
+    chassis.drive(x,y,theta);
 
     if (Constants.debugMode) {
-      m_chassis.listener();
+      chassis.listener();
     }
   }
 
@@ -103,7 +88,7 @@ public class TeleopDrive extends Command {
    */
   @Override
   public void end(boolean interrupted) {
-    m_chassis.stopModules();
+    chassis.stopModules();
   }
 
   /**
