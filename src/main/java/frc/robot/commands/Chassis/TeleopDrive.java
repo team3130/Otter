@@ -5,7 +5,7 @@
 package frc.robot.commands.Chassis;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.Chassis;
@@ -27,7 +27,8 @@ public class TeleopDrive extends Command {
   /**
    * The controller that we use to drive
    */
-  private final XboxController m_xboxController;
+  private final Joystick joystickPose;
+  private final Joystick joystickHolonomic;
 
   /**
    * Creates a new TeleopDrive command
@@ -36,14 +37,15 @@ public class TeleopDrive extends Command {
    * @param chassis The subsystem used by this command.
    * @param xboxController the controller that we use to drive
    */
-  public TeleopDrive(Chassis chassis, XboxController xboxController) {
+  public TeleopDrive(Chassis chassis, Joystick joystick0, Joystick joystick1) {
     m_chassis = chassis;
     // Use addRequirements() here to declare subsystem dependencies.
     m_requirements.add(chassis);
     xLimiter = new SlewRateLimiter(Constants.Swerve.kMaxAccelerationDrive);
     yLimiter = new SlewRateLimiter(Constants.Swerve.kMaxAccelerationDrive);
     turningLimiter = new SlewRateLimiter(Constants.Swerve.kMaxAccelerationAngularDrive);
-    m_xboxController = xboxController;
+    joystickPose = joystick0;
+    joystickHolonomic = joystick1;
   }
 
   /**
@@ -61,9 +63,9 @@ public class TeleopDrive extends Command {
    */
   @Override
   public void execute() {
-    double y = m_xboxController.getRawAxis(Constants.Buttons.LST_AXS_LJOYSTICKX); // left stick y-axis (y-axis is inverted)
-    double x = m_xboxController.getRawAxis(Constants.Buttons.LST_AXS_LJOYSTICKY); // left stick x-axis
-    double theta = -m_xboxController.getRawAxis(Constants.Buttons.LST_AXS_RJOYSTICKX); // right stick x-axis
+    double y = joystickPose.getRawAxis(Constants.Buttons.LST_AXS_LJOYSTICKX); // left stick y-axis (y-axis is inverted)
+    double x = joystickPose.getRawAxis(Constants.Buttons.LST_AXS_LJOYSTICKY); // left stick x-axis
+    double theta = -joystickHolonomic.getRawAxis(Constants.Buttons.LST_AXS_RJOYSTICKX); // right stick x-axis
 
     // square the inputs
     y = y * Math.abs(y);
