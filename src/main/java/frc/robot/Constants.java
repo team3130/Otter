@@ -64,6 +64,10 @@ public final class Constants {
 
     public static double kCameraFOV = 0; // TODO: Find real value
     public static final double AprilTagTrustDistance = 5;
+    public static final int speakerTargetRedFiducialID = 4;
+    public static final int speakerTargetBlueFiducialID = 7;
+    public static final int ampTargetRedFiducialID = 5;
+    public static final int ampTargetBlueFiducialID = 6;
   }
 
   /**

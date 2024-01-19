@@ -19,14 +19,13 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.sensors.Camera;
 import frc.robot.sensors.Navx;
 import frc.robot.swerve.SwerveModule;
 
 import java.util.Arrays;
 
 /**
- * Chassis is the drivetrain subsystem of our bot. Our physical chassis is a swerve drive, 
+ * Chassis is the drivetrain subsystem of our bot. Our physical chassis is a swerve drive,
  * so we use wpilib SwerveDriveKinematics and SwerveDrivePoseEstimator as opposed to Differential Drive objects
  */
 public class Chassis extends SubsystemBase {
@@ -35,26 +34,26 @@ public class Chassis extends SubsystemBase {
     private final SwerveModule[] modules; // list of four swerve modules
     private final Navx Gyro = Navx.GetInstance(); // initialize Navx
     private boolean fieldRelative = true; // field relative or robot oriented drive
-    private final Camera m_limelight;
+    private final CameraSubsystem cameraSubsystem;
     private double maxSpeedRead = 0; // updated periodically with the maximum speed that has been read on any of the swerve modules
     private final Field2d field; // sendable that gets put on shuffleboard with the auton trajectory and the robots current position
     private final GenericEntry n_fieldOrriented; // comp network table entry for whether field oriented drivetrain
 
     /**
      * Makes a chassis that starts at 0, 0, 0
-     * @param limelight the limelight object that we can use for updating odometry
+     * the limelight object that we can use for updating odometry
      */
-    public Chassis(Camera limelight){
-      this (new Pose2d(), new Rotation2d(), limelight);
+    public Chassis(CameraSubsystem cameraSubsystem){
+        this (new Pose2d(), new Rotation2d(), cameraSubsystem);
     }
 
     /**
      * Makes a chassis with a starting position
      * @param startingPos the initial position to say that the robot is at
      * @param startingRotation the initial rotation of the bot
-     * @param limelight the limelight object which is used for updating odometry
+     * the limelight object which is used for updating odometry
      */
-    public Chassis(Pose2d startingPos, Rotation2d startingRotation, Camera limelight) {
+    public Chassis(Pose2d startingPos, Rotation2d startingRotation, CameraSubsystem cameraSubsystem1) {
         kinematics = new SwerveDriveKinematics(Constants.Swerve.moduleTranslations);
 
         modules = new SwerveModule[4];
@@ -66,31 +65,31 @@ public class Chassis extends SubsystemBase {
         // odometry wrapper class that has functionality for cameras that report position with latency
         odometry = new SwerveDrivePoseEstimator(kinematics, startingRotation, generatePoses(), startingPos);
 
-        m_limelight = limelight;
+        cameraSubsystem = cameraSubsystem1;
 
         field = new Field2d();
         Shuffleboard.getTab("Comp").add("field", field);
         n_fieldOrriented = Shuffleboard.getTab("Comp").add("field orriented", false).getEntry();
-  }
-
-    /**
-    * If the PID controllers of the {@link SwerveModule}'s are all done
-    * @return whether the wheels are zereod/PID controllers are done
-    */
-    public boolean turnToAnglePIDIsDone() {
-        return modules[Constants.Modules.leftFront].PIDisDone() &&
-        modules[Constants.Modules.leftBack].PIDisDone() &&
-        modules[Constants.Modules.rightFront].PIDisDone() &&
-        modules[Constants.Modules.rightBack].PIDisDone();
     }
 
     /**
-    * Resets odometry
-    * <p>Resets navx</p>
-    * <p>Resets relative encoders to be what the absolute encoders are</p>
-    * <p>Hard reset of the odometry object</p>
+     * If the PID controllers of the {@link SwerveModule}'s are all done
+     * @return whether the wheels are zereod/PID controllers are done
+     */
+    public boolean turnToAnglePIDIsDone() {
+        return modules[Constants.Modules.leftFront].PIDisDone() &&
+                modules[Constants.Modules.leftBack].PIDisDone() &&
+                modules[Constants.Modules.rightFront].PIDisDone() &&
+                modules[Constants.Modules.rightBack].PIDisDone();
+    }
+
+    /**
+     * Resets odometry
+     * <p>Resets navx</p>
+     * <p>Resets relative encoders to be what the absolute encoders are</p>
+     * <p>Hard reset of the odometry object</p>
      * @param pose the position to reset odometry to
-    */
+     */
     public void resetOdometry(Pose2d pose) {
         resetEncoders();
         Navx.resetNavX();
@@ -101,7 +100,7 @@ public class Chassis extends SubsystemBase {
      * Flip-flops between field relative and bot relative swerve drive
      */
     public void flipFieldRelative() {
-      fieldRelative = !fieldRelative;
+        fieldRelative = !fieldRelative;
     }
 
     /**
@@ -109,12 +108,12 @@ public class Chassis extends SubsystemBase {
      * @return bool if field relative
      */
     public boolean getFieldRelative() {
-      return fieldRelative;
+        return fieldRelative;
     }
 
     // Zeros the Navx's heading
     public void zeroHeading(){
-      Navx.resetNavX();
+        Navx.resetNavX();
     }
 
     /**
@@ -122,7 +121,7 @@ public class Chassis extends SubsystemBase {
      * @return the rotation of the bot in degrees
      */
     public double getHeading() {
-      return Math.IEEEremainder(Navx.getAngle(), 360);
+        return Math.IEEEremainder(Navx.getAngle(), 360);
     }
 
     /**
@@ -130,7 +129,7 @@ public class Chassis extends SubsystemBase {
      * @return the bot rotation
      */
     public Rotation2d getRotation2d(){
-      return odometry.getEstimatedPosition().getRotation();
+        return odometry.getEstimatedPosition().getRotation();
     }
 
     /**
@@ -151,7 +150,7 @@ public class Chassis extends SubsystemBase {
      * Also provides a timestamp that the update occurred
      */
     public void updateOdometryFromSwerve() {
-      odometry.updateWithTime(Timer.getFPGATimestamp(), Navx.getRotation(), generatePoses());
+        odometry.updateWithTime(Timer.getFPGATimestamp(), Navx.getRotation(), generatePoses());
     }
 
     // Update odometry with swerve drive
@@ -171,20 +170,20 @@ public class Chassis extends SubsystemBase {
         field.setRobotPose(odometry.getEstimatedPosition());
     }
 
-  // Stops the devices connected to this subsystem
-  public void stopModules(){
-      modules[Constants.Modules.leftFront].stop();
-      modules[Constants.Modules.leftBack].stop();
-      modules[Constants.Modules.rightFront].stop();
-      modules[Constants.Modules.rightBack].stop();
-  }
+    // Stops the devices connected to this subsystem
+    public void stopModules(){
+        modules[Constants.Modules.leftFront].stop();
+        modules[Constants.Modules.leftBack].stop();
+        modules[Constants.Modules.rightFront].stop();
+        modules[Constants.Modules.rightBack].stop();
+    }
 
     /**
      * Getter for geometry
      * @return the geometry of the swerve modules
      */
     public SwerveDriveKinematics getKinematics() {
-      return kinematics;
+        return kinematics;
     }
 
     /**
@@ -192,12 +191,12 @@ public class Chassis extends SubsystemBase {
      * @param desiredStates the states to set the modules to
      */
     public void setModuleStates(SwerveModuleState[] desiredStates) {
-      SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
+        SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
 
-      modules[Constants.Modules.leftFront].setDesiredState(desiredStates[Constants.Modules.leftFront]);
-      modules[Constants.Modules.leftBack].setDesiredState(desiredStates[Constants.Modules.leftBack]);
-      modules[Constants.Modules.rightFront].setDesiredState(desiredStates[Constants.Modules.rightFront]);
-      modules[Constants.Modules.rightBack].setDesiredState(desiredStates[Constants.Modules.rightBack]);
+        modules[Constants.Modules.leftFront].setDesiredState(desiredStates[Constants.Modules.leftFront]);
+        modules[Constants.Modules.leftBack].setDesiredState(desiredStates[Constants.Modules.leftBack]);
+        modules[Constants.Modules.rightFront].setDesiredState(desiredStates[Constants.Modules.rightFront]);
+        modules[Constants.Modules.rightBack].setDesiredState(desiredStates[Constants.Modules.rightBack]);
     }
 
     /**
@@ -205,9 +204,9 @@ public class Chassis extends SubsystemBase {
      * @param setpoint angle to spin the motors to
      */
     public void turnToAngle(double setpoint) {
-      for (SwerveModule module : modules) {
-          module.turnToAngle(setpoint);
-      }
+        for (SwerveModule module : modules) {
+            module.turnToAngle(setpoint);
+        }
     }
 
     /**
