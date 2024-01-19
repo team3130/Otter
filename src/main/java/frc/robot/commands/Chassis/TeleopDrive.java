@@ -63,9 +63,9 @@ public class TeleopDrive extends Command {
    */
   @Override
   public void execute() {
-    double y = joystickPose.getRawAxis(Constants.Buttons.LST_AXS_LJOYSTICKX); // left stick y-axis (y-axis is inverted)
-    double x = joystickPose.getRawAxis(Constants.Buttons.LST_AXS_LJOYSTICKY); // left stick x-axis
-    double theta = -joystickHolonomic.getRawAxis(Constants.Buttons.LST_AXS_RJOYSTICKX); // right stick x-axis
+    double y = joystickPose.getRawAxis(0); // left stick y-axis (y-axis is inverted)
+    double x = joystickPose.getRawAxis(1); // left stick x-axis
+    double theta = -joystickHolonomic.getRawAxis(0); // right stick x-axis
 
     // square the inputs
     y = y * Math.abs(y);

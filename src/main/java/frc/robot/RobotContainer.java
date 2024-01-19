@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -35,8 +36,8 @@ public class RobotContainer {
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final Camera limelight = new Camera();
   private final Chassis chassis = new Chassis(limelight);
-  private final XboxController driverController = new XboxController(0);
-  private final XboxController operatorController = new XboxController(1);
+  private final Joystick controller1 = new Joystick(0);
+  private final Joystick controller2 = new Joystick(1);
 
   // container for the robot containing subsystems, OI devices, and commands
   public RobotContainer() {
@@ -44,7 +45,7 @@ public class RobotContainer {
     exportShuffleBoardData(); // export ShuffleBoardData
 
     // Default commands running in the background when other commands not scheduled
-    chassis.setDefaultCommand(new TeleopDrive(chassis, driverController));
+    chassis.setDefaultCommand(new TeleopDrive(chassis, controller1, controller2));
   }
 
   public void periodic() {
@@ -72,10 +73,10 @@ public class RobotContainer {
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed, cancelling on release.
     // driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
-    new POVButton(driverController, Constants.Buttons.LST_POV_N).whileTrue(new ZeroEverything(chassis));
-    new POVButton(driverController, Constants.Buttons.LST_POV_W).whileTrue(new ZeroWheels(chassis));
+    new POVButton(controller2, 2).whileTrue(new ZeroEverything(chassis));
+    //new POVButton(driverController, Constants.Buttons.LST_POV_W).whileTrue(new ZeroWheels(chassis));
 
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new FlipFieldOriented(chassis));
+   // new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new FlipFieldOriented(chassis));
 
     SmartDashboard.putData(new FlipFieldOriented(chassis));
   }
