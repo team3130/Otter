@@ -31,7 +31,7 @@ public class CameraSubsystem extends SubsystemBase {
   protected PhotonCamera camera = new PhotonCamera("cam");
   private static final ShuffleboardTab tab = Shuffleboard.getTab("PhotonCamera");
   AprilTagFieldLayout aprilTagFieldLayout;
-  Pose2d targetPose = new Pose2d(0, 0, Rotation2d.fromRadians(0));
+  Pose2d targetPose = new Pose2d(16.58, 5.55, Rotation2d.fromRadians(0));
   Transform2d cameraToRobot = new Transform2d(3, 0, Rotation2d.fromRadians(0));
   private double previousPipelineTimestamp = 0;
 
