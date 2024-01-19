@@ -63,11 +63,6 @@ public class TeleopDrive extends Command {
     }
     theta = Math.abs(theta) > Constants.Swerve.kDeadband ? theta : 0.0;
 
-    if (!chassis.getFieldRelative()) {
-      y = -y;
-      x = -x;
-    }
-
     // apply slew rate limiter which also converts to m/s and rad.s
     x = xLimiter.calculate(x * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
     y = yLimiter.calculate(y * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
