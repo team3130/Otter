@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -11,6 +12,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.Timer;
@@ -38,6 +40,17 @@ public class Chassis extends SubsystemBase {
     private double maxSpeedRead = 0; // updated periodically with the maximum speed that has been read on any of the swerve modules
     private final Field2d field; // sendable that gets put on shuffleboard with the auton trajectory and the robots current position
     private final GenericEntry n_fieldOrriented; // comp network table entry for whether field oriented drivetrain
+    private ProfiledPIDController targetController;
+    private TrapezoidProfile.Constraints targetConstraints;
+    private final double targetP = 0d;
+    private final double targetI = 0d;
+    private final double targetD = 0d;
+    private double targetMaxVelo = Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond; //TODO real
+    private double targetMaxAcc = Constants.Swerve.kMaxAccelerationDrive; //TODO real
+
+    private boolean isTryingToTarget = false;
+
+
 
     /**
      * Makes a chassis that starts at 0, 0, 0
@@ -70,8 +83,32 @@ public class Chassis extends SubsystemBase {
         field = new Field2d();
         Shuffleboard.getTab("Comp").add("field", field);
         n_fieldOrriented = Shuffleboard.getTab("Comp").add("field orriented", false).getEntry();
+
+        targetConstraints = new TrapezoidProfile.Constraints(targetMaxVelo, targetMaxAcc);
+        targetController = new ProfiledPIDController(targetP, targetI, targetD, targetConstraints);
+        targetController.enableContinuousInput(-2*Math.PI,2*Math.PI);
+        targetController.setTolerance(0.05);
     }
 
+    public void resetTargetController() {
+        targetController.reset(cameraSubsystem.getTargetYaw());
+        targetController.setGoal(0);
+    }
+    public double goToTargetPower() {
+        return targetController.calculate(cameraSubsystem.getTargetYaw());
+    }
+    public boolean targetControllerDone(){
+        return targetController.atSetpoint();
+    }
+    public boolean isTryingToTarget(){
+        return isTryingToTarget;
+    }
+    public void setTryingToTargetTrue(){
+        isTryingToTarget=true;
+    }
+    public void setTryingToTargetFalse(){
+        isTryingToTarget=false;
+    }
     /**
      * If the PID controllers of the {@link SwerveModule}'s are all done
      * @return whether the wheels are zereod/PID controllers are done

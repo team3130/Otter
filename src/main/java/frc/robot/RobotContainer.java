@@ -39,7 +39,7 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
 
-    chassis.setDefaultCommand(new TeleopDrive(chassis, driverGamepad));
+    chassis.setDefaultCommand(new TeleopDrive(chassis, driverGamepad, cameraSubsystem));
     configureBindings();
 
     vomitShuffleBoardData();
@@ -76,10 +76,8 @@ public class RobotContainer {
     new POVButton(driverGamepad, Constants.Buttons.LST_POV_W).whileTrue(new ZeroWheels(chassis));
     m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
     new POVButton(driverGamepad, Constants.Buttons.LST_POV_N).whileTrue(new ZeroEverything(chassis));
-    new JoystickButton(driverGamepad, Constants.Buttons.LST_BTN_B).whileTrue(new FlipFieldOriented(chassis));
-    new JoystickButton(driverGamepad, Constants.Buttons.LST_BTN_LBUMPER).whileTrue(new TrackSpeaker(chassis, cameraSubsystem, driverGamepad));
-    new JoystickButton(driverGamepad, Constants.Buttons.LST_BTN_RBUMPER).whileTrue(new TrackAmp(chassis, cameraSubsystem, driverGamepad));
-    SmartDashboard.putData(new FlipFieldOriented(chassis));
+    new JoystickButton(driverGamepad, Constants.Buttons.LST_BTN_X).whileTrue(new EnableTargeting(chassis));
+    new JoystickButton(driverGamepad, Constants.Buttons.LST_BTN_A).whileTrue(new TargetingPressed(chassis));
   }
 
   public Command resetEverything() {
