@@ -60,9 +60,6 @@ public class RobotContainer {
 
     SendableRegistry.add(autoChooser, "arm");
     SmartDashboard.putData("Auto Chooser", autoChooser);
-
-    //named commands
-    NamedCommands.registerCommand("Flippy", new FlipFieldOriented(chassis));
   }
 
   public Command pick() {
@@ -109,7 +106,6 @@ public class RobotContainer {
     // driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
     new POVButton(driverController, Constants.Buttons.LST_POV_N).whileTrue(new ZeroEverything(chassis));
     new POVButton(driverController, Constants.Buttons.LST_POV_W).whileTrue(new ZeroWheels(chassis));
-
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new FlipFieldOriented(chassis));
 
     SmartDashboard.putData(new FlipFieldOriented(chassis));

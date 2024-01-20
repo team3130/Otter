@@ -29,6 +29,7 @@ import frc.robot.sensors.Navx;
 import frc.robot.swerve.SwerveModule;
 
 import java.util.Arrays;
+import java.util.function.Consumer;
 
 /**
  * Chassis is the drivetrain subsystem of our bot. Our physical chassis is a swerve drive, 
@@ -83,8 +84,8 @@ public class Chassis extends SubsystemBase {
                 this::getPose2d, // Robot pose supplier
                 this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
                 this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-                //this::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
-                (speeds) -> drive(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond, true),
+                // drive(getRobotRelativeSpeeds().vxMetersPerSecond, getRobotRelativeSpeeds().vyMetersPerSecond, getRobotRelativeSpeeds().omegaRadiansPerSecond, false), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+                (speeds) -> drive(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond, false),
                 new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
                         // TODO: change constants below
                         new PIDConstants(3, 0, 0), // Translation PID constants
@@ -265,9 +266,10 @@ public class Chassis extends SubsystemBase {
 
     private SwerveModuleState[] getModuleStates() {
         SwerveModuleState[] states = new SwerveModuleState[4];
-        for (int i = 0; i < 4; i++) {
-            states[i] = modules[i].getState();
-        }
+        states[0] = modules[Constants.Modules.leftFront].getState();
+        states[1] = modules[Constants.Modules.leftBack].getState();
+        states[2] = modules[Constants.Modules.rightFront].getState();
+        states[3] = modules[Constants.Modules.rightBack].getState();
         return states;
     }
 
@@ -317,20 +319,6 @@ public class Chassis extends SubsystemBase {
         for (SwerveModule module : modules) {
             module.resetEncoders();
         }
-    }
-
-    /**
-     * Sets the bot to be field relative
-     */
-    public void setFieldRelative() {
-        fieldRelative = true;
-    }
-
-    /**
-     * Sets the bot to robot oriented
-     */
-    public void setRobotOriented() {
-        fieldRelative = false;
     }
 
     /**
@@ -444,19 +432,31 @@ public class Chassis extends SubsystemBase {
     /**
      * The same as {@link #drive(double, double, double)} except you pass in if you are field relative or not.
      * This method will drive the swerve modules based to x, y and theta vectors.
-     * @param x velocity in the x dimension m/s
-     * @param y velocity in the y dimension m/s
-     * @param theta the angular (holonomic) speed to drive the swerve modules at
+     *
+     * @param x             velocity in the x dimension m/s
+     * @param y             velocity in the y dimension m/s
+     * @param theta         the angular (holonomic) speed to drive the swerve modules at
      * @param fieldRelative whether to use
+     * @return
      */
+    /*
+    public Consumer<ChassisSpeeds> drive(double x, double y, double theta, boolean fieldRelative) {
+        if (fieldRelative) {
+            setModuleStates(kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(x, y, theta, getRotation2d())));
+        } else {
+            setModuleStates(kinematics.toSwerveModuleStates(getRobotRelativeSpeeds()));
+        }
+        return null;
+    }
+    */
     public void drive(double x, double y, double theta, boolean fieldRelative) {
         if (fieldRelative) {
             setModuleStates(kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(x, y, theta, getRotation2d())));
-        }
-        else {
+        } else {
             setModuleStates(kinematics.toSwerveModuleStates(new ChassisSpeeds(x, y, theta)));
         }
     }
+
 
     /**
      * Our main method to drive using three variables. Locked to field relative or robot oriented based off of {@link #fieldRelative}.
