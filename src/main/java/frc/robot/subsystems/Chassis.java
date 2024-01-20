@@ -79,6 +79,7 @@ public class Chassis extends SubsystemBase {
         field = new Field2d();
         Shuffleboard.getTab("Comp").add("field", field);
         n_fieldOrriented = Shuffleboard.getTab("Comp").add("field orriented", false).getEntry();
+<<<<<<< Updated upstream
 
         AutoBuilder.configureHolonomic(
                 this::getPose2d, // Robot pose supplier
@@ -140,6 +141,9 @@ public class Chassis extends SubsystemBase {
         return optimizedState;
     }
      */
+=======
+    }
+>>>>>>> Stashed changes
 
     /**
     * If the PID controllers of the {@link SwerveModule}'s are all done
@@ -245,12 +249,12 @@ public class Chassis extends SubsystemBase {
     }
 
   // Stops the devices connected to this subsystem
-  public void stopModules(){
+    public void stopModules(){
       modules[Constants.Modules.leftFront].stop();
       modules[Constants.Modules.leftBack].stop();
       modules[Constants.Modules.rightFront].stop();
       modules[Constants.Modules.rightBack].stop();
-  }
+    }
 
     /**
      * Getter for geometry
@@ -467,5 +471,4 @@ public class Chassis extends SubsystemBase {
     public void drive(double x, double y, double theta) {
         drive(x, y, theta, getFieldRelative());
     }
-
 }
