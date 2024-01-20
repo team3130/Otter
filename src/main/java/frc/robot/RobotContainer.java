@@ -63,6 +63,13 @@ public class RobotContainer {
     NamedCommands.registerCommand("Flippy", new FlipFieldOriented(chassis));
   }
 
+  public Command getSelectedAuto() {
+    return autoChooser.getSelected();
+  }
+
+  public Command getPullOut() {
+    return new PathPlannerAuto("Pull out");
+  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -71,14 +78,6 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
     return Autos.exampleAuto(m_exampleSubsystem);
-  }
-
-  public Command getAutoCommand() {
-    return new PathPlannerAuto("Example Auto");
-  }
-
-  public Command getSelectedAuto() {
-    return autoChooser.getSelected();
   }
 
   public void periodic() {
