@@ -28,6 +28,8 @@ public class CameraSubsystem extends SubsystemBase {
   private int speakerTargetFiducialID;
   private int ampTargetFiducialID;
 
+  private int fiducialID = 0;
+
   /**
    * Constructs a new Limelight object.
    * The limelight object will be full of null values if Constants.useAprilTags is false.
@@ -37,6 +39,8 @@ public class CameraSubsystem extends SubsystemBase {
     // Shuffleboard.getTab("Camerapls").add("target", target);
     tab.addBoolean("hasTarget", this::hasTarget);
     tab.addDouble("Target Yaw", this::getTargetYaw);
+    tab.addInteger("fiducial ID", this::getFiducialID);
+
     // SuppliedValueWidget<Double> targetYaw = tab.addDouble("Target Yaw", this::getTargetYaw);
     // tab.addDouble("Target Yaw", this::getTargetYaw).withPosition(2, 0).withSize(6, 4)
 
@@ -68,10 +72,12 @@ public class CameraSubsystem extends SubsystemBase {
     if (!hasTarget()) {
       return null;
     } else {
+      PhotonPipelineResult result = camera.getLatestResult();
+      double yaw = result.getBestTarget().getYaw();
       return PhotonUtils.estimateFieldToRobot(
               Constants.AprilTags.CAMERA_HEIGHT_METERS, Constants.AprilTags.TARGET_HEIGHT_METERS,
               Constants.AprilTags.CAMERA_PITCH_RADIANS, Constants.AprilTags.kTargetPitch,
-              Rotation2d.fromDegrees(-getTarget().getYaw()), Navx.getRotation(), targetPose, cameraToRobot);
+              Rotation2d.fromDegrees(yaw), Navx.getRotation(), targetPose, cameraToRobot);
     }
   }
 
@@ -82,31 +88,32 @@ public class CameraSubsystem extends SubsystemBase {
     return result.hasTargets();
   }
 
+
   public double getTargetYaw() {
     if (!hasTarget()) {
-      return 69.0; //Why bro???
+      return -400.0;
     } else {
-      Rotation2d targetYaw = PhotonUtils.getYawToPose(findRobotPose(), targetPose);
-      return targetYaw.getRadians();
+      PhotonPipelineResult result = camera.getLatestResult();
+      if (result.getBestTarget() != null && result.getBestTarget().getYaw() != -400.0) {
+        //result.getBestTarget().getYaw();
+        Rotation2d targetYaw = PhotonUtils.getYawToPose(findRobotPose(), targetPose);
+        return targetYaw.getRadians();
+      }
     }
+    return -400d;
   }
 
-  public double getSpeakerTargetYaw() {
-    Rotation2d targetYaw = PhotonUtils.getYawToPose(findRobotPose(), aprilTagFieldLayout.getTagPose(speakerTargetFiducialID).get().toPose2d());
-    return targetYaw.getRadians();
 
-  }
 
-  public double getAmpTargetYaw() {
-    Rotation2d targetYaw = PhotonUtils.getYawToPose(findRobotPose(), aprilTagFieldLayout.getTagPose(ampTargetFiducialID).get().toPose2d());
-    return targetYaw.getRadians();
-
+  public int getFiducialID(){
+    return fiducialID;
   }
 
   public void initSendable(SendableBuilder builder) {
     builder.setSmartDashboardType("Camera");
     builder.addBooleanProperty("hasTarget", this::hasTarget, null);
     builder.addDoubleProperty("targetYaw", this::getTargetYaw, null);
+    builder.addIntegerProperty("fiducial", this::getFiducialID, null);
   }
 
   // This method will be called once per scheduler run
@@ -114,10 +121,10 @@ public class CameraSubsystem extends SubsystemBase {
   public void periodic() {
     PhotonPipelineResult result = camera.getLatestResult();
     double resultTimestamp = result.getTimestampSeconds();
-    if (resultTimestamp != previousPipelineTimestamp && result.hasTargets()) {
+    if (resultTimestamp != previousPipelineTimestamp && result.hasTargets() && result.getBestTarget() != null) {
       previousPipelineTimestamp = resultTimestamp;
       PhotonTrackedTarget target = result.getBestTarget();
-      int fiducialID = getTarget().getFiducialId();
+      fiducialID = result.getBestTarget().getFiducialId();
     }
   }
 
