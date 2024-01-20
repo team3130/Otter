@@ -46,6 +46,7 @@ public class Chassis extends SubsystemBase {
     private final GenericEntry n_fieldOrriented; // comp network table entry for whether field oriented drivetrain
 
     Rotation2d angleSetpoint = null;
+
     /**
      * Makes a chassis that starts at 0, 0, 0
      * @param limelight the limelight object that we can use for updating odometry
@@ -86,8 +87,8 @@ public class Chassis extends SubsystemBase {
                 (speeds) -> drive(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond, true),
                 new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
                         // TODO: change constants below
-                        new PIDConstants(1.4, 0.05, 0.015), // Translation PID constants
-                        new PIDConstants(1.4, 0.05, 0.015), // Rotation PID constants
+                        new PIDConstants(3, 0, 0), // Translation PID constants
+                        new PIDConstants(7, 0, 0), // Rotation PID constants
                         3, // Max module speed, in m/s
                         0.35, // Drive base radius in meters. Distance from robot center to furthest module.
                         new ReplanningConfig() // Default path replanning config. See the API for the options here

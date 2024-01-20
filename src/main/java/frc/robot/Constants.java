@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 
 /**
@@ -131,6 +132,35 @@ public final class Constants {
     public final static double[] kI_Swerve = new double[] {kI_FrontLeft, kI_BackLeft, kI_FrontRight, kI_BackRight};
     public final static double[] kD_Swerve = new double[] {kD_FrontLeft, kD_BackLeft, kD_FrontRight, kD_BackRight};
     public final static double[] kF_Swerve = new double[] {kF_FrontLeft, kF_BackLeft, kF_FrontRight, kF_BackRight};
+  }
+
+  public static class Auton {
+    /** Chassis auton */
+    public static final double kPXController = 3;
+    public static final double kIXController = 0;
+    public static final double kDXController = 0;
+    public static final double kPYController = 3;
+    public static final double kIYController = 0;
+    public static final double kDYController = 0;
+    public static final double kPThetaController = 7;
+    public static final double kIThetaController = 0;
+    public static final double kDThetaController = 0;
+
+    public static final double kMaxAngularAccelerationRadiansPerSecondSquared = Math.PI; // max spiny acceleration
+    public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2 * 2 * Math.PI; // max spiny velocity
+    // real max spiny speed (multiply by some number for safety)
+    public static final double kMaxAngularSpeedRadiansPerSecond =  kPhysicalMaxAngularSpeedRadiansPerSecond;
+    // spiny PID constraints
+    public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
+            kMaxAngularSpeedRadiansPerSecond, kMaxAngularAccelerationRadiansPerSecondSquared);
+
+    /**
+     * Length and width as measured as distances between center of wheels
+     */
+    // the left-to-right distance between the drivetrain wheels, should be measured from center to center
+    public static final double trackWidth_m = 0.61;
+    // the front-to-back distance between the drivetrain wheels, should be measured from center to center
+    public static final double wheelBase_m = 0.61;
   }
 
   public static class Modules {
