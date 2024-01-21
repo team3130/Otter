@@ -20,6 +20,8 @@ public final class Constants {
   public static final boolean debugMode = true; //TODO: make false after testing
   public static final boolean kNavxReversed = true;
 
+  public static final int PNM_INTAKE_ACTUATOR = 0;
+
   public static class CAN {
     public final static int leftFrontSteer = 2;
     public final static int leftFrontDrive = 3;
@@ -35,6 +37,10 @@ public final class Constants {
     public final static int CANCoderBottomRight = 11;
     public final static int CANCoderTopLeft = 12;
     public final static int CANCoderBottomLeft = 13;
+
+    public final static int intakeMotor = 14;
+
+    public final static int intakesolenoid = 15;
 
     // Order should match side
     public static final int[] turningID = new int[] {leftFrontSteer, leftBackSteer, rightFrontSteer, rightBackSteer};
