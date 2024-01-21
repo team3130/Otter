@@ -11,10 +11,7 @@ import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveModulePosition;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -84,8 +81,9 @@ public class Chassis extends SubsystemBase {
                 this::getPose2d, // Robot pose supplier
                 this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
                 this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-                // drive(getRobotRelativeSpeeds().vxMetersPerSecond, getRobotRelativeSpeeds().vyMetersPerSecond, getRobotRelativeSpeeds().omegaRadiansPerSecond, false), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
-                (speeds) -> drive(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond, false),
+                this::driveRobotRelative,
+                // drivey(getRobotRelativeSpeeds().vxMetersPerSecond, getRobotRelativeSpeeds().vyMetersPerSecond, getRobotRelativeSpeeds().omegaRadiansPerSecond, false), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+                //(speeds) -> drive(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond, false),
                 new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
                         // TODO: change constants below
                         new PIDConstants(3, 0, 0), // Translation PID constants
@@ -108,6 +106,30 @@ public class Chassis extends SubsystemBase {
                 this // Reference to this subsystem to set requirements
         );
     }
+
+    public void driveRobotRelative(ChassisSpeeds speeds){
+        drive(speeds.vxMetersPerSecond,speeds.vyMetersPerSecond,speeds.omegaRadiansPerSecond,false);
+    }
+
+    public void drive(double x, double y, double theta, boolean fieldRelative) {
+        if (fieldRelative) {
+            setModuleStates(kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(x, y, theta, getRotation2d())));
+        } else {
+            setModuleStates(kinematics.toSwerveModuleStates(new ChassisSpeeds(x, y, theta)));
+        }
+    }
+
+
+    /**
+     * Our main method to drive using three variables. Locked to field relative or robot oriented based off of {@link #fieldRelative}.
+     * @param x the velocity in the x dimension m/s
+     * @param y the velocity in the y dimension m/s
+     * @param theta the angular (holonomic) speed of the bot
+     */
+    public void drive(double x, double y, double theta) {
+        drive(x, y, theta, getFieldRelative());
+    }
+
 
     // I genuinely dk
     // also written to be runVelocity
@@ -203,6 +225,8 @@ public class Chassis extends SubsystemBase {
 
     // method to reset the robot's odometry to the given pose
     public void resetPose(Pose2d newPose) {
+        // TODO: try the first option
+        odometry.resetPosition(new Rotation2d(), generatePoses(), new Pose2d());
         odometry.resetPosition(getRotation2d(), generatePoses(), newPose);
     }
 
@@ -231,7 +255,6 @@ public class Chassis extends SubsystemBase {
     public void updateOdometery() {
         updateOdometryFromSwerve();
     }
-
 
     /**
      * subsystem looped call made by the scheduler.
@@ -439,33 +462,14 @@ public class Chassis extends SubsystemBase {
      * @param fieldRelative whether to use
      * @return
      */
-    /*
-    public Consumer<ChassisSpeeds> drive(double x, double y, double theta, boolean fieldRelative) {
+
+    public Consumer<ChassisSpeeds> drivey(double x, double y, double theta, boolean fieldRelative) {
         if (fieldRelative) {
             setModuleStates(kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(x, y, theta, getRotation2d())));
         } else {
             setModuleStates(kinematics.toSwerveModuleStates(getRobotRelativeSpeeds()));
         }
         return null;
-    }
-    */
-    public void drive(double x, double y, double theta, boolean fieldRelative) {
-        if (fieldRelative) {
-            setModuleStates(kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(x, y, theta, getRotation2d())));
-        } else {
-            setModuleStates(kinematics.toSwerveModuleStates(new ChassisSpeeds(x, y, theta)));
-        }
-    }
-
-
-    /**
-     * Our main method to drive using three variables. Locked to field relative or robot oriented based off of {@link #fieldRelative}.
-     * @param x the velocity in the x dimension m/s
-     * @param y the velocity in the y dimension m/s
-     * @param theta the angular (holonomic) speed of the bot
-     */
-    public void drive(double x, double y, double theta) {
-        drive(x, y, theta, getFieldRelative());
     }
 
 }
