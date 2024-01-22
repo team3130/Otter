@@ -6,10 +6,9 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Chassis;
-import frc.robot.subsystems.ExampleSubsystem;
 
 /** An example command that uses an example subsystem. */
-public class EnableTargeting extends Command {
+public class DisableTargeting extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final Chassis chassis;
 
@@ -18,7 +17,7 @@ public class EnableTargeting extends Command {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public EnableTargeting(Chassis subsystem) {
+  public DisableTargeting(Chassis subsystem) {
     chassis = subsystem;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(chassis);
@@ -27,12 +26,7 @@ public class EnableTargeting extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if(chassis.isTryingToTarget()){
-      chassis.setTryingToTargetFalse();
-    }
-    else{
-     chassis.setTryingToTargetTrue();
-     chassis.resetTargetController();}
+    chassis.setTryingToTargetFalse();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

@@ -78,7 +78,9 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
 
+
     CommandScheduler.getInstance().cancelAll();
+    CommandScheduler.getInstance().schedule(m_robotContainer.dontTarget());
     CommandScheduler.getInstance().schedule(m_robotContainer.resetEverything());
   }
 

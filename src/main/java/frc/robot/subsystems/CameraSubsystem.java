@@ -94,13 +94,14 @@ public class CameraSubsystem extends SubsystemBase {
       return -400.0;
     } else {
       PhotonPipelineResult result = camera.getLatestResult();
-      if (result.getBestTarget() != null && result.getBestTarget().getYaw() != -400.0) {
-        //result.getBestTarget().getYaw();
-        Rotation2d targetYaw = PhotonUtils.getYawToPose(findRobotPose(), targetPose);
-        return targetYaw.getRadians();
+      if (result.getBestTarget() != null && result.getBestTarget().getPitch() != -400.0) {
+        return -Math.toRadians(result.getBestTarget().getPitch());
       }
     }
     return -400d;
+  }
+  public double getTargetDegrees(){
+    return Math.toDegrees(getTargetYaw());
   }
 
 
@@ -113,7 +114,7 @@ public class CameraSubsystem extends SubsystemBase {
   public void initSendable(SendableBuilder builder) {
     builder.setSmartDashboardType("Camera");
     builder.addBooleanProperty("hasTarget", this::hasTarget, null);
-    builder.addDoubleProperty("targetYaw", this::getTargetYaw, null);
+    builder.addDoubleProperty("targetYaw", this::getTargetDegrees, null);
     builder.addIntegerProperty("fiducial", this::getFiducialID, null);
   }
 
@@ -122,7 +123,7 @@ public class CameraSubsystem extends SubsystemBase {
   public void periodic() {
     PhotonPipelineResult result = camera.getLatestResult();
     double resultTimestamp = result.getTimestampSeconds();
-    if (resultTimestamp != previousPipelineTimestamp && result.hasTargets() && result.getBestTarget() != null) {
+    if (result.hasTargets() && result.getBestTarget() != null) {
       previousPipelineTimestamp = resultTimestamp;
       PhotonTrackedTarget target = result.getBestTarget();
       fiducialID = result.getBestTarget().getFiducialId();

@@ -83,6 +83,9 @@ public class RobotContainer {
   public Command resetEverything() {
     return new ZeroEverything(chassis);
   }
+  public Command dontTarget() {
+    return new DisableTargeting(chassis);
+  }
 
 
   /**

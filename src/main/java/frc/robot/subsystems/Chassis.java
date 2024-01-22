@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -40,11 +41,11 @@ public class Chassis extends SubsystemBase {
     private double maxSpeedRead = 0; // updated periodically with the maximum speed that has been read on any of the swerve modules
     private final Field2d field; // sendable that gets put on shuffleboard with the auton trajectory and the robots current position
     private final GenericEntry n_fieldOrriented; // comp network table entry for whether field oriented drivetrain
-    private ProfiledPIDController targetController;
-    private TrapezoidProfile.Constraints targetConstraints;
-    private final double targetP = 0d;
-    private final double targetI = 0d;
-    private final double targetD = 0d;
+    private PIDController targetController;
+    //private TrapezoidProfile.Constraints targetConstraints;
+    private  double targetP = 0d;
+    private  double targetI = 0d;
+    private  double targetD = 0d;
     private double targetMaxVelo = Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond; //TODO real
     private double targetMaxAcc = Constants.Swerve.kMaxAccelerationDrive; //TODO real
 
@@ -84,16 +85,16 @@ public class Chassis extends SubsystemBase {
         Shuffleboard.getTab("Comp").add("field", field);
         n_fieldOrriented = Shuffleboard.getTab("Comp").add("field orriented", false).getEntry();
 
-        targetConstraints = new TrapezoidProfile.Constraints(targetMaxVelo, targetMaxAcc);
-        targetController = new ProfiledPIDController(targetP, targetI, targetD, targetConstraints);
-        targetController.enableContinuousInput(-2*Math.PI,2*Math.PI);
-        targetController.setTolerance(0.05);
+        targetController = new PIDController(targetP, targetI, targetD);
+
     }
 
     public void resetTargetController() {
-        targetController.reset(cameraSubsystem.getTargetYaw());
-        targetController.setGoal(0);
-    }
+        targetController.reset();
+        targetController.setSetpoint(0d);
+        targetController.enableContinuousInput(-2*Math.PI,2*Math.PI);
+        targetController.setTolerance(Math.toRadians(1.0));
+        targetController.setPID(targetP, targetI, targetD);    }
     public double goToTargetPower() {
         return targetController.calculate(cameraSubsystem.getTargetYaw());
     }
@@ -109,6 +110,33 @@ public class Chassis extends SubsystemBase {
     public void setTryingToTargetFalse(){
         isTryingToTarget=false;
     }
+
+    public double getTargetP() {
+        return targetP;
+    }
+
+    public double getTargetI() {
+        return targetI;
+    }
+
+    public double getTargetD() {
+        return targetD;
+    }
+    public void setTargetP(double newP){
+        targetP = newP;
+    }
+    public void setTargetI(double newI){
+        targetI = newI;
+    }
+    public void setTargetD(double newD){
+    targetD = newD;
+    }
+    public boolean getIsTryingToTarget() {
+        return isTryingToTarget;
+    }
+
+
+
     /**
      * If the PID controllers of the {@link SwerveModule}'s are all done
      * @return whether the wheels are zereod/PID controllers are done
@@ -372,6 +400,10 @@ public class Chassis extends SubsystemBase {
         builder.addDoubleProperty("Y position", this::getY, null);
         builder.addDoubleProperty("rotation", this::getYaw, null);
         builder.addDoubleProperty("max speed read", this::getMaxSpeedRead, null);
+        builder.addDoubleProperty("target P", this::getTargetP, this::setTargetP);
+        builder.addDoubleProperty("target I", this::getTargetI, this::setTargetI);
+        builder.addDoubleProperty("target D", this::getTargetD, this::setTargetD);
+        builder.addBooleanProperty("is targeting", this::getIsTryingToTarget, null);
     }
 
     /**

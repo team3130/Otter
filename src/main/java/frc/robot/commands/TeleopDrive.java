@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
@@ -31,6 +32,7 @@ public class TeleopDrive extends Command {
    * The controller that we use to drive
    */
   private final XboxController m_xboxController;
+  private Timer rumbleTime = new Timer();
 
   /**
    * Creates a new TeleopDrive command
@@ -56,7 +58,6 @@ public class TeleopDrive extends Command {
    */
   @Override
   public void initialize() {
-  m_chassis.resetTargetController();
   }
 
   /**
@@ -73,7 +74,8 @@ public class TeleopDrive extends Command {
     if (m_chassis.isTryingToTarget()){
       theta = m_chassis.goToTargetPower();
 
-      if (m_chassis.targetControllerDone()){
+      if (m_chassis.targetControllerDone() && !rumbleTime.hasElapsed(1)){
+        rumbleTime.start();
         m_xboxController.setRumble(GenericHID.RumbleType.kBothRumble, 1);
       }
 
@@ -100,9 +102,6 @@ public class TeleopDrive extends Command {
 
     m_chassis.drive(x,y,theta);
 
-    if (Constants.debugMode) {
-      m_chassis.listener();
-    }
   }
 
   /**

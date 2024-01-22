@@ -164,9 +164,9 @@ public class SwerveModule implements Sendable {
         // percent output of the drive motor that the swerve controller wants you to go to by the physical max speed the bot can travel
         // TODO: underneath set control voltage output is not real
         // m_driveMotor.setControl(driveMotorVoltRequest.withOutput(12d* (state.speedMetersPerSecond / Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond)));
-        m_driveMotor.setVoltage((12d* (state.speedMetersPerSecond / Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond)));
+        m_driveMotor.setVoltage((10d* (state.speedMetersPerSecond / Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond)));
         // set the steering motor based off the output of the PID controller
-        m_steerMotor.setVoltage(12d * turningPidController.calculate(Math.IEEEremainder(getTurningPosition(), Math.PI * 2), state.angle.getRadians()));
+        m_steerMotor.setVoltage(4d * turningPidController.calculate(Math.IEEEremainder(getTurningPosition(), Math.PI * 2), state.angle.getRadians()));
     }
 
     /**
