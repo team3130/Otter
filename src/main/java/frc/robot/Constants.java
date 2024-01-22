@@ -186,8 +186,8 @@ public final class Constants {
     public static final double kWheelDiameter = Units.inchesToMeters(3.86);
     public final static double DriveRotToMeters = kWheelDiameter * Math.PI * 1/(kDriveGearRatio); // multiply by
     public static final double SteerRotToRads = 1/(kSteerGearRatio) * Math.PI * 2; // multiply by position
-    public static final double DriveRotToMetersPerSecond = DriveRotToMeters * 10; // multiply by velocity
-    public static final double SteerRotToRadsPerSecond = SteerRotToRads * 10; // multiply by velocity
+    public static final double DriveRotToMetersPerSecond = DriveRotToMeters ; // multiply by velocity
+    public static final double SteerRotToRadsPerSecond = SteerRotToRads; // multiply by velocity
   }
 
   public static class Buttons {

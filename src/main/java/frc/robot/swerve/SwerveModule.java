@@ -83,13 +83,13 @@ public class SwerveModule implements Sendable {
     // gets the velocity of the drive motor in m/s
     public double getDriveVelocity() {
         // return m_driveMotor.getRotorVelocity().getValue() * Constants.Conversions.DriveRotToMetersPerSecond;
-        return m_driveMotor.getVelocity().getValue() * Constants.Conversions.DriveRotToMetersPerSecond;
+        return m_driveMotor.getVelocity().getValue() * Constants.Conversions.DriveRotToMeters;
     }
 
     // gets the speed at which the steering motor turns in radians per second
     public double getTurningVelocity() {
         // return m_steerMotor.getRotorVelocity().getValue() * Constants.Conversions.SteerRotToRadsPerSecond;
-        return m_steerMotor.getVelocity().getValue() * Constants.Conversions.SteerRotToRadsPerSecond;
+        return m_steerMotor.getVelocity().getValue() * Constants.Conversions.SteerRotToRads;
     }
 
     // gets the position of the steering wheel according to the absolute encoders
@@ -166,7 +166,7 @@ public class SwerveModule implements Sendable {
         // m_driveMotor.setControl(driveMotorVoltRequest.withOutput(12d* (state.speedMetersPerSecond / Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond)));
         m_driveMotor.setVoltage((10d* (state.speedMetersPerSecond / Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond)));
         // set the steering motor based off the output of the PID controller
-        m_steerMotor.setVoltage(5d * turningPidController.calculate(Math.IEEEremainder(getTurningPosition(), Math.PI * 2), state.angle.getRadians()));
+        m_steerMotor.setVoltage(4d * turningPidController.calculate(Math.IEEEremainder(getTurningPosition(), Math.PI * 2), state.angle.getRadians()));
     }
 
     /**

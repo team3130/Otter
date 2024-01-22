@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.commands.Autos;
 import frc.robot.sensors.Camera;
 import frc.robot.sensors.Navx;
 import frc.robot.swerve.SwerveModule;
@@ -107,6 +108,21 @@ public class Chassis extends SubsystemBase {
         );
     }
 
+    // method to reset the robot's odometry to the given pose
+    public void resetPose(Pose2d newPose) {
+        // odometry.resetPosition(new Rotation2d(), generatePoses(), new Pose2d());
+        // chassis.resetOdometry(new Pose2d(0, 0, new Rotation2d()));
+        //odometry.resetPosition(Navx.getRotation(), generatePoses(), newPose);
+        odometry.resetPosition(Rotation2d.fromDegrees(Navx.getAngle()),
+                new SwerveModulePosition[]{
+                        modules[Constants.Modules.leftFront].getPosition(),
+                        modules[Constants.Modules.leftBack].getPosition(),
+                        modules[Constants.Modules.rightFront].getPosition(),
+                        modules[Constants.Modules.rightBack].getPosition()
+                },
+                newPose);
+    }
+
     public void driveRobotRelative(ChassisSpeeds speeds){
         drive(speeds.vxMetersPerSecond,speeds.vyMetersPerSecond,speeds.omegaRadiansPerSecond,false);
     }
@@ -128,6 +144,10 @@ public class Chassis extends SubsystemBase {
      */
     public void drive(double x, double y, double theta) {
         drive(x, y, theta, getFieldRelative());
+    }
+
+    public boolean getAutoConfig() {
+        return AutoBuilder.isConfigured();
     }
 
 
@@ -183,7 +203,6 @@ public class Chassis extends SubsystemBase {
     */
     public void resetOdometry(Pose2d pose) {
         resetEncoders();
-        Navx.resetNavX();
         odometry.resetPosition(Navx.getRotation(), generatePoses(), pose);
     }
 
@@ -223,12 +242,6 @@ public class Chassis extends SubsystemBase {
       return odometry.getEstimatedPosition().getRotation();
     }
 
-    // method to reset the robot's odometry to the given pose
-    public void resetPose(Pose2d newPose) {
-        // TODO: try the first option
-        odometry.resetPosition(new Rotation2d(), generatePoses(), new Pose2d());
-        odometry.resetPosition(getRotation2d(), generatePoses(), newPose);
-    }
 
     /**
      * Generates the positions of the swerve modules
@@ -335,6 +348,10 @@ public class Chassis extends SubsystemBase {
         return odometry.getEstimatedPosition();
     }
 
+    public String getOdometry() {
+        return odometry.getEstimatedPosition().toString();
+    }
+
     /**
      * Command to reset the encoders
      */
@@ -431,6 +448,8 @@ public class Chassis extends SubsystemBase {
         builder.addDoubleProperty("Y position", this::getY, null);
         builder.addDoubleProperty("rotation", this::getYaw, null);
         builder.addDoubleProperty("max speed read", this::getMaxSpeedRead, null);
+        builder.addStringProperty("odometry pose2d", this::getOdometry, null);
+        builder.addBooleanProperty("autobuilder confiured", this::getAutoConfig, null);
     }
 
     /**
