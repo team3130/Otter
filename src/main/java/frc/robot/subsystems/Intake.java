@@ -3,26 +3,26 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.subsystems;
+import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.commands.Intake.Spintake;
 
 import static frc.robot.Constants.PNM_INTAKE_ACTUATOR;
 
 public class Intake extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
   private TalonFX m_intakemotor;
-  private Solenoid m_intakesolenoid;
-  private VoltageOut m_request;
+  private Solenoid m_intakesolenoid1;
+  private Solenoid m_intakesolenoid2;
 
   public Intake() {
     m_intakemotor = new TalonFX(Constants.CAN.intakeMotor);
-    m_intakesolenoid = new Solenoid(Constants.CAN.intakesolenoid, PneumaticsModuleType.CTREPCM, PNM_INTAKE_ACTUATOR);
+    m_intakesolenoid1 = new Solenoid(Constants.CAN.intakesolenoid1, PneumaticsModuleType.CTREPCM, PNM_INTAKE_ACTUATOR);
+    m_intakesolenoid2 = new Solenoid(Constants.CAN.intakesolenoid2, PneumaticsModuleType.CTREPCM, PNM_INTAKE_ACTUATOR);
 
     m_intakemotor.setInverted(false);
 
@@ -39,25 +39,22 @@ public class Intake extends SubsystemBase {
    *
    * @return value of some boolean subsystem state, such as a digital sensor.
    */
-  public boolean exampleCondition() {
-    // Query some boolean state, such as a digital sensor.
-    return false;
-  }
 
   public void Intake(){
-    m_intakemotor.setControl(m_request.withOutput(12.0));
+    m_intakemotor.setControl(new DutyCycleOut(.8));
   }
 
   public void Outtake(){
-    m_intakemotor.setControl(m_request.withOutput(-12.0));
+    m_intakemotor.setControl(new DutyCycleOut(-.8));
   }
 
   public void Stoptake(){
-    m_intakemotor.setControl(m_request.withOutput(0.0));
+    m_intakemotor.setControl(new DutyCycleOut(0));
   }
 
   public void SolenoidToggle(){
-    m_intakesolenoid.toggle();
+    m_intakesolenoid1.toggle();
+    m_intakesolenoid2.toggle();
   }
 
 

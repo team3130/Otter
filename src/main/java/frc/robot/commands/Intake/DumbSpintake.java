@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Intake;
 
 /** An example command that uses an example subsystem. */
-public class Spintake extends Command {
+public class DumbSpintake extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final Intake m_intake;
 
@@ -17,7 +17,7 @@ public class Spintake extends Command {
    *
    * @param //subsystem The subsystem used by this command.
    */
-  public Spintake(Intake intake) {
+  public DumbSpintake(Intake intake) {
     m_intake = intake;
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -26,7 +26,6 @@ public class Spintake extends Command {
   @Override
   public void initialize() {
     m_intake.Intake();
-    m_intake.SolenoidToggle();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -37,7 +36,6 @@ public class Spintake extends Command {
   @Override
   public void end(boolean interrupted) {
     m_intake.Stoptake();
-    m_intake.SolenoidToggle();
   }
 
   // Returns true when the command should end.

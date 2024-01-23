@@ -40,7 +40,9 @@ public final class Constants {
 
     public final static int intakeMotor = 14;
 
-    public final static int intakesolenoid = 15;
+    public final static int intakesolenoid1 = 15;
+
+    public final static int intakesolenoid2 = 16;
 
     // Order should match side
     public static final int[] turningID = new int[] {leftFrontSteer, leftBackSteer, rightFrontSteer, rightBackSteer};

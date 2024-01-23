@@ -17,10 +17,12 @@ import frc.robot.commands.*;
 import frc.robot.commands.Chassis.TeleopDrive;
 import frc.robot.commands.Chassis.ZeroEverything;
 import frc.robot.commands.Chassis.ZeroWheels;
+import frc.robot.commands.Intake.*;
 import frc.robot.sensors.Camera;
 import frc.robot.subsystems.Chassis;
 import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.subsystems.Intake;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -73,6 +75,11 @@ public class RobotContainer {
     // driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
     new POVButton(driverController, Constants.Buttons.LST_POV_N).whileTrue(new ZeroEverything(chassis));
     new POVButton(driverController, Constants.Buttons.LST_POV_W).whileTrue(new ZeroWheels(chassis));
+    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_LBUMPER).whileTrue(new Spouttake(new Intake()));
+    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_RBUMPER).whileTrue(new Spintake(new Intake()));
+    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_B).whileTrue(new DumbPneumatics(new Intake()));
+    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_A).whileTrue(new DumbSpintake(new Intake()));
+    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_X).whileTrue(new DumbSpouttake(new Intake()));
   }
 
   /*
