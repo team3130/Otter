@@ -111,9 +111,11 @@ public class Chassis extends SubsystemBase {
     // method to reset the robot's odometry to the given pose
     public void resetPose(Pose2d newPose) {
         // odometry.resetPosition(new Rotation2d(), generatePoses(), new Pose2d());
+
         // chassis.resetOdometry(new Pose2d(0, 0, new Rotation2d()));
-        //odometry.resetPosition(Navx.getRotation(), generatePoses(), newPose);
-        odometry.resetPosition(Rotation2d.fromDegrees(Navx.getAngle()),
+        odometry.resetPosition(Navx.getRotation(), generatePoses(), newPose);
+
+        /*odometry.resetPosition(Rotation2d.fromDegrees(Navx.getAngle()),
                 new SwerveModulePosition[]{
                         modules[Constants.Modules.leftFront].getPosition(),
                         modules[Constants.Modules.leftBack].getPosition(),
@@ -121,6 +123,8 @@ public class Chassis extends SubsystemBase {
                         modules[Constants.Modules.rightBack].getPosition()
                 },
                 newPose);
+
+         */
     }
 
     public void driveRobotRelative(ChassisSpeeds speeds){
