@@ -4,12 +4,14 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Hopper;
 
 /** An example command that uses an example subsystem. */
-public class SpinHopper extends CommandBase {
+public class SpinHopper extends Command {
   private final Hopper m_hopper;
+  private final Timer timer;
 
   /**
    * Creates a new ExampleCommand.
@@ -17,6 +19,7 @@ public class SpinHopper extends CommandBase {
    * @param subsystem The subsystem used by this command.
    */
   public SpinHopper(Hopper subsystem) {
+    timer = new Timer();
     m_hopper = subsystem;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
@@ -26,6 +29,8 @@ public class SpinHopper extends CommandBase {
   @Override
   public void initialize() {
     m_hopper.spinHopper();
+    timer.reset();
+    timer.start();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -42,6 +47,12 @@ public class SpinHopper extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    if (timer.hasElapsed(2.0)) {
+      timer.stop();
+      return true;
+    } else {
+      return false;
+    }
   }
+
 }

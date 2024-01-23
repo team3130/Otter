@@ -5,11 +5,11 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Newman_Constants.Constants;
+import frc.robot.Constants;
+import frc.robot.commands.SpinHopper;
 
 /**
  * The hopper subsystem that can be put on shuffleboard.
@@ -21,7 +21,7 @@ public class Hopper extends SubsystemBase {
     /**
      * The left motor's controller for the hopper
      */
-    protected final TalonFX m_leftWheel;
+    protected final WPI_TalonSRX m_leftWheel;
 
     /**
      * The right motor's controller for the hopper
@@ -32,8 +32,8 @@ public class Hopper extends SubsystemBase {
      * Constructs a hopper with 9 volts of voltage compensation on the motors.
      */
     public Hopper() {
-        m_leftWheel = new WPI_TalonSRX(Constants.CAN_hopperleft);
-        m_rightWheel = new WPI_TalonSRX(Constants.CAN_hopperright);
+        m_leftWheel = new WPI_TalonSRX(Constants.CAN.CAN_hopperleft);
+        m_rightWheel = new WPI_TalonSRX(Constants.CAN.CAN_hopperright);
         m_leftWheel.configFactoryDefault();
         m_rightWheel.configFactoryDefault();
         m_rightWheel.configVoltageCompSaturation(Constants.kMaxVoltageHopper);
@@ -45,6 +45,9 @@ public class Hopper extends SubsystemBase {
         m_rightWheel.setInverted(false);
     }
 
+    public Command spinHopperAuto() {
+        return new SpinHopper(this);
+    }
     /**
      * spin the motor at 100%
      */

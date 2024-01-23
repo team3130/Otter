@@ -27,6 +27,7 @@ import frc.robot.sensors.Camera;
 import frc.robot.subsystems.Chassis;
 import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.subsystems.Hopper;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -38,14 +39,23 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 // The robot's subsystems and commands are defined here...
 public class RobotContainer {
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-  private final Camera limelight = new Camera();
-  private final Chassis chassis = new Chassis(limelight);
+  private final Camera limelight;
+  private final Chassis chassis;
+  private final Hopper hopper;
   private final XboxController driverController = new XboxController(0);
   private final XboxController operatorController = new XboxController(1);
   private final SendableChooser<Command> autoChooser;
 
   // container for the robot containing subsystems, OI devices, and commands
   public RobotContainer() {
+    limelight = new Camera();
+    chassis = new Chassis(limelight);
+    hopper = new Hopper();
+
+    // Named commands must be registered before the creation of any PathPlanner Autos or Paths
+    // Do this in RobotContainer, after subsystem initialization, but before the creation of any other commands.
+    NamedCommands.registerCommand("spinHopper", hopper.spinHopperAuto());
+
     configureBindings(); // configure button bindings
     exportShuffleBoardData(); // export ShuffleBoardData
 
@@ -106,6 +116,8 @@ public class RobotContainer {
     new POVButton(driverController, Constants.Buttons.LST_POV_N).whileTrue(new ZeroEverything(chassis));
     new POVButton(driverController, Constants.Buttons.LST_POV_W).whileTrue(new ZeroWheels(chassis));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new FlipFieldOriented(chassis));
+
+    new JoystickButton(driverController, Constants.Buttons.LST_BTN_Y).whileTrue(new SpinHopper(hopper));
 
     SmartDashboard.putData(new FlipFieldOriented(chassis));
   }

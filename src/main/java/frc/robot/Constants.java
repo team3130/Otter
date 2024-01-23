@@ -20,6 +20,7 @@ import edu.wpi.first.math.util.Units;
 public final class Constants {
   public static final boolean debugMode = true; //TODO: make false after testing
   public static final boolean kNavxReversed = true;
+  public final static double kMaxVoltageHopper = 9d;
 
   public static class CAN {
     public final static int leftFrontSteer = 2;
@@ -41,6 +42,9 @@ public final class Constants {
     public static final int[] turningID = new int[] {leftFrontSteer, leftBackSteer, rightFrontSteer, rightBackSteer};
     public static final int[] spinningID = new int[] {leftFrontDrive, leftBackDrive, rightFrontDrive, rightBackDrive};
     public final static int[] CANCoders = new int[] {CANCoderTopLeft, CANCoderBottomLeft, CANCoderTopRight, CANCoderBottomRight};
+
+    public final static int CAN_hopperright = 16;
+    public final static int CAN_hopperleft = 17;
 
   }
 
