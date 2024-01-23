@@ -32,14 +32,38 @@ public class LEDSubsystem extends SubsystemBase {
     led.start();
   }
 
+  // HSV: h == set the value, s == saturation, v == brightness value
+  // Red falls between 0 and 60 degrees.
+  // Yellow falls between 61 and 120 degrees.
+  // Green falls between 121 and 180 degrees.
+  // Cyan falls between 181 and 240 degrees.
+  // Blue falls between 241 and 300 degrees.
+  // Magenta falls between 301 and 360 degrees.
 
-  public void oneColor() {
+  public void red() {
     for (var i = 0; i < ledBuffer.getLength(); i++) {
       // Sets the specified LED to the RGB values for red
       ledBuffer.setHSV(i, 0, 0, 128);
     }
     led.setData(ledBuffer);
   }
+
+  public void green() {
+    for (var i = 0; i < ledBuffer.getLength(); i++) {
+      // Sets the specified LED to the RGB values for red
+      ledBuffer.setHSV(i, 150, 0, 128);
+    }
+    led.setData(ledBuffer);
+  }
+
+  public void blue() {
+    for (var i = 0; i < ledBuffer.getLength(); i++) {
+      // Sets the specified LED to the RGB values for red
+      ledBuffer.setHSV(i, 260, 0, 128);
+    }
+    led.setData(ledBuffer);
+  }
+
 
   public void rainbow() {
     int rainbowFirstPixelHue = 20;
@@ -48,7 +72,6 @@ public class LEDSubsystem extends SubsystemBase {
       // Calculate the hue - hue is easier for rainbows because the color
       // shape is a circle so only one value needs to precess
       final var hue = (rainbowFirstPixelHue + (i * 180 / ledBuffer.getLength())) % 180;
-      // Set the value, s == saturation, v == brightness value
       ledBuffer.setHSV(i, hue, 255, 128);
     }
     // Increase by to make the rainbow "move"
