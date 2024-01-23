@@ -43,7 +43,7 @@ public class Chassis extends SubsystemBase {
     private final GenericEntry n_fieldOrriented; // comp network table entry for whether field oriented drivetrain
     private PIDController targetController;
     //private TrapezoidProfile.Constraints targetConstraints;
-    private  double targetP = 0d;
+    private  double targetP = 10d;
     private  double targetI = 0d;
     private  double targetD = 0d;
     private double targetMaxVelo = Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond; //TODO real
