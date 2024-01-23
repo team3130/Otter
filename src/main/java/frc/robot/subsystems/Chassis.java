@@ -41,15 +41,8 @@ public class Chassis extends SubsystemBase {
     private double maxSpeedRead = 0; // updated periodically with the maximum speed that has been read on any of the swerve modules
     private final Field2d field; // sendable that gets put on shuffleboard with the auton trajectory and the robots current position
     private final GenericEntry n_fieldOrriented; // comp network table entry for whether field oriented drivetrain
-    private PIDController targetController;
-    //private TrapezoidProfile.Constraints targetConstraints;
-    private  double targetP = 10d;
-    private  double targetI = 0d;
-    private  double targetD = 0d;
     private double targetMaxVelo = Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond; //TODO real
     private double targetMaxAcc = Constants.Swerve.kMaxAccelerationDrive; //TODO real
-
-    private boolean isTryingToTarget = false;
 
 
 
@@ -85,60 +78,10 @@ public class Chassis extends SubsystemBase {
         Shuffleboard.getTab("Comp").add("field", field);
         n_fieldOrriented = Shuffleboard.getTab("Comp").add("field orriented", false).getEntry();
 
-        targetController = new PIDController(targetP, targetI, targetD);
 
     }
 
-    public void resetTargetController() {
-        targetController.reset();
-        targetController.setSetpoint(0d);
-        targetController.enableContinuousInput(-2*Math.PI,2*Math.PI);
-        targetController.setTolerance(Math.toRadians(1.0));
-        targetController.setPID(targetP, targetI, targetD);    }
-    public double goToTargetPower() {
-        if(cameraSubsystem.hasTarget()){
-            return targetController.calculate(cameraSubsystem.getTargetYaw(), 0);
-        }
-        else {
-            return 0;
-        }
-    }
-    public boolean targetControllerDone(){
-        return targetController.atSetpoint();
-    }
-    public boolean isTryingToTarget(){
-        return isTryingToTarget;
-    }
-    public void setTryingToTargetTrue(){
-        isTryingToTarget=true;
-    }
-    public void setTryingToTargetFalse(){
-        isTryingToTarget=false;
-    }
 
-    public double getTargetP() {
-        return targetP;
-    }
-
-    public double getTargetI() {
-        return targetI;
-    }
-
-    public double getTargetD() {
-        return targetD;
-    }
-    public void setTargetP(double newP){
-        targetP = newP;
-    }
-    public void setTargetI(double newI){
-        targetI = newI;
-    }
-    public void setTargetD(double newD){
-    targetD = newD;
-    }
-    public boolean getIsTryingToTarget() {
-        return isTryingToTarget;
-    }
 
 
 
@@ -405,10 +348,6 @@ public class Chassis extends SubsystemBase {
         builder.addDoubleProperty("Y position", this::getY, null);
         builder.addDoubleProperty("rotation", this::getYaw, null);
         builder.addDoubleProperty("max speed read", this::getMaxSpeedRead, null);
-        builder.addDoubleProperty("target P", this::getTargetP, this::setTargetP);
-        builder.addDoubleProperty("target I", this::getTargetI, this::setTargetI);
-        builder.addDoubleProperty("target D", this::getTargetD, this::setTargetD);
-        builder.addBooleanProperty("is targeting", this::getIsTryingToTarget, null);
     }
 
     /**

@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -27,8 +28,12 @@ public class CameraSubsystem extends SubsystemBase {
   private double previousPipelineTimestamp = 0;
   private int speakerTargetFiducialID;
   private int ampTargetFiducialID;
-
+  private boolean isTryingToTarget = false;
   private int fiducialID = 0;
+  private PIDController targetController;
+  private  double targetP = 10d;
+  private  double targetI = 0d;
+  private  double targetD = 0d;
 
   /**
    * Constructs a new Limelight object.
@@ -54,8 +59,54 @@ public class CameraSubsystem extends SubsystemBase {
       speakerTargetFiducialID = Constants.AprilTags.speakerTargetBlueFiducialID;
       ampTargetFiducialID = Constants.AprilTags.ampTargetBlueFiducialID;
     }
+    targetController = new PIDController(targetP, targetI, targetD);
+
+  }
+  public boolean targetControllerDone(){
+    return targetController.atSetpoint();
+  }
+  public boolean isTryingToTarget(){
+    return isTryingToTarget;
+  }
+  public void setTryingToTargetTrue(){
+    isTryingToTarget=true;
+  }
+  public void setTryingToTargetFalse(){
+    isTryingToTarget=false;
   }
 
+  public double getTargetP() {
+    return targetP;
+  }
+
+  public double getTargetI() {
+    return targetI;
+  }
+
+  public double getTargetD() {
+    return targetD;
+  }
+  public void setTargetP(double newP){
+    targetP = newP;
+  }
+  public void setTargetI(double newI){
+    targetI = newI;
+  }
+  public void setTargetD(double newD){
+    targetD = newD;
+  }
+  public boolean getIsTryingToTarget() {
+    return isTryingToTarget;
+  }
+
+  public double goToTargetPower() {
+    if(hasTarget()){
+      return targetController.calculate(getTargetYaw(), 0);
+    }
+    else {
+      return 0;
+    }
+  }
   public PhotonTrackedTarget getTarget() {
     if (!hasTarget()) {
       return null;
@@ -64,6 +115,15 @@ public class CameraSubsystem extends SubsystemBase {
       return result.getBestTarget();
     }
   }
+
+  public void resetTargetController() {
+    targetController.reset();
+    targetController.setSetpoint(0d);
+    targetController.enableContinuousInput(-2*Math.PI,2*Math.PI);
+    targetController.setTolerance(Math.toRadians(1.0));
+    targetController.setPID(targetP, targetI, targetD);
+  }
+
 
   public Pose2d findRobotPose() {
     // cameraToRobot The position of the robot relative to the camera. If the camera was
@@ -116,6 +176,12 @@ public class CameraSubsystem extends SubsystemBase {
     builder.addBooleanProperty("hasTarget", this::hasTarget, null);
     builder.addDoubleProperty("targetYaw", this::getTargetDegrees, null);
     builder.addIntegerProperty("fiducial", this::getFiducialID, null);
+
+      builder.addDoubleProperty("target P", this::getTargetP, this::setTargetP);
+      builder.addDoubleProperty("target I", this::getTargetI, this::setTargetI);
+      builder.addDoubleProperty("target D", this::getTargetD, this::setTargetD);
+      builder.addBooleanProperty("is targeting", this::getIsTryingToTarget, null);
+
   }
 
   // This method will be called once per scheduler run

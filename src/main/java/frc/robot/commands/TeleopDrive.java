@@ -71,8 +71,8 @@ public class TeleopDrive extends Command {
     double y = m_xboxController.getRawAxis(Constants.Buttons.LST_AXS_LJOYSTICKX); // left stick y-axis (y-axis is inverted)
     double x = m_xboxController.getRawAxis(Constants.Buttons.LST_AXS_LJOYSTICKY); // left stick x-axis
 
-    if (m_chassis.isTryingToTarget()){
-      theta = m_chassis.goToTargetPower();
+    if (m_camera.isTryingToTarget()){
+      theta = m_camera.goToTargetPower();
 
     } else {
       theta = -m_xboxController.getRawAxis(Constants.Buttons.LST_AXS_RJOYSTICKX); // right stick x-axis

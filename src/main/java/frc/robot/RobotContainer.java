@@ -76,7 +76,7 @@ public class RobotContainer {
     new POVButton(driverGamepad, Constants.Buttons.LST_POV_W).whileTrue(new ZeroWheels(chassis));
     m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
     new POVButton(driverGamepad, Constants.Buttons.LST_POV_N).whileTrue(new ZeroEverything(chassis));
-    new JoystickButton(driverGamepad, Constants.Buttons.LST_BTN_X).whileTrue(new EnableTargeting(chassis));
+    new JoystickButton(driverGamepad, Constants.Buttons.LST_BTN_X).onTrue(new EnableTargeting(cameraSubsystem));
     new JoystickButton(driverGamepad, Constants.Buttons.LST_BTN_A).whileTrue(new TargetingPressed(chassis));
   }
 
