@@ -96,7 +96,12 @@ public class Chassis extends SubsystemBase {
         targetController.setTolerance(Math.toRadians(1.0));
         targetController.setPID(targetP, targetI, targetD);    }
     public double goToTargetPower() {
-        return targetController.calculate(cameraSubsystem.getTargetYaw());
+        if(cameraSubsystem.hasTarget()){
+            return targetController.calculate(cameraSubsystem.getTargetYaw(), 0);
+        }
+        else {
+            return 0;
+        }
     }
     public boolean targetControllerDone(){
         return targetController.atSetpoint();

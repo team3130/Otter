@@ -74,11 +74,6 @@ public class TeleopDrive extends Command {
     if (m_chassis.isTryingToTarget()){
       theta = m_chassis.goToTargetPower();
 
-      if (m_chassis.targetControllerDone() && !rumbleTime.hasElapsed(1)){
-        rumbleTime.start();
-        m_xboxController.setRumble(GenericHID.RumbleType.kBothRumble, 1);
-      }
-
     } else {
       theta = -m_xboxController.getRawAxis(Constants.Buttons.LST_AXS_RJOYSTICKX); // right stick x-axis
       theta = Math.abs(theta) > Constants.Swerve.kDeadband ? theta : 0.0;
