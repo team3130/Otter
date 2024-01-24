@@ -12,22 +12,9 @@
     "data": {
       "commands": [
         {
-          "type": "parallel",
+          "type": "path",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "north"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "spinHopper"
-                }
-              }
-            ]
+            "pathName": "north"
           }
         }
       ]

@@ -128,7 +128,11 @@ public class Chassis extends SubsystemBase {
     }
 
     public void driveRobotRelative(ChassisSpeeds speeds){
-        drive(speeds.vxMetersPerSecond,speeds.vyMetersPerSecond,speeds.omegaRadiansPerSecond,false);
+        driveAuton(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond);
+    }
+
+    public void driveAuton(double x, double y, double theta) {
+        setModuleStates(kinematics.toSwerveModuleStates(new ChassisSpeeds(x, y, theta)));
     }
 
     public void drive(double x, double y, double theta, boolean fieldRelative) {
@@ -153,39 +157,6 @@ public class Chassis extends SubsystemBase {
     public boolean getAutoConfig() {
         return AutoBuilder.isConfigured();
     }
-
-
-    // I genuinely dk
-    // also written to be runVelocity
-    /*
-    public void driveRobotRelative(ChassisSpeeds speeds) {
-        // Calculate module setpoints
-        ChassisSpeeds discreteSpeeds = ChassisSpeeds.discretize(speeds, 0.02);
-        SwerveModuleState[] setpointStates = kinematics.toSwerveModuleStates(discreteSpeeds);
-        SwerveDriveKinematics.desaturateWheelSpeeds(setpointStates, Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
-
-        // Send setpoints to modules
-        SwerveModuleState[] optimizedSetpointStates = new SwerveModuleState[4];
-        for (int i = 0; i < 4; i++) {
-            // The module returns the optimized state, useful for logging
-            optimizedSetpointStates[i] = modules[i].runSetpoint(setpointStates[i]);
-        }
-    }
-    */
-
-    /** Runs the module with the specified setpoint state. Returns the optimized state.
-    public SwerveModuleState runSetpoint(SwerveModuleState state) {
-        // Optimize state based on current angle
-        // Controllers run in "periodic" when the setpoint is not null
-        var optimizedState = SwerveModuleState.optimize(state, getRotation2d());
-
-        // Update setpoints, controllers run in "periodic"
-        angleSetpoint = optimizedState.angle;
-        speedSetpoint = optimizedState.speedMetersPerSecond;
-
-        return optimizedState;
-    }
-     */
 
     /**
     * If the PID controllers of the {@link SwerveModule}'s are all done
