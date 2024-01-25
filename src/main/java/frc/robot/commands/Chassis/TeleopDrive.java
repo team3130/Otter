@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.Chassis;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -15,42 +15,24 @@ import frc.robot.subsystems.Chassis;
 
 /** A default command to drive in teleop based off the joysticks*/
 public class TeleopDrive extends Command {
+  private final Chassis chassis;
+  private final XboxController xboxController;
 
-  /**
-   * Chassis singleton which is used as the subsystem
-   */
-  private final Chassis m_chassis;
   private final CameraSubsystem m_camera;
-
-  /**
-   * acceleration limiters for the x dimension, y dimension, and the holonomic rotation.
-   * These values are in m/s and rad/s respectively.
-   */
   private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
 
-  /**
-   * The controller that we use to drive
-   */
-  private final XboxController m_xboxController;
-  private Timer rumbleTime = new Timer();
-
-  /**
-   * Creates a new TeleopDrive command
-   * Initializes slew rate limiters to limit acceleration
-   *
-   * @param chassis The subsystem used by this command.
-   * @param xboxController the controller that we use to drive
-   */
   public TeleopDrive(Chassis chassis, XboxController xboxController, CameraSubsystem camera) {
     m_chassis = chassis;
     m_camera = camera;
+    m_xboxController = xboxController;
+
     // Use addRequirements() here to declare subsystem dependencies.
     m_requirements.add(chassis);
     m_requirements.add(camera);
+    
     xLimiter = new SlewRateLimiter(Constants.Swerve.kMaxAccelerationDrive);
     yLimiter = new SlewRateLimiter(Constants.Swerve.kMaxAccelerationDrive);
     turningLimiter = new SlewRateLimiter(Constants.Swerve.kMaxAccelerationAngularDrive);
-    m_xboxController = xboxController;
   }
 
   /**
@@ -95,7 +77,7 @@ public class TeleopDrive extends Command {
     x = xLimiter.calculate(x * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
     y = yLimiter.calculate(y * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
 
-    m_chassis.drive(x,y,theta);
+    chassis.drive(x,y,theta);
 
   }
 
@@ -106,7 +88,7 @@ public class TeleopDrive extends Command {
    */
   @Override
   public void end(boolean interrupted) {
-    m_chassis.stopModules();
+    chassis.stopModules();
   }
 
   /**

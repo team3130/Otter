@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.Chassis;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -13,17 +13,8 @@ import frc.robot.subsystems.Chassis;
  * A command to automatically zero all odometry.
  */
 public class ZeroEverything extends InstantCommand {
-
-  /**
-   * The chassis singleton which is the subsystem for this command
-   */
   private final Chassis m_chassis;
 
-  /**
-   * Creates a new ZeroEverything
-   *
-   * @param subsystem The subsystem used by this command.
-   */
   public ZeroEverything(Chassis subsystem) {
     m_chassis = subsystem;
     // Use addRequirements() here to declare subsystem dependencies.
