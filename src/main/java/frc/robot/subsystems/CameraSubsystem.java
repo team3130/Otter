@@ -35,6 +35,8 @@ public class CameraSubsystem extends SubsystemBase {
   private  double targetI = 0d;
   private  double targetD = 0d;
 
+  private int fiducialID = 0;
+
   /**
    * Constructs a new Limelight object.
    * The limelight object will be full of null values if Constants.useAprilTags is false.
@@ -162,13 +164,6 @@ public class CameraSubsystem extends SubsystemBase {
   }
   public double getTargetDegrees(){
     return Math.toDegrees(getTargetYaw());
-  }
-
-
-
-
-  public int getFiducialID(){
-    return fiducialID;
   }
 
   public void initSendable(SendableBuilder builder) {
