@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.*;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -18,6 +19,10 @@ import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
+
+import static frc.robot.Constants.AprilTags.*;
+import static frc.robot.Constants.maxRange;
+import static frc.robot.Constants.minRange;
 
 public class CameraSubsystem extends SubsystemBase {
   protected PhotonCamera camera = new PhotonCamera("cam");
@@ -34,6 +39,14 @@ public class CameraSubsystem extends SubsystemBase {
   private  double targetP = 10d;
   private  double targetI = 0d;
   private  double targetD = 0d;
+
+  private double range =
+          PhotonUtils.calculateDistanceToTargetMeters(
+                  CAMERA_HEIGHT_METERS,
+                  TARGET_HEIGHT_METERS,
+                  CAMERA_PITCH_RADIANS,
+                  Units.degreesToRadians(getTarget().getPitch()));
+
 
   /**
    * Constructs a new Limelight object.
@@ -70,6 +83,17 @@ public class CameraSubsystem extends SubsystemBase {
   }
   public void setTryingToTargetTrue(){
     isTryingToTarget=true;
+  }
+
+  //purpose of below system is to indicate to the driver and weapons officer if the robot is within the shooting range.
+  //The boolean will mark true if we are in range and a April Tag is in sight, and it will be false if both conditions are not met.
+  //TODO
+  //look into integrating this into controller vibration for operator and driver.
+  public boolean inShootingRange(){
+    if (hasTarget() == true && maxRange >= range && minRange <= range){
+      return true;
+    }
+    return false;
   }
   public void setTryingToTargetFalse(){
     isTryingToTarget=false;
@@ -135,8 +159,8 @@ public class CameraSubsystem extends SubsystemBase {
       PhotonPipelineResult result = camera.getLatestResult();
       double yaw = result.getBestTarget().getYaw();
       return PhotonUtils.estimateFieldToRobot(
-              Constants.AprilTags.CAMERA_HEIGHT_METERS, Constants.AprilTags.TARGET_HEIGHT_METERS,
-              Constants.AprilTags.CAMERA_PITCH_RADIANS, Constants.AprilTags.kTargetPitch,
+              CAMERA_HEIGHT_METERS, TARGET_HEIGHT_METERS,
+              CAMERA_PITCH_RADIANS, Constants.AprilTags.kTargetPitch,
               Rotation2d.fromDegrees(yaw), Navx.getRotation(), targetPose, cameraToRobot);
     }
   }
@@ -176,6 +200,7 @@ public class CameraSubsystem extends SubsystemBase {
     builder.addBooleanProperty("hasTarget", this::hasTarget, null);
     builder.addDoubleProperty("targetYaw", this::getTargetDegrees, null);
     builder.addIntegerProperty("fiducial", this::getFiducialID, null);
+    builder.addBooleanProperty("in Range", this::inShootingRange,null);
 
       builder.addDoubleProperty("target P", this::getTargetP, this::setTargetP);
       builder.addDoubleProperty("target I", this::getTargetI, this::setTargetI);

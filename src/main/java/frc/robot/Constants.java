@@ -20,6 +20,14 @@ public final class Constants {
   public static final boolean debugMode = true; //TODO: make false after testing
   public static final boolean kNavxReversed = true;
 
+  public static final double maxRange = 5;
+  //max distance in meters that the shooter will be marked as able to shoot from. This feature only changes visual output and should have no impact on robot performance
+  //TODO: update during doing shooter testing
+
+  public static final double minRange = 4.5;
+  //min distance in meters that the shooter will be marked as able to shoot from. This feature only changes visual output and should have no impact on robot performance
+  //TODO: update during shooter testing
+
   public static class CAN {
     public final static int leftFrontSteer = 2;
     public final static int leftFrontDrive = 3;
