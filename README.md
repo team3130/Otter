@@ -5,6 +5,8 @@ Otter is the robot repository for the 2024 Crescendo season.
 Shooter (velocity PID controller), shooter shifter, intake, climber, and amper
 L3 Swerve Drivetrain
 
+<hr>
+
 Biblically accurate [photo of software leads Juhae and Giorgia](https://www.ithaca.edu/sites/default/files/2018-09/Sea%20otters%20holding%20hands%20by%20Ken%20Conger.jpg) during Crescendo (2024, colorized)
 
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣤⣤⣤⣤⣤⣤⣤⣤⣤⣤⣀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
