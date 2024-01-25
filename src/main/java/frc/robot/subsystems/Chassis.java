@@ -35,7 +35,7 @@ public class Chassis extends SubsystemBase {
     private final SwerveDriveKinematics kinematics; // geometry of swerve modules
     private final SwerveDrivePoseEstimator odometry; // odometry object
     private final SwerveModule[] modules; // list of four swerve modules
-    private final Navx Gyro = Navx.GetInstance(); // initialize Navx
+    private final Navx navx = Navx.GetInstance(); // initialize Navx
     private boolean fieldRelative = true; // field relative or robot oriented drive
     private final CameraSubsystem cameraSubsystem;
     private double maxSpeedRead = 0; // updated periodically with the maximum speed that has been read on any of the swerve modules
@@ -77,6 +77,7 @@ public class Chassis extends SubsystemBase {
         field = new Field2d();
         Shuffleboard.getTab("Comp").add("field", field);
         n_fieldOrriented = Shuffleboard.getTab("Comp").add("field orriented", false).getEntry();
+    }
 
 
     }
@@ -183,12 +184,12 @@ public class Chassis extends SubsystemBase {
         field.setRobotPose(odometry.getEstimatedPosition());
     }
 
-    // Stops the devices connected to this subsystem
+  // Stops the devices connected to this subsystem
     public void stopModules(){
-        modules[Constants.Modules.leftFront].stop();
-        modules[Constants.Modules.leftBack].stop();
-        modules[Constants.Modules.rightFront].stop();
-        modules[Constants.Modules.rightBack].stop();
+      modules[Constants.Modules.leftFront].stop();
+      modules[Constants.Modules.leftBack].stop();
+      modules[Constants.Modules.rightFront].stop();
+      modules[Constants.Modules.rightBack].stop();
     }
 
     /**
@@ -326,7 +327,7 @@ public class Chassis extends SubsystemBase {
      * A vomit onto shuffleboard of the {@link SwerveModule} objects in Chassis
      * @param tab the tab to add the {@link SwerveModule} objects
      */
-    public void shuffleboardVom(ShuffleboardTab tab) {
+    public void exportSwerveModData(ShuffleboardTab tab) {
         tab.add(modules[0]);
         tab.add(modules[1]);
         tab.add(modules[2]);
@@ -395,5 +396,4 @@ public class Chassis extends SubsystemBase {
     public void drive(double x, double y, double theta) {
         drive(x, y, theta, getFieldRelative());
     }
-
 }

@@ -4,82 +4,75 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
-import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.*;
 import frc.robot.subsystems.CameraSubsystem;
+import frc.robot.commands.Chassis.TeleopDrive;
+import frc.robot.commands.Chassis.ZeroEverything;
+import frc.robot.commands.Chassis.ZeroWheels;
 import frc.robot.subsystems.Chassis;
 import frc.robot.subsystems.ExampleSubsystem;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
+ * "declarative" paradigm, very little robot logic should actually be handled in robot periodic methods
+ * (other than the scheduler calls). Instead, the structure of the robot (including
  * subsystems, commands, and trigger mappings) should be declared here.
  */
+
+// The robot's subsystems and commands are defined here...
 public class RobotContainer {
-    public static XboxController m_DriverGamepad;
-    // The robot's subsystems and commands are defined here...
+  // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final CameraSubsystem cameraSubsystem = new CameraSubsystem();
   private final Chassis chassis = new Chassis(cameraSubsystem);
-  private final CommandXboxController m_driverController =
-      new CommandXboxController(OperatorConstants.kDriverControllerPort);
   private final XboxController driverGamepad = new XboxController(0);
-
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
+  private final XboxController operatorController = new XboxController(1);
   public RobotContainer() {
-    // Configure the trigger bindings
+    exportShuffleBoardData(); // export ShuffleBoardData
 
     chassis.setDefaultCommand(new TeleopDrive(chassis, driverGamepad, cameraSubsystem));
     configureBindings();
 
-    vomitShuffleBoardData();
   }
 
-
-  /**
-   * adds the subsystem {@link edu.wpi.first.util.sendable.Sendable} objects to a 'Subsystems' shuffleboard tab
-   */
-  public void vomitShuffleBoardData() {
+  /** adds the subsystem {@link edu.wpi.first.util.sendable.Sendable} objects to a 'Subsystems' shuffleboard tab */
+  public void exportShuffleBoardData() {
     if (Constants.debugMode) {
       ShuffleboardTab tab = Shuffleboard.getTab("Subsystems");
       tab.add(chassis);
-      chassis.shuffleboardVom(Shuffleboard.getTab("Swerve Modules"));
+      chassis.exportSwerveModData(Shuffleboard.getTab("Swerve Modules"));
     }
   }
 
-  /**
-   * Use this method to define your trigger->command mappings. Triggers can be created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
-   * predicate, or via the named factories in {@link
-   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
-   * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-   * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
-   * joysticks}.
-   */
+  // This method defines trigger -> command mappings
+  // Triggers created via the Trigger constructor
+    // CommandGenericHID subclass for CommandXboxController Xbox
+    // CommandPS4Controller subclass for PS4 Controller
+    // CommandJoystick for flight joysticks
   private void configureBindings() {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     new Trigger(m_exampleSubsystem::exampleCondition)
-        .onTrue(new ExampleCommand(m_exampleSubsystem));
+            .onTrue(new ExampleCommand(m_exampleSubsystem));
 
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
-    new POVButton(driverGamepad, Constants.Buttons.LST_POV_W).whileTrue(new ZeroWheels(chassis));
-    m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
-    new POVButton(driverGamepad, Constants.Buttons.LST_POV_N).whileTrue(new ZeroEverything(chassis));
+    new POVButton(driverController, Constants.Buttons.LST_POV_N).whileTrue(new ZeroEverything(chassis));
+    new POVButton(driverController, Constants.Buttons.LST_POV_W).whileTrue(new ZeroWheels(chassis));
     new JoystickButton(driverGamepad, Constants.Buttons.LST_BTN_X).onTrue(new EnableTargeting(cameraSubsystem));
     new JoystickButton(driverGamepad, Constants.Buttons.LST_BTN_A).whileTrue(new TargetingPressed(chassis));
   }
 
+  /*
+  Sendable Commands
+   */
   public Command resetEverything() {
     return new ZeroEverything(chassis);
   }
@@ -87,10 +80,19 @@ public class RobotContainer {
     return new DisableTargeting(chassis);
   }
 
+  /*
+  Odometry and Chassis methods
+   */
+  public void resetOdometryWithoutApril() {
+    chassis.resetOdometry(new Pose2d(0, 0, new Rotation2d()));
+  }
+
+  public void updateChassisPose() {
+    chassis.updateOdometery();
+  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
