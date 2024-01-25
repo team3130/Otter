@@ -5,28 +5,29 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.CameraSubsystem;
 import frc.robot.subsystems.Chassis;
 
 /** An example command that uses an example subsystem. */
 public class DisableTargeting extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final Chassis chassis;
+  private final CameraSubsystem camera;
 
   /**
    * Creates a new ExampleCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public DisableTargeting(Chassis subsystem) {
-    chassis = subsystem;
+  public DisableTargeting(CameraSubsystem subsystem) {
+    camera = subsystem;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(chassis);
+    addRequirements(camera);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    chassis.setTryingToTargetFalse();
+    camera.setTryingToTargetFalse();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

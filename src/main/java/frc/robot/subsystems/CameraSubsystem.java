@@ -35,9 +35,9 @@ public class CameraSubsystem extends SubsystemBase {
   private  double targetI = 0d;
   private  double targetD = 0d;
 
-  private double targetF = 0d;
+  private double XtargetV = 0.2;
+  private double YtargetF = 0.7;
 
-  private int fiducialID = 0;
 
   /**
    * Constructs a new Limelight object.
@@ -78,6 +78,12 @@ public class CameraSubsystem extends SubsystemBase {
   public void setTryingToTargetFalse(){
     isTryingToTarget=false;
   }
+  public void setXTargetV(double newXF){
+    XtargetV = newXF ;
+  }
+  public void setYTargetV(double newYF){
+    YtargetF = newYF ;
+  }
 
   public double getTargetP() {
     return targetP;
@@ -90,9 +96,17 @@ public class CameraSubsystem extends SubsystemBase {
   public double getTargetD() {
     return targetD;
   }
-  public double getTargetF() {
-    return targetF;
+
+  public double getXTargetV() {
+    return XtargetV;
   }
+  public double getYTargetV() {
+    return YtargetF;
+  }
+  public int getFiducialID() {
+    return fiducialID;
+  }
+
 
   public void setTargetP(double newP){
     targetP = newP;
@@ -182,7 +196,11 @@ public class CameraSubsystem extends SubsystemBase {
     builder.addDoubleProperty("target I", this::getTargetI, this::setTargetI);
     builder.addDoubleProperty("target D", this::getTargetD, this::setTargetD);
     builder.addBooleanProperty("is targeting", this::getIsTryingToTarget, null);
-    builder.addDoubleProperty("target F", this::getTargetF, null);
+    builder.addDoubleProperty("target F", this::getXTargetV, this::setXTargetV);
+    builder.addDoubleProperty("target YF", this::getYTargetV, this::setYTargetV);
+    builder.addDoubleProperty("target XF", this::getXTargetV, this::setXTargetV);
+
+
 
   }
 

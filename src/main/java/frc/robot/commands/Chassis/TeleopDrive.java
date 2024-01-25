@@ -5,8 +5,6 @@
 package frc.robot.commands.Chassis;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
@@ -15,12 +13,11 @@ import frc.robot.subsystems.Chassis;
 
 /** A default command to drive in teleop based off the joysticks*/
 public class TeleopDrive extends Command {
-  private final Chassis chassis;
-  private final XboxController xboxController;
+  private final Chassis m_chassis;
+  private final XboxController m_xboxController;
 
   private final CameraSubsystem m_camera;
   private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
-
   public TeleopDrive(Chassis chassis, XboxController xboxController, CameraSubsystem camera) {
     m_chassis = chassis;
     m_camera = camera;
@@ -54,8 +51,7 @@ public class TeleopDrive extends Command {
     double x = m_xboxController.getRawAxis(Constants.Buttons.LST_AXS_LJOYSTICKY); // left stick x-axis
 
     if (m_camera.isTryingToTarget()){
-      theta = m_camera.goToTargetPower() + (y * m_camera.getTargetF());
-
+        theta = (x *m_camera.getXTargetV()) + (m_camera.goToTargetPower()) + (-y * m_camera.getYTargetV());
     } else {
       theta = -m_xboxController.getRawAxis(Constants.Buttons.LST_AXS_RJOYSTICKX); // right stick x-axis
       theta = Math.abs(theta) > Constants.Swerve.kDeadband ? theta : 0.0;
@@ -77,7 +73,7 @@ public class TeleopDrive extends Command {
     x = xLimiter.calculate(x * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
     y = yLimiter.calculate(y * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
 
-    chassis.drive(x,y,theta);
+    m_chassis.drive(x,y,theta);
 
   }
 
@@ -88,7 +84,7 @@ public class TeleopDrive extends Command {
    */
   @Override
   public void end(boolean interrupted) {
-    chassis.stopModules();
+    m_chassis.stopModules();
   }
 
   /**
