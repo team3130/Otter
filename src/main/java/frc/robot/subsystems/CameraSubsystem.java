@@ -35,6 +35,8 @@ public class CameraSubsystem extends SubsystemBase {
   private  double targetI = 0d;
   private  double targetD = 0d;
 
+  private double targetF = 0d;
+
   /**
    * Constructs a new Limelight object.
    * The limelight object will be full of null values if Constants.useAprilTags is false.
@@ -86,6 +88,10 @@ public class CameraSubsystem extends SubsystemBase {
   public double getTargetD() {
     return targetD;
   }
+  public double getTargetF() {
+    return targetF;
+  }
+
   public void setTargetP(double newP){
     targetP = newP;
   }
@@ -177,10 +183,11 @@ public class CameraSubsystem extends SubsystemBase {
     builder.addDoubleProperty("targetYaw", this::getTargetDegrees, null);
     builder.addIntegerProperty("fiducial", this::getFiducialID, null);
 
-      builder.addDoubleProperty("target P", this::getTargetP, this::setTargetP);
-      builder.addDoubleProperty("target I", this::getTargetI, this::setTargetI);
-      builder.addDoubleProperty("target D", this::getTargetD, this::setTargetD);
-      builder.addBooleanProperty("is targeting", this::getIsTryingToTarget, null);
+    builder.addDoubleProperty("target P", this::getTargetP, this::setTargetP);
+    builder.addDoubleProperty("target I", this::getTargetI, this::setTargetI);
+    builder.addDoubleProperty("target D", this::getTargetD, this::setTargetD);
+    builder.addBooleanProperty("is targeting", this::getIsTryingToTarget, null);
+    builder.addDoubleProperty("target F", this::getTargetF, null);
 
   }
 
