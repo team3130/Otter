@@ -31,11 +31,13 @@ public class RobotContainer {
   private final XboxController operatorController = new XboxController(1);
   private final Shooter shooter;
   private final Indexer indexer;
+  private final Intake intake;
 
   // container for the robot containing subsystems, OI devices, and commands
   public RobotContainer() {
     shooter = new Shooter();
     indexer = new Indexer();
+    intake = new Intake();
 
     // Named commands must be registered before the creation of any PathPlanner Autos or Paths
     // Do this in RobotContainer, after subsystem initialization, but before the creation of any other commands.
@@ -74,6 +76,7 @@ public class RobotContainer {
     if (Constants.debugMode) {
       ShuffleboardTab tab = Shuffleboard.getTab("Subsystems");
       tab.add(shooter);
+      tab.add(intake);
     }
   }
 
@@ -90,9 +93,11 @@ public class RobotContainer {
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed, cancelling on release.
     // driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
 
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_A).whileTrue(new Shoot(shooter, indexer));
+    new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new Shoot(shooter, indexer, intake));
+
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new OnlyIndex(indexer));
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new OnlyShoot(shooter));
+    new JoystickButton(driverController, Constants.Buttons.LST_BTN_A).whileTrue(new OnlyShoot(shooter));
+    new JoystickButton(driverController, Constants.Buttons.LST_BTN_Y).whileTrue(new IntakeCommand(intake));
 
   }
 }

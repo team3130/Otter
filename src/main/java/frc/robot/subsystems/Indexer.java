@@ -19,6 +19,9 @@ public class Indexer extends SubsystemBase {
         motor7 = new WPI_TalonSRX(7);
         motor6 = new WPI_TalonSRX(10);
 
+        motor6.configVoltageCompSaturation(3);
+        motor7.configVoltageCompSaturation(3);
+
         motor7.configFactoryDefault();
         motor6.configFactoryDefault();
         motor6.setInverted(true);

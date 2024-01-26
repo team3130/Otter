@@ -35,8 +35,8 @@ public class Shooter extends SubsystemBase {
     }
 
     public void runShooters() {
-        leftFlywheel9.setControl(leftFlywheelVoltReq.withOutput(9));
-        rightFlywheel8.setControl(rightFlywheelVoltReq.withOutput(9));
+        leftFlywheel9.setControl(leftFlywheelVoltReq.withOutput(5));
+        rightFlywheel8.setControl(rightFlywheelVoltReq.withOutput(5));
     }
 
     public void stopShooters() {
@@ -64,11 +64,11 @@ public class Shooter extends SubsystemBase {
     }
 
     public double getVelocityMotor8() {
-        return rightFlywheel8.getVelocity().getValue();
+        return rightFlywheel8.getVelocity().getValue() * 60;
     }
 
     public double getVelocityMotor9() {
-        return leftFlywheel9.getVelocity().getValue();
+        return leftFlywheel9.getVelocity().getValue() * 60;
     }
 
     @Override
