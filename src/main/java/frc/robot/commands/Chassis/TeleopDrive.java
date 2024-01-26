@@ -2,7 +2,9 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
+
 package frc.robot.commands.Chassis;
+
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -13,27 +15,32 @@ import frc.robot.Constants;
 import frc.robot.subsystems.CameraSubsystem;
 import frc.robot.subsystems.Chassis;
 
+
 /** A default command to drive in teleop based off the joysticks*/
 public class TeleopDrive extends Command {
   private final Chassis chassis;
   private final XboxController xboxController;
 
-  private final CameraSubsystem m_camera;
+
+  private final CameraSubsystem camera;
   private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
 
+
   public TeleopDrive(Chassis chassis, XboxController xboxController, CameraSubsystem camera) {
-    m_chassis = chassis;
-    m_camera = camera;
-    m_xboxController = xboxController;
+    this.chassis = chassis;
+    this.camera = camera;
+    this.xboxController = xboxController;
+
 
     // Use addRequirements() here to declare subsystem dependencies.
     m_requirements.add(chassis);
     m_requirements.add(camera);
-    
+
     xLimiter = new SlewRateLimiter(Constants.Swerve.kMaxAccelerationDrive);
     yLimiter = new SlewRateLimiter(Constants.Swerve.kMaxAccelerationDrive);
     turningLimiter = new SlewRateLimiter(Constants.Swerve.kMaxAccelerationAngularDrive);
   }
+
 
   /**
    * Called when the scheduler first schedules the command
@@ -41,6 +48,7 @@ public class TeleopDrive extends Command {
   @Override
   public void initialize() {
   }
+
 
   /**
    * Called periodically while the default command is being ran and is not actively interrupted.
@@ -50,20 +58,23 @@ public class TeleopDrive extends Command {
   @Override
   public void execute() {
     double theta = 0.0;
-    double y = m_xboxController.getRawAxis(Constants.Buttons.LST_AXS_LJOYSTICKX); // left stick y-axis (y-axis is inverted)
-    double x = m_xboxController.getRawAxis(Constants.Buttons.LST_AXS_LJOYSTICKY); // left stick x-axis
+    double y = xboxController.getRawAxis(Constants.Buttons.LST_AXS_LJOYSTICKX); // left stick y-axis (y-axis is inverted)
+    double x = xboxController.getRawAxis(Constants.Buttons.LST_AXS_LJOYSTICKY); // left stick x-axis
 
-    if (m_camera.isTryingToTarget()){
-      theta = m_camera.goToTargetPower();
+
+    if (camera.isTryingToTarget()){
+      theta = camera.goToTargetPower();
+
 
     } else {
-      theta = -m_xboxController.getRawAxis(Constants.Buttons.LST_AXS_RJOYSTICKX); // right stick x-axis
+      theta = -xboxController.getRawAxis(Constants.Buttons.LST_AXS_RJOYSTICKX); // right stick x-axis
       theta = Math.abs(theta) > Constants.Swerve.kDeadband ? theta : 0.0;
       theta = turningLimiter.calculate(theta) * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond;
     }
     // square the inputs
     y = y * Math.abs(y);
     x = x * Math.abs(x);
+
 
     // apply dead-band
     if (Math.abs(x) < Constants.Swerve.kDeadband) {
@@ -73,13 +84,17 @@ public class TeleopDrive extends Command {
       y = 0;
     }
 
+
     // apply slew rate limiter which also converts to m/s and rad.s
     x = xLimiter.calculate(x * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
     y = yLimiter.calculate(y * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
 
+
     chassis.drive(x,y,theta);
 
+
   }
+
 
   /**
    * Called when the command is over.
@@ -90,6 +105,7 @@ public class TeleopDrive extends Command {
   public void end(boolean interrupted) {
     chassis.stopModules();
   }
+
 
   /**
    * @return false. Never is finished.

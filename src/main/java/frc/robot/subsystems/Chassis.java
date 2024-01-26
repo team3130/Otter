@@ -2,13 +2,16 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
+
 package frc.robot.subsystems;
+
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -25,7 +28,9 @@ import frc.robot.Constants;
 import frc.robot.sensors.Navx;
 import frc.robot.swerve.SwerveModule;
 
+
 import java.util.Arrays;
+
 
 /**
  * Chassis is the drivetrain subsystem of our bot. Our physical chassis is a swerve drive,
@@ -43,8 +48,8 @@ public class Chassis extends SubsystemBase {
     private final GenericEntry n_fieldOrriented; // comp network table entry for whether field oriented drivetrain
     private double targetMaxVelo = Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond; //TODO real
     private double targetMaxAcc = Constants.Swerve.kMaxAccelerationDrive; //TODO real
-
-
+    private Pose2d initialPosition = new Pose2d();
+    private Pose2d currentPosition = new Pose2d();
 
     /**
      * Makes a chassis that starts at 0, 0, 0
@@ -63,28 +68,25 @@ public class Chassis extends SubsystemBase {
     public Chassis(Pose2d startingPos, Rotation2d startingRotation, CameraSubsystem cameraSubsystem1) {
         kinematics = new SwerveDriveKinematics(Constants.Swerve.moduleTranslations);
 
+
         modules = new SwerveModule[4];
         modules[Constants.Modules.leftFront] = new SwerveModule(Constants.Modules.leftFront);
         modules[Constants.Modules.leftBack] = new SwerveModule(Constants.Modules.leftBack);
         modules[Constants.Modules.rightFront] = new SwerveModule(Constants.Modules.rightFront);
         modules[Constants.Modules.rightBack] = new SwerveModule(Constants.Modules.rightBack);
 
+
         // odometry wrapper class that has functionality for cameras that report position with latency
         odometry = new SwerveDrivePoseEstimator(kinematics, startingRotation, generatePoses(), startingPos);
 
+
         cameraSubsystem = cameraSubsystem1;
+
 
         field = new Field2d();
         Shuffleboard.getTab("Comp").add("field", field);
         n_fieldOrriented = Shuffleboard.getTab("Comp").add("field orriented", false).getEntry();
     }
-
-
-    }
-
-
-
-
 
     /**
      * If the PID controllers of the {@link SwerveModule}'s are all done
@@ -172,7 +174,6 @@ public class Chassis extends SubsystemBase {
         updateOdometryFromSwerve();
     }
 
-
     /**
      * subsystem looped call made by the scheduler.
      * Updates the odometry from swerve and April Tags.
@@ -184,12 +185,12 @@ public class Chassis extends SubsystemBase {
         field.setRobotPose(odometry.getEstimatedPosition());
     }
 
-  // Stops the devices connected to this subsystem
+    // Stops the devices connected to this subsystem
     public void stopModules(){
-      modules[Constants.Modules.leftFront].stop();
-      modules[Constants.Modules.leftBack].stop();
-      modules[Constants.Modules.rightFront].stop();
-      modules[Constants.Modules.rightBack].stop();
+        modules[Constants.Modules.leftFront].stop();
+        modules[Constants.Modules.leftBack].stop();
+        modules[Constants.Modules.rightFront].stop();
+        modules[Constants.Modules.rightBack].stop();
     }
 
     /**
@@ -368,6 +369,35 @@ public class Chassis extends SubsystemBase {
      */
     public double getMaxSpeedRead() {
         return maxSpeedRead;
+    }
+
+    /**
+     * Initial position vector + initial April Tag distance vector = origin to April Tag vector
+     * Current position vector - origin to April Tag vector = current April Tag distance vector
+     * Angle to turn to face target is arctan(y-component currentATDistance vector, x-component currentATDistance vector)
+     *
+     * @return angle to turn to April Tag
+     */
+    public double getAngleToFaceTarget() {
+        currentPosition = new Pose2d(getPose2d().getTranslation(), Navx.getRotation());
+        double initialAprilTagDistance = cameraSubsystem.getTargetDistance();
+        double initialAprilTagAngle = Navx.getRotation().getRadians();
+        Translation2d initialAprilTagVector = new Translation2d(initialAprilTagDistance * Math.sin(initialAprilTagAngle), initialAprilTagDistance * Math.cos(initialAprilTagAngle));
+        Translation2d originToAprilTagVector = getInitialPosition().getTranslation().plus(initialAprilTagVector);
+        Translation2d currentPositionToAprilTagVector = currentPosition.getTranslation().minus(originToAprilTagVector);
+        double theta = Math.atan2(currentPositionToAprilTagVector.getY(), currentPositionToAprilTagVector.getX()) - currentPosition.getRotation().getRadians() + Math.PI;
+        return theta;
+    }
+
+    /**
+     * called in FaceTarget initialize as "setInitialPosition(chassis.getPose2d);"
+     */
+    public void setInitialPosition(Pose2d newInitialPosition) {
+        initialPosition = new Pose2d(newInitialPosition.getTranslation(), Navx.getRotation());
+    }
+
+    public Pose2d getInitialPosition() {
+        return initialPosition;
     }
 
     /**
