@@ -36,7 +36,7 @@ public class CameraSubsystem extends SubsystemBase {
   private  double targetD = 0d;
 
   private double XtargetV = 0.2;
-  private double YtargetF = 0.7;
+  private double YtargetF = 0.8;
 
 
   /**
