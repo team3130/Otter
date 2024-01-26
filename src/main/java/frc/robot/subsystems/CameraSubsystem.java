@@ -177,7 +177,7 @@ public class CameraSubsystem extends SubsystemBase {
     } else {
       PhotonPipelineResult result = camera.getLatestResult();
       if (result.getBestTarget() != null && result.getBestTarget().getPitch() != -400.0) {
-        return -Math.toRadians(result.getBestTarget().getPitch());
+        return -Math.toRadians(result.getBestTarget().getYaw());
       }
     }
     return -400d;
