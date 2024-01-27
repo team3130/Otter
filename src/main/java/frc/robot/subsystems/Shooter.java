@@ -22,8 +22,10 @@ public class Shooter extends SubsystemBase {
     final VoltageOut leftFlywheelVoltReq = new VoltageOut(0);
     final VoltageOut rightFlywheelVoltReq = new VoltageOut(0);
 
-    final VoltageOut leftVelocityRequest = new VoltageOut(0);
-    final VoltageOut rightVelocityRequest = new VoltageOut(0);
+
+    final VelocityVoltage leftVelocityRequest = new VelocityVoltage(0).withSlot(0); // class instance
+    final VelocityVoltage rightVelocityRequest = new VelocityVoltage(0).withSlot(0);
+
     final double flyWheelVelocity = 8;
 
     Slot0Configs slot0Configs; // gains for specific slot
@@ -123,15 +125,6 @@ public class Shooter extends SubsystemBase {
         return leftFlywheel9.getVelocity().getValue() * 60;
     }
 
-
-    public double getLeftFlyVelocity() {
-        return leftFlywheel9.getVelocity().getValue(); // rotations per second
-    }
-
-    public double getRightFlyVelocity() {
-        return rightFlywheel8.getVelocity().getValue(); // rotations per second
-    }
-
     public double getRightFlyVoltSupply() {
         return rightFlywheel8.getSupplyVoltage().getValue();
     }
@@ -144,16 +137,6 @@ public class Shooter extends SubsystemBase {
         return rightFlywheel8.getSupplyCurrent().getValue();
     }
 
-    public void runShooters() {
-        leftFlywheel9.setControl(leftFlywheelVoltReq.withOutput(leftFlywheelVolt));
-        rightFlywheel8.setControl(rightFlywheelVoltReq.withOutput(rightFlywheelVolt));
-    }
-
-    public void stopShooters() {
-        leftFlywheel9.setControl(leftFlywheelVoltReq.withOutput(0));
-        rightFlywheel8.setControl(rightFlywheelVoltReq.withOutput(0));
-    }
-
     @Override
     public void initSendable(SendableBuilder builder) {
         builder.setSmartDashboardType("Shooter");
@@ -163,7 +146,9 @@ public class Shooter extends SubsystemBase {
         builder.addDoubleProperty("proportion speed", this::getProportionVolt, this::setProportionVolt);
         builder.addDoubleProperty("8 real velocity", this::getVelocityMotor8, null);
         builder.addDoubleProperty("9 real velocity", this::getVelocityMotor9, null);
-
+        builder.addDoubleProperty("right volt supply", this::getRightFlyVoltSupply, null);
+        builder.addDoubleProperty("left volt supply", this::getLeftFlywheelVoltSupply, null);
+        builder.addDoubleProperty("right current", this::getRightFlyCurrent, null);
     }
 
     @Override
