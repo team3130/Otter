@@ -48,8 +48,6 @@ public class Chassis extends SubsystemBase {
     private final GenericEntry n_fieldOrriented; // comp network table entry for whether field oriented drivetrain
     private double targetMaxVelo = Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond; //TODO real
     private double targetMaxAcc = Constants.Swerve.kMaxAccelerationDrive; //TODO real
-    private Pose2d initialPosition = new Pose2d();
-    private Pose2d currentPosition = new Pose2d();
 
     /**
      * Makes a chassis that starts at 0, 0, 0
@@ -371,33 +369,14 @@ public class Chassis extends SubsystemBase {
         return maxSpeedRead;
     }
 
-    /**
-     * Initial position vector + initial April Tag distance vector = origin to April Tag vector
-     * Current position vector - origin to April Tag vector = current April Tag distance vector
-     * Angle to turn to face target is arctan(y-component currentATDistance vector, x-component currentATDistance vector)
-     *
-     * @return angle to turn to April Tag
-     */
-    public double getAngleToFaceTarget() {
-        currentPosition = new Pose2d(getPose2d().getTranslation(), Navx.getRotation());
-        double initialAprilTagDistance = cameraSubsystem.getTargetDistance();
-        double initialAprilTagAngle = initialPosition.getRotation().getRadians();
-        Translation2d initialAprilTagVector = new Translation2d(initialAprilTagDistance * Math.sin(Math.PI - initialAprilTagAngle), initialAprilTagDistance * Math.cos(Math.PI - initialAprilTagAngle));
-        Translation2d originToAprilTagVector = getInitialPosition().getTranslation().plus(initialAprilTagVector);
-        Translation2d currentPositionToAprilTagVector = currentPosition.getTranslation().minus(originToAprilTagVector);
+    public double getAngleToFaceTarget(Translation2d originToAprilTagVector) {
+        Translation2d currentPositionToAprilTagVector = getPose2d().getTranslation().minus(originToAprilTagVector);
         double theta = Math.atan2(currentPositionToAprilTagVector.getY(), currentPositionToAprilTagVector.getX()) - Math.PI;
         return theta;
     }
 
-    /**
-     * called in FaceTarget initialize as "setInitialPosition(chassis.getPose2d);"
-     */
-    public void setInitialPosition(Pose2d newInitialPosition) {
-        initialPosition = new Pose2d(newInitialPosition.getTranslation(), Navx.getRotation());
-    }
-
     public Pose2d getInitialPosition() {
-        return initialPosition;
+        return getPose2d();
     }
 
     /**

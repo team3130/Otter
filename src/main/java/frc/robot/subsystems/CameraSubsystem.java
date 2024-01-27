@@ -33,7 +33,7 @@ public class CameraSubsystem extends SubsystemBase {
   private int ampTargetFiducialID;
   private boolean isTryingToTarget = false;
   private int fiducialID = 0;
-  private PIDController targetController;
+  public PIDController targetController;
   private double targetP = 10d;
   private double targetI = 0d;
   private double targetD = 0d;
@@ -116,6 +116,7 @@ public class CameraSubsystem extends SubsystemBase {
       return 0;
     }
   }
+
   public PhotonTrackedTarget getTarget() {
     if (!hasTarget()) {
       return null;
