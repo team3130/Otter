@@ -16,6 +16,12 @@
           "data": {
             "pathName": "north"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "south"
+          }
         }
       ]
     }
