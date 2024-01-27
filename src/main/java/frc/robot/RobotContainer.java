@@ -10,10 +10,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.*;
-import frc.robot.commands.Shooter.IntakeCommand;
-import frc.robot.commands.Shooter.OnlyIndex;
-import frc.robot.commands.Shooter.OnlyShoot;
-import frc.robot.commands.Shooter.Shoot;
+import frc.robot.commands.Shooter.*;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -98,6 +95,8 @@ public class RobotContainer {
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new OnlyIndex(indexer));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_A).whileTrue(new OnlyShoot(shooter));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_Y).whileTrue(new IntakeCommand(intake));
+
+    new JoystickButton(driverController, Constants.Buttons.LST_POV_E).whileTrue(new VelocityShoot(shooter));
 
   }
 }

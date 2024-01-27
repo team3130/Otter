@@ -137,6 +137,17 @@ public class Shooter extends SubsystemBase {
         return rightFlywheel8.getSupplyCurrent().getValue();
     }
 
+    public double getkS() { return kS; }
+    public double getkV() { return kV; }
+    public double getkP() { return kP; }
+    public double getkI() { return kI; }
+    public double getkD() { return kD; }
+    public void setkS(double newS) { slot0Configs.kS = newS; }
+    public void setkV(double newV) { slot0Configs.kV = newV; }
+    public void setkP(double newP) { slot0Configs.kP = newP; }
+    public void setkI(double newI) { slot0Configs.kI = newI; }
+    public void setkD(double newD) { slot0Configs.kD = newD; }
+
     @Override
     public void initSendable(SendableBuilder builder) {
         builder.setSmartDashboardType("Shooter");
@@ -149,6 +160,12 @@ public class Shooter extends SubsystemBase {
         builder.addDoubleProperty("right volt supply", this::getRightFlyVoltSupply, null);
         builder.addDoubleProperty("left volt supply", this::getLeftFlywheelVoltSupply, null);
         builder.addDoubleProperty("right current", this::getRightFlyCurrent, null);
+
+        builder.addDoubleProperty("velocity kS", this::getkS, this::setkS);
+        builder.addDoubleProperty("velocity kV", this::getkV, this::setkV);
+        builder.addDoubleProperty("velocity kP", this::getkP, this::setkP);
+        builder.addDoubleProperty("velocity kI", this::getkI, this::setkI);
+        builder.addDoubleProperty("velocity kD", this::getkD, this::setkD);
     }
 
     @Override
