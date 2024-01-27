@@ -64,10 +64,10 @@ public class RobotContainer {
     new Trigger(m_exampleSubsystem::exampleCondition)
             .onTrue(new ExampleCommand(m_exampleSubsystem));
 
-    new POVButton(driverController, Constants.Buttons.LST_POV_N).whileTrue(new ZeroEverything(chassis));
-    new POVButton(driverController, Constants.Buttons.LST_POV_W).whileTrue(new ZeroWheels(chassis));
+    new POVButton(driverGamepad, Constants.Buttons.LST_POV_N).whileTrue(new ZeroEverything(chassis));
+    new POVButton(driverGamepad, Constants.Buttons.LST_POV_W).whileTrue(new ZeroWheels(chassis));
     new JoystickButton(driverGamepad, Constants.Buttons.LST_BTN_X).onTrue(new EnableTargeting(cameraSubsystem));
-    new JoystickButton(driverGamepad, Constants.Buttons.LST_BTN_A).whileTrue(new TargetingPressed(chassis));
+    new JoystickButton(driverGamepad, Constants.Buttons.LST_BTN_A).whileTrue(new TargetingPressed(cameraSubsystem));
   }
 
   /*

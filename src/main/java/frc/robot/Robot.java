@@ -94,8 +94,8 @@ public class Robot extends TimedRobot {
 
 
     CommandScheduler.getInstance().cancelAll();
-    CommandScheduler.getInstance().schedule(m_robotContainer.dontTarget());
-    CommandScheduler.getInstance().schedule(m_robotContainer.resetEverything());
+    CommandScheduler.getInstance().schedule(robotContainer.dontTarget());
+    CommandScheduler.getInstance().schedule(robotContainer.resetEverything());
   }
 
   /** This function is called periodically during operator control. */

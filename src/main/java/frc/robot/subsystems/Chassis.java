@@ -381,11 +381,11 @@ public class Chassis extends SubsystemBase {
     public double getAngleToFaceTarget() {
         currentPosition = new Pose2d(getPose2d().getTranslation(), Navx.getRotation());
         double initialAprilTagDistance = cameraSubsystem.getTargetDistance();
-        double initialAprilTagAngle = Navx.getRotation().getRadians();
-        Translation2d initialAprilTagVector = new Translation2d(initialAprilTagDistance * Math.sin(initialAprilTagAngle), initialAprilTagDistance * Math.cos(initialAprilTagAngle));
+        double initialAprilTagAngle = initialPosition.getRotation().getRadians();
+        Translation2d initialAprilTagVector = new Translation2d(initialAprilTagDistance * Math.sin(Math.PI - initialAprilTagAngle), initialAprilTagDistance * Math.cos(Math.PI - initialAprilTagAngle));
         Translation2d originToAprilTagVector = getInitialPosition().getTranslation().plus(initialAprilTagVector);
         Translation2d currentPositionToAprilTagVector = currentPosition.getTranslation().minus(originToAprilTagVector);
-        double theta = Math.atan2(currentPositionToAprilTagVector.getY(), currentPositionToAprilTagVector.getX()) - currentPosition.getRotation().getRadians() + Math.PI;
+        double theta = Math.atan2(currentPositionToAprilTagVector.getY(), currentPositionToAprilTagVector.getX()) - Math.PI;
         return theta;
     }
 
