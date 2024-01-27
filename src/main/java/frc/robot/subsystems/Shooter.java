@@ -22,6 +22,25 @@ public class Shooter extends SubsystemBase {
     final VoltageOut leftFlywheelVoltReq = new VoltageOut(0);
     final VoltageOut rightFlywheelVoltReq = new VoltageOut(0);
 
+    final VoltageOut leftVelocityRequest = new VoltageOut(0);
+    final VoltageOut rightVelocityRequest = new VoltageOut(0);
+    final double flyWheelVelocity = 8;
+
+    Slot0Configs slot0Configs; // gains for specific slot
+    /*
+      alternative way
+      / / create a velocity closed-loop request, voltage output, slot 0 configs
+      final VelocityVoltage velocityRequest = new VelocityVoltage(0).withSlot(0);
+    */
+
+    private double kS = 0.05;
+    private double kV = 0.12;
+    private double kP = 0.11;
+    private double kI = 0;
+    private double kD = 0;
+    private double feedForwardVolt;
+
+
     public Shooter() {
         leftFlywheel9 = new TalonFX(9);
         rightFlywheel8 = new TalonFX(8);
@@ -32,6 +51,16 @@ public class Shooter extends SubsystemBase {
         rightFlywheel8.setNeutralMode(NeutralModeValue.Coast);
 
         rightFlywheel8.setInverted(true);
+
+        slot0Configs = new Slot0Configs(); // gains for specific slot
+
+        slot0Configs.kS = kS; // Add 0.05 V output to overcome static friction
+
+        slot0Configs.kV = kV; // 1/(rps) - A velocity target of 1 rps results in 0.12 V output
+        slot0Configs.kP = kP; // 1/rps - An error of 1 rps results in 0.11 V output
+        slot0Configs.kI = kI; // 1/rot - output per unit of integrated error in velocity (output/rotation)
+        slot0Configs.kD = kD; // output per unit of error derivative in velocity (output/ (rps/s))
+        // leftFlywheel9.getConfigurator().apply(new Slot0Configs());
     }
 
     public void runShooters() {
@@ -42,6 +71,29 @@ public class Shooter extends SubsystemBase {
     public void stopShooters() {
         leftFlywheel9.setControl(leftFlywheelVoltReq.withOutput(0));
         rightFlywheel8.setControl(rightFlywheelVoltReq.withOutput(0));
+    }
+
+    public void updateVelocityPID() {
+        leftFlywheel9.getConfigurator().apply(slot0Configs);
+        rightFlywheel8.getConfigurator().apply(slot0Configs);
+        // leftFlywheel9.getConfigurator().apply(new Slot0Configs());
+    }
+
+    public void setFlywheelVelocity() {
+        // velocityRequest.Slot = 0; // this is probably redudant now
+        leftFlywheel9.setControl(leftVelocityRequest.withVelocity(flyWheelVelocity).withFeedForward(feedForwardVolt));
+
+        // ALT way: set velocity to 8 rps, add 0.5 V to overcome gravity
+        // m_talonFX.setControl(velocityRequest.withVelocity(8).withFeedForward(0.5));
+    }
+
+    public void configureVelocitySlot() {
+        slot0Configs.kS = kS; // Add 0.05 V output to overcome static friction
+
+        slot0Configs.kV = kV; // 1/(rps) - A velocity target of 1 rps results in 0.12 V output
+        slot0Configs.kP = kP; // 1/rps - An error of 1 rps results in 0.11 V output
+        slot0Configs.kI = kI; // 1/rot - output per unit of integrated error in velocity (output/rotation)
+        slot0Configs.kD = kD; // output per unit of error derivative in velocity (output/ (rps/s))
     }
 
     @Override
@@ -69,6 +121,37 @@ public class Shooter extends SubsystemBase {
 
     public double getVelocityMotor9() {
         return leftFlywheel9.getVelocity().getValue() * 60;
+    }
+
+
+    public double getLeftFlyVelocity() {
+        return leftFlywheel9.getVelocity().getValue(); // rotations per second
+    }
+
+    public double getRightFlyVelocity() {
+        return rightFlywheel8.getVelocity().getValue(); // rotations per second
+    }
+
+    public double getRightFlyVoltSupply() {
+        return rightFlywheel8.getSupplyVoltage().getValue();
+    }
+
+    public double getLeftFlywheelVoltSupply() {
+        return leftFlywheel9.getSupplyVoltage().getValue();
+    }
+
+    public double getRightFlyCurrent() {
+        return rightFlywheel8.getSupplyCurrent().getValue();
+    }
+
+    public void runShooters() {
+        leftFlywheel9.setControl(leftFlywheelVoltReq.withOutput(leftFlywheelVolt));
+        rightFlywheel8.setControl(rightFlywheelVoltReq.withOutput(rightFlywheelVolt));
+    }
+
+    public void stopShooters() {
+        leftFlywheel9.setControl(leftFlywheelVoltReq.withOutput(0));
+        rightFlywheel8.setControl(rightFlywheelVoltReq.withOutput(0));
     }
 
     @Override
