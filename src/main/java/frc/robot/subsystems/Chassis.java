@@ -48,6 +48,11 @@ public class Chassis extends SubsystemBase {
     private final GenericEntry n_fieldOrriented; // comp network table entry for whether field oriented drivetrain
     private double targetMaxVelo = Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond; //TODO real
     private double targetMaxAcc = Constants.Swerve.kMaxAccelerationDrive; //TODO real
+    public Pose2d initialPosition;
+    public double initialAprilTagDistance;
+    public double initialAprilTagAngle;
+    public Translation2d initialAprilTagVector;
+    public Translation2d originToAprilTagVector;
 
     /**
      * Makes a chassis that starts at 0, 0, 0
@@ -318,9 +323,8 @@ public class Chassis extends SubsystemBase {
     /**
      * @return the yaw from odometry
      */
-    private double getYaw() {
-        return odometry.getEstimatedPosition().getRotation().getDegrees();
-    }
+    private double getYaw() { return odometry.getEstimatedPosition().getRotation().getDegrees(); }
+    private double getInitialAprilTagDistance() { return initialAprilTagDistance; }
 
     /**
      * A vomit onto shuffleboard of the {@link SwerveModule} objects in Chassis
@@ -348,6 +352,7 @@ public class Chassis extends SubsystemBase {
         builder.addDoubleProperty("Y position", this::getY, null);
         builder.addDoubleProperty("rotation", this::getYaw, null);
         builder.addDoubleProperty("max speed read", this::getMaxSpeedRead, null);
+        builder.addDoubleProperty("Target Distance", this::getInitialAprilTagDistance, null);
     }
 
     /**
@@ -369,14 +374,29 @@ public class Chassis extends SubsystemBase {
         return maxSpeedRead;
     }
 
+    /*This method generates the angle needed to turn to face a specific target without using a camera
+       - needs to be paired with Giorgia's face target code or needs to start with the camera facing the target
+     */
     public double getAngleToFaceTarget(Translation2d originToAprilTagVector) {
+        // the vector from the position that we are at currently to the april tag (target)
         Translation2d currentPositionToAprilTagVector = getPose2d().getTranslation().minus(originToAprilTagVector);
+        // the angle that we need to turn to from our current holonomic at our current position to face target (setpoint)
         double theta = Math.atan2(currentPositionToAprilTagVector.getY(), currentPositionToAprilTagVector.getX()) - Math.PI;
         return theta;
     }
 
+    // getter for the initial position where we use Giorgia's face target
     public Pose2d getInitialPosition() {
         return getPose2d();
+    }
+
+    // gets the information like distance to april tag and angle to make vectors (uses FaceTarget info)
+    public void prepareForFaceTarget(){
+        initialPosition = getInitialPosition();
+        initialAprilTagDistance = cameraSubsystem.getTargetDistance();
+        initialAprilTagAngle = initialPosition.getRotation().getRadians(); // can maybe use yaw later
+        initialAprilTagVector = new Translation2d(initialAprilTagDistance * Math.sin(Math.PI - initialAprilTagAngle), initialAprilTagDistance * Math.cos(Math.PI - initialAprilTagAngle));
+        originToAprilTagVector = initialPosition.getTranslation().plus(initialAprilTagVector);
     }
 
     /**

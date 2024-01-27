@@ -168,6 +168,15 @@ public class CameraSubsystem extends SubsystemBase {
     }
     return -400d;
   }
+
+  public boolean faceTargeted(){
+    if (getTargetYaw() == 0.0){
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
   public double getTargetDegrees() {
     return Math.toDegrees(getTargetYaw());
   }

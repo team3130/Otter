@@ -25,11 +25,6 @@ public class TeleopDrive extends Command {
   private final XboxController xboxController;
   private final CameraSubsystem camera;
   private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
-  private Pose2d initialPosition;
-  private double initialAprilTagDistance;
-  private double initialAprilTagAngle;
-  private Translation2d initialAprilTagVector;
-  private Translation2d originToAprilTagVector;
 
   public TeleopDrive(Chassis chassis, XboxController xboxController, CameraSubsystem camera) {
     this.chassis = chassis;
@@ -52,12 +47,8 @@ public class TeleopDrive extends Command {
    */
   @Override
   public void initialize() {
-    if (camera.isTryingToTarget()) {
-      initialPosition = chassis.getInitialPosition();
-      initialAprilTagDistance = camera.getTargetDistance();
-      initialAprilTagAngle = initialPosition.getRotation().getRadians(); // can maybe use yaw later
-      initialAprilTagVector = new Translation2d(initialAprilTagDistance * Math.sin(Math.PI - initialAprilTagAngle), initialAprilTagDistance * Math.cos(Math.PI - initialAprilTagAngle));
-      originToAprilTagVector = initialPosition.getTranslation().plus(initialAprilTagVector);
+    if (camera.faceTargeted()){
+      chassis.prepareForFaceTarget();
     }
   }
 
@@ -73,10 +64,12 @@ public class TeleopDrive extends Command {
       double y = xboxController.getRawAxis(Constants.Buttons.LST_AXS_LJOYSTICKX); // left stick y-axis (y-axis is inverted)
       double x = xboxController.getRawAxis(Constants.Buttons.LST_AXS_LJOYSTICKY); // left stick x-axis
 
-
+      // set theta to face target
       if (camera.isTryingToTarget()) {
         theta = camera.goToTargetPower();
-        camera.targetController.calculate(chassis.getRotation2d().getRadians(), chassis.getAngleToFaceTarget(originToAprilTagVector));
+          if (camera.faceTargeted()) {
+            theta = camera.targetController.calculate(chassis.getRotation2d().getRadians(), chassis.getAngleToFaceTarget(chassis.originToAprilTagVector));
+          }
       }
       else {
         theta = -xboxController.getRawAxis(Constants.Buttons.LST_AXS_RJOYSTICKX); // right stick x-axis
@@ -127,4 +120,3 @@ public class TeleopDrive extends Command {
       return false;
     }
   }
-}
