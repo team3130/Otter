@@ -71,6 +71,14 @@ public class Shooter extends SubsystemBase {
         return leftFlywheel9.getVelocity().getValue() * 60;
     }
 
+    public double getLeftCurrent() {
+        return leftFlywheel9.getSupplyCurrent().getValue();
+    }
+
+    public double getRightCurrent() {
+        return rightFlywheel8.getSupplyCurrent().getValue();
+    }
+
     @Override
     public void initSendable(SendableBuilder builder) {
         builder.setSmartDashboardType("Shooter");
@@ -80,6 +88,9 @@ public class Shooter extends SubsystemBase {
         builder.addDoubleProperty("proportion speed", this::getProportionVolt, this::setProportionVolt);
         builder.addDoubleProperty("8 real velocity", this::getVelocityMotor8, null);
         builder.addDoubleProperty("9 real velocity", this::getVelocityMotor9, null);
+
+        builder.addDoubleProperty("left current", this::getLeftCurrent, null);
+        builder.addDoubleProperty("right current", this::getRightCurrent, null);
 
     }
 
