@@ -69,20 +69,11 @@ public class CameraSubsystem extends SubsystemBase {
   public boolean targetControllerDone(){
     return targetController.atSetpoint();
   }
-  public boolean isTryingToTarget(){
-    return isTryingToTarget;
-  }
-  public void setTryingToTargetTrue(){
-    isTryingToTarget=true;
-  }
-  public void setTryingToTargetFalse(){
-    isTryingToTarget=false;
-  }
   public void setXTargetV(double newXF){
-    XtargetV = newXF ;
+    XtargetV = newXF;
   }
   public void setYTargetV(double newYF){
-    YtargetF = newYF ;
+    YtargetF = newYF;
   }
 
   public double getTargetP() {
@@ -199,9 +190,6 @@ public class CameraSubsystem extends SubsystemBase {
     builder.addDoubleProperty("target F", this::getXTargetV, this::setXTargetV);
     builder.addDoubleProperty("target YF", this::getYTargetV, this::setYTargetV);
     builder.addDoubleProperty("target XF", this::getXTargetV, this::setXTargetV);
-
-
-
   }
 
   // This method will be called once per scheduler run

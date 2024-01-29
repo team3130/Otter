@@ -12,21 +12,21 @@ import frc.robot.subsystems.CameraSubsystem;
 import frc.robot.subsystems.Chassis;
 
 /** A default command to drive in teleop based off the joysticks*/
-public class TeleopDrive extends Command {
-  private final Chassis chassis;
-  private final XboxController xboxController;
+public class FFFaceTarget extends Command {
+  private final Chassis m_chassis;
+  private final XboxController m_xboxController;
 
-  private final CameraSubsystem camera;
+  private final CameraSubsystem m_camera;
   private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
-  public TeleopDrive(Chassis chassis, XboxController xboxController, CameraSubsystem camera) {
-    this.chassis = chassis;
-    this.camera = camera;
-    this.xboxController = xboxController;
+  public FFFaceTarget(Chassis chassis, XboxController xboxController, CameraSubsystem camera) {
+    m_chassis = chassis;
+    m_camera = camera;
+    m_xboxController = xboxController;
 
     // Use addRequirements() here to declare subsystem dependencies.
     m_requirements.add(chassis);
     m_requirements.add(camera);
-    
+
     xLimiter = new SlewRateLimiter(Constants.Swerve.kMaxAccelerationDrive);
     yLimiter = new SlewRateLimiter(Constants.Swerve.kMaxAccelerationDrive);
     turningLimiter = new SlewRateLimiter(Constants.Swerve.kMaxAccelerationAngularDrive);
@@ -37,6 +37,7 @@ public class TeleopDrive extends Command {
    */
   @Override
   public void initialize() {
+    m_camera.resetTargetController();
   }
 
   /**
@@ -46,9 +47,11 @@ public class TeleopDrive extends Command {
    */
   @Override
   public void execute() {
-    double y = -xboxController.getRawAxis(Constants.Buttons.LST_AXS_LJOYSTICKX); // left stick y-axis (y-axis is inverted)
-    double x = -xboxController.getRawAxis(Constants.Buttons.LST_AXS_LJOYSTICKY); // left stick x-axis
-    double theta = -xboxController.getRawAxis(Constants.Buttons.LST_AXS_RJOYSTICKX); // right stick x-axis
+    double theta = 0.0;
+    double y = m_xboxController.getRawAxis(Constants.Buttons.LST_AXS_LJOYSTICKX); // left stick y-axis (y-axis is inverted)
+    double x = m_xboxController.getRawAxis(Constants.Buttons.LST_AXS_LJOYSTICKY); // left stick x-axis
+
+    theta = (x * m_camera.getXTargetV()) + (m_camera.goToTargetPower()) + (-y * m_camera.getYTargetV());
 
     // square the inputs
     y = y * Math.abs(y);
@@ -61,15 +64,12 @@ public class TeleopDrive extends Command {
     if (Math.abs(y) < Constants.Swerve.kDeadband) {
       y = 0;
     }
-    theta = Math.abs(theta) > Constants.Swerve.kDeadband ? theta : 0.0;
 
     // apply slew rate limiter which also converts to m/s and rad.s
     x = xLimiter.calculate(x * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
     y = yLimiter.calculate(y * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
-    //TODO: why doesn't theta get scaled as well??
-    theta = turningLimiter.calculate(theta) * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond;
 
-    chassis.drive(x,y,theta);
+    m_chassis.drive(x,y,theta);
   }
 
   /**
@@ -79,7 +79,7 @@ public class TeleopDrive extends Command {
    */
   @Override
   public void end(boolean interrupted) {
-    chassis.stopModules();
+    m_chassis.stopModules();
   }
 
   /**
