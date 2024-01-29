@@ -75,9 +75,6 @@ public class RobotContainer {
   public Command resetEverything() {
     return new ZeroEverything(chassis);
   }
-  public Command dontTarget() {
-    return new DisableTargeting(cameraSubsystem);
-  }
 
   /*
   Odometry and Chassis methods

@@ -93,7 +93,6 @@ public class Robot extends TimedRobot {
 
 
     CommandScheduler.getInstance().cancelAll();
-    CommandScheduler.getInstance().schedule(robotContainer.dontTarget());
     CommandScheduler.getInstance().schedule(robotContainer.resetEverything());
   }
 
