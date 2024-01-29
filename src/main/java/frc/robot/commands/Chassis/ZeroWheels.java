@@ -9,17 +9,14 @@ import frc.robot.subsystems.Chassis;
 
 /** A command to zero wheels of chassis */
 public class ZeroWheels extends Command {
-  private final Chassis m_chassis;
+  private final Chassis chassis;
 
   public ZeroWheels(Chassis chassis) {
-    m_chassis = chassis;
-    // Use addRequirements() here to declare subsystem dependencies.
+    this.chassis = chassis;
     addRequirements(chassis);
   }
 
-  /**
-   * Called when the scheduler starts the command
-   */
+  //Called when the scheduler starts the command
   @Override
   public void initialize() {
   }
@@ -27,7 +24,7 @@ public class ZeroWheels extends Command {
   // Sets the angle PID controller to 0 degrees and calculates output for the motors
   @Override
   public void execute() {
-    m_chassis.turnToAngle(90);
+    chassis.turnToAngle(90);
   }
 
   /**
@@ -37,7 +34,7 @@ public class ZeroWheels extends Command {
    */
   @Override
   public void end(boolean interrupted) {
-    m_chassis.stopModules();
+    chassis.stopModules();
   }
 
   /**
@@ -45,6 +42,6 @@ public class ZeroWheels extends Command {
    */
   @Override
   public boolean isFinished() {
-    return m_chassis.turnToAnglePIDIsDone();
+    return chassis.turnToAnglePIDIsDone();
   }
 }
