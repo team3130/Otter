@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Intake extends SubsystemBase {
   private final VictorSPX intakeMotor; // we should probably change these names once we learn more
-  private final double speed = 0.7;
+  private final double speed = 0.8;
 
   /** Creates a new ExampleSubsystem. */
   public Intake() {

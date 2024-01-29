@@ -34,14 +34,14 @@ public class Shoot extends Command {
         spinUpTime.reset();
         spinUpTime.start();
         m_shooter.runShooters();
-        m_intake.runIntake();
+        m_indexer.runIndexers();
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        if (spinUpTime.hasElapsed(0.5)){
-            m_indexer.runIndexers();
+        if (spinUpTime.hasElapsed(2.5)){
+            m_intake.runIntake();
         }
     }
 

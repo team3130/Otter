@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Indexer extends SubsystemBase {
     private final WPI_TalonSRX motor7; // we should probably change these names once we learn more
     private final WPI_TalonSRX motor6; // we should probably change these names once we learn more
-    private double speed = 0.80;
+    private double speed = 0.90;
 
     public Indexer() {
         motor7 = new WPI_TalonSRX(7);
