@@ -35,9 +35,9 @@ public class Shooter extends SubsystemBase {
       final VelocityVoltage velocityRequest = new VelocityVoltage(0).withSlot(0);
     */
 
-    private double kS = 0.05;
-    private double kV = 0.12;
-    private double kP = 0.11;
+    private double kS = 0.5;
+    private double kV = 0.1;
+    private double kP = 0.15;
     private double kI = 0;
     private double kD = 0;
     private double feedForwardVolt;
@@ -83,7 +83,7 @@ public class Shooter extends SubsystemBase {
 
     public void setFlywheelVelocity() {
         // velocityRequest.Slot = 0; // this is probably redudant now
-        leftFlywheel9.setControl(leftVelocityRequest.withVelocity(flyWheelVelocity).withFeedForward(feedForwardVolt));
+        rightFlywheel8.setControl(leftVelocityRequest.withVelocity(flyWheelVelocity).withFeedForward(feedForwardVolt));
 
         // ALT way: set velocity to 8 rps, add 0.5 V to overcome gravity
         // m_talonFX.setControl(velocityRequest.withVelocity(8).withFeedForward(0.5));
@@ -155,11 +155,12 @@ public class Shooter extends SubsystemBase {
         builder.addDoubleProperty("speed 8", this::getSpeed8, null);
         builder.addDoubleProperty("speed 9", this::getSpeed9, null);
         builder.addDoubleProperty("proportion speed", this::getProportionVolt, this::setProportionVolt);
+
         builder.addDoubleProperty("8 real velocity", this::getVelocityMotor8, null);
         builder.addDoubleProperty("9 real velocity", this::getVelocityMotor9, null);
+
         builder.addDoubleProperty("right volt supply", this::getRightFlyVoltSupply, null);
         builder.addDoubleProperty("left volt supply", this::getLeftFlywheelVoltSupply, null);
-        builder.addDoubleProperty("right current", this::getRightFlyCurrent, null);
 
         builder.addDoubleProperty("velocity kS", this::getkS, this::setkS);
         builder.addDoubleProperty("velocity kV", this::getkV, this::setkV);
