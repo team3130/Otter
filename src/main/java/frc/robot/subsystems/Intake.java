@@ -6,8 +6,11 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.motorcontrol.PWMTalonSRX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -15,20 +18,26 @@ import static frc.robot.Constants.PNM_INTAKE_ACTUATOR;
 
 public class Intake extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
-  private TalonFX m_intakemotor;
-  private Solenoid m_intakesolenoid1;
-  private Solenoid m_intakesolenoid2;
+  private final WPI_TalonSRX intakemotor;
+  private final Solenoid intakesolenoid1;
+  private final Solenoid intakesolenoid2;
+
+  private final DigitalInput limitSwitch1;
+
+  public static double dumbSpeed = .8;
 
   public Intake() {
-    m_intakemotor = new TalonFX(Constants.CAN.intakeMotor);
-    m_intakesolenoid1 = new Solenoid(Constants.CAN.intakesolenoid1, PneumaticsModuleType.CTREPCM, PNM_INTAKE_ACTUATOR);
-    m_intakesolenoid2 = new Solenoid(Constants.CAN.intakesolenoid2, PneumaticsModuleType.CTREPCM, PNM_INTAKE_ACTUATOR);
+    intakemotor = new WPI_TalonSRX(Constants.CAN.intakeMotor);
+    intakesolenoid1 = new Solenoid(Constants.CAN.intakesolenoid1, PneumaticsModuleType.CTREPCM, PNM_INTAKE_ACTUATOR);
+    intakesolenoid2 = new Solenoid(Constants.CAN.intakesolenoid2, PneumaticsModuleType.CTREPCM, PNM_INTAKE_ACTUATOR);
+    limitSwitch1 = new DigitalInput(Constants.CAN.intakeLimitSwitch1);
 
-    m_intakemotor.setInverted(false);
 
-    final VoltageOut m_request = new VoltageOut(0);
+
+    intakemotor.setInverted(false);
+
+
   }
-
   /**
    * Example command factory method.
    *
@@ -39,22 +48,30 @@ public class Intake extends SubsystemBase {
    *
    * @return value of some boolean subsystem state, such as a digital sensor.
    */
-
-  public void Intake(){
-    m_intakemotor.setControl(new DutyCycleOut(.8));
+  public double getDumbSpeed(){
+    return dumbSpeed;
+  }
+  public void setDumbSpeed(double x){
+    dumbSpeed = x;
+  }
+  public boolean intakeLimitSwitch1(){
+    return limitSwitch1.get();
+  }
+  public void DumbIntake(){
+    intakemotor.set(dumbSpeed);
   }
 
-  public void Outtake(){
-    m_intakemotor.setControl(new DutyCycleOut(-.8));
+  public void DumbOuttake(){
+    intakemotor.set(-dumbSpeed);
   }
 
   public void Stoptake(){
-    m_intakemotor.setControl(new DutyCycleOut(0));
+    intakemotor.set(0);
   }
 
   public void SolenoidToggle(){
-    m_intakesolenoid1.toggle();
-    m_intakesolenoid2.toggle();
+    intakesolenoid1.toggle();
+    intakesolenoid2.toggle();
   }
 
 

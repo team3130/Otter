@@ -9,7 +9,6 @@ import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -122,11 +121,9 @@ public class RobotContainer {
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_Y).whileTrue(new SpinHopper(hopper));
 
     SmartDashboard.putData(new FlipDriveOrientation(chassis));
-    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_LBUMPER).whileTrue(new Spouttake(new Intake()));
-    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_RBUMPER).whileTrue(new Spintake(new Intake()));
+    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_LBUMPER).whileTrue(new DumbSpouttake(new Intake()));
+    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_RBUMPER).whileTrue(new DumbSpintake(new Intake()));
     new JoystickButton(operatorController, Constants.Buttons.LST_BTN_B).whileTrue(new DumbPneumatics(new Intake()));
-    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_A).whileTrue(new DumbSpintake(new Intake()));
-    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_X).whileTrue(new DumbSpouttake(new Intake()));
   }
 
   /*

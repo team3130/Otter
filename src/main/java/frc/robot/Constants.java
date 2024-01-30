@@ -46,6 +46,8 @@ public final class Constants {
 
     public final static int intakesolenoid2 = 16;
 
+    public final static int intakeLimitSwitch1 = 17;
+
     // Order should match side
     public static final int[] turningID = new int[] {leftFrontSteer, leftBackSteer, rightFrontSteer, rightBackSteer};
     public static final int[] spinningID = new int[] {leftFrontDrive, leftBackDrive, rightFrontDrive, rightBackDrive};

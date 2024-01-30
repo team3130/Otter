@@ -25,7 +25,8 @@ public class DumbSpouttake extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_intake.Outtake();
+    m_intake.DumbOuttake();
+    m_intake.SolenoidToggle();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -36,6 +37,7 @@ public class DumbSpouttake extends Command {
   @Override
   public void end(boolean interrupted) {
     m_intake.Stoptake();
+    m_intake.SolenoidToggle();
   }
 
   // Returns true when the command should end.
