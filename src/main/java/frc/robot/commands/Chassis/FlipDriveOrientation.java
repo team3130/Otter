@@ -10,7 +10,6 @@ import frc.robot.subsystems.ExampleSubsystem;
 
 /** An example command that uses an example subsystem. */
 public class FlipDriveOrientation extends Command {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final Chassis chassis;
 
   /**
@@ -20,7 +19,6 @@ public class FlipDriveOrientation extends Command {
    */
   public FlipDriveOrientation(Chassis subsystem) {
     this.chassis = subsystem;
-    // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
   }
 
