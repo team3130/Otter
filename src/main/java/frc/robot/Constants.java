@@ -226,4 +226,12 @@ public final class Constants {
     public static final int LST_AXS_RJOYSTICKX = 4;
     public static final int LST_AXS_RJOYSTICKY = 5;
   }
+
+  public static class Climber {
+    public static final int kRLimitSwitch = 0; // TODO
+    public static final int kLLimitSwitch = 0; // TODO
+
+    public static final int KRMotor = 0; // TODO
+    public static final int KLMotor = 0; // TODO
+  }
 }
