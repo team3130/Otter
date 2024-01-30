@@ -68,33 +68,6 @@ public class Climber extends SubsystemBase {
     m_motorL.set(ControlMode.PercentOutput, 0);
   }
 
-  /**zeroes encoders*/
-  public void resetEncoders() {
-    m_motorL.setSelectedSensorPosition(0);
-    m_motorR.setSelectedSensorPosition(0);
-  }
-
-  public void resetEncodersLeft() {
-    m_motorL.setSelectedSensorPosition(0);
-  }
-
-  public void resetEncodersRight() {
-    m_motorR.setSelectedSensorPosition(0);
-  }
-
-  public void setZeroed(boolean value) {
-    isZeroed = value;
-  }
-
-  public void zero(double left, double right) {
-    m_left_motor.set(ControlMode.PercentOutput, -left);
-     m_right_motor.set(ControlMode.PercentOutput, -right);
-}
-
-  public boolean isZeroed() {
-    return isZeroed;
-  }
-
   public double getMaxExtensionTicks(){
     return maxExtensionTicks;
   }
