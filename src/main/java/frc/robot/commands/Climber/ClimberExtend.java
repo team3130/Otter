@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 
 /** An example command that uses an example subsystem. */
 public class ClimberExtend extends Command {
-  private final Climber m_climber;
+  private final Climber climber;
   private double speed;
 
   /**
@@ -18,7 +18,7 @@ public class ClimberExtend extends Command {
    * @param subsystem The subsystem used by this command.
    */
   public ClimberExtend(Climber climber, double speed) {
-    m_climber = climber;
+    this.climber = climber;
     this.speed = speed;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(climber);
@@ -27,9 +27,9 @@ public class ClimberExtend extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if(m_climber.BrokeLimit()) {
-      m_climber.resetEncoders();
-      m_climber.setZeroed();
+    if(climber.BrokeLimit()) {
+      climber.resetEncoders();
+      climber.setZeroed();
     }
   }
 
@@ -37,25 +37,22 @@ public class ClimberExtend extends Command {
   @Override
   public void execute() {
     double y = -RobotContainer.m_WeaponsGamepad.getRawAxis(1); // get value of joystick
-    if(m_climber.LimitSwitch() && speed < 0) {
-      speed = 0;
-    }
-    else if ((m_climber.getPosition() >= m_climber.getMaxExtensionTicks()) && speed > 0) {
+    if(climber.LimitSwitch() && speed < 0) {
       speed = 0;
     }
 
-    m_climber.runMotor(-speed);
+    climber.runMotor(-speed);
 
-    if(m_climber.LimitSwitch()){
-      m_climber.resetEncoders();
-      m_climber.setZeroed();
+    if(climber.LimitSwitch()){
+      climber.resetEncoders();
+      climber.setZeroed();
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_climber.stop();
+    climber.stop();
   }
 
   // Returns true when the command should end.

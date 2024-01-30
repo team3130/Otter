@@ -39,17 +39,32 @@ public class Climber extends SubsystemBase {
     m_limitSwitchL = new DigitalInput(Constants.Climber.KRLimitSwitch);
   }
 
-  public boolean brokeLimit() {
-    return !m_limitSwitchR.get() || !m_limitSwitchL.get();
+  public boolean brokeLeft() {
+    return !m_limitSwitchL.get();
   }
 
-  public void setSpeed(double speed) {
+  public boolean brokeRight() {
+    return !m_limitSwitchR.get();
+  }
+
+  public void setSpeedRight(double speed) {
     m_motorR.set(speed);
+  }
+
+  public void setSpeedLeft(double speed) {
     m_motorL.set(speed);
   }
 
   public void stop() {
     m_motorR.set(ControlMode.PercentOutput, 0);
+    m_motorL.set(ControlMode.PercentOutput, 0);
+  }
+
+  public void stopRight() {
+    m_motorR.set(ControlMode.PercentOutput, 0);
+  }
+
+  public void stopLeft() {
     m_motorL.set(ControlMode.PercentOutput, 0);
   }
 
@@ -59,9 +74,22 @@ public class Climber extends SubsystemBase {
     m_motorR.setSelectedSensorPosition(0);
   }
 
-  public void setZeroed() {
-    isZeroed = true;
+  public void resetEncodersLeft() {
+    m_motorL.setSelectedSensorPosition(0);
   }
+
+  public void resetEncodersRight() {
+    m_motorR.setSelectedSensorPosition(0);
+  }
+
+  public void setZeroed(boolean value) {
+    isZeroed = value;
+  }
+
+  public void zero(double left, double right) {
+    m_left_motor.set(ControlMode.PercentOutput, -left);
+     m_right_motor.set(ControlMode.PercentOutput, -right);
+}
 
   public boolean isZeroed() {
     return isZeroed;
