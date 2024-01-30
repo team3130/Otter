@@ -67,14 +67,16 @@ public class TeleopDrive extends Command {
       // set theta to face target
       if (camera.isTryingToTarget()) {
         theta = camera.goToTargetPower();
-          if (camera.faceTargeted()) {
-            theta = camera.targetController.calculate(chassis.getRotation2d().getRadians(), chassis.getAngleToFaceTarget(chassis.originToAprilTagVector));
-          }
       }
+      // sets theta to controller output
       else {
         theta = -xboxController.getRawAxis(Constants.Buttons.LST_AXS_RJOYSTICKX); // right stick x-axis
         theta = Math.abs(theta) > Constants.Swerve.kDeadband ? theta : 0.0;
         theta = turningLimiter.calculate(theta) * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond;
+      }
+      // sets theta to odometry face target
+      if (camera.faceTargeted()) {
+        theta = camera.targetController.calculate(chassis.getRotation2d().getRadians(), chassis.getAngleToFaceTarget(chassis.originToAprilTagVector));
       }
       // square the inputs
       y = y * Math.abs(y);
