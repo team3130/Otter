@@ -25,9 +25,7 @@ public class Amp extends SubsystemBase {
     pneumatic = new Solenoid(Constants.CAN.CAN_PCM, PneumaticsModuleType.CTREPCM, Constants.CAN.CAN_Amp);
   }
 
-  public Amp {
-    ampLimit = new DigitalInput()
-  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
