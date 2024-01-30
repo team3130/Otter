@@ -2,13 +2,13 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.Climber;
 
 import frc.robot.subsystems.Climber;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /** An example command that uses an example subsystem. */
-public class ClimberExtend extends Command {
+public class ClimberExtendLeft extends Command {
   private final Climber climber;
   private double speed;
 
@@ -17,7 +17,7 @@ public class ClimberExtend extends Command {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public ClimberExtend(Climber climber, double speed) {
+  public ClimberExtendLeft(Climber climber, double speed) {
     this.climber = climber;
     this.speed = speed;
     // Use addRequirements() here to declare subsystem dependencies.
@@ -36,7 +36,6 @@ public class ClimberExtend extends Command {
     }
 
     climber.setSpeedLeft(speed);
-
   }
 
   // Called once the command ends or is interrupted.
