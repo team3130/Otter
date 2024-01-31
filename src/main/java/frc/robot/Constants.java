@@ -58,6 +58,13 @@ public final class Constants {
 
   }
 
+  public static class Intake {
+    public static double dumbSpeed = .8;
+    public static double slowSpeed = .2;
+    public static double time1 = .5;
+    public static double time2 = .65;
+    public static double allottedTime = 4;
+  }
   public static class AprilTags {
     public static final boolean useAprilTags = false;
 

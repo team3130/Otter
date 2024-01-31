@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.motorcontrol.PWMTalonSRX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import edu.wpi.first.wpilibj.Timer;
 
 import static frc.robot.Constants.PNM_INTAKE_ACTUATOR;
 
@@ -24,7 +25,8 @@ public class Intake extends SubsystemBase {
 
   private final DigitalInput limitSwitch1;
 
-  public static double dumbSpeed = .8;
+  public Timer timer;
+  public Timer stopwatch;
 
   public Intake() {
     intakemotor = new WPI_TalonSRX(Constants.CAN.intakeMotor);
@@ -32,10 +34,9 @@ public class Intake extends SubsystemBase {
     intakesolenoid2 = new Solenoid(Constants.CAN.intakesolenoid2, PneumaticsModuleType.CTREPCM, PNM_INTAKE_ACTUATOR);
     limitSwitch1 = new DigitalInput(Constants.CAN.intakeLimitSwitch1);
 
-
+    intakemotor.configFactoryDefault();
 
     intakemotor.setInverted(false);
-
 
   }
   /**
@@ -49,32 +50,58 @@ public class Intake extends SubsystemBase {
    * @return value of some boolean subsystem state, such as a digital sensor.
    */
   public double getDumbSpeed(){
-    return dumbSpeed;
+    return Constants.Intake.dumbSpeed;
   }
   public void setDumbSpeed(double x){
-    dumbSpeed = x;
+    Constants.Intake.dumbSpeed = x;
   }
+  public void slowIntake() {intakemotor.set(Constants.Intake.slowSpeed);}
+  public void slowOutake() {intakemotor.set(-Constants.Intake.slowSpeed);}
   public boolean intakeLimitSwitch1(){
     return limitSwitch1.get();
   }
   public void DumbIntake(){
-    intakemotor.set(dumbSpeed);
+    intakemotor.set(Constants.Intake.dumbSpeed);
   }
-
   public void DumbOuttake(){
-    intakemotor.set(-dumbSpeed);
+    intakemotor.set(-Constants.Intake.dumbSpeed);
+  }
+  public boolean limitSwitchTimer(){
+    if(!intakeLimitSwitch1()){
+      stopwatch.reset;
+      stopwatch.start;
+    }
+    if (stopwatch < Constants.Intake.allottedTime) {
+      return true
+    } else {
+      return false
+    }
   }
 
   public void Stoptake(){
     intakemotor.set(0);
   }
 
+  public int startTimer() {
+    timer.reset;
+    timer.start;
+  }
+
+  public void smartSpin(){
+    DumbIntake();
+    if (limitSwitchTimer()) {
+      if (timer.hasElapsed(Constants.Intake.time1)) {
+        slowIntake();
+      }
+      if (timer.hasElapsed(Constants.Intake.time2)) {
+        Stoptake();
+      }
+    }
+  }
   public void SolenoidToggle(){
     intakesolenoid1.toggle();
     intakesolenoid2.toggle();
   }
-
-
 
   @Override
   public void periodic() {
