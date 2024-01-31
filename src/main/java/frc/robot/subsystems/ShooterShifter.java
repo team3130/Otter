@@ -15,7 +15,7 @@ public class ShooterShifter extends SubsystemBase {
   private final Solenoid parkShifter;
   private boolean isParked = true;
   private final Solenoid shootShifter;
-  private boolean isFirstShootStage = false;
+  private boolean isFirstShootStage = true;
   public ShooterShifter() {
     // fill in parameters with canID and pneumatic type
     parkShifter = new Solenoid();
@@ -42,11 +42,11 @@ public class ShooterShifter extends SubsystemBase {
   //METHODS
   public void parkShift(){
     setIsParked(!isParked);
-    parkShifter.set(isParked);
+    parkShifter.set(!isParked);
   }
   public void shootShift(){
     setFirstShootStage(!isFirstShootStage);
-    shootShifter.set(isFirstShootStage);
+    shootShifter.set(!isFirstShootStage);
   }
 
   /**
