@@ -34,13 +34,16 @@ public class ClimberExtendRight extends Command {
     @Override
     public void execute() {
 
+        // reads joystick input as y
         double y = xboxController.getRawAxis(Constants.Buttons.LST_AXS_RJOYSTICKY); // TODO
         y = y * Math.abs(y);
-        
+
+        // checks if limit switch has been broken
         if (climber.brokeLimit() && y < 0) {
             y = 0;
         }
 
+        //sets the speed of the motor
         climber.setSpeed(y);
     }
 

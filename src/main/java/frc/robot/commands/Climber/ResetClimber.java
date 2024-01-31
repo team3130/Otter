@@ -7,17 +7,20 @@ package frc.robot.commands.Climber;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.Climber.*;
+import edu.wpi.first.wpilibj.Timer;
 
 /** An example command that uses an example subsystem. */
 public class ResetClimber extends Command {
 
     private final ClimberLeft climberLeft;
-
     private final ClimberRight climberRight;
+
+    private final Timer timer;
 
     public ResetClimber(ClimberRight climberRight, ClimberLeft climberLeft) {
       this.climberRight = climberRight;
       this.climberLeft = climberLeft;
+      timer = new Timer();
       addRequirements(climberRight);
       addRequirements(climberLeft);
     }
@@ -26,17 +29,34 @@ public class ResetClimber extends Command {
     @Override
     public void initialize() {
 
-        
-
-        if ((climberRight.getMotorCurrent() >= Constants.Climber.currentMax) || (climberLeft.getMotorCurrent() >= Constants.Climber.currentMax)) {
-            climberRight.invert();
-            climberLeft.invert();
-        }
+        // starts the motors and timer
+        climberRight.setSpeed(0); // TODO
+        climberLeft.setSpeed(0); // TODO
+        timer.start();
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
-    public void execute() {}
+    public void execute() {
+        // checks if the timer has reached half a second
+        if (timer.hasElapsed(0.5)) {
+
+            // stops the motors
+            climberRight.stop();
+            climberLeft.stop();
+
+            // checks if the voltage spiked
+            if ((climberRight.getMotorCurrent() >= Constants.Climber.currentMax) || (climberLeft.getMotorCurrent() >= Constants.Climber.currentMax)) {
+
+                // inverts the motors
+                climberRight.invert();
+                climberLeft.invert();
+
+            }
+
+            timer.stop();
+        }
+    }
 
     // Called once the command ends or is interrupted.
     @Override
