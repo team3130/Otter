@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -17,7 +19,7 @@ public class Amp extends SubsystemBase {
 
   private final Solenoid pneumatic;
   private final DigitalInput ampLimit;
-  private final TalonFX ampMotor;
+  private final TalonSRX ampMotor;
   private double intakeAmpSpeed = 0.1;
   private double outtakeAmpSpeed = -0.1;
 
@@ -25,7 +27,10 @@ public class Amp extends SubsystemBase {
   public Amp() {
     pneumatic = new Solenoid(Constants.CAN.CAN_PCM, PneumaticsModuleType.CTREPCM, Constants.CAN.CAN_AmpChannel);
     ampLimit = new DigitalInput(Constants.CAN.CAN_AmpLimitSwitch);
-    ampMotor = new TalonFX(Constants.CAN.CAN_AmpMotor);
+    ampMotor = new TalonSRX(Constants.CAN.CAN_AmpMotor);
+    ampMotor.configFactoryDefault();
+    ampMotor.configVoltageCompSaturation(3);
+    ampMotor.setInverted(false);
   }
 
   /**
@@ -36,63 +41,70 @@ public class Amp extends SubsystemBase {
   }
 
   /**
-   * primes the amp arm
+   * toggles the pneumatic to prop-up the amp arm
    */
   public void primeAmp() {
     pneumatic.set(true);
   }
 
   /**
-   * tucks back the amp arm
+   * toggles the pneumatic to tuck in the amp arm
    */
   public void unPrimeAmp() {
     pneumatic.set(false);
   }
 
   /**
-   * spins the amp-take motor to intake notes
+   * spins the motor to intake notes into the amp
    */
   public void intakeAmp() {
-    ampMotor.set(intakeAmpSpeed);
+    ampMotor.set(ControlMode.PercentOutput, intakeAmpSpeed);
   }
 
   /**
-   * spins the amp-take motor to outtake notes
+   * spins the motor to eject notes from the amp
    */
   public void outtakeAmp() {
-    ampMotor.set(outtakeAmpSpeed);
+    ampMotor.set(ControlMode.PercentOutput, outtakeAmpSpeed);
   }
 
   /**
-   * stops the amp-take motor
+   * stops the motor to prevent the note from getting destroyed in the amp.
    */
   public void motorStop() {
-    ampMotor.set(0);
+    ampMotor.set(ControlMode.PercentOutput, 0);
   }
 
   /**
-   * @return gets value of intake amp speed
+   * @return value of the motor speed while intaking
    */
   public double getIntakeAmpSpeed() {
     return intakeAmpSpeed;
   }
 
   /**
-   * @return gets value of outtake amp speed
+   * @return value of the motor speed while outtaking
    */
   public double getOuttakeAmpSpeed() {
     return outtakeAmpSpeed;
   }
 
   /**
-   * @return sets value of intake amp speed
+   * @return status of the pneumatic to see whether amp is propped up or not
+   */
+  public boolean getPneumaticState() {
+    return pneumatic.get();
+  }
+
+  /**
+   * @return sets value of amp motor's intake speed
    */
   public void setIntakeAmpSpeed(double speed) {
     intakeAmpSpeed = speed;
   }
 
   /**
-   * @return sets value of outtake amp speed
+   * @return sets value of amp motor's outtake speed
    */
   public void setOuttakeAmpSpeed(double speed) {
     outtakeAmpSpeed = speed;
@@ -109,13 +121,14 @@ public class Amp extends SubsystemBase {
 
 
   /**
-   * exports data to sShuffleboard
+   * exports data to Shuffleboard
    */
   public void initSendable(SendableBuilder builder) {
     builder.setSmartDashboardType("Amp");
     builder.addDoubleProperty("Intake Amp Speed", this::getIntakeAmpSpeed, this::setIntakeAmpSpeed);
     builder.addDoubleProperty("Outtake Amp Speed", this::getOuttakeAmpSpeed, this::setOuttakeAmpSpeed);
     builder.addBooleanProperty("Limit Switch", this::getLimitSwitch, null);
+    builder.addBooleanProperty("Pneumatic Status", this::getPneumaticState, null);
   }
 
 }
