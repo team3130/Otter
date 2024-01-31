@@ -231,7 +231,9 @@ public final class Constants {
     public static final int kRLimitSwitch = 0; // TODO
     public static final int kLLimitSwitch = 0; // TODO
 
-    public static final int KRMotor = 0; // TODO
-    public static final int KLMotor = 0; // TODO
+    public static final int kRMotor = 0; // TODO
+    public static final int kLMotor = 0; // TODO
+
+    public static final double currentMax = 0.0; // TODO
   }
 }

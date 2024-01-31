@@ -16,36 +16,36 @@ import frc.robot.Constants;
 public class ClimberRight extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
 
-  private final DigitalInput m_limitSwitchR;
+  private final DigitalInput limitSwitch;
 
-  private final WPI_TalonSRX m_motorR;
+  private final WPI_TalonSRX motor;
 
   private boolean ratchetDir = true;
 
 
   public ClimberRight() {
-    m_motorR = new WPI_TalonSRX(Constants.Climber.KRMotor);
-    m_motorR.configFactoryDefault();
-    m_motorR.setInverted(false);
+    motor = new WPI_TalonSRX(Constants.Climber.kRMotor);
+    motor.configFactoryDefault();
+    motor.setInverted(false);
 
 
-    m_limitSwitchR = new DigitalInput(Constants.Climber.kRLimitSwitch);
+    limitSwitch = new DigitalInput(Constants.Climber.kRLimitSwitch);
 
   }
 
   public boolean brokeRight() {
-    return !m_limitSwitchR.get();
+    return !limitSwitch.get();
   }
 
   public void setSpeedRight(double speed) {
     if (!ratchetDir) {
       speed *= -1;
     }
-    m_motorR.set(ControlMode.PercentOutput, speed);
+    motor.set(ControlMode.PercentOutput, speed);
   }
 
   public void stopRight() {
-    m_motorR.set(ControlMode.PercentOutput, 0);
+    motor.set(ControlMode.PercentOutput, 0);
   }
 
   public boolean getRatchetDir() {

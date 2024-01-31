@@ -12,35 +12,35 @@ public class ClimberLeft extends SubsystemBase {
      * Creates a new ExampleSubsystem.
      */
 
-    private final DigitalInput m_limitSwitchL;
+    private final DigitalInput limitSwitch;
 
-    private final WPI_TalonSRX m_motorL;
+    private final WPI_TalonSRX motor;
 
     private boolean ratchetDir = true;
 
     public ClimberLeft() {
 
 
-        m_motorL = new WPI_TalonSRX(Constants.Climber.KLMotor);
-        m_motorL.configFactoryDefault();
-        m_motorL.setInverted(false);
+        motor = new WPI_TalonSRX(Constants.Climber.kLMotor);
+        motor.configFactoryDefault();
+        motor.setInverted(false);
 
-        m_limitSwitchL = new DigitalInput(Constants.Climber.kRLimitSwitch);
+        limitSwitch = new DigitalInput(Constants.Climber.kRLimitSwitch);
     }
 
     public boolean brokeLeft() {
-        return !m_limitSwitchL.get();
+        return !limitSwitch.get();
     }
 
     public void setSpeedLeft(double speed) {
         if (!ratchetDir) {
             speed *= -1;
         }
-        m_motorL.set(ControlMode.PercentOutput, speed);
+        motor.set(ControlMode.PercentOutput, speed);
     }
 
     public void stopLeft() {
-        m_motorL.set(ControlMode.PercentOutput, 0);
+        motor.set(ControlMode.PercentOutput, 0);
     }
 
     public void setRatchetDir(boolean Skibidi) {
