@@ -24,6 +24,7 @@ import frc.robot.commands.Chassis.TeleopDrive;
 import frc.robot.commands.Chassis.ZeroEverything;
 import frc.robot.commands.Chassis.ZeroWheels;
 import frc.robot.sensors.Camera;
+import frc.robot.subsystems.Amp;
 import frc.robot.subsystems.Chassis;
 import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -42,6 +43,7 @@ public class RobotContainer {
   private final Camera limelight;
   private final Chassis chassis;
   private final Hopper hopper;
+  private final Amp amp;
   private final XboxController driverController = new XboxController(0);
   private final XboxController operatorController = new XboxController(1);
   private final SendableChooser<Command> autoChooser;
@@ -51,6 +53,7 @@ public class RobotContainer {
     limelight = new Camera();
     chassis = new Chassis(limelight);
     hopper = new Hopper();
+    amp = new Amp();
 
     // Named commands must be registered before the creation of any PathPlanner Autos or Paths
     // Do this in RobotContainer, after subsystem initialization, but before the creation of any other commands.
@@ -97,6 +100,7 @@ public class RobotContainer {
     if (Constants.debugMode) {
       ShuffleboardTab tab = Shuffleboard.getTab("Subsystems");
       tab.add(chassis);
+      tab.add(amp);
       chassis.exportSwerveModData(Shuffleboard.getTab("Swerve Modules"));
     }
   }
