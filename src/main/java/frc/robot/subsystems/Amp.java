@@ -5,13 +5,11 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -19,7 +17,7 @@ public class Amp extends SubsystemBase {
 
   private final Solenoid pneumatic;
   private final DigitalInput ampLimit;
-  private final TalonSRX ampMotor;
+  private final WPI_TalonSRX ampMotor;
   private double intakeAmpSpeed = 0.1;
   private double outtakeAmpSpeed = -0.1;
 
@@ -27,7 +25,7 @@ public class Amp extends SubsystemBase {
   public Amp() {
     pneumatic = new Solenoid(Constants.CAN.CAN_PCM, PneumaticsModuleType.CTREPCM, Constants.CAN.CAN_AmpChannel);
     ampLimit = new DigitalInput(Constants.CAN.CAN_AmpLimitSwitch);
-    ampMotor = new TalonSRX(Constants.CAN.CAN_AmpMotor);
+    ampMotor = new WPI_TalonSRX(Constants.CAN.CAN_AmpMotor);
     ampMotor.configFactoryDefault();
     ampMotor.configVoltageCompSaturation(3);
     ampMotor.setInverted(false);
