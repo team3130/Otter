@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.ClosedLoopGeneralConfigs;
+import com.ctre.phoenix6.configs.ClosedLoopRampsConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VelocityVoltage;
@@ -11,6 +13,8 @@ import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Shooter extends SubsystemBase {
@@ -26,7 +30,7 @@ public class Shooter extends SubsystemBase {
     final VelocityVoltage leftVelocityRequest = new VelocityVoltage(0).withSlot(0); // class instance
     final VelocityVoltage rightVelocityRequest = new VelocityVoltage(0).withSlot(0);
 
-    final double flyWheelVelocity = 8;
+    double flyWheelVelocity = 25;
 
     Slot0Configs slot0Configs; // gains for specific slot
     /*
@@ -37,10 +41,11 @@ public class Shooter extends SubsystemBase {
 
     private double kS = 0.5;
     private double kV = 0.1;
-    private double kP = 0.15;
+    private double kP = 0.0;
     private double kI = 0;
-    private double kD = 0;
+    private double kD = 0.000;
     private double feedForwardVolt;
+    ClosedLoopRampsConfigs closedLoopRamp;
 
 
     public Shooter() {
@@ -54,15 +59,19 @@ public class Shooter extends SubsystemBase {
 
         rightFlywheel8.setInverted(true);
 
+        rightFlywheel8.getConfigurator().apply(new ClosedLoopRampsConfigs().withVoltageClosedLoopRampPeriod(3));
+
         slot0Configs = new Slot0Configs(); // gains for specific slot
 
         slot0Configs.kS = kS; // Add 0.05 V output to overcome static friction
 
-        slot0Configs.kV = kV; // 1/(rps) - A velocity target of 1 rps results in 0.12 V output
+        slot0Configs.kV = kV; // multiply setpoint by kV == Voltage or 1/(rps) - A velocity target of 1 rps results in 0.12 V output
         slot0Configs.kP = kP; // 1/rps - An error of 1 rps results in 0.11 V output
         slot0Configs.kI = kI; // 1/rot - output per unit of integrated error in velocity (output/rotation)
         slot0Configs.kD = kD; // output per unit of error derivative in velocity (output/ (rps/s))
         // leftFlywheel9.getConfigurator().apply(new Slot0Configs());
+
+        ShuffleboardTab tab = Shuffleboard.getTab("Shooter Velocity");
     }
 
     public void runShooters() {
@@ -88,6 +97,7 @@ public class Shooter extends SubsystemBase {
         // ALT way: set velocity to 8 rps, add 0.5 V to overcome gravity
         // m_talonFX.setControl(velocityRequest.withVelocity(8).withFeedForward(0.5));
     }
+
 
     public void configureVelocitySlot() {
         slot0Configs.kS = kS; // Add 0.05 V output to overcome static friction
@@ -118,11 +128,11 @@ public class Shooter extends SubsystemBase {
     }
 
     public double getVelocityMotor8() {
-        return rightFlywheel8.getVelocity().getValue() * 60;
+        return rightFlywheel8.getVelocity().getValue();
     }
 
     public double getVelocityMotor9() {
-        return leftFlywheel9.getVelocity().getValue() * 60;
+        return leftFlywheel9.getVelocity().getValue();
     }
 
     public double getRightFlyVoltSupply() {
@@ -142,11 +152,17 @@ public class Shooter extends SubsystemBase {
     public double getkP() { return kP; }
     public double getkI() { return kI; }
     public double getkD() { return kD; }
-    public void setkS(double newS) { slot0Configs.kS = newS; }
-    public void setkV(double newV) { slot0Configs.kV = newV; }
-    public void setkP(double newP) { slot0Configs.kP = newP; }
-    public void setkI(double newI) { slot0Configs.kI = newI; }
-    public void setkD(double newD) { slot0Configs.kD = newD; }
+    public void setkS(double newS) { this.kS = newS; }
+    public void setkV(double newV) { this.kV = newV; }
+    public void setkP(double newP) { this.kP = newP; }
+    public void setkI(double newI) { this.kI = newI; }
+    public void setkD(double newD) { this.kD = newD; }
+    public void setGoalVelocity(double newVel) {
+        this.flyWheelVelocity = newVel;
+    }
+    public double getGoalVelocity() {
+        return this.flyWheelVelocity;
+    }
 
     @Override
     public void initSendable(SendableBuilder builder) {
@@ -167,6 +183,8 @@ public class Shooter extends SubsystemBase {
         builder.addDoubleProperty("velocity kP", this::getkP, this::setkP);
         builder.addDoubleProperty("velocity kI", this::getkI, this::setkI);
         builder.addDoubleProperty("velocity kD", this::getkD, this::setkD);
+
+        builder.addDoubleProperty("setpoint velocity", this::getGoalVelocity, this::setGoalVelocity);
     }
 
     @Override

@@ -27,6 +27,7 @@ public class VelocityShoot extends Command {
   @Override
   public void initialize() {
     // configureVelocitySlot();
+    shooter.configureVelocitySlot();
     shooter.updateVelocityPID();
     shooter.setFlywheelVelocity();
   }
