@@ -12,14 +12,15 @@ public class ShooterShifter extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
 
   //VARIABLES
-  private final Solenoid parkShifter;
+  private final Solenoid solenoid1;
   private boolean isParked = true;
-  private final Solenoid shootShifter;
+  private final Solenoid solenoid2;
   private boolean isFirstShootStage = true;
+  private boolean is
   public ShooterShifter() {
     // fill in parameters with canID and pneumatic type
-    parkShifter = new Solenoid();
-    shootShifter = new Solenoid();
+    solenoid1 = new Solenoid();
+    solenoid2 = new Solenoid();
 
   }
 
@@ -42,11 +43,11 @@ public class ShooterShifter extends SubsystemBase {
   //METHODS
   public void parkShift(){
     setIsParked(!isParked);
-    parkShifter.set(!isParked);
+    solenoid1.set(!isParked);
   }
   public void shootShift(){
     setFirstShootStage(!isFirstShootStage);
-    shootShifter.set(!isFirstShootStage);
+    solenoid2.set(!isFirstShootStage);
   }
 
   /**
