@@ -4,12 +4,12 @@
 
 package frc.robot.commands.Climber;
 
-import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.ClimberRight;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /** An example command that uses an example subsystem. */
 public class ClimberExtendRight extends Command {
-  private final Climber climber;
+  private final ClimberRight climber;
   private double speed;
 
   /**
@@ -17,7 +17,7 @@ public class ClimberExtendRight extends Command {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public ClimberExtendRight(Climber climber, double speed) {
+  public ClimberExtendRight(ClimberRight climber, double speed) {
     this.climber = climber;
     this.speed = speed;
     // Use addRequirements() here to declare subsystem dependencies.

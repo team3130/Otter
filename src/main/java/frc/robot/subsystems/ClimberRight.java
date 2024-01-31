@@ -13,30 +13,24 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import frc.robot.Constants;
 
-public class Climber extends SubsystemBase {
+public class ClimberRight extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
 
   private final DigitalInput m_limitSwitchR;
-  private final DigitalInput m_limitSwitchL;
 
   private final WPI_TalonSRX m_motorR;
-  private final WPI_TalonSRX m_motorL;
 
-  public Climber() {
+  private boolean ratchetDir = true;
+
+
+  public ClimberRight() {
     m_motorR = new WPI_TalonSRX(Constants.Climber.KRMotor);
     m_motorR.configFactoryDefault();
     m_motorR.setInverted(false);
 
-    m_motorL = new WPI_TalonSRX(Constants.Climber.KLMotor);
-    m_motorL.configFactoryDefault();
-    m_motorL.setInverted(false);
 
     m_limitSwitchR = new DigitalInput(Constants.Climber.kRLimitSwitch);
-    m_limitSwitchL = new DigitalInput(Constants.Climber.kRLimitSwitch);
-  }
 
-  public boolean brokeLeft() {
-    return !m_limitSwitchL.get();
   }
 
   public boolean brokeRight() {
@@ -44,19 +38,22 @@ public class Climber extends SubsystemBase {
   }
 
   public void setSpeedRight(double speed) {
+    if (!ratchetDir) {
+      speed *= -1;
+    }
     m_motorR.set(ControlMode.PercentOutput, speed);
-  }
-
-  public void setSpeedLeft(double speed) {
-    m_motorL.set(ControlMode.PercentOutput, speed);
   }
 
   public void stopRight() {
     m_motorR.set(ControlMode.PercentOutput, 0);
   }
 
-  public void stopLeft() {
-    m_motorL.set(ControlMode.PercentOutput, 0);
+  public boolean getRatchetDir() {
+    return ratchetDir;
+  }
+
+  public void setRatchetDir(boolean value) {
+    this.ratchetDir = value;
   }
 
   @Override
@@ -72,6 +69,6 @@ public class Climber extends SubsystemBase {
   @Override
   public void initSendable(SendableBuilder builder) {
       builder.addBooleanProperty("ClimberBrokeRight", this::brokeRight, null);
-      builder.addBooleanProperty("ClimberBrokeLeft", this::brokeLeft, null);
+      builder.addBooleanProperty("RightRatchetDirection", this::getRatchetDir, this::setRatchetDir);
   }
 }
