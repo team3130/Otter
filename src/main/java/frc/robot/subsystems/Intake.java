@@ -3,18 +3,14 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.subsystems;
+
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import com.ctre.phoenix6.controls.DutyCycleOut;
-import com.ctre.phoenix6.controls.VoltageOut;
-import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.motorcontrol.PWMTalonSRX;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import edu.wpi.first.wpilibj.Timer;
 
 import static frc.robot.Constants.PNM_INTAKE_ACTUATOR;
 
@@ -56,26 +52,26 @@ public class Intake extends SubsystemBase {
   public void setDumbSpeed(double x){
     Constants.Intake.dumbSpeed = x;
   }
-  public void slowIntake() {intakemotor.set(Constants.Intake.slowSpeed);}
-  public void slowOutake() {intakemotor.set(-Constants.Intake.slowSpeed);}
+  public void slowIntake() {intakemotor.set(ControlMode.PercentOutput, Constants.Intake.slowSpeed);}
+  public void slowOutake() {intakemotor.set(ControlMode.PercentOutput, -Constants.Intake.slowSpeed);}
   public boolean intakeLimitSwitch1(){
     return limitSwitch1.get();
   }
   public void DumbIntake(){
-    intakemotor.set(Constants.Intake.dumbSpeed);
+    intakemotor.set(ControlMode.PercentOutput, Constants.Intake.dumbSpeed);
   }
   public void DumbOuttake(){
-    intakemotor.set(-Constants.Intake.dumbSpeed);
+    intakemotor.set(ControlMode.PercentOutput, -Constants.Intake.dumbSpeed);
   }
   public boolean limitSwitchTimer(){
     if(!intakeLimitSwitch1()){
-      stopwatch.reset;
-      stopwatch.start;
+      stopwatch.reset();
+      stopwatch.start();
     }
     if (stopwatch < Constants.Intake.allottedTime) {
-      return true
+      return true;
     } else {
-      return false
+      return false;
     }
   }
 
@@ -83,9 +79,9 @@ public class Intake extends SubsystemBase {
     intakemotor.set(0);
   }
 
-  public int startTimer() {
-    timer.reset;
-    timer.start;
+  public void startTimer() {
+    timer.reset();
+    timer.start();
   }
 
   public void smartSpin(){

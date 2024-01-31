@@ -63,7 +63,7 @@ public final class Constants {
     public static double slowSpeed = .2;
     public static double time1 = .5;
     public static double time2 = .65;
-    public static double allottedTime = 4;
+    public static int allottedTime = 4;
   }
   public static class AprilTags {
     public static final boolean useAprilTags = false;
