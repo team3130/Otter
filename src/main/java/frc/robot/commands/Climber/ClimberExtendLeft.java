@@ -5,7 +5,7 @@
 package frc.robot.commands.Climber;
 
 import frc.robot.Constants;
-import frc.robot.subsystems.ClimberLeft;
+import frc.robot.subsystems.Climber.ClimberLeft;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj.XboxController;
 
@@ -20,10 +20,9 @@ public class ClimberExtendLeft extends Command {
      *
      * @param subsystem The subsystem used by this command.
     */
-    public ClimberExtendLeft(ClimberLeft climber, XboxController xboxController) {
-        this.climber = climber;
+    public ClimberExtendLeft(ClimberLeft subsystem, XboxController xboxController) {
+        climber = subsystem;
         this.xboxController = xboxController;
-        // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(climber);
     }
 
@@ -35,20 +34,20 @@ public class ClimberExtendLeft extends Command {
     @Override
     public void execute() {
 
-        double y = xboxController.getRawAxis(Constants.Buttons.LST_AXS_RJOYSTICKY);
+        double y = xboxController.getRawAxis(Constants.Buttons.LST_AXS_RJOYSTICKY); // TODO
         y = y * Math.abs(y);
     
-        if (climber.brokeLeft() && y < 0) {
+        if (climber.brokeLimit() && y < 0) {
             y = 0;
         }
 
-        climber.setSpeedLeft(y);
+        climber.setSpeed(y);
     }
 
-  // Called once the command ends or is interrupted.
+    // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        climber.stopLeft();
+        climber.stop();
     }
 
     // Returns true when the command should end.
