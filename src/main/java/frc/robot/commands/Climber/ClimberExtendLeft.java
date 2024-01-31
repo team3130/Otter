@@ -4,49 +4,56 @@
 
 package frc.robot.commands.Climber;
 
+import frc.robot.Constants;
 import frc.robot.subsystems.ClimberLeft;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj.XboxController;
 
 /** An example command that uses an example subsystem. */
 public class ClimberExtendLeft extends Command {
-  private final ClimberLeft climber;
-  private double speed;
+  
+    private final ClimberLeft climber;
+    public XboxController xboxController;
 
-  /**
-   * Creates a new ExampleCommand.
-   *
-   * @param subsystem The subsystem used by this command.
-   */
-  public ClimberExtendLeft(ClimberLeft climber, double speed) {
-    this.climber = climber;
-    this.speed = speed;
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(climber);
-  }
-
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {}
-
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
-    if (climber.brokeLeft() && speed < 0) {
-        speed = 0;
+    /**
+     * Creates a new ExampleCommand.
+     *
+     * @param subsystem The subsystem used by this command.
+    */
+    public ClimberExtendLeft(ClimberLeft climber, XboxController xboxController) {
+        this.climber = climber;
+        this.xboxController = xboxController;
+        // Use addRequirements() here to declare subsystem dependencies.
+        addRequirements(climber);
     }
 
-    climber.setSpeedLeft(speed);
-  }
+    // Called when the command is initially scheduled.
+    @Override
+    public void initialize() {}
+
+    // Called every time the scheduler runs while the command is scheduled.
+    @Override
+    public void execute() {
+
+        double y = xboxController.getRawAxis(Constants.Buttons.LST_AXS_RJOYSTICKY);
+        y = y * Math.abs(y);
+    
+        if (climber.brokeLeft() && y < 0) {
+            y = 0;
+        }
+
+        climber.setSpeedLeft(y);
+    }
 
   // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {
-    climber.stopLeft();
-  }
+    @Override
+    public void end(boolean interrupted) {
+        climber.stopLeft();
+    }
 
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return false;
-  }
+    // Returns true when the command should end.
+    @Override
+    public boolean isFinished() {
+        return false;
+    }
 }
