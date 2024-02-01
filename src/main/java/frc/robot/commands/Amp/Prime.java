@@ -14,9 +14,7 @@ public class Prime extends Command {
   private final Amp amp;
 
   /**
-   * Creates a new ExampleCommand.
-   *
-   * @param subsystem The subsystem used by this command.
+   * @param Amp The subsystem used by this command.
    */
   public Prime(Amp amp) {
     this.amp = amp;
@@ -26,7 +24,9 @@ public class Prime extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    amp.primeAmp();
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override

@@ -22,12 +22,11 @@ public class Amp extends SubsystemBase {
   private double outtakeAmpSpeed = -0.1;
   /**
   * primetime & outtaketime are the amount of seconds it takes for amp to prime (go up)
-   * and to outtake (spit out note). Set up for ease of use w/ shuffleboard
+   * and to outtake (spit out note).
    */
   private double primeTime = 1;
   private double outtakeTime = 2;
 
-  /** Creates a new ExampleSubsystem. */
   public Amp() {
     pneumatic = new Solenoid(Constants.CAN.ampPCM, PneumaticsModuleType.CTREPCM, Constants.CAN.ampChannel);
     ampLimit = new DigitalInput(Constants.CAN.ampLimitSwitch);
@@ -73,21 +72,21 @@ public class Amp extends SubsystemBase {
   }
 
   /**
-   * stops the motor to prevent the note from getting destroyed in the amp.
+   * stops the motor to prevent the note from getting destroyed in the amp
    */
   public void motorStop() {
     ampMotor.set(ControlMode.PercentOutput, 0);
   }
 
   /**
-   * @return value of the motor speed while intaking
+   * @return speed of the motor while intaking
    */
   public double getIntakeAmpSpeed() {
     return intakeAmpSpeed;
   }
 
   /**
-   * @return value of the motor speed while outtaking
+   * @return speed of the motor while outtaking
    */
   public double getOuttakeAmpSpeed() {
     return outtakeAmpSpeed;
@@ -101,12 +100,15 @@ public class Amp extends SubsystemBase {
   }
 
   /**
-   * gets the time of prime and outtake time for amp
-   * @return
+   * @return the time required to prop up amp arm (may be useful when combining amp commands, mainly for shuffleboard)
    */
   public double getPrimeTime() {
     return primeTime;
   }
+
+  /**
+   * @return the time required to tuck in amp arm (may be useful when combining amp commands, mainly for shuffleboard)
+   */
   public double getOuttakeTime() {
     return outtakeTime;
   }
@@ -125,12 +127,22 @@ public class Amp extends SubsystemBase {
     outtakeAmpSpeed = speed;
   }
 
+  /**
+   * sets the time required to prop up amp arm (mainly for shuffleboard)
+   * @param pt
+   */
   public void setPrimeTime(double pt) {
     primeTime = pt;
   }
+
+  /**
+   * sets the time required to tuck in amp arm (mainly for shuffleboard)
+   * @param ot
+   */
   public void setOuttakeTime(double ot) {
     outtakeTime = ot;
   }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
@@ -141,7 +153,6 @@ public class Amp extends SubsystemBase {
     // This method will be called once per scheduler run during simulation
   }
 
-
   /**
    * exports data to Shuffleboard
    */
@@ -149,8 +160,8 @@ public class Amp extends SubsystemBase {
     builder.setSmartDashboardType("Amp");
     builder.addDoubleProperty("Intake Amp Speed", this::getIntakeAmpSpeed, this::setIntakeAmpSpeed);
     builder.addDoubleProperty("Outtake Amp Speed", this::getOuttakeAmpSpeed, this::setOuttakeAmpSpeed);
-    builder.addDoubleProperty("Time to Prime", this::getPrimeTime, this::setPrimeTime);
-    builder.addDoubleProperty("Time to Outtake", this::getOuttakeTime, this::setOuttakeTime);
+    //builder.addDoubleProperty("Time to Prime", this::getPrimeTime, this::setPrimeTime);
+    //builder.addDoubleProperty("Time to Outtake", this::getOuttakeTime, this::setOuttakeTime);
     builder.addBooleanProperty("Limit Switch", this::getLimitSwitch, null);
     builder.addBooleanProperty("Pneumatic Status", this::getPneumaticState, null);
   }
