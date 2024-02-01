@@ -9,18 +9,16 @@ import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Intake;
 
 /** An example command that uses an example subsystem. */
-public class IntakeCommand extends Command {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final Intake intake;
+public class FlipDriveOrientation extends Command {
+  private final Chassis chassis;
 
   /**
    * Creates a new ExampleCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public IntakeCommand(Intake subsystem) {
-    intake = subsystem;
-    // Use addRequirements() here to declare subsystem dependencies.
+  public FlipDriveOrientation(Chassis subsystem) {
+    this.chassis = subsystem;
     addRequirements(subsystem);
   }
 
