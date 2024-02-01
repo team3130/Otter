@@ -4,35 +4,29 @@
 
 package frc.robot.commands.Shooter;
 
-import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.ShooterShifter;
 
 /** An example command that uses an example subsystem. */
-public class ShootShift extends Command {
+public class DecreaseShifterStage extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final ShooterShifter shoot;
-
+  private final ShooterShifter park;
   /**
    * Creates a new ExampleCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public ShootShift(ShooterShifter subsystem) {
-    shoot = subsystem;
+  public DecreaseShifterStage(ShooterShifter subsystem) {
+    park = subsystem;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
   }
 
-  // Shifts shooter stage when isParked is false
+
   @Override
   public void initialize() {
-    if(!shoot.getIsParked()) {
-      shoot.shootShift();
-    }
+    park.decreaseStage();
   }
-
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {}
