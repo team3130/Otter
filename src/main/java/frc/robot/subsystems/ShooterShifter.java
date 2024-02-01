@@ -4,9 +4,11 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class ShooterShifter extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
@@ -31,10 +33,10 @@ public class ShooterShifter extends SubsystemBase {
   private boolean isThirdShootStage = true;
   public ShooterShifter() {
     /**
-     * fill in parameters with canID and pneumatic type
+     * fill in parameters with pneumatic type
      */
-    solenoid1 = new Solenoid();
-    solenoid2 = new Solenoid();
+    solenoid1 = new Solenoid(PneumaticsModuleType.CTREPCM,Constants.CAN.CAN_Solenoid1);
+    solenoid2 = new Solenoid(PneumaticsModuleType.CTREPCM,Constants.CAN.CAN_Solenoid2);
 
   }
 
