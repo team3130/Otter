@@ -5,7 +5,6 @@
 package frc.robot.subsystems;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.path.PathPlannerTrajectory;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
@@ -13,7 +12,6 @@ import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.*;
-import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -21,7 +19,6 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.commands.Autos;
@@ -31,8 +28,6 @@ import frc.robot.swerve.SwerveModule;
 
 import java.util.Arrays;
 import java.util.function.Consumer;
-
-import static java.lang.Math.toRadians;
 
 /**
  * Chassis is the drivetrain subsystem of our bot. Our physical chassis is a swerve drive, 
@@ -80,7 +75,7 @@ public class Chassis extends SubsystemBase {
         m_limelight = limelight;
 
         field = new Field2d();
-        SmartDashboard.putData("Field", field);
+        Shuffleboard.getTab("Comp").add("field", field);
         n_fieldOrriented = Shuffleboard.getTab("Comp").add("field orriented", false).getEntry();
 
         AutoBuilder.configureHolonomic(
@@ -132,13 +127,7 @@ public class Chassis extends SubsystemBase {
          */
     }
 
-    /*
-    public Rotation2d idkMan() {
-        Navx.getRotation().getRadians() + new Rotation2d(toRadians(180);
-    }
-    */
-
-    public void driveRobotRelative(ChassisSpeeds speeds) {
+    public void driveRobotRelative(ChassisSpeeds speeds){
         driveAuton(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond);
     }
 
@@ -253,14 +242,6 @@ public class Chassis extends SubsystemBase {
     // Update odometry with swerve drive
     public void updateOdometery() {
         updateOdometryFromSwerve();
-    }
-
-    /**
-     * updates the field object with a trajectory
-     * @param trajectory the trajectory to set the field object wtih
-     */
-    public void updateField2DFromTrajectory(Trajectory trajectory) {
-        field.getObject("traj").setTrajectory(trajectory);
     }
 
     /**

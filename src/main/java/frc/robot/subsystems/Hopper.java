@@ -17,7 +17,15 @@ import frc.robot.commands.SpinHopper;
  * Because build is un-organized the right wheel is geared 1/4 of the left wheel
  */
 public class Hopper extends SubsystemBase {
+
+    /**
+     * The left motor's controller for the hopper
+     */
     protected final WPI_TalonSRX m_leftWheel;
+
+    /**
+     * The right motor's controller for the hopper
+     */
     protected final WPI_TalonSRX m_rightWheel;
 
     /**
@@ -40,11 +48,14 @@ public class Hopper extends SubsystemBase {
     public Command spinHopperAuto() {
         return new SpinHopper(this);
     }
-
+    /**
+     * spin the motor at 100%
+     */
     public void spinHopper() {
         m_leftWheel.set(ControlMode.PercentOutput, 1);
         m_rightWheel.set(ControlMode.PercentOutput, 1);
     }
+
 
     /** alternating directions to unjam pieces that have become lodged **/
     public void alternateHopper(){
