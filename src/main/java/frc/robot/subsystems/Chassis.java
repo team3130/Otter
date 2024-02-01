@@ -79,13 +79,6 @@ public class Chassis extends SubsystemBase {
         n_fieldOrriented = Shuffleboard.getTab("Comp").add("field orriented", false).getEntry();
     }
 
-
-    }
-
-
-
-
-
     /**
      * If the PID controllers of the {@link SwerveModule}'s are all done
      * @return whether the wheels are zereod/PID controllers are done

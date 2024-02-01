@@ -17,14 +17,13 @@ import frc.robot.subsystems.Chassis;
 public class TeleopDrive extends Command {
   private final Chassis chassis;
   private final XboxController xboxController;
-
-  private final CameraSubsystem m_camera;
+  private final CameraSubsystem camera;
   private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
 
   public TeleopDrive(Chassis chassis, XboxController xboxController, CameraSubsystem camera) {
-    m_chassis = chassis;
-    m_camera = camera;
-    m_xboxController = xboxController;
+    this.chassis = chassis;
+    this.xboxController = xboxController;
+    this.camera = camera;
 
     // Use addRequirements() here to declare subsystem dependencies.
     m_requirements.add(chassis);
@@ -39,8 +38,7 @@ public class TeleopDrive extends Command {
    * Called when the scheduler first schedules the command
    */
   @Override
-  public void initialize() {
-  }
+  public void initialize() {}
 
   /**
    * Called periodically while the default command is being ran and is not actively interrupted.
@@ -50,14 +48,14 @@ public class TeleopDrive extends Command {
   @Override
   public void execute() {
     double theta = 0.0;
-    double y = m_xboxController.getRawAxis(Constants.Buttons.LST_AXS_LJOYSTICKX); // left stick y-axis (y-axis is inverted)
-    double x = m_xboxController.getRawAxis(Constants.Buttons.LST_AXS_LJOYSTICKY); // left stick x-axis
+    double y = xboxController.getRawAxis(Constants.Buttons.LST_AXS_LJOYSTICKX); // left stick y-axis (y-axis is inverted)
+    double x = xboxController.getRawAxis(Constants.Buttons.LST_AXS_LJOYSTICKY); // left stick x-axis
 
-    if (m_camera.isTryingToTarget()){
-      theta = m_camera.goToTargetPower();
+    if (camera.isTryingToTarget()){
+      theta = camera.goToTargetPower();
 
     } else {
-      theta = -m_xboxController.getRawAxis(Constants.Buttons.LST_AXS_RJOYSTICKX); // right stick x-axis
+      theta = -xboxController.getRawAxis(Constants.Buttons.LST_AXS_RJOYSTICKX); // right stick x-axis
       theta = Math.abs(theta) > Constants.Swerve.kDeadband ? theta : 0.0;
       theta = turningLimiter.calculate(theta) * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond;
     }
@@ -78,7 +76,6 @@ public class TeleopDrive extends Command {
     y = yLimiter.calculate(y * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
 
     chassis.drive(x,y,theta);
-
   }
 
   /**
