@@ -7,24 +7,21 @@ package frc.robot.commands.Climber;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.Climber;
-import frc.robot.subsystems.Climber.ClimberRight;
 import edu.wpi.first.wpilibj.Timer;
 
 /** An example command that uses an example subsystem. */
 public class ResetClimberRight extends Command {
 
-    private final ClimberRight climberRight;
     private final Climber climber;
 
     private boolean isDone = false;
 
     private final Timer timer;
 
-    public ResetClimberRight(ClimberRight climberRight, Climber climber) {
-      this.climberRight = climberRight;
+    public ResetClimberRight(Climber climber) {
       this.climber = climber;
       timer = new Timer();
-      addRequirements(climberRight);
+      addRequirements(climber);
     }
 
     // Called when the command is initially scheduled.
@@ -32,7 +29,7 @@ public class ResetClimberRight extends Command {
     public void initialize() {
 
         // starts the motors and timer
-        climberRight.setSpeed(0); // TODO
+        climber.setSpeed(0); // TODO
 
         timer.reset();
         timer.start();
@@ -43,9 +40,9 @@ public class ResetClimberRight extends Command {
     public void execute() {
         if (timer.hasElapsed(climber.getTimerAmount())) {
             // checks if the voltage spiked
-            if (climberRight.getMotorCurrent() >= climber.getCurrentMax()) {
+            if (climber.getMotorCurrent() >= climber.getCurrentMaxRight()) {
                 // inverts the motors
-                climberRight.invert();
+                climber.invert();
             }
             isDone = true;
         }
@@ -54,7 +51,7 @@ public class ResetClimberRight extends Command {
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        climberRight.stop();
+        climber.stop();
         timer.stop();
     }
 

@@ -15,135 +15,87 @@ import frc.robot.Constants;
 
 public class Climber extends SubsystemBase {
 
-    private double currentMax = 0.0;
+    private double currentMaxRight = 0.0;
+
+    private double currentMaxLeft = 0.0;
 
     private double timerAmount = 0.1;
 
-    public double getCurrentMax() {
-        return currentMax;
+    public double getCurrentMaxRight() {
+        return currentMaxRight;
     }
 
-    public void setCurrentMax(double value) {
-        currentMax = value;
+    public void setCurrentMaxRight(double skibidi) {
+        currentMaxRight = skibidi;
+    }
+
+    public double getCurrentMaxLeft() {
+        return currentMaxLeft;
+    }
+
+    public void setCurrentMaxLeft(double skibidi) {
+        currentMaxLeft = skibidi;
     }
 
     public double getTimerAmount() {
         return timerAmount;
     }
 
-    public void setTimerAmount(double value) {
-        timerAmount = value;
+    public void setTimerAmount(double skibidi) {
+        timerAmount = skibidi;
+    }
+
+    private final DigitalInput limitSwitch;
+
+    private final WPI_TalonSRX motor;
+
+    public Climber(int kMotor, int kLimitSwitch) {
+        motor = new WPI_TalonSRX(kMotor);
+        motor.configFactoryDefault();
+        motor.configVoltageCompSaturation(3);
+        motor.setInverted(false);
+
+        limitSwitch = new DigitalInput(kLimitSwitch);
+    }
+
+    // returns the status of the left arm's limitswitch
+    public boolean brokeLimit() {
+        return !limitSwitch.get();
+    }
+
+    // inverts the motor direction
+    public void invert() {
+        motor.setInverted(!motor.getInverted());
+    }
+
+    // returns the amount of current the motor is using
+    public double getMotorCurrent() {
+        return motor.getSupplyCurrent();
+    }
+
+    // sets speed of right arm
+    public void setSpeed(double speed) {
+        motor.set(ControlMode.PercentOutput, speed);
+    }
+
+    // sets left arm speed to zero
+    public void stop() {
+        motor.set(ControlMode.PercentOutput, 0);
+    }
+
+    @Override
+    public void periodic() {
+    }
+
+    @Override
+    public void simulationPeriodic() {
     }
 
     @Override
     public void initSendable(SendableBuilder builder) {
-        builder.addDoubleProperty("currentMax", this::getCurrentMax, this::setCurrentMax);
+        builder.addBooleanProperty("ClimberBrokeLeft", this::brokeLimit, null);
+        builder.addDoubleProperty("currentMaxRight", this::getCurrentMaxRight, this::setCurrentMaxRight);
+        builder.addDoubleProperty("currentMaxLeft", this::getCurrentMaxLeft, this::setCurrentMaxLeft);
         builder.addDoubleProperty("timerAmount", this::getTimerAmount, this::setTimerAmount);
-    }
-
-    // Class for Right Climber Arm
-    public static class ClimberRight extends SubsystemBase {
-
-        private final DigitalInput limitSwitch;
-
-        private final WPI_TalonSRX motor;
-
-        public ClimberRight() {
-            motor = new WPI_TalonSRX(Constants.Climber.kRMotor);
-            motor.configFactoryDefault();
-            motor.configVoltageCompSaturation(3);
-            motor.setInverted(false);
-
-            limitSwitch = new DigitalInput(Constants.Climber.kRLimitSwitch);
-        }
-
-        // returns the status of the right arm's limitswitch
-        public boolean brokeLimit() {
-            return !limitSwitch.get();
-        }
-
-        // inverts the motor direction
-        public void invert() {
-            motor.setInverted(!motor.getInverted());
-        }
-
-        // returns the amount of current the motor is using
-        public double getMotorCurrent() {
-            return motor.getMotorOutputVoltage();
-        }
-
-        // sets speed of right arm
-        public void setSpeed(double speed) {
-            motor.set(ControlMode.PercentOutput, speed);
-        }
-
-        // sets right arm speed to zero
-        public void stop() {
-            motor.set(ControlMode.PercentOutput, 0);
-        }
-
-        @Override
-        public void periodic() {}
-
-        @Override
-        public void simulationPeriodic() {}
-
-        @Override
-        public void initSendable(SendableBuilder builder) {
-            builder.addBooleanProperty("ClimberBrokeRight", this::brokeLimit, null);
-        }
-    }
-
-    // Class for Left Climber Arm
-    public static class ClimberLeft extends SubsystemBase {
-
-        private final DigitalInput limitSwitch;
-
-        private final WPI_TalonSRX motor;
-
-        public ClimberLeft() {
-            motor = new WPI_TalonSRX(Constants.Climber.kLMotor);
-            motor.configFactoryDefault();
-            motor.configVoltageCompSaturation(3);
-            motor.setInverted(false);
-
-            limitSwitch = new DigitalInput(Constants.Climber.kLLimitSwitch);
-        }
-
-        // returns the status of the left arm's limitswitch
-        public boolean brokeLimit() {
-            return !limitSwitch.get();
-        }
-
-        // inverts the motor direction
-        public void invert() {
-            motor.setInverted(!motor.getInverted());
-        }
-
-        // returns the amount of current the motor is using
-        public double getMotorCurrent() {
-            return motor.getMotorOutputVoltage();
-        }
-
-        // sets speed of right arm
-        public void setSpeed(double speed) {
-            motor.set(ControlMode.PercentOutput, speed);
-        }
-
-        // sets left arm speed to zero
-        public void stop() {
-            motor.set(ControlMode.PercentOutput, 0);
-        }
-
-        @Override
-        public void periodic() {}
-
-        @Override
-        public void simulationPeriodic() {}
-
-        @Override
-        public void initSendable(SendableBuilder builder) {
-            builder.addBooleanProperty("ClimberBrokeLeft", this::brokeLimit, null);
-        }
     }
 }

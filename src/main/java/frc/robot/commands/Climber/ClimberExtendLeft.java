@@ -5,14 +5,14 @@
 package frc.robot.commands.Climber;
 
 import frc.robot.Constants;
-import frc.robot.subsystems.Climber.ClimberLeft;
+import frc.robot.subsystems.Climber;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj.XboxController;
 
 /** An example command that uses an example subsystem. */
 public class ClimberExtendLeft extends Command {
   
-    private final ClimberLeft climber;
+    private final Climber climber;
     public XboxController xboxController;
 
     /**
@@ -20,7 +20,7 @@ public class ClimberExtendLeft extends Command {
      *
      * @param subsystem The subsystem used by this command.
     */
-    public ClimberExtendLeft(ClimberLeft subsystem, XboxController xboxController) {
+    public ClimberExtendLeft(Climber subsystem, XboxController xboxController) {
         climber = subsystem;
         this.xboxController = xboxController;
         addRequirements(climber);
