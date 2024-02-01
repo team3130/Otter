@@ -1,0 +1,37 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 2,
+      "y": 3
+    },
+    "rotation": 0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "south"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "spinHopper"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "north"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 
 /**
@@ -19,6 +20,7 @@ import edu.wpi.first.math.util.Units;
 public final class Constants {
   public static final boolean debugMode = true; //TODO: make false after testing
   public static final boolean kNavxReversed = true;
+  public final static double kMaxVoltageHopper = 9d;
 
   public static class CAN {
     public final static int leftFrontSteer = 2;
@@ -40,6 +42,9 @@ public final class Constants {
     public static final int[] turningID = new int[] {leftFrontSteer, leftBackSteer, rightFrontSteer, rightBackSteer};
     public static final int[] spinningID = new int[] {leftFrontDrive, leftBackDrive, rightFrontDrive, rightBackDrive};
     public final static int[] CANCoders = new int[] {CANCoderTopLeft, CANCoderBottomLeft, CANCoderTopRight, CANCoderBottomRight};
+
+    public final static int CAN_hopperright = 16;
+    public final static int CAN_hopperleft = 17;
 
   }
 
@@ -133,6 +138,35 @@ public final class Constants {
     public final static double[] kF_Swerve = new double[] {kF_FrontLeft, kF_BackLeft, kF_FrontRight, kF_BackRight};
   }
 
+  public static class Auton {
+    /** Chassis auton */
+    public static final double kPXController = 3;
+    public static final double kIXController = 0;
+    public static final double kDXController = 0;
+    public static final double kPYController = 3;
+    public static final double kIYController = 0;
+    public static final double kDYController = 0;
+    public static final double kPThetaController = 7;
+    public static final double kIThetaController = 0;
+    public static final double kDThetaController = 0;
+
+    public static final double kMaxAngularAccelerationRadiansPerSecondSquared = Math.PI; // max spiny acceleration
+    public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2 * 2 * Math.PI; // max spiny velocity
+    // real max spiny speed (multiply by some number for safety)
+    public static final double kMaxAngularSpeedRadiansPerSecond =  kPhysicalMaxAngularSpeedRadiansPerSecond;
+    // spiny PID constraints
+    public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
+            kMaxAngularSpeedRadiansPerSecond, kMaxAngularAccelerationRadiansPerSecondSquared);
+
+    /**
+     * Length and width as measured as distances between center of wheels
+     */
+    // the left-to-right distance between the drivetrain wheels, should be measured from center to center
+    public static final double trackWidth_m = 0.61;
+    // the front-to-back distance between the drivetrain wheels, should be measured from center to center
+    public static final double wheelBase_m = 0.61;
+  }
+
   public static class Modules {
     public static final int leftFront = 0;
     public static final int leftBack = 1;
@@ -156,8 +190,8 @@ public final class Constants {
     public static final double kWheelDiameter = Units.inchesToMeters(3.86);
     public final static double DriveRotToMeters = kWheelDiameter * Math.PI * 1/(kDriveGearRatio); // multiply by
     public static final double SteerRotToRads = 1/(kSteerGearRatio) * Math.PI * 2; // multiply by position
-    public static final double DriveRotToMetersPerSecond = DriveRotToMeters * 10; // multiply by velocity
-    public static final double SteerRotToRadsPerSecond = SteerRotToRads * 10; // multiply by velocity
+    public static final double DriveRotToMetersPerSecond = DriveRotToMeters ; // multiply by velocity
+    public static final double SteerRotToRadsPerSecond = SteerRotToRads; // multiply by velocity
   }
 
   public static class Buttons {
