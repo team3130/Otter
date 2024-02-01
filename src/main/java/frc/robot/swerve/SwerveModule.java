@@ -17,9 +17,9 @@ import frc.robot.Constants;
 
 // Swerve module that reflects the actual swerve modules
 public class SwerveModule implements Sendable {
-    private final TalonFX m_steerMotor; // the steering motor
-    private final TalonFX m_driveMotor; // the driving motor
-    private final CANcoder m_absoluteEncoder; // the can encoder attached to the shaft
+    private final TalonFX steerMotor; // the steering motor
+    private final TalonFX driveMotor; // the driving motor
+    private final CANcoder absoluteEncoder; // the can encoder attached to the shaft
     private final PIDController turningPidController; // PID controller for steering
     private final double absoluteEncoderOffset; // the absolute encoder offset from where 0 is to where it thinks it is
     private final int side; // the side that the bot is on
@@ -32,19 +32,19 @@ public class SwerveModule implements Sendable {
      * @param side is reflective in {@link Constants}
      */
     public SwerveModule(int side) {
-        m_steerMotor = new TalonFX(Constants.CAN.turningID[side]);
-        m_driveMotor = new TalonFX(Constants.CAN.spinningID[side]);
+        steerMotor = new TalonFX(Constants.CAN.turningID[side]);
+        driveMotor = new TalonFX(Constants.CAN.spinningID[side]);
 
-        m_absoluteEncoder = new CANcoder(Constants.CAN.CANCoders[side]);
+        absoluteEncoder = new CANcoder(Constants.CAN.CANCoders[side]);
         turningPidController = new PIDController(Constants.Swerve.kP_Swerve[side], Constants.Swerve.kI_Swerve[side], Constants.Swerve.kD_Swerve[side]);
 
-        m_steerMotor.getConfigurator().apply(new TalonFXConfiguration()); // config factory default
-        m_steerMotor.setNeutralMode(NeutralModeValue.Brake); // Brake mode
-        m_steerMotor.setInverted(true);
+        steerMotor.getConfigurator().apply(new TalonFXConfiguration()); // config factory default
+        steerMotor.setNeutralMode(NeutralModeValue.Brake); // Brake mode
+        steerMotor.setInverted(true);
 
-        m_driveMotor.getConfigurator().apply(new TalonFXConfiguration());
-        m_driveMotor.setNeutralMode(NeutralModeValue.Brake);
-        m_driveMotor.setInverted(false);
+        driveMotor.getConfigurator().apply(new TalonFXConfiguration());
+        driveMotor.setNeutralMode(NeutralModeValue.Brake);
+        driveMotor.setInverted(false);
 
         turningPidController.enableContinuousInput(-Math.PI, Math.PI); // wrap for circles
         turningPidController.setTolerance(0.0025, 0.05); // at position tolerance
@@ -63,45 +63,34 @@ public class SwerveModule implements Sendable {
 
     // returns the amount of distance the drive motor has travelled in meters
     public double getDrivePosition() {
-        // TODO: refresh?
-        // because we are calling getRotorPosition() every loop,
-        // we do not need to call refresh()
-        // rotorPosSignal.refresh();
-
-
-        // refreshed TalonFX rotor position signal // position value that we just refreshed in rotations
-        // return m_driveMotor.getRotorPosition().getValue() * Constants.Conversions.DriveRotToMeters;
-        return m_driveMotor.getPosition().getValue() * Constants.Conversions.DriveRotToMeters;
+        return driveMotor.getPosition().getValue() * Constants.Conversions.DriveRotToMeters;
     }
 
     // returns the position of the steering motor radians
     public double getTurningPosition() {
-        // return m_steerMotor.getRotorPosition().getValue() * Constants.Conversions.SteerRotToRads;
-        return m_steerMotor.getPosition().getValue() * Constants.Conversions.SteerRotToRads;
+        return steerMotor.getPosition().getValue() * Constants.Conversions.SteerRotToRads;
     }
 
     // gets the velocity of the drive motor in m/s
     public double getDriveVelocity() {
-        // return m_driveMotor.getRotorVelocity().getValue() * Constants.Conversions.DriveRotToMetersPerSecond;
-        return m_driveMotor.getVelocity().getValue() * Constants.Conversions.DriveRotToMeters;
+        return driveMotor.getVelocity().getValue() * Constants.Conversions.DriveRotToMeters;
     }
 
     // gets the speed at which the steering motor turns in radians per second
     public double getTurningVelocity() {
-        // return m_steerMotor.getRotorVelocity().getValue() * Constants.Conversions.SteerRotToRadsPerSecond;
-        return m_steerMotor.getVelocity().getValue() * Constants.Conversions.SteerRotToRads;
+        return steerMotor.getVelocity().getValue() * Constants.Conversions.SteerRotToRads;
     }
 
     // gets the position of the steering wheel according to the absolute encoders
     public double getAbsoluteEncoderRad() {
-        return Math.toRadians(m_absoluteEncoder.getAbsolutePosition().getValue() * 360);
+        return Math.toRadians(absoluteEncoder.getAbsolutePosition().getValue() * 360);
     }
 
     /**
      * @return the position of the steering wheel in degrees
      */
     public double getAbsoluteEncoderDegrees() {
-        return m_absoluteEncoder.getAbsolutePosition().getValue();
+        return absoluteEncoder.getAbsolutePosition().getValue();
     }
 
     // updates steering PID controller
@@ -120,7 +109,7 @@ public class SwerveModule implements Sendable {
      * Resets the relative encoders according the absolute encoder involving the offset
      */
     public void resetEncoders() {
-        m_steerMotor.setPosition((getAbsoluteEncoderRad() - absoluteEncoderOffset) / Constants.Conversions.SteerRotToRads);
+        steerMotor.setPosition((getAbsoluteEncoderRad() - absoluteEncoderOffset) / Constants.Conversions.SteerRotToRads);
         // m_driveMotor.setSelectedSensorPosition(0);
     }
 
@@ -144,8 +133,8 @@ public class SwerveModule implements Sendable {
      * Default stop method to stop the motors
      */
     public void stop(){
-        m_steerMotor.setControl(steerMotorVoltRequest.withOutput(0));
-        m_driveMotor.setControl(driveMotorVoltRequest.withOutput(0));
+        steerMotor.setControl(steerMotorVoltRequest.withOutput(0));
+        driveMotor.setControl(driveMotorVoltRequest.withOutput(0));
     }
 
     /**
@@ -164,9 +153,9 @@ public class SwerveModule implements Sendable {
         // percent output of the drive motor that the swerve controller wants you to go to by the physical max speed the bot can travel
         // TODO: underneath set control voltage output is not real
         // m_driveMotor.setControl(driveMotorVoltRequest.withOutput(12d* (state.speedMetersPerSecond / Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond)));
-        m_driveMotor.setVoltage((10d* (state.speedMetersPerSecond / Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond)));
+        driveMotor.setVoltage((10d* (state.speedMetersPerSecond / Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond)));
         // set the steering motor based off the output of the PID controller
-        m_steerMotor.setVoltage(4d * turningPidController.calculate(Math.IEEEremainder(getTurningPosition(), Math.PI * 2), state.angle.getRadians()));
+        steerMotor.setVoltage(4d * turningPidController.calculate(Math.IEEEremainder(getTurningPosition(), Math.PI * 2), state.angle.getRadians()));
     }
 
     /**
@@ -174,7 +163,7 @@ public class SwerveModule implements Sendable {
      * @param setpoint in radians
      */
     public void turnToAngle(double setpoint) {
-        m_steerMotor.setVoltage(12d * turningPidController.calculate(Math.IEEEremainder(getTurningPosition(), Math.PI * 2), setpoint));
+        steerMotor.setVoltage(12d * turningPidController.calculate(Math.IEEEremainder(getTurningPosition(), Math.PI * 2), setpoint));
     }
 
     /**
