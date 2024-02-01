@@ -4,15 +4,16 @@
 
 package frc.robot.subsystems;
 
+import static frc.robot.Constants.PNM_INTAKE_ACTUATOR;
+
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-
-import static frc.robot.Constants.PNM_INTAKE_ACTUATOR;
 
 public class Intake extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
@@ -32,6 +33,10 @@ public class Intake extends SubsystemBase {
     limitSwitch1 = new DigitalInput(Constants.CAN.intakeLimitSwitch1);
 
     intakemotor.configFactoryDefault();
+
+    intakemotor.configVoltageCompSaturation(Constants.Intake.kMaxVoltageIntake);
+    
+    intakemotor.enableVoltageCompensation(true);
 
     intakemotor.setInverted(false);
 

@@ -66,6 +66,7 @@ public final class Constants {
     public static double time1 = .5; //seconds
     public static double time2 = .65;//seconds
     public static int allottedTime = 4; //seconds
+    public static int kMaxVoltageIntake = 3;
 
   }
   public static class AprilTags {
