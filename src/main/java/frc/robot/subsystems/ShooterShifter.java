@@ -65,76 +65,26 @@ public class ShooterShifter extends SubsystemBase {
   /**
   METHODS
    */
-  public void increaseStage(){
-    /**
-     * this is the shooter shifter stage 1 from parked stage
-     */
-    if(isParked) {
-      solenoid1.set(true);
-      setFirstShootStage(true);
-      setIsParked(false);
-      setSecondShootStage(false);
-      setThirdShootStage(false);
-    }
-    /**
-     * this is the shooter shifter stage 2 from stage 1
-     */
-    if(isFirstShootStage){
-      solenoid1.set(false);
-      solenoid2.set(true);
-      setSecondShootStage(true);
-      setFirstShootStage(false);
-      setThirdShootStage(false);
-      setIsParked(false);
-    }
-    /**
-     * this is the shooter shifter stage 3 from stage 2
-     */
-    if(isSecondShootStage){
-      solenoid1.set(true);
-      solenoid2.set(true);
-      setThirdShootStage(true);
-      setIsParked(false);
-      setFirstShootStage(false);
-      setSecondShootStage(false);
-    }
+  public void goToParkedStage(){
+    setIsParked(true);
+    solenoid1.set(false);
+    solenoid2.set(false);
   }
-  public void decreaseStage(){
-    /**
-     * this is the shooter shifter stage 2 from stage 3
-     */
-    if(isThirdShootStage){
-      solenoid1.set(false);
-      solenoid2.set(true);
-      setSecondShootStage(true);
-      setThirdShootStage(false);
-      setFirstShootStage(false);
-      setIsParked(false);
-    }
-    /**
-     * this is the shooter shifter stage 1 from stage 2
-     */
-    if(isSecondShootStage){
-      solenoid1.set(true);
-      solenoid2.set(false);
-      setFirstShootStage(true);
-      setThirdShootStage(false);
-      setSecondShootStage(false);
-      setIsParked(false);
-    }
-    /**
-     * this is the shooter shifter parked stage from stage 1
-     */
-    if(isFirstShootStage){
-      solenoid1.set(false);
-      solenoid2.set(false);
-      setIsParked(true);
-      setThirdShootStage(false);
-      setSecondShootStage(false);
-      setFirstShootStage(false);
-    }
+  public void goToStage1(){
+    setFirstShootStage(true);
+    solenoid1.set(true);
+    solenoid2.set(false);
   }
-
+  public void goToStage2(){
+    setSecondShootStage(true);
+    solenoid1.set(false);
+    solenoid2.set(true);
+  }
+  public void goToStage3(){
+    setThirdShootStage(true);
+    solenoid1.set(true);
+    solenoid2.set(true);
+  }
 
   /**
    * Example command factory method.
