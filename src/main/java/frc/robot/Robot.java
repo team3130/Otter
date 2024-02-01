@@ -50,14 +50,6 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
     robotContainer.periodic();
 
-    // reset chassis pose every kResetTime seconds
-    if (timer.hasElapsed(0.75)) {
-        robotContainer.resetOdometryWithoutApril();
-        timer.stop();
-        timer.reset();
-    } else {
-      robotContainer.updateChassisPose();
-    }
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -70,10 +62,13 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    autonomousCommand = robotContainer.getAutonomousCommand();
+    CommandScheduler.getInstance().cancelAll();
+    //CommandScheduler.getInstance().schedule(robotContainer.resetEverything());
+
 
     // schedule the autonomous command (example)
     if (autonomousCommand != null) {
+      //CommandScheduler.getInstance().schedule(robotContainer.getAutonomousCommand());
       autonomousCommand.schedule();
     }
   }
