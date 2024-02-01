@@ -31,13 +31,9 @@ public class TeleopDrive extends Command {
     turningLimiter = new SlewRateLimiter(Constants.Swerve.kMaxAccelerationAngularDrive);
   }
 
-  /**
-   * Called when the scheduler first schedules the command
-   */
+  //Called when the scheduler first schedules the command
   @Override
-  public void initialize() {
-
-  }
+  public void initialize() {}
 
   /**
    * Called periodically while the default command is being ran and is not actively interrupted.
@@ -46,8 +42,8 @@ public class TeleopDrive extends Command {
    */
   @Override
   public void execute() {
-    double y = xboxController.getRawAxis(Constants.Buttons.LST_AXS_LJOYSTICKX); // left stick y-axis (y-axis is inverted)
-    double x = xboxController.getRawAxis(Constants.Buttons.LST_AXS_LJOYSTICKY); // left stick x-axis
+    double y = -xboxController.getRawAxis(Constants.Buttons.LST_AXS_LJOYSTICKX); // left stick y-axis (y-axis is inverted)
+    double x = -xboxController.getRawAxis(Constants.Buttons.LST_AXS_LJOYSTICKY); // left stick x-axis
     double theta = -xboxController.getRawAxis(Constants.Buttons.LST_AXS_RJOYSTICKX); // right stick x-axis
 
     // square the inputs
@@ -86,9 +82,6 @@ public class TeleopDrive extends Command {
     chassis.stopModules();
   }
 
-  /**
-   * @return false. Never is finished.
-   */
   @Override
   public boolean isFinished() {
     return false;

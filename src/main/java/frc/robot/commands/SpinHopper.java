@@ -10,25 +10,25 @@ import frc.robot.subsystems.Hopper;
 
 /** An example command that uses an example subsystem. */
 public class SpinHopper extends Command {
-  private final Hopper m_hopper;
+  private final Hopper hopper;
   private final Timer timer;
 
   /**
    * Creates a new ExampleCommand.
    *
-   * @param subsystem The subsystem used by this command.
+   * @param hopper The subsystem used by this command.
    */
-  public SpinHopper(Hopper subsystem) {
+  public SpinHopper(Hopper hopper) {
     timer = new Timer();
-    m_hopper = subsystem;
+    this.hopper = hopper;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(subsystem);
+    addRequirements(hopper);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_hopper.spinHopper();
+    hopper.spinHopper();
     timer.reset();
     timer.start();
   }
@@ -41,7 +41,7 @@ public class SpinHopper extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_hopper.stopHopper();
+    hopper.stopHopper();
   }
 
   // Returns true when the command should end.
@@ -54,5 +54,4 @@ public class SpinHopper extends Command {
       return false;
     }
   }
-
 }
