@@ -63,6 +63,12 @@ public class Intake extends SubsystemBase {
   public void DumbOuttake(){
     intakemotor.set(-Constants.Intake.dumbSpeed);
   }
+  
+
+  public void Stoptake(){
+    intakemotor.set(0);
+  }
+
   public boolean limitSwitchTimer(){
     if(!intakeLimitSwitch1()){
       timer.reset();
@@ -74,11 +80,6 @@ public class Intake extends SubsystemBase {
       return true;
     }
   }
-
-  public void Stoptake(){
-    intakemotor.set(0);
-  }
-
 
   public void smartSpin(){
     DumbIntake();

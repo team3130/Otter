@@ -59,12 +59,14 @@ public final class Constants {
   }
 
   public static class Intake {
+
+    //TODO find these values
     public static double dumbSpeed = .8;
     public static double slowSpeed = .2;
-    public static double time1 = .5;
-    public static double time2 = .65;
-    public static int allottedTime = 4;
-    
+    public static double time1 = .5; //seconds
+    public static double time2 = .65;//seconds
+    public static int allottedTime = 4; //seconds
+
   }
   public static class AprilTags {
     public static final boolean useAprilTags = false;
