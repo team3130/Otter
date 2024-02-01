@@ -9,7 +9,6 @@ import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -19,11 +18,16 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.*;
+import frc.robot.commands.Amp.AmpIntake;
+import frc.robot.commands.Amp.AmpOuttake;
+import frc.robot.commands.Amp.AmpPrime;
+import frc.robot.commands.Amp.AmpUnPrime;
 import frc.robot.commands.Chassis.FlipDriveOrientation;
 import frc.robot.commands.Chassis.TeleopDrive;
 import frc.robot.commands.Chassis.ZeroEverything;
 import frc.robot.commands.Chassis.ZeroWheels;
 import frc.robot.sensors.Camera;
+import frc.robot.subsystems.Amp;
 import frc.robot.subsystems.Chassis;
 import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -42,6 +46,7 @@ public class RobotContainer {
   private final Camera limelight;
   private final Chassis chassis;
   private final Hopper hopper;
+  private final Amp amp;
   private final XboxController driverController = new XboxController(0);
   private final XboxController operatorController = new XboxController(1);
   private final SendableChooser<Command> autoChooser;
@@ -51,6 +56,7 @@ public class RobotContainer {
     limelight = new Camera();
     chassis = new Chassis(limelight);
     hopper = new Hopper();
+    amp = new Amp();
 
     // Named commands must be registered before the creation of any PathPlanner Autos or Paths
     // Do this in RobotContainer, after subsystem initialization, but before the creation of any other commands.
@@ -97,6 +103,7 @@ public class RobotContainer {
     if (Constants.debugMode) {
       ShuffleboardTab tab = Shuffleboard.getTab("Subsystems");
       tab.add(chassis);
+      tab.add(amp);
       chassis.exportSwerveModData(Shuffleboard.getTab("Swerve Modules"));
     }
   }
@@ -116,7 +123,10 @@ public class RobotContainer {
     new POVButton(driverController, Constants.Buttons.LST_POV_N).whileTrue(new ZeroEverything(chassis));
     new POVButton(driverController, Constants.Buttons.LST_POV_W).whileTrue(new ZeroWheels(chassis));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new FlipDriveOrientation(chassis));
-
+    new JoystickButton(driverController, Constants.Buttons.LST_BTN_A).whileTrue(new AmpIntake(amp));
+    new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new AmpOuttake(amp));
+    new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new AmpPrime(amp));
+    new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new AmpUnPrime(amp));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_Y).whileTrue(new SpinHopper(hopper));
 
     SmartDashboard.putData(new FlipDriveOrientation(chassis));
