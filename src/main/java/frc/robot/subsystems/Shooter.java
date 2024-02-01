@@ -39,11 +39,11 @@ public class Shooter extends SubsystemBase {
       final VelocityVoltage velocityRequest = new VelocityVoltage(0).withSlot(0);
     */
 
-    private double kS = 0.5;
-    private double kV = 0.1;
-    private double kP = 0.0;
+    private double kS = 0;
+    private double kV = 0.135;
+    private double kP = 0.3;
     private double kI = 0;
-    private double kD = 0.000;
+    private double kD = 0.01;
     private double feedForwardVolt;
     ClosedLoopRampsConfigs closedLoopRamp;
 
@@ -59,7 +59,7 @@ public class Shooter extends SubsystemBase {
 
         rightFlywheel8.setInverted(true);
 
-        rightFlywheel8.getConfigurator().apply(new ClosedLoopRampsConfigs().withVoltageClosedLoopRampPeriod(3));
+        rightFlywheel8.getConfigurator().apply(new ClosedLoopRampsConfigs().withVoltageClosedLoopRampPeriod(2));
 
         slot0Configs = new Slot0Configs(); // gains for specific slot
 
@@ -72,6 +72,9 @@ public class Shooter extends SubsystemBase {
         // leftFlywheel9.getConfigurator().apply(new Slot0Configs());
 
         ShuffleboardTab tab = Shuffleboard.getTab("Shooter Velocity");
+
+        tab.addDouble("Live Veloci", this::getVelocityMotor8).withWidget("Graph").withPosition(0, 0).withSize(4, 3);
+        tab.addDouble("Live Velocity", this::getVelocityMotor8).withPosition(0, 3).withSize(2, 1);
     }
 
     public void runShooters() {
