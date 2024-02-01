@@ -64,6 +64,7 @@ public final class Constants {
     public static double time1 = .5;
     public static double time2 = .65;
     public static int allottedTime = 4;
+    
   }
   public static class AprilTags {
     public static final boolean useAprilTags = false;

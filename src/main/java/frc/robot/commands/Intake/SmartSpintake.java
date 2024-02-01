@@ -25,7 +25,7 @@ public class SmartSpintake extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_intake.SmartIntake();
+    m_intake.smartSpin();
     m_intake.SolenoidToggle();
   }
 

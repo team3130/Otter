@@ -52,26 +52,26 @@ public class Intake extends SubsystemBase {
   public void setDumbSpeed(double x){
     Constants.Intake.dumbSpeed = x;
   }
-  public void slowIntake() {intakemotor.set(ControlMode.PercentOutput, Constants.Intake.slowSpeed);}
-  public void slowOutake() {intakemotor.set(ControlMode.PercentOutput, -Constants.Intake.slowSpeed);}
+  public void slowIntake() {intakemotor.set(Constants.Intake.slowSpeed);}
+  public void slowOutake() {intakemotor.set(-Constants.Intake.slowSpeed);}
   public boolean intakeLimitSwitch1(){
     return limitSwitch1.get();
   }
   public void DumbIntake(){
-    intakemotor.set(ControlMode.PercentOutput, Constants.Intake.dumbSpeed);
+    intakemotor.set(Constants.Intake.dumbSpeed);
   }
   public void DumbOuttake(){
-    intakemotor.set(ControlMode.PercentOutput, -Constants.Intake.dumbSpeed);
+    intakemotor.set(-Constants.Intake.dumbSpeed);
   }
   public boolean limitSwitchTimer(){
     if(!intakeLimitSwitch1()){
-      stopwatch.reset();
-      stopwatch.start();
+      timer.reset();
+      timer.start();
     }
-    if (stopwatch < Constants.Intake.allottedTime) {
-      return true;
-    } else {
+    if (timer.hasElapsed(Constants.Intake.allottedTime)) {
       return false;
+    } else {
+      return true;
     }
   }
 
@@ -79,10 +79,6 @@ public class Intake extends SubsystemBase {
     intakemotor.set(0);
   }
 
-  public void startTimer() {
-    timer.reset();
-    timer.start();
-  }
 
   public void smartSpin(){
     DumbIntake();
@@ -93,6 +89,9 @@ public class Intake extends SubsystemBase {
       if (timer.hasElapsed(Constants.Intake.time2)) {
         Stoptake();
       }
+    else {
+      DumbIntake();
+    }
     }
   }
   public void SolenoidToggle(){
