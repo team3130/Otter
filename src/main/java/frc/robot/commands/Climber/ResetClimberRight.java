@@ -10,16 +10,16 @@ import frc.robot.subsystems.Climber.*;
 import edu.wpi.first.wpilibj.Timer;
 
 /** An example command that uses an example subsystem. */
-public class ResetClimber extends Command {
+public class ResetClimberRight extends Command {
 
-    private final ClimberLeft climberLeft;
     private final ClimberRight climberRight;
+
+    private boolean isDone = false;
 
     private final Timer timer;
 
-    public ResetClimber(ClimberRight climberRight, ClimberLeft climberLeft) {
+    public ResetClimberRight(ClimberRight climberRight, ClimberLeft climberLeft) {
       this.climberRight = climberRight;
-      this.climberLeft = climberLeft;
       timer = new Timer();
       addRequirements(climberRight);
       addRequirements(climberLeft);
@@ -31,43 +31,34 @@ public class ResetClimber extends Command {
 
         // starts the motors and timer
         climberRight.setSpeed(0); // TODO
-        climberLeft.setSpeed(0); // TODO
+
+        timer.reset();
         timer.start();
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        // checks if the timer has reached half a second
-        if (timer.hasElapsed(0.5)) {
-
-            // stops the motors
-            climberRight.stop();
-            climberLeft.stop();
-
+        if (timer.hasElapsed(0.1)) {
             // checks if the voltage spiked
-            if ((climberRight.getMotorCurrent() >= Constants.Climber.currentMax) || (climberLeft.getMotorCurrent() >= Constants.Climber.currentMax)) {
-
+            if (climberRight.getMotorCurrent() >= Constants.Climber.currentMax) {
                 // inverts the motors
                 climberRight.invert();
-                climberLeft.invert();
-
             }
-
-            timer.stop();
+            isDone = true;
         }
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-      climberLeft.stop();
-      climberRight.stop();
+        climberRight.stop();
+        timer.stop();
     }
 
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-      return false;
+      return isDone;
     }
 }
