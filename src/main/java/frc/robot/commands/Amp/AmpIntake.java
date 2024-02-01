@@ -8,14 +8,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Amp;
 
 /** An example command that uses an example subsystem. */
-public class UnPrime extends Command {
+public class AmpIntake extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final Amp amp;
 
   /**
    * @param Amp The subsystem used by this command.
+   * @param amp
    */
-  public UnPrime(Amp amp) {
+  public AmpIntake(Amp amp) {
     this.amp = amp;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(amp);
@@ -24,16 +25,22 @@ public class UnPrime extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    amp.unPrimeAmp();
+    amp.intakeAmp();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    if (amp.getLimitSwitch()) {
+      amp.motorStop();
+    }
+  }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    amp.motorStop();
+  }
 
   // Returns true when the command should end.
   @Override

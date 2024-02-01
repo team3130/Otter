@@ -6,17 +6,16 @@ package frc.robot.commands.Amp;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Amp;
-import frc.robot.subsystems.ExampleSubsystem;
 
 /** An example command that uses an example subsystem. */
-public class Prime extends Command {
+public class AmpUnPrime extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final Amp amp;
 
   /**
    * @param Amp The subsystem used by this command.
    */
-  public Prime(Amp amp) {
+  public AmpUnPrime(Amp amp) {
     this.amp = amp;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(amp);
@@ -25,7 +24,7 @@ public class Prime extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    amp.primeAmp();
+    amp.unPrimeAmp();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

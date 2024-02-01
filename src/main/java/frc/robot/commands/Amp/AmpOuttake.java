@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Amp;
 
 /** An example command that uses an example subsystem. */
-public class Outtake extends Command {
+public class AmpOuttake extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final Amp amp;
 
@@ -16,7 +16,7 @@ public class Outtake extends Command {
    * @param Amp The subsystem used by this command.
    * @param amp
    */
-  public Outtake(Amp amp) {
+  public AmpOuttake(Amp amp) {
     this.amp = amp;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(amp);
