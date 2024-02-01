@@ -6,23 +6,25 @@ package frc.robot.commands.Climber;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
-import frc.robot.subsystems.Climber.*;
+import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.Climber.ClimberRight;
 import edu.wpi.first.wpilibj.Timer;
 
 /** An example command that uses an example subsystem. */
 public class ResetClimberRight extends Command {
 
     private final ClimberRight climberRight;
+    private final Climber climber;
 
     private boolean isDone = false;
 
     private final Timer timer;
 
-    public ResetClimberRight(ClimberRight climberRight, ClimberLeft climberLeft) {
+    public ResetClimberRight(ClimberRight climberRight, Climber climber) {
       this.climberRight = climberRight;
+      this.climber = climber;
       timer = new Timer();
       addRequirements(climberRight);
-      addRequirements(climberLeft);
     }
 
     // Called when the command is initially scheduled.
@@ -41,7 +43,7 @@ public class ResetClimberRight extends Command {
     public void execute() {
         if (timer.hasElapsed(0.1)) {
             // checks if the voltage spiked
-            if (climberRight.getMotorCurrent() >= Constants.Climber.currentMax) {
+            if (climberRight.getMotorCurrent() >= climber.getCurrentMax()) {
                 // inverts the motors
                 climberRight.invert();
             }

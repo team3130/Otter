@@ -15,6 +15,21 @@ import frc.robot.Constants;
 
 public class Climber extends SubsystemBase {
 
+    private double currentMax = 0.0;
+
+    public double getCurrentMax() {
+        return currentMax;
+    }
+
+    public void setCurrentMax(double value) {
+        currentMax = value;
+    }
+
+    @Override
+    public void initSendable(SendableBuilder builder) {
+        builder.addDoubleProperty("currentMax", this::getCurrentMax, this::setCurrentMax);
+    }
+
     // Class for Right Climber Arm
     public static class ClimberRight extends SubsystemBase {
 
