@@ -26,12 +26,14 @@ public class SmartSpintake extends Command {
   @Override
   public void initialize() {
     m_intake.SolenoidToggle();
-    m_intake.smartSpin();
+   
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+     m_intake.smartSpin();
+  }
 
   // Called once the command ends or is interrupted.
   @Override

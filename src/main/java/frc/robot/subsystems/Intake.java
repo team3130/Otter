@@ -31,6 +31,7 @@ public class Intake extends SubsystemBase {
     intakesolenoid1 = new Solenoid(Constants.CAN.intakesolenoid1, PneumaticsModuleType.CTREPCM, PNM_INTAKE_ACTUATOR);
     intakesolenoid2 = new Solenoid(Constants.CAN.intakesolenoid2, PneumaticsModuleType.CTREPCM, PNM_INTAKE_ACTUATOR);
     limitSwitch1 = new DigitalInput(Constants.CAN.intakeLimitSwitch1);
+    timer = new Timer();
 
     intakemotor.configFactoryDefault();
 
@@ -75,7 +76,7 @@ public class Intake extends SubsystemBase {
   }
 
   public boolean limitSwitchTimer(){
-    if(!intakeLimitSwitch1()){
+    if(intakeLimitSwitch1()){
       timer.reset();
       timer.start();
     }
@@ -87,17 +88,16 @@ public class Intake extends SubsystemBase {
   }
 
   public void smartSpin(){
-    DumbIntake();
     if (limitSwitchTimer()) {
-      if (timer.hasElapsed(Constants.Intake.time1)) {
-        slowIntake();
-      }
       if (timer.hasElapsed(Constants.Intake.time2)) {
         Stoptake();
       }
+      else {
+        slowIntake();
+      }
+    }
     else {
       DumbIntake();
-    }
     }
   }
   public void SolenoidToggle(){
