@@ -16,21 +16,21 @@ public class ShooterShifter extends SubsystemBase {
   /**
   VARIABLES
    */
+  // solenoid1 is shorter pneumatic
   private final Solenoid solenoid1;
-  /**
-   * solenoid1 is shorter pneumatic
-   */
+
+  // solenoid2 is longer pneumatic
   private final Solenoid solenoid2;
-  /**
-   * solenoid2 is longer pneumatic
-   */
-  private boolean isParked = true;
+
   /**
    * is parked is a variable for when both solenoids are not activated
    */
-  private boolean isFirstShootStage = true;
-  private boolean isSecondShootStage = true;
-  private boolean isThirdShootStage = true;
+  private boolean isParked = true;
+
+  private boolean isFirstShootStage = false;
+  private boolean isSecondShootStage = false;
+  private boolean isThirdShootStage = false;
+
   public ShooterShifter() {
     /**
      * fill in parameters with pneumatic type
@@ -38,6 +38,8 @@ public class ShooterShifter extends SubsystemBase {
     solenoid1 = new Solenoid(PneumaticsModuleType.CTREPCM,Constants.CAN.CAN_Solenoid1);
     solenoid2 = new Solenoid(PneumaticsModuleType.CTREPCM,Constants.CAN.CAN_Solenoid2);
 
+    solenoid1.set(false);
+    solenoid2.set(false);
   }
 
   /**
