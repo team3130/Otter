@@ -20,12 +20,18 @@ public class Amp extends SubsystemBase {
   private final WPI_TalonSRX ampMotor;
   private double intakeAmpSpeed = 0.1;
   private double outtakeAmpSpeed = -0.1;
+  /**
+  * primetime & outtaketime are the amount of seconds it takes for amp to prime (go up)
+   * and to outtake (spit out note). Set up for ease of use w/ shuffleboard
+   */
+  private double primeTime = 1;
+  private double outtakeTime = 2;
 
   /** Creates a new ExampleSubsystem. */
   public Amp() {
-    pneumatic = new Solenoid(Constants.CAN.CAN_PCM, PneumaticsModuleType.CTREPCM, Constants.CAN.CAN_AmpChannel);
-    ampLimit = new DigitalInput(Constants.CAN.CAN_AmpLimitSwitch);
-    ampMotor = new WPI_TalonSRX(Constants.CAN.CAN_AmpMotor);
+    pneumatic = new Solenoid(Constants.CAN.ampPCM, PneumaticsModuleType.CTREPCM, Constants.CAN.ampChannel);
+    ampLimit = new DigitalInput(Constants.CAN.ampLimitSwitch);
+    ampMotor = new WPI_TalonSRX(Constants.CAN.ampMotor);
     ampMotor.configFactoryDefault();
     ampMotor.configVoltageCompSaturation(3);
     ampMotor.setInverted(false);
@@ -95,6 +101,17 @@ public class Amp extends SubsystemBase {
   }
 
   /**
+   * gets the time of prime and outtake time for amp
+   * @return
+   */
+  public double getPrimeTime() {
+    return primeTime;
+  }
+  public double getOuttakeTime() {
+    return outtakeTime;
+  }
+
+  /**
    * @return sets value of amp motor's intake speed
    */
   public void setIntakeAmpSpeed(double speed) {
@@ -106,6 +123,13 @@ public class Amp extends SubsystemBase {
    */
   public void setOuttakeAmpSpeed(double speed) {
     outtakeAmpSpeed = speed;
+  }
+
+  public void setPrimeTime(double pt) {
+    primeTime = pt;
+  }
+  public void setOuttakeTime(double ot) {
+    outtakeTime = ot;
   }
   @Override
   public void periodic() {
@@ -125,6 +149,8 @@ public class Amp extends SubsystemBase {
     builder.setSmartDashboardType("Amp");
     builder.addDoubleProperty("Intake Amp Speed", this::getIntakeAmpSpeed, this::setIntakeAmpSpeed);
     builder.addDoubleProperty("Outtake Amp Speed", this::getOuttakeAmpSpeed, this::setOuttakeAmpSpeed);
+    builder.addDoubleProperty("Time to Prime", this::getPrimeTime, this::setPrimeTime);
+    builder.addDoubleProperty("Time to Outtake", this::getOuttakeTime, this::setOuttakeTime);
     builder.addBooleanProperty("Limit Switch", this::getLimitSwitch, null);
     builder.addBooleanProperty("Pneumatic Status", this::getPneumaticState, null);
   }

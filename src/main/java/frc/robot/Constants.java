@@ -46,13 +46,13 @@ public final class Constants {
     public final static int CAN_hopperright = 16;
     public final static int CAN_hopperleft = 17;
 
-    public final static int CAN_PCM = 18;
+    public final static int ampPCM = 18;
 
-    public final static int CAN_AmpChannel = 19;
+    public final static int ampChannel = 19;
 
-    public final static int CAN_AmpLimitSwitch = 20; //TODO
+    public final static int ampLimitSwitch = 20; //TODO
 
-    public final static int CAN_AmpMotor = 21; //TODO
+    public final static int ampMotor = 21; //TODO
   }
 
   public static class AprilTags {

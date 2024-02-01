@@ -12,7 +12,8 @@ import java.util.Timer;
 public class AmpOuttake extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final Amp amp;
-  private final Timer ampTimer;
+  private final Timer primeTimer;
+  private final Timer outtakeTimer;
 
   /**
    * Creates a new ExampleCommand.
@@ -22,7 +23,8 @@ public class AmpOuttake extends Command {
    */
   public AmpOuttake(Amp amp) {
     this.amp = amp;
-    ampTimer = new Timer();
+    primeTimer = new Timer();
+    outtakeTimer = new Timer();
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(amp);
   }
@@ -34,8 +36,10 @@ public class AmpOuttake extends Command {
   @Override
   public void initialize() {
     amp.primeAmp();
-    ampTimer.reset();
-    ampTimer.start();
+    primeTimer.reset();
+    outtakeTimer.reset();
+    primeTimer.start();
+    outtakeTimer.start();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -43,21 +47,29 @@ public class AmpOuttake extends Command {
   /**
    * Change the hasElapsed second number to however long it takes
    * amp to prime again
+   *
+   * if primetime has elapsed, ampMotor is allowed to eject because
+   * the amp arm has primed (lifted)
+   *
+   * if outtaketime has elapsed and the limit switch is released,
+   * ampMotor stopped because the note has been fully ejected
    */
   @Override
   public void execute() {
-    if (ampTimer.hasElapsed(1)) {
+    if (primeTimer.hasElapsed(amp.getPrimeTime())) {
       amp.outtakeAmp();
-      ampTimer.stop();
+      primeTimer.stop();
     }
-    if (!amp.getLimitSwitch()) {
+    if (!amp.getLimitSwitch() && outtakeTimer.hasElapsed(amp.getOuttakeTime())) {
       amp.motorStop();
+      outtakeTimer.stop();
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    amp.motorStop();
     amp.unPrimeAmp();
   }
 
