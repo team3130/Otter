@@ -17,6 +17,8 @@ public class Climber extends SubsystemBase {
 
     private double currentMax = 0.0;
 
+    private double timerAmount = 0.1;
+
     public double getCurrentMax() {
         return currentMax;
     }
@@ -25,9 +27,18 @@ public class Climber extends SubsystemBase {
         currentMax = value;
     }
 
+    public double getTimerAmount() {
+        return timerAmount;
+    }
+
+    public void setTimerAmount(double value) {
+        timerAmount = value;
+    }
+
     @Override
     public void initSendable(SendableBuilder builder) {
         builder.addDoubleProperty("currentMax", this::getCurrentMax, this::setCurrentMax);
+        builder.addDoubleProperty("timerAmount", this::getTimerAmount, this::setTimerAmount);
     }
 
     // Class for Right Climber Arm

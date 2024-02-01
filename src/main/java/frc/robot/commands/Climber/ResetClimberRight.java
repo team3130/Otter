@@ -41,7 +41,7 @@ public class ResetClimberRight extends Command {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        if (timer.hasElapsed(0.1)) {
+        if (timer.hasElapsed(climber.getTimerAmount())) {
             // checks if the voltage spiked
             if (climberRight.getMotorCurrent() >= climber.getCurrentMax()) {
                 // inverts the motors
