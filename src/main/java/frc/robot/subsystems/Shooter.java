@@ -45,8 +45,6 @@ public class Shooter extends SubsystemBase {
     private double kI = 0;
     private double kD = 0.01;
     private double feedForwardVolt;
-    ClosedLoopRampsConfigs closedLoopRamp;
-
 
     public Shooter() {
         leftFlywheel9 = new TalonFX(9);
