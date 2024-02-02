@@ -46,11 +46,7 @@ public class TeleopDrive extends Command {
    * Called when the scheduler first schedules the command
    */
   @Override
-  public void initialize() {
-    if (camera.faceTargeted()){
-      chassis.prepareForFaceTarget();
-    }
-  }
+  public void initialize() {}
 
 
     /**
@@ -64,7 +60,7 @@ public class TeleopDrive extends Command {
       double y = xboxController.getRawAxis(Constants.Buttons.LST_AXS_LJOYSTICKX); // left stick y-axis (y-axis is inverted)
       double x = xboxController.getRawAxis(Constants.Buttons.LST_AXS_LJOYSTICKY); // left stick x-axis
 
-
+      //gets the initial values
       if (chassis.getInitialAprilTagDistance() == 0 && camera.hasTarget()){
         chassis.prepareForFaceTarget();
       }
@@ -72,16 +68,17 @@ public class TeleopDrive extends Command {
       if (camera.isTryingToTarget()) {
         theta = camera.goToTargetPower();
       }
+      // sets theta to odometry face target
+      if (!camera.isTryingToTarget() && x == 0) { //can set margin of error with testing or best guess
+        theta = camera.targetController.calculate(chassis.getRotation2d().getRadians(), chassis.getAngleToFaceTarget(chassis.getOriginToAprilTagVector()));
+      }
       // sets theta to controller output
       else {
         theta = -xboxController.getRawAxis(Constants.Buttons.LST_AXS_RJOYSTICKX); // right stick x-axis
         theta = Math.abs(theta) > Constants.Swerve.kDeadband ? theta : 0.0;
         theta = turningLimiter.calculate(theta) * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond;
       }
-      // sets theta to odometry face target
-      if (camera.faceTargeted()) {
-        theta = camera.targetController.calculate(chassis.getRotation2d().getRadians(), chassis.getAngleToFaceTarget(chassis.getOriginToAprilTagVector()));
-      }
+
       // square the inputs
       y = y * Math.abs(y);
       x = x * Math.abs(x);
