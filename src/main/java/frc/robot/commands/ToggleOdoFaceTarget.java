@@ -5,31 +5,31 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.CameraSubsystem;
+import frc.robot.commands.Chassis.TeleopDrive;
 import frc.robot.subsystems.Chassis;
+import frc.robot.subsystems.ExampleSubsystem;
 
 /** An example command that uses an example subsystem. */
-public class DisableTargeting extends Command {
+public class ToggleOdoFaceTarget extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final Chassis chassis;
-  private final CameraSubsystem cam;
 
   /**
    * Creates a new ExampleCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public DisableTargeting(Chassis subsystem, CameraSubsystem camSubsystem) {
+  public ToggleOdoFaceTarget(Chassis subsystem) {
     chassis = subsystem;
-    cam = camSubsystem;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(chassis);
+    addRequirements(subsystem);
   }
+
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    cam.setTryingToTargetFalse();
+    chassis.setFaceTargetting(!chassis.getFaceTargetting());
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -38,8 +38,7 @@ public class DisableTargeting extends Command {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override

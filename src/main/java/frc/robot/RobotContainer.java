@@ -39,6 +39,7 @@ public class RobotContainer {
   private final Shooter shooter;
   private final Indexer indexer;
   private final Intake intake;
+  private final TeleopDrive teleopDrive;
 
   // container for the robot containing subsystems, OI devices, and commands
   public RobotContainer() {
@@ -101,10 +102,11 @@ public class RobotContainer {
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed, cancelling on release.
     // driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
-    new POVButton(driverGamepad, Constants.Buttons.LST_POV_N).whileTrue(new ZeroEverything(chassis));
-    new POVButton(driverGamepad, Constants.Buttons.LST_POV_W).whileTrue(new ZeroWheels(chassis));
-    new JoystickButton(driverGamepad, Constants.Buttons.LST_BTN_X).onTrue(new EnableTargeting(cameraSubsystem));
-    new JoystickButton(driverGamepad, Constants.Buttons.LST_BTN_A).whileTrue(new TargetingPressed(cameraSubsystem));
+    new POVButton(driverController, Constants.Buttons.LST_POV_N).whileTrue(new ZeroEverything(chassis));
+    new POVButton(driverController, Constants.Buttons.LST_POV_W).whileTrue(new ZeroWheels(chassis));
+    new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).onTrue(new EnableTargeting(cameraSubsystem));
+    new JoystickButton(driverController, Constants.Buttons.LST_BTN_A).whileTrue(new TargetingPressed(cameraSubsystem));
+    new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new ToggleOdoFaceTarget(chassis));
   }
 
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new Shoot(shooter, indexer, intake));
@@ -115,7 +117,7 @@ public class RobotContainer {
     return new ZeroEverything(chassis);
   }
   public Command dontTarget() {
-    return new DisableTargeting(chassis);
+    return new DisableTargeting(chassis,cameraSubsystem);
   }
 
     //new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new OnlyIndex(indexer));

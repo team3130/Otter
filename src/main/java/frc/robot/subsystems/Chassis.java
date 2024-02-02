@@ -32,7 +32,6 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.commands.Autos;
-import frc.robot.sensors.Camera;
 import frc.robot.sensors.Navx;
 import frc.robot.swerve.SwerveModule;
 
@@ -63,6 +62,7 @@ public class Chassis extends SubsystemBase {
     private Translation2d initialAprilTagVector;
     private Translation2d originToAprilTagVector;
     private double theta = 0.0;
+    private boolean isFaceTargetting = false;
 
     Rotation2d angleSetpoint = null;
 
@@ -423,6 +423,12 @@ public class Chassis extends SubsystemBase {
     private double getYaw() { return odometry.getEstimatedPosition().getRotation().getDegrees(); }
     public double getInitialAprilTagDistance() { return initialAprilTagDistance; }
     public Translation2d getOriginToAprilTagVector() {return originToAprilTagVector;}
+    public void setFaceTargetting(boolean newIsFaceTargetting){
+        isFaceTargetting = newIsFaceTargetting;
+    }
+    public boolean getFaceTargetting(){
+        return isFaceTargetting;
+    }
 
     /**
      * A vomit onto shuffleboard of the {@link SwerveModule} objects in Chassis
