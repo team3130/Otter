@@ -6,20 +6,25 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.RobotContainer;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import frc.robot.Constants;
 
 public class Climber extends SubsystemBase {
-
     private double currentMaxRight = 0.0;
-
     private double currentMaxLeft = 0.0;
-
     private double timerAmount = 0.1;
+    private final DigitalInput limitSwitch;
+    private final WPI_TalonSRX climberMotor;
+
+    public Climber(int CANID, int limitSwitch) {
+        climberMotor = new WPI_TalonSRX(CANID);
+        climberMotor.configFactoryDefault();
+        climberMotor.configVoltageCompSaturation(3);
+        climberMotor.setInverted(false);
+
+        this.limitSwitch = new DigitalInput(limitSwitch);
+    }
 
     public double getCurrentMaxRight() {
         return currentMaxRight;
@@ -45,19 +50,6 @@ public class Climber extends SubsystemBase {
         timerAmount = skibidi;
     }
 
-    private final DigitalInput limitSwitch;
-
-    private final WPI_TalonSRX motor;
-
-    public Climber(int kMotor, int kLimitSwitch) {
-        motor = new WPI_TalonSRX(kMotor);
-        motor.configFactoryDefault();
-        motor.configVoltageCompSaturation(3);
-        motor.setInverted(false);
-
-        limitSwitch = new DigitalInput(kLimitSwitch);
-    }
-
     // returns the status of the left arm's limitswitch
     public boolean brokeLimit() {
         return !limitSwitch.get();
@@ -65,22 +57,22 @@ public class Climber extends SubsystemBase {
 
     // inverts the motor direction
     public void invert() {
-        motor.setInverted(!motor.getInverted());
+        climberMotor.setInverted(!climberMotor.getInverted());
     }
 
     // returns the amount of current the motor is using
     public double getMotorCurrent() {
-        return motor.getSupplyCurrent();
+        return climberMotor.getSupplyCurrent();
     }
 
     // sets speed of right arm
     public void setSpeed(double speed) {
-        motor.set(ControlMode.PercentOutput, speed);
+        climberMotor.set(ControlMode.PercentOutput, speed);
     }
 
     // sets left arm speed to zero
     public void stop() {
-        motor.set(ControlMode.PercentOutput, 0);
+        climberMotor.set(ControlMode.PercentOutput, 0);
     }
 
     @Override

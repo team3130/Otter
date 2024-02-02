@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
@@ -21,6 +24,14 @@ public final class Constants {
     public static final boolean debugMode = true; //TODO: make false after testing
     public static final boolean kNavxReversed = true;
     public final static double kMaxVoltageHopper = 9d;
+    public final static HolonomicPathFollowerConfig holo = new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
+                                                                                 // TODO: change constants below
+                        new PIDConstants(3, 0, 0), // Translation PID constants
+                        new PIDConstants(7, 0, 0), // Rotation PID constants
+                        3, // Max module speed, in m/s
+                                0.35, // Drive base radius in meters. Distance from robot center to furthest module.
+                                new ReplanningConfig() // Default path replanning config. See the API for the options here
+                );
 
     public static class CAN {
         public final static int leftFrontSteer = 2;

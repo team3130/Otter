@@ -9,7 +9,7 @@ import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.util.sendable.SendableRegistry;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -23,11 +23,16 @@ import frc.robot.commands.Chassis.FlipDriveOrientation;
 import frc.robot.commands.Chassis.TeleopDrive;
 import frc.robot.commands.Chassis.ZeroEverything;
 import frc.robot.commands.Chassis.ZeroWheels;
+import frc.robot.commands.Climber.ClimberExtend;
+import frc.robot.commands.Climber.ResetClimbers;
 import frc.robot.sensors.Camera;
 import frc.robot.subsystems.Chassis;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.Hopper;
+
+import java.util.function.BooleanSupplier;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -42,6 +47,8 @@ public class RobotContainer {
   private final Camera limelight;
   private final Chassis chassis;
   private final Hopper hopper;
+  private final Climber leftClimber;
+  private final Climber rightClimber;
   private final XboxController driverController = new XboxController(0);
   private final XboxController operatorController = new XboxController(1);
   private final SendableChooser<Command> autoChooser;
@@ -51,6 +58,8 @@ public class RobotContainer {
     limelight = new Camera();
     chassis = new Chassis(limelight);
     hopper = new Hopper();
+    leftClimber = new Climber(10, 0);
+    rightClimber = new Climber(11, 1);
 
     // Named commands must be registered before the creation of any PathPlanner Autos or Paths
     // Do this in RobotContainer, after subsystem initialization, but before the creation of any other commands.
@@ -61,6 +70,8 @@ public class RobotContainer {
 
     // Default commands running in the background when other commands not scheduled
     chassis.setDefaultCommand(new TeleopDrive(chassis, driverController));
+    leftClimber.setDefaultCommand(new ClimberExtend(leftClimber, driverController, Constants.Buttons.LST_AXS_RJOYSTICKY));
+    rightClimber.setDefaultCommand(new ClimberExtend(rightClimber, driverController, Constants.Buttons.LST_AXS_LJOYSTICKY));
 
     // Build an auto chooser. This will use Commands.none() as the default option.
     // autoChooser = AutoBuilder.buildAutoChooser();
@@ -69,6 +80,18 @@ public class RobotContainer {
     autoChooser = AutoBuilder.buildAutoChooser("up");
 
     SmartDashboard.putData("Auto Chooser", autoChooser);
+  }
+
+  public static BooleanSupplier isFieldMirrored() {
+    // Boolean supplier that controls when the path will be mirrored for the red alliance
+    // This will flip the path being followed to the red side of the field.
+    // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+
+    var alliance = DriverStation.getAlliance();
+    if (alliance.isPresent()) {
+      return () -> (alliance.get() == DriverStation.Alliance.Red);
+    }
+    return () -> false;
   }
 
   public Command pick() {
@@ -116,6 +139,7 @@ public class RobotContainer {
     new POVButton(driverController, Constants.Buttons.LST_POV_W).whileTrue(new ZeroWheels(chassis));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new FlipDriveOrientation(chassis));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_Y).whileTrue(new SpinHopper(hopper));
+    new JoystickButton(driverController, Constants.Buttons.LST_BTN_A).whileTrue(new ResetClimbers(leftClimber));
 
     SmartDashboard.putData(new FlipDriveOrientation(chassis));
   }

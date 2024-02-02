@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.commands.Autos;
 import frc.robot.sensors.Camera;
 import frc.robot.sensors.Navx;
@@ -88,27 +89,8 @@ public class Chassis extends SubsystemBase {
                 this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
                 this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
                 this::driveRobotRelative,
-                // drivey(getRobotRelativeSpeeds().vxMetersPerSecond, getRobotRelativeSpeeds().vyMetersPerSecond, getRobotRelativeSpeeds().omegaRadiansPerSecond, false), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
-                //(speeds) -> drive(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond, false),
-                new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-                        // TODO: change constants below
-                        new PIDConstants(3, 0, 0), // Translation PID constants
-                        new PIDConstants(7, 0, 0), // Rotation PID constants
-                        3, // Max module speed, in m/s
-                        0.35, // Drive base radius in meters. Distance from robot center to furthest module.
-                        new ReplanningConfig() // Default path replanning config. See the API for the options here
-                ),
-                () -> {
-                    // Boolean supplier that controls when the path will be mirrored for the red alliance
-                    // This will flip the path being followed to the red side of the field.
-                    // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-
-                    var alliance = DriverStation.getAlliance();
-                    if (alliance.isPresent()) {
-                        return alliance.get() == DriverStation.Alliance.Red;
-                    }
-                    return false;
-                },
+                Constants.holo,
+                RobotContainer.isFieldMirrored(),
                 this // Reference to this subsystem to set requirements
         );
     }
@@ -174,6 +156,7 @@ public class Chassis extends SubsystemBase {
     * @return whether the wheels are zereod/PID controllers are done
     */
     public boolean turnToAnglePIDIsDone() {
+        // TODO: swerve module iterate
         return modules[Constants.Modules.leftFront].PIDisDone() &&
         modules[Constants.Modules.leftBack].PIDisDone() &&
         modules[Constants.Modules.rightFront].PIDisDone() &&
