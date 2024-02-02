@@ -105,13 +105,29 @@ public class Chassis extends SubsystemBase {
         }
     }
 
+    // Flip-flops between field relative and bot relative swerve drive
+    public void flipFieldRelative() {
+        fieldRelative = !fieldRelative;
+    }
 
-    // If the PID controllers of the Swerve Modules are done, returing wheter the wheels are zeroed/PID controllers finished
-    public boolean turnToAnglePIDIsFinished() {
-        return modules[Constants.Modules.leftFront].PIDisDone() &&
-            modules[Constants.Modules.leftBack].PIDisDone() &&
-            modules[Constants.Modules.rightFront].PIDisDone() &&
-            modules[Constants.Modules.rightBack].PIDisDone();
+    // Getter for if swerve drive is field relative or not, bool if field relative
+    public boolean getFieldRelative() {
+        return fieldRelative;
+    }
+
+    // sets field oriented (field or robot oriented) to the provided boolean
+    public void setWhetherFieldOriented(boolean fieldOriented) {
+        fieldRelative = fieldOriented;
+    }
+
+    // returns the bots rotation according to NavX
+    public Rotation2d getRotation2d(){
+        return odometry.getEstimatedPosition().getRotation();
+    }
+
+    // periodic call to update odometry from encoders
+    public void updateOdometryFromSwerve() {
+        odometry.update(Navx.getRotation(), generatePoses());
     }
 
     // Resets odometry: resets relative encoders to what the absolute encoders are, hard reset of odometry object
@@ -119,6 +135,41 @@ public class Chassis extends SubsystemBase {
     public void resetOdometry(Pose2d pose) {
         resetEncoders();
         odometry.resetPosition(Navx.getRotation(), generatePoses(), pose);
+    }
+
+    // If the PID controllers of the Swerve Modules are done, returning whether the wheels are zeroed/PID controllers finished
+    public boolean turnToAnglePIDIsFinished() {
+        return modules[Constants.Modules.leftFront].PIDisDone() &&
+                modules[Constants.Modules.leftBack].PIDisDone() &&
+                modules[Constants.Modules.rightFront].PIDisDone() &&
+                modules[Constants.Modules.rightBack].PIDisDone();
+    }
+
+    // Generates the position of the swerve modules, retuning the position
+    public SwerveModulePosition[] generatePoses() {
+        SwerveModulePosition[] positions = new SwerveModulePosition[4];
+        for (int i = 0; i < 4; i++) {
+            positions[i] = modules[i].getPosition();
+        }
+        return positions;
+    }
+
+    private SwerveModuleState[] getModuleStates() {
+        SwerveModuleState[] states = new SwerveModuleState[4];
+        for (int i = 0; i < 4; i++) {
+            states[i] = modules[i].getState();
+        }
+        return states;
+    }
+
+    // set module states to desired states
+    public void setModuleStates(SwerveModuleState[] desiredStates) {
+        SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
+
+        modules[Constants.Modules.leftFront].setDesiredState(desiredStates[Constants.Modules.leftFront]);
+        modules[Constants.Modules.leftBack].setDesiredState(desiredStates[Constants.Modules.leftBack]);
+        modules[Constants.Modules.rightFront].setDesiredState(desiredStates[Constants.Modules.rightFront]);
+        modules[Constants.Modules.rightBack].setDesiredState(desiredStates[Constants.Modules.rightBack]);
     }
 
     // A listener to calculate what the max speed we read was
@@ -130,47 +181,25 @@ public class Chassis extends SubsystemBase {
         }
     }
 
-    /**
-     * Flip-flops between field relative and bot relative swerve drive
-     */
-    public void flipFieldRelative() {
-        fieldRelative = !fieldRelative;
+    // Spins the wheels to an angle
+    public void turnToAngle(double setpoint) {
+        for (SwerveModule module : modules) {
+            module.turnToAngle(setpoint);
+        }
     }
 
-    /**
-     * Getter for if swerve drive is field relative or not
-     * @return bool if field relative
-     */
-    public boolean getFieldRelative() {
-        return fieldRelative;
+    // Stops the devices connected to this subsystem
+    public void stopModules(){
+        for (SwerveModule module : modules) {
+            module.stop();
+        }
     }
 
-    /**
-     * Returns the bots rotation according to Navx as a {@link Rotation2d}
-     * @return the bot rotation
-     */
-    public Rotation2d getRotation2d(){
-        return odometry.getEstimatedPosition().getRotation();
-    }
-
-    /**
-     * Generates the positions of the swerve modules
-     * @return the poses of each module
-     */
-    public SwerveModulePosition[] generatePoses() {
-        return new SwerveModulePosition[] {
-                modules[Constants.Modules.leftFront].getPosition(),
-                modules[Constants.Modules.leftBack].getPosition(),
-                modules[Constants.Modules.rightFront].getPosition(),
-                modules[Constants.Modules.rightBack].getPosition()
-        };
-    }
-
-    /**
-     * periodic call to update odometry from encoders
-     */
-    public void updateOdometryFromSwerve() {
-        odometry.update(Navx.getRotation(), generatePoses());
+    // Command to reset the encoders
+    public void resetEncoders() {
+        for (SwerveModule module : modules) {
+            module.resetEncoders();
+        }
     }
 
     /**
@@ -184,52 +213,6 @@ public class Chassis extends SubsystemBase {
         field.setRobotPose(odometry.getEstimatedPosition());
     }
 
-    // Stops the devices connected to this subsystem
-    public void stopModules(){
-        for (SwerveModule module : modules) {
-            module.stop();
-        }
-    }
-
-    /**
-     * Getter for geometry
-     * @return the geometry of the swerve modules
-     */
-    public SwerveDriveKinematics getKinematics() {
-        return kinematics;
-    }
-
-    private SwerveModuleState[] getModuleStates() {
-        SwerveModuleState[] states = new SwerveModuleState[4];
-        for (int i = 0; i < 4; i++) {
-            states[i] = modules[i].getState();
-        }
-        return states;
-    }
-
-    /**
-     * Sets the module states to desired states
-     * @param desiredStates the states to set the modules to
-     */
-    public void setModuleStates(SwerveModuleState[] desiredStates) {
-        SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
-
-        modules[Constants.Modules.leftFront].setDesiredState(desiredStates[Constants.Modules.leftFront]);
-        modules[Constants.Modules.leftBack].setDesiredState(desiredStates[Constants.Modules.leftBack]);
-        modules[Constants.Modules.rightFront].setDesiredState(desiredStates[Constants.Modules.rightFront]);
-        modules[Constants.Modules.rightBack].setDesiredState(desiredStates[Constants.Modules.rightBack]);
-    }
-
-    /**
-     * Spins the wheels to an angle
-     * @param setpoint angle to spin the motors to
-     */
-    public void turnToAngle(double setpoint) {
-        for (SwerveModule module : modules) {
-            module.turnToAngle(setpoint);
-        }
-    }
-
     /**
      * The simulation periodic call
      */
@@ -238,54 +221,6 @@ public class Chassis extends SubsystemBase {
         // This method will be called once per scheduler run during simulation
     }
 
-    /**
-     * Command to reset the encoders
-     */
-    public void resetEncoders() {
-        for (SwerveModule module : modules) {
-            module.resetEncoders();
-        }
-    }
-
-    /**
-     * Sets field oriented to the provided boolean
-     * @param fieldOriented to drive in field or robot orriented
-     */
-    public void setWhetherFieldOriented(boolean fieldOriented) {
-        fieldRelative = fieldOriented;
-    }
-
-    /**
-     * update the P values for the swerve module
-     * @param pValue the new P value
-     */
-    public void updatePValuesFromSwerveModule(double pValue) {
-        Arrays.stream(modules).forEach((SwerveModule modules) -> modules.updatePValue(pValue));
-    }
-
-    /**
-     * update the D values for the swerve module
-     * @param dValue the new D value
-     */
-    public void updateDValuesFromSwerveModule(double dValue) {
-        Arrays.stream(modules).forEach((SwerveModule modules) -> modules.updateDValue(dValue));
-    }
-
-    /**
-     * gets the kP values for each module
-     * @return gets the kP value from the modules
-     */
-    public double getPValuesForSwerveModules() {
-        return modules[0].getPValue();
-    }
-
-    /**
-     * gets the kD values for each module
-     * @return gets the kD value from the modules
-     */
-    public double getDValuesForSwerveModules() {
-        return modules[0].getDValue();
-    }
 
     /**
      * A vomit onto shuffleboard of the {@link SwerveModule} objects in Chassis
@@ -298,6 +233,25 @@ public class Chassis extends SubsystemBase {
         tab.add(modules[3]);
     }
 
+    // update the P values for the swerve module
+    public void updatePValuesFromSwerveModule(double pValue) {
+        Arrays.stream(modules).forEach((SwerveModule modules) -> modules.updatePValue(pValue));
+    }
+
+    // update the D values for the swerve module
+    public void updateDValuesFromSwerveModule(double dValue) {
+        Arrays.stream(modules).forEach((SwerveModule modules) -> modules.updateDValue(dValue));
+    }
+
+    // gets the kP values for each module
+    public double getPValuesForSwerveModules() {
+        return modules[0].getPValue();
+    }
+
+    // gets the kD values for each module
+    public double getDValuesForSwerveModules() {
+        return modules[0].getDValue();
+    }
 
     // returns the heading the NavX is reading, returning the rotation of the robot in degrees
     public double getHeading() {
