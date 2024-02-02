@@ -9,15 +9,13 @@ import frc.robot.subsystems.Amp;
 
 /** An example command that uses an example subsystem. */
 public class AmpPrime extends Command {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final Amp amp;
 
   /**
-   * @param Amp The subsystem used by this command.
+   * @param amp The subsystem used by this command.
    */
   public AmpPrime(Amp amp) {
     this.amp = amp;
-    // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(amp);
   }
 

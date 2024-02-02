@@ -9,16 +9,13 @@ import frc.robot.subsystems.Amp;
 
 /** An example command that uses an example subsystem. */
 public class AmpIntake extends Command {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final Amp amp;
 
   /**
-   * @param Amp The subsystem used by this command.
-   * @param amp
+   * @param amp The subsystem used by this command.
    */
   public AmpIntake(Amp amp) {
     this.amp = amp;
-    // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(amp);
   }
 
@@ -31,20 +28,21 @@ public class AmpIntake extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (amp.getLimitSwitch()) {
-      amp.motorStop();
-    }
+
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    amp.motorStop();
+    amp.ampMotorStop();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    if (amp.getLimitSwitch()) {
+      return true;
+    }
     return false;
   }
 }
