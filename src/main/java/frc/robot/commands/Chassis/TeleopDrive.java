@@ -65,7 +65,7 @@ public class TeleopDrive extends Command {
       double x = xboxController.getRawAxis(Constants.Buttons.LST_AXS_LJOYSTICKY); // left stick x-axis
 
 
-      if (chassis.initialAprilTagDistance == 0){ 
+      if (chassis.getInitialAprilTagDistance() == 0 && camera.hasTarget()){
         chassis.prepareForFaceTarget();
       }
       // set theta to face target
@@ -80,7 +80,7 @@ public class TeleopDrive extends Command {
       }
       // sets theta to odometry face target
       if (camera.faceTargeted()) {
-        theta = camera.targetController.calculate(chassis.getRotation2d().getRadians(), chassis.getAngleToFaceTarget(chassis.originToAprilTagVector));
+        theta = camera.targetController.calculate(chassis.getRotation2d().getRadians(), chassis.getAngleToFaceTarget(chassis.getOriginToAprilTagVector()));
       }
       // square the inputs
       y = y * Math.abs(y);

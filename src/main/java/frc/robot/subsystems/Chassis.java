@@ -57,11 +57,12 @@ public class Chassis extends SubsystemBase {
     private final GenericEntry n_fieldOrriented; // comp network table entry for whether field oriented drivetrain
     private double targetMaxVelo = Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond; //TODO real
     private double targetMaxAcc = Constants.Swerve.kMaxAccelerationDrive; //TODO real
-    public Pose2d initialPosition;
-    public double initialAprilTagDistance = 0;
-    public double initialAprilTagAngle;
-    public Translation2d initialAprilTagVector;
-    public Translation2d originToAprilTagVector;
+    private Pose2d initialPosition;
+    private double initialAprilTagDistance = 0;
+    private double initialAprilTagAngle;
+    private Translation2d initialAprilTagVector;
+    private Translation2d originToAprilTagVector;
+    private double theta = 0.0;
 
     Rotation2d angleSetpoint = null;
 
@@ -185,7 +186,7 @@ public class Chassis extends SubsystemBase {
     * If the PID controllers of the {@link SwerveModule}'s are all done
     * @return whether the wheels are zereod/PID controllers are done
     */
-     * If the PID controllers of the {@link SwerveModule}'s are all done
+     /** If the PID controllers of the {@link SwerveModule}'s are all done
      * @return whether the wheels are zereod/PID controllers are done
      */
     public boolean turnToAnglePIDIsDone() {
@@ -420,7 +421,8 @@ public class Chassis extends SubsystemBase {
      * @return the yaw from odometry
      */
     private double getYaw() { return odometry.getEstimatedPosition().getRotation().getDegrees(); }
-    private double getInitialAprilTagDistance() { return initialAprilTagDistance; }
+    public double getInitialAprilTagDistance() { return initialAprilTagDistance; }
+    public Translation2d getOriginToAprilTagVector() {return originToAprilTagVector;}
 
     /**
      * A vomit onto shuffleboard of the {@link SwerveModule} objects in Chassis
@@ -479,7 +481,7 @@ public class Chassis extends SubsystemBase {
         // the vector from the position that we are at currently to the april tag (target)
         Translation2d currentPositionToAprilTagVector = getPose2d().getTranslation().minus(originToAprilTagVector);
         // the angle that we need to turn to from our current holonomic at our current position to face target (setpoint)
-        double theta = Math.atan2(currentPositionToAprilTagVector.getY(), currentPositionToAprilTagVector.getX()) - Math.PI;
+        theta = Math.atan2(currentPositionToAprilTagVector.getY(), currentPositionToAprilTagVector.getX()) - Math.PI;
         return theta;
     }
 
@@ -496,7 +498,6 @@ public class Chassis extends SubsystemBase {
         initialAprilTagVector = new Translation2d(initialAprilTagDistance * Math.sin(Math.PI - initialAprilTagAngle), initialAprilTagDistance * Math.cos(Math.PI - initialAprilTagAngle));
         originToAprilTagVector = initialPosition.getTranslation().plus(initialAprilTagVector);
     }
-
     /**
      * The same as {@link #drive(double, double, double)} except you pass in if you are field relative or not.
      * This method will drive the swerve modules based to x, y and theta vectors.
