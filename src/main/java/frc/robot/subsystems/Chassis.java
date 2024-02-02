@@ -290,7 +290,7 @@ public class Chassis extends SubsystemBase {
     }
 
     /**
-     * AUTONOMOUS
+     * AUTONOMOUS PATHPLANNER METHODS
      */
 
     // returns the current position of the bot from odometry as a Pose2D
