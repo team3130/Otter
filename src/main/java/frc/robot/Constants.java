@@ -61,11 +61,10 @@ public final class Constants {
   public static class Intake {
 
     //TODO find these values
-    public static double dumbSpeed = .8;
-    public static double slowSpeed = .2;
-    public static double time1 = .5; //seconds
-    public static double time2 = .65;//seconds
-    public static int allottedTime = 4; //seconds
+    public static double dumbSpeed = .85;
+    public static double maxIntakeTicks = 300;
+
+    public static double bufferIntakeTicks = 200;
     public static int kMaxVoltageIntake = 3;
 
   }

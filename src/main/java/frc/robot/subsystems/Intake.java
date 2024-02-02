@@ -4,40 +4,41 @@
 
 package frc.robot.subsystems;
 
-import static frc.robot.Constants.PNM_INTAKE_ACTUATOR;
-
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
+import static frc.robot.Constants.Intake.*;
+import static frc.robot.Constants.PNM_INTAKE_ACTUATOR;
+
 public class Intake extends SubsystemBase {
-  /** Creates a new ExampleSubsystem. */
+  /**
+   * Creates a new ExampleSubsystem.
+   */
   private final WPI_TalonSRX intakemotor;
   private final Solenoid intakesolenoid1;
   private final Solenoid intakesolenoid2;
 
   private final DigitalInput limitSwitch1;
 
-  public Timer timer;
-  public Timer stopwatch;
 
   public Intake() {
     intakemotor = new WPI_TalonSRX(Constants.CAN.intakeMotor);
     intakesolenoid1 = new Solenoid(Constants.CAN.intakesolenoid1, PneumaticsModuleType.CTREPCM, PNM_INTAKE_ACTUATOR);
     intakesolenoid2 = new Solenoid(Constants.CAN.intakesolenoid2, PneumaticsModuleType.CTREPCM, PNM_INTAKE_ACTUATOR);
     limitSwitch1 = new DigitalInput(Constants.CAN.intakeLimitSwitch1);
-    timer = new Timer();
 
     intakemotor.configFactoryDefault();
 
     intakemotor.configVoltageCompSaturation(Constants.Intake.kMaxVoltageIntake);
-    
+
     intakemotor.enableVoltageCompensation(true);
+
+    intakemotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
 
     intakemotor.setInverted(false);
 
@@ -52,22 +53,43 @@ public class Intake extends SubsystemBase {
    *
    * @return value of some boolean subsystem state, such as a digital sensor.
    */
-  public double getDumbSpeed(){
-    return Constants.Intake.dumbSpeed;
+  public double getPosition() {
+    return intakemotor.getSelectedSensorPosition();
   }
-  public void setDumbSpeed(double x){
-    Constants.Intake.dumbSpeed = x;
+
+  public double getVelocity() {
+    return intakemotor.getSelectedSensorVelocity();
   }
-  public void slowIntake() {intakemotor.set(Constants.Intake.slowSpeed);}
-  public void slowOutake() {intakemotor.set(-Constants.Intake.slowSpeed);}
+
+  //This function is only ever called with the pneumatics being extending out of the frame perimeter. Need to consult with operator for preference for control scheme
+  public void SmartIntake() {
+    if (getPosition() < bufferIntakeTicks) {
+      // this checks to see how far the motor has traveled. Because decelerating over a large time period is slower than decelerating over a shorter one,
+      // the intake will maintain its current speed for a short time until the ticks surpass the buffer tick count
+      DumbIntake();
+    } else {
+        intakemotor.set(((dumbSpeed * -1) / (maxIntakeTicks - bufferIntakeTicks)) * (getPosition() - bufferIntakeTicks) + dumbSpeed);
+      //dumb speed = ds, max ticks = mt, buffer ticks = bt, intakemotor.getSelected sensor position = x, output speed = y. All non x variabls are constants which can be changed in tuning
+      // y= ((-ds)/(mt-bt))(x-bt)+ds
+      // this equation is based on the point slope equation with ((-ds)/(mt-bt)) being the equation for slope, and bt and ds being for x and y coordinates of where the two equations intersect
+      //currently ds = .85, mt = 300, and bt = 200.
+      // when paired with the above equation y = .85 in a piecewise function
+      // x < 200 { y = .85
+      // x >= 200 { y= ds*((mt-(x-bt))/mt)
+    }
+  }
   public boolean intakeLimitSwitch1(){
     return limitSwitch1.get();
   }
   public void DumbIntake(){
-    intakemotor.set(Constants.Intake.dumbSpeed);
+    intakemotor.set(dumbSpeed);
   }
   public void DumbOuttake(){
-    intakemotor.set(-Constants.Intake.dumbSpeed);
+    intakemotor.set(-dumbSpeed);
+  }
+
+  public void ResetEncoders() {
+    intakemotor.setSelectedSensorPosition(0);
   }
   
 
@@ -75,32 +97,14 @@ public class Intake extends SubsystemBase {
     intakemotor.set(0);
   }
 
-  public boolean limitSwitchTimer(){
-    if(intakeLimitSwitch1()){
-      timer.reset();
-      timer.start();
-    }
-    if (timer.hasElapsed(Constants.Intake.allottedTime)) {
-      return false;
-    } else {
-      return true;
+  public void limitSwitchCheck(){
+    if(intakeLimitSwitch1()) {
+      ResetEncoders();
     }
   }
+//This function is only ever called with the pneumatics being extending out of the frame perimeter. Need to consult with operator for preference for control scheme
 
-  public void smartSpin(){
-    if (limitSwitchTimer()) {
-      if (timer.hasElapsed(Constants.Intake.time2)) {
-        Stoptake();
-      }
-      else {
-        slowIntake();
-      }
-    }
-    else {
-      DumbIntake();
-    }
-  }
-  public void SolenoidToggle(){
+  public void SolenoidToggle() {
     intakesolenoid1.toggle();
     intakesolenoid2.toggle();
   }

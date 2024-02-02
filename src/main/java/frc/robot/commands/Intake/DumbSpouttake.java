@@ -10,23 +10,23 @@ import frc.robot.subsystems.Intake;
 /** An example command that uses an example subsystem. */
 public class DumbSpouttake extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final Intake m_intake;
+  private final Intake intake;
 
   /**
    * Creates a new ExampleCommand.
    *
    * @param //subsystem The subsystem used by this command.
    */
-  public DumbSpouttake(Intake intake) {
-    m_intake = intake;
+  public DumbSpouttake(Intake Intake) {
+    intake = Intake;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_intake.DumbOuttake();
-    m_intake.SolenoidToggle();
+    intake.DumbOuttake();
+    intake.SolenoidToggle();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -36,8 +36,8 @@ public class DumbSpouttake extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_intake.Stoptake();
-    m_intake.SolenoidToggle();
+    intake.Stoptake();
+    intake.SolenoidToggle();
   }
 
   // Returns true when the command should end.
