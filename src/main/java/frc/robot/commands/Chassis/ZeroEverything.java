@@ -13,16 +13,17 @@ import frc.robot.subsystems.Chassis;
  * A command to automatically zero all odometry.
  */
 public class ZeroEverything extends InstantCommand {
-  private final Chassis chassis;
+  private final Chassis m_chassis;
 
   public ZeroEverything(Chassis subsystem) {
-    chassis = subsystem;
+    m_chassis = subsystem;
+    // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    chassis.resetOdometry(new Pose2d(0, 0, new Rotation2d()));
+    m_chassis.resetOdometry(new Pose2d(0, 0, new Rotation2d()));
   }
 }
