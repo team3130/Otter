@@ -20,13 +20,16 @@ import java.io.IOException;
 import java.util.Optional;
 
 public class Camera {
+
     protected PhotonCamera camera;
+    private static final ShuffleboardTab tab = Shuffleboard.getTab("PhotonCamera");
     AprilTagFieldLayout aprilTagFieldLayout;
     int successfulUpdates = 0;
-    GenericEntry yaw;
-    GenericEntry pitch;
+
+    GenericEntry n_yaw;
+    GenericEntry n_pitch;
+
     protected double lastReadTime = 0;
-    private static final ShuffleboardTab tab = Shuffleboard.getTab("PhotonCamera");
 
     /**
      * Constructs a new Limelight object.
@@ -54,8 +57,8 @@ public class Camera {
             }
             */
 
-            yaw = Shuffleboard.getTab("PhotonVision").add("Yaw", 0).getEntry();
-            pitch = Shuffleboard.getTab("PhotonVision").add("Pitch", 0).getEntry();
+            n_yaw = Shuffleboard.getTab("PhotonVision").add("Yaw", 0).getEntry();
+            n_pitch = Shuffleboard.getTab("PhotonVision").add("Pitch", 0).getEntry();
         }   
     }
 
