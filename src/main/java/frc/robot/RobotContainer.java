@@ -8,22 +8,22 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.commands.*;
-import frc.robot.commands.Shooter.*;
-import frc.robot.subsystems.*;
-import frc.robot.commands.Chassis.FlipDriveOrientation;
-import frc.robot.commands.Chassis.TeleopDrive;
-import frc.robot.commands.Chassis.ZeroEverything;
-import frc.robot.commands.Chassis.ZeroWheels;
-import frc.robot.commands.Intake.*;
-import frc.robot.sensors.Camera;
-import frc.robot.subsystems.Chassis;
-import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.subsystems.Hopper;
-import frc.robot.subsystems.Intake;
+import frc.robot.commands.Autos;
+import frc.robot.commands.Chassis.FlipDriveOrientation;
+import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.Intake.DumbPneumatics;
+import frc.robot.commands.Intake.DumbSpintake;
+import frc.robot.commands.Intake.DumbSpouttake;
+import frc.robot.commands.Intake.SmartSpintake;
+import frc.robot.commands.Shooter.OnlyShoot;
+import frc.robot.commands.Shooter.Shoot;
+import frc.robot.commands.Shooter.VelocityShoot;
+import frc.robot.commands.SpinHopper;
+import frc.robot.subsystems.*;
 
 import java.util.function.BooleanSupplier;
 
@@ -42,12 +42,17 @@ public class RobotContainer {
   private final Shooter shooter;
   private final Indexer indexer;
   private final Intake intake;
+  private final Chassis chassis;
+  private final Hopper hopper;
+
 
   // container for the robot containing subsystems, OI devices, and commands
   public RobotContainer() {
     shooter = new Shooter();
     indexer = new Indexer();
     intake = new Intake();
+    chassis = new Chassis();
+    hopper = new Hopper();
 
     // Named commands must be registered before the creation of any PathPlanner Autos or Paths
     // Do this in RobotContainer, after subsystem initialization, but before the creation of any other commands.
@@ -124,6 +129,7 @@ public class RobotContainer {
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new FlipDriveOrientation(chassis));
 
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_Y).whileTrue(new SpinHopper(hopper));
+    new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new VelocityShoot(shooter));
 
     SmartDashboard.putData(new FlipDriveOrientation(chassis));
     new JoystickButton(operatorController, Constants.Buttons.LST_BTN_LBUMPER).whileTrue(new DumbSpouttake(new Intake()));
@@ -132,7 +138,6 @@ public class RobotContainer {
     new JoystickButton(operatorController, Constants.Buttons.LST_BTN_B).whileTrue(new DumbPneumatics(new Intake()));
   }
 
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new VelocityShoot(shooter));
+
 
   }
-}
