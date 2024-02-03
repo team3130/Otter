@@ -6,13 +6,14 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-import static frc.robot.Constants.Intake.*;
+import static frc.robot.Constants.Intake.dumbSpeed;
 import static frc.robot.Constants.PNM_INTAKE_ACTUATOR;
 
 public class Intake extends SubsystemBase {
@@ -24,6 +25,10 @@ public class Intake extends SubsystemBase {
   private final Solenoid intakesolenoid2;
 
   private final DigitalInput limitSwitch1;
+
+  public static double maxIntakeTicks = 300; //This number represents the distance from the Limit Switch to the point where we want the disk to stop
+
+  public static double bufferIntakeTicks = 200; //This number represents the distance that we want the disk to go before slowing down.
 
 
   public Intake() {
@@ -43,12 +48,12 @@ public class Intake extends SubsystemBase {
     intakemotor.setInverted(false);
 
   }
-  /**
+  /*
    * Example command factory method.
    *
    * @return a command
    */
-  /**
+  /*
    * An example method querying a boolean state of the subsystem (for example, a digital sensor).
    *
    * @return value of some boolean subsystem state, such as a digital sensor.
@@ -60,6 +65,23 @@ public class Intake extends SubsystemBase {
   public double getVelocity() {
     return intakemotor.getSelectedSensorVelocity();
   }
+  public double getMaxIntakeTicks() {
+    return maxIntakeTicks;
+  }
+
+  public void setMaxIntakeTicks(double MaxTicks) {
+    maxIntakeTicks = MaxTicks;
+  }
+
+  public double getBufferIntakeTicks() {
+    return bufferIntakeTicks;
+  }
+
+  public void setBufferIntakeTicks(double BufferTicks) {
+    bufferIntakeTicks = BufferTicks;
+  }
+
+
 
   //This function is only ever called with the pneumatics being extending out of the frame perimeter. Need to consult with operator for preference for control scheme
   public void SmartIntake() {
@@ -69,7 +91,7 @@ public class Intake extends SubsystemBase {
       DumbIntake();
     } else {
         intakemotor.set(((dumbSpeed * -1) / (maxIntakeTicks - bufferIntakeTicks)) * (getPosition() - bufferIntakeTicks) + dumbSpeed);
-      //dumb speed = ds, max ticks = mt, buffer ticks = bt, intakemotor.getSelected sensor position = x, output speed = y. All non x variabls are constants which can be changed in tuning
+      //dumb speed = ds, max ticks = mt, buffer ticks = bt, intakemotor.getSelected sensor position = x, output speed = y. All non x variables are constants which can be changed in tuning
       // y= ((-ds)/(mt-bt))(x-bt)+ds
       // this equation is based on the point slope equation with ((-ds)/(mt-bt)) being the equation for slope, and bt and ds being for x and y coordinates of where the two equations intersect
       //currently ds = .85, mt = 300, and bt = 200.
@@ -109,6 +131,11 @@ public class Intake extends SubsystemBase {
     intakesolenoid2.toggle();
   }
 
+  public void initSendable(SendableBuilder builder) {
+    builder.setSmartDashboardType("Intake");
+    builder.addDoubleProperty("Distance from Limit Switch to Stop point", this::getMaxIntakeTicks, this::setMaxIntakeTicks);
+    builder.addDoubleProperty("Distance from limit Switch to Slowing Down point", this::getBufferIntakeTicks, this::setBufferIntakeTicks);
+  }
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

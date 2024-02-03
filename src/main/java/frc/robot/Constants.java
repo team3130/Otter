@@ -65,9 +65,7 @@ public final class Constants {
 
     //TODO find these values
     public static double dumbSpeed = .85;
-    public static double maxIntakeTicks = 300;
 
-    public static double bufferIntakeTicks = 200;
     public static int kMaxVoltageIntake = 3;
 
   }
