@@ -114,9 +114,9 @@ public final class Constants {
 
     /* Length and width as measured as distances between center of wheels */
     // the left-to-right distance between the drivetrain wheels, should be measured from center to center
-    public static final double trackWidth = 0.61;
+    public static final double trackWidth = 0.508;
     // the front-to-back distance between the drivetrain wheels, should be measured from center to center
-    public static final double wheelBase = 0.61;
+    public static final double wheelBase = 0.508;
 
     public static final Translation2d[] moduleTranslations = {
             new Translation2d(wheelBase / 2.0, trackWidth / 2.0),
@@ -135,23 +135,23 @@ public final class Constants {
     public final static double kMaxAccelerationDrive = 7;
     public final static double kMaxAccelerationAngularDrive = 4.0*Math.PI;
 
-    public final static double kP_FrontRight = 1.35;
-    public final static double kI_FrontRight = 0.05;
+    public final static double kP_FrontRight = 0.0;
+    public final static double kI_FrontRight = 0;
     public final static double kD_FrontRight = 0;
     public final static double kF_FrontRight = 0;
 
-    public final static double kP_FrontLeft = 1.55;
-    public final static double kI_FrontLeft = 0.05;
-    public final static double kD_FrontLeft = 0.015;
+    public final static double kP_FrontLeft = 0;
+    public final static double kI_FrontLeft = 0;
+    public final static double kD_FrontLeft = 0;
     public final static double kF_FrontLeft = 0;
 
-    public final static double kP_BackLeft = 1.6;
-    public final static double kI_BackLeft = 0.01;
-    public final static double kD_BackLeft = 0.015;
+    public final static double kP_BackLeft = 0;
+    public final static double kI_BackLeft = 0;
+    public final static double kD_BackLeft = 0;
     public final static double kF_BackLeft = 0;
 
-    public final static double kP_BackRight = 1.2;
-    public final static double kI_BackRight = 0.05;
+    public final static double kP_BackRight = 0;
+    public final static double kI_BackRight = 0;
     public final static double kD_BackRight = 0;
     public final static double kF_BackRight = 0;
 
@@ -189,14 +189,6 @@ public final class Constants {
     // spiny PID constraints
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
             kMaxAngularSpeedRadiansPerSecond, kMaxAngularAccelerationRadiansPerSecondSquared);
-
-    /**
-     * Length and width as measured as distances between center of wheels
-     */
-    // the left-to-right distance between the drivetrain wheels, should be measured from center to center
-    public static final double trackWidth_m = 0.61;
-    // the front-to-back distance between the drivetrain wheels, should be measured from center to center
-    public static final double wheelBase_m = 0.61;
   }
 
   public static class Modules {
@@ -207,19 +199,18 @@ public final class Constants {
   }
 
   public static class EncoderOffsets {
-    public static final double kTopLeftOffset = Math.toRadians(268.682);
-    public static final double kBottomLeftOffset = Math.toRadians(281.426);
-    public static final double kTopRightOffset = Math.toRadians(129.3);
-    public static final double kBottomRightOffset = Math.toRadians(0);
+    public static final double kTopLeftOffset = 0; // Math.toRadians(268.682);
+    public static final double kBottomLeftOffset = 0; // Math.toRadians(281.426);
+    public static final double kTopRightOffset = 0; // Math.toRadians(129.3);
+    public static final double kBottomRightOffset = 0; // Math.toRadians(0);
     public static final double[] kCANCoderOffsets = new double[] {kTopLeftOffset, kBottomLeftOffset, kTopRightOffset, kBottomRightOffset};
   }
 
   // gear ratios and/or ticks per rev, etc.
   public static class Conversions {
-    public final static double kDriveGearRatio = 6.75; // checked 1/19
-    public final static double kSteerGearRatio = 150d/7d; // checked 1/19
-    public static final double kEncoderResolution = 2048;
-    public static final double kWheelDiameter = Units.inchesToMeters(3.86);
+    public final static double kDriveGearRatio = 6.73; // Checked 2/2/24 //6.75  checked 1/19/23
+    public final static double kSteerGearRatio = 21.4317; // Checked 2/2/24 //150d/7d = 21.42857  checked 1/19
+    public static final double kWheelDiameter = Units.inchesToMeters(4);
     public final static double DriveRotToMeters = kWheelDiameter * Math.PI * 1/(kDriveGearRatio); // multiply by
     public static final double SteerRotToRads = 1/(kSteerGearRatio) * Math.PI * 2; // multiply by position
     public static final double DriveRotToMetersPerSecond = DriveRotToMeters ; // multiply by velocity

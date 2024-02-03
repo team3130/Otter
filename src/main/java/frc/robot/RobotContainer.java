@@ -23,6 +23,9 @@ import frc.robot.commands.Shooter.OnlyShoot;
 import frc.robot.commands.Shooter.Shoot;
 import frc.robot.commands.Shooter.VelocityShoot;
 import frc.robot.commands.SpinHopper;
+import frc.robot.commands.*;
+import frc.robot.commands.Shooter.*;
+import frc.robot.sensors.Camera;
 import frc.robot.subsystems.*;
 
 import java.util.function.BooleanSupplier;
@@ -42,8 +45,9 @@ public class RobotContainer {
   private final Shooter shooter;
   private final Indexer indexer;
   private final Intake intake;
-  private final Chassis chassis;
   private final Hopper hopper;
+  private final Camera camera;
+  private final Chassis chassis;
 
 
   // container for the robot containing subsystems, OI devices, and commands
@@ -51,8 +55,9 @@ public class RobotContainer {
     shooter = new Shooter();
     indexer = new Indexer();
     intake = new Intake();
-    chassis = new Chassis();
     hopper = new Hopper();
+    camera = new Camera();
+    chassis = new Chassis(camera);
 
     // Named commands must be registered before the creation of any PathPlanner Autos or Paths
     // Do this in RobotContainer, after subsystem initialization, but before the creation of any other commands.
@@ -105,6 +110,8 @@ public class RobotContainer {
       ShuffleboardTab tab = Shuffleboard.getTab("Subsystems");
       tab.add(shooter);
       tab.add(intake);
+      tab.add(chassis);
+      chassis.exportSwerveModData(Shuffleboard.getTab("Swerve Modules"));
     }
   }
 
