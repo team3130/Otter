@@ -13,8 +13,21 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.Autos;
+import frc.robot.commands.Chassis.FlipDriveOrientation;
+import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.Intake.DumbPneumatics;
+import frc.robot.commands.Intake.DumbSpintake;
+import frc.robot.commands.Intake.DumbSpouttake;
+import frc.robot.commands.Intake.SmartSpintake;
+import frc.robot.commands.Shooter.OnlyShoot;
+import frc.robot.commands.Shooter.Shoot;
+import frc.robot.commands.Shooter.VelocityShoot;
+import frc.robot.commands.SpinHopper;
 import frc.robot.commands.*;
 import frc.robot.commands.Shooter.*;
 import frc.robot.commands.Amp.AmpIntake;
@@ -53,14 +66,17 @@ public class RobotContainer {
   private final Shooter shooter;
   private final Indexer indexer;
   private final Intake intake;
+  private final Hopper hopper;
   private final Camera camera;
   private final Chassis chassis;
+
 
   // container for the robot containing subsystems, OI devices, and commands
   public RobotContainer() {
     shooter = new Shooter();
     indexer = new Indexer();
     intake = new Intake();
+    hopper = new Hopper();
     camera = new Camera();
     chassis = new Chassis(camera);
     hopper = new Hopper();
@@ -148,8 +164,19 @@ public class RobotContainer {
 
     //new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new OnlyIndex(indexer));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_A).whileTrue(new OnlyShoot(shooter));
+    SmartDashboard.putData(new FlipDriveOrientation(chassis));
+    new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new FlipDriveOrientation(chassis));
 
+    new JoystickButton(driverController, Constants.Buttons.LST_BTN_Y).whileTrue(new SpinHopper(hopper));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new VelocityShoot(shooter));
 
+    SmartDashboard.putData(new FlipDriveOrientation(chassis));
+    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_LBUMPER).whileTrue(new DumbSpouttake(new Intake()));
+    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_RBUMPER).whileTrue(new DumbSpintake(new Intake()));
+    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_A).whileTrue(new SmartSpintake(new Intake()));
+    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_B).whileTrue(new DumbPneumatics(new Intake()));
   }
-}
+
+
+
+  }

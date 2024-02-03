@@ -25,6 +25,8 @@ public final class Constants {
   public static final boolean kNavxReversed = true;
   public final static double kMaxVoltageHopper = 9d;
 
+  public static final int PNM_INTAKE_ACTUATOR = 0;
+
   public static class CAN {
     public final static int leftFrontSteer = 2;
     public final static int leftFrontDrive = 3;
@@ -41,6 +43,14 @@ public final class Constants {
     public final static int CANCoderTopLeft = 12;
     public final static int CANCoderBottomLeft = 13;
 
+    public final static int intakeMotor = 14;
+
+    public final static int intakesolenoid1 = 15;
+
+    public final static int intakesolenoid2 = 16;
+
+    public final static int intakeLimitSwitch1 = 17;
+
     // Order should match side
     public static final int[] turningID = new int[] {leftFrontSteer, leftBackSteer, rightFrontSteer, rightBackSteer};
     public static final int[] spinningID = new int[] {leftFrontDrive, leftBackDrive, rightFrontDrive, rightBackDrive};
@@ -55,6 +65,14 @@ public final class Constants {
     public final static int ampMotor = 21; //TODO
   }
 
+  public static class Intake {
+
+    //TODO find these values
+
+
+    public static int kMaxVoltageIntake = 3;
+
+  }
   public static class AprilTags {
     public static final boolean useAprilTags = false;
 

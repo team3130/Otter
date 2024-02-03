@@ -4,7 +4,6 @@
 
 package frc.robot.commands.Shooter;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Indexer;
@@ -34,7 +33,6 @@ public class Shoot extends Command {
         spinUpTime.reset();
         spinUpTime.start();
         m_shooter.runShooters();
-        m_intake.runIntake();
     }
 
     // Called every time the scheduler runs while the command is scheduled.
@@ -42,6 +40,7 @@ public class Shoot extends Command {
     public void execute() {
         if (spinUpTime.hasElapsed(0.5)){
             m_indexer.runIndexers();
+            m_intake.DumbIntake();
         }
     }
 
@@ -50,7 +49,7 @@ public class Shoot extends Command {
     public void end(boolean interrupted) {
         m_shooter.stopShooters();
         m_indexer.stopIndexers();
-        m_intake.stopIntake();
+        m_intake.Stoptake();
     }
 
     // Returns true when the command should end.
