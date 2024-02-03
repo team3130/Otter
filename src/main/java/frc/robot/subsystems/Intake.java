@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-import static frc.robot.Constants.Intake.dumbSpeed;
 import static frc.robot.Constants.PNM_INTAKE_ACTUATOR;
 
 public class Intake extends SubsystemBase {
@@ -29,6 +28,10 @@ public class Intake extends SubsystemBase {
   public static double maxIntakeTicks = 300; //This number represents the distance from the Limit Switch to the point where we want the disk to stop
 
   public static double bufferIntakeTicks = 200; //This number represents the distance that we want the disk to go before slowing down.
+
+  public static double slowSpeed = .4; //Speed slower than dumbSpeed, in order to slow down the disk
+
+  public static double dumbSpeed = .85; //Speeed value for the high speed intake/outake
 
 
   public Intake() {
@@ -81,9 +84,25 @@ public class Intake extends SubsystemBase {
     bufferIntakeTicks = BufferTicks;
   }
 
+  public double getSlowSpeed() {
+    return slowSpeed;
+  }
 
+  public void setSlowSpeed(double slowSpeed1) {
+    slowSpeed = slowSpeed1;
+  }
+
+  public double getDumbSpeed() {
+    return dumbSpeed;
+  }
+
+  public void setDumbSpeed(double dumbSpeed1) {
+    dumbSpeed = dumbSpeed1;
+  }
 
   //This function is only ever called with the pneumatics being extending out of the frame perimeter. Need to consult with operator for preference for control scheme
+  //Linear Deceleration after a set point
+  /*
   public void SmartIntake() {
     if (getPosition() < bufferIntakeTicks) {
       // this checks to see how far the motor has traveled. Because decelerating over a large time period is slower than decelerating over a shorter one,
@@ -100,6 +119,34 @@ public class Intake extends SubsystemBase {
       // x >= 200 { y= ds*((mt-(x-bt))/mt)
     }
   }
+   */
+
+  //Deceleration logic in a exponential form. Might have difficulty getting the disk to its final location as it's percentage output drops below 2% after 42 ticks
+  /*
+  public void SmartIntake() {
+    if (getPosition() < bufferIntakeTicks) {
+      DumbIntake();
+    }
+    else {
+      intakemotor.set((dumbSpeed) * (1 / (getPosition()) - (bufferIntakeTicks - 1)));
+    }
+  }
+   */
+
+  //Two preset Speeds, no deceleration logic
+  public void SmartIntake(){
+    if (getPosition() < bufferIntakeTicks) {
+      DumbIntake();
+    }
+    else {
+      if (getPosition() <= bufferIntakeTicks && getPosition() < maxIntakeTicks){
+        SlowIntake();
+      }
+      else {
+        Stoptake();
+      }
+    }
+  }
   public boolean intakeLimitSwitch1(){
     return limitSwitch1.get();
   }
@@ -108,6 +155,9 @@ public class Intake extends SubsystemBase {
   }
   public void DumbOuttake(){
     intakemotor.set(-dumbSpeed);
+  }
+  public void SlowIntake(){
+    intakemotor.set(slowSpeed);
   }
 
   public void ResetEncoders() {
@@ -135,6 +185,8 @@ public class Intake extends SubsystemBase {
     builder.setSmartDashboardType("Intake");
     builder.addDoubleProperty("Distance from Limit Switch to Stop point", this::getMaxIntakeTicks, this::setMaxIntakeTicks);
     builder.addDoubleProperty("Distance from limit Switch to Slowing Down point", this::getBufferIntakeTicks, this::setBufferIntakeTicks);
+    builder.addDoubleProperty("slowSpeed", this::getSlowSpeed, this::setSlowSpeed);
+    builder.addDoubleProperty("dumbSpeed", this::getDumbSpeed, this::setDumbSpeed);
   }
   @Override
   public void periodic() {

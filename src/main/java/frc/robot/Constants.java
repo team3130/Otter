@@ -64,7 +64,7 @@ public final class Constants {
   public static class Intake {
 
     //TODO find these values
-    public static double dumbSpeed = .85;
+
 
     public static int kMaxVoltageIntake = 3;
 
