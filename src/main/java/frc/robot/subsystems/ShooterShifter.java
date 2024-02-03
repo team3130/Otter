@@ -11,83 +11,52 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class ShooterShifter extends SubsystemBase {
-  /** Creates a new ExampleSubsystem. */
-
-  /**
-  VARIABLES
-   */
-  // solenoid1 is shorter pneumatic
-  private final Solenoid solenoid1;
-
-  // solenoid2 is longer pneumatic
-  private final Solenoid solenoid2;
-
-  /**
-   * is parked is a variable for when both solenoids are not activated
-   */
-  private boolean isParked = true;
-
-  private boolean isFirstShootStage = false;
-  private boolean isSecondShootStage = false;
-  private boolean isThirdShootStage = false;
+  private final Solenoid shifterOne; // shorter pneumatic
+  private final Solenoid shifterTwo; // longer pneumatic
+  private boolean doubleRetracted = true; // both pneumatics down
+  private boolean shifterOneExtended = false; // pneumatic 1 up
+  private boolean shifterTwoExtended = false; // pneumatic 2 up
+  private boolean doubleExtended = false; // both pneumatics up
 
   public ShooterShifter() {
-    /**
-     * fill in parameters with pneumatic type
-     */
-    solenoid1 = new Solenoid(PneumaticsModuleType.CTREPCM,Constants.CAN.CAN_Solenoid1);
-    solenoid2 = new Solenoid(PneumaticsModuleType.CTREPCM,Constants.CAN.CAN_Solenoid2);
+    shifterOne = new Solenoid(Constants.CAN.shifterOnePNM, PneumaticsModuleType.CTREPCM , Constants.CAN.shifterOneChannel);
+    shifterTwo = new Solenoid(Constants.CAN.shifterTwoPNM, PneumaticsModuleType.CTREPCM , Constants.CAN.shifterTwoChannel);
 
-    solenoid1.set(false);
-    solenoid2.set(false);
+    shifterOne.set(false);
+    shifterTwo.set(false);
   }
 
-  /**
-   * GETTERS
-   */
-  public boolean getIsParked(){
-    return isParked;
-  }
-  public boolean getIsFirstShootStage(){
-    return isFirstShootStage;
-  }
-  public boolean getIsSecondShootStage(){return isSecondShootStage;}
-  public boolean getIsThirdShootStage(){return isThirdShootStage;}
-
-  /**
-   * SETTERS
-   */
-  public void setIsParked(boolean newIsParked){
-    isParked = newIsParked;
-  }
-  public void setFirstShootStage(boolean newIsFirstShootStage){
-    isFirstShootStage = newIsFirstShootStage;
-  }
-  public void setSecondShootStage(boolean newIsSecondShootStage){isSecondShootStage = newIsSecondShootStage;}
-  public void setThirdShootStage(boolean newIsThirdShootStage){isSecondShootStage = newIsThirdShootStage;}
+  public boolean getIsParked() { return doubleRetracted; }
+  public boolean getIsFirstShootStage() { return shifterOneExtended; }
+  public boolean getIsSecondShootStage() { return shifterTwoExtended; }
+  public boolean getIsThirdShootStage() { return doubleExtended; }
+  public void setDoubleRetract(boolean newIsParked) { doubleRetracted = newIsParked; }
+  public void extendShifterOne(boolean newIsFirstShootStage) { shifterOneExtended = newIsFirstShootStage; }
+  public void extendShifterTwo(boolean newIsSecondShootStage) { shifterTwoExtended = newIsSecondShootStage; }
+  public void setDoubleExtended(boolean newIsThirdShootStage) { shifterTwoExtended = newIsThirdShootStage; }
 
   /**
   METHODS
    */
   public void goToParkedStage(){
-    setIsParked(true);
-    solenoid1.set(false);
-    solenoid2.set(false);
+    setDoubleRetract(true);
+    shifterOne.set(false);
+    shifterTwo.set(false);
   }
   public void goToStage1(){
-    setFirstShootStage(true);
-    solenoid1.set(true);
-    solenoid2.set(false);
+    extendShifterOne(true);
+    shifterOne.set(true);
+    shifterTwo.set(false);
   }
   public void goToStage2(){
-    setSecondShootStage(true);
-    solenoid1.set(false);
-    solenoid2.set(true);
+    extendShifterTwo(true);
+    shifterOne.set(false);
+    shifterTwo.set(true);
   }
   public void goToStage3(){
-    setThirdShootStage(true);
-    solenoid1.set(true);
-    solenoid2.set(true);
+    setDoubleExtended(true);
+    shifterOne.set(true);
+    shifterTwo.set(true);
   }
 
   /**
