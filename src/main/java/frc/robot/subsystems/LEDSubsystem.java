@@ -64,6 +64,13 @@ public class LEDSubsystem extends SubsystemBase {
     led.setData(ledBuffer);
   }
 
+  public void reset() {
+    for (var i = 0; i < ledBuffer.getLength(); i++) {
+      // Sets the specified LED to the RGB values for red
+      ledBuffer.setHSV(i, 0, 0, 0);
+    }
+    led.setData(ledBuffer);
+  }
 
   public void rainbow() {
     int rainbowFirstPixelHue = 20;

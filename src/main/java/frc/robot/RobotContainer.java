@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.Autos;
 import frc.robot.commands.Chassis.FlipDriveOrientation;
@@ -24,6 +25,7 @@ import frc.robot.commands.Intake.DumbPneumatics;
 import frc.robot.commands.Intake.DumbSpintake;
 import frc.robot.commands.Intake.DumbSpouttake;
 import frc.robot.commands.Intake.SmartSpintake;
+import frc.robot.commands.LED.LightUpWithNote;
 import frc.robot.commands.Shooter.OnlyShoot;
 import frc.robot.commands.Shooter.Shoot;
 import frc.robot.commands.Shooter.VelocityShoot;
@@ -61,14 +63,13 @@ public class RobotContainer {
   private final Chassis chassis;
   private final Hopper hopper;
   private final Amp amp;
-  private final XboxController driverController = new XboxController(0);
-  private final XboxController operatorController = new XboxController(1);
   private final Shooter shooter;
   private final Indexer indexer;
   private final Intake intake;
-  private final Hopper hopper;
   private final Camera camera;
-  private final Chassis chassis;
+  private final LEDSubsystem ledSubsystem;
+  private final XboxController driverController = new XboxController(0);
+  private final XboxController operatorController = new XboxController(1);
 
 
   // container for the robot containing subsystems, OI devices, and commands
@@ -79,8 +80,8 @@ public class RobotContainer {
     hopper = new Hopper();
     camera = new Camera();
     chassis = new Chassis(camera);
-    hopper = new Hopper();
     amp = new Amp();
+    ledSubsystem = new LEDSubsystem();
 
     // Named commands must be registered before the creation of any PathPlanner Autos or Paths
     // Do this in RobotContainer, after subsystem initialization, but before the creation of any other commands.
@@ -89,6 +90,7 @@ public class RobotContainer {
     exportShuffleBoardData(); // export ShuffleBoardData
 
     // Default commands running in the background when other commands not scheduled
+    ledSubsystem.setDefaultCommand(new LightUpWithNote(ledSubsystem, amp, intake));
 
     // Build an auto chooser. This will use Commands.none() as the default option.
     // autoChooser = AutoBuilder.buildAutoChooser();

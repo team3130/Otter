@@ -5,21 +5,27 @@
 package frc.robot.commands.LED;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.Amp;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.LEDSubsystem;
 
 /** An example command that uses an example subsystem. */
 public class LightUpWithNote extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final LEDSubsystem ledSubsystem;
+  private final Amp amp;
+  private final Intake intake;
 
   /**
    * Creates a new ExampleCommand.
    *
-   * @param subsystem The subsystem used by this command.
+   * @param //subsystem The subsystem used by this command.
    */
-  public LightUpWithNote(LEDSubsystem ledSubsystem) {
+  public LightUpWithNote(LEDSubsystem ledSubsystem, Amp amp, Intake intake) {
     this.ledSubsystem = ledSubsystem;
+    this.amp = amp;
+    this.intake = intake;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(ledSubsystem);
   }
@@ -31,12 +37,19 @@ public class LightUpWithNote extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if ()
+    if (amp.getLimitSwitch() || intake.intakeLimitSwitch1()) {
+      ledSubsystem.green();
+    }
+    else {
+      ledSubsystem.reset();
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    ledSubsystem.reset();
+  }
 
   // Returns true when the command should end.
   @Override
