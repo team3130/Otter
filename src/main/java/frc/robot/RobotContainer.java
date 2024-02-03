@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -11,8 +12,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.*;
 import frc.robot.commands.Shooter.*;
+import frc.robot.sensors.Camera;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+
+import java.util.function.BooleanSupplier;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -29,12 +33,16 @@ public class RobotContainer {
   private final Shooter shooter;
   private final Indexer indexer;
   private final Intake intake;
+  private final Camera camera;
+  private final Chassis chassis;
 
   // container for the robot containing subsystems, OI devices, and commands
   public RobotContainer() {
     shooter = new Shooter();
     indexer = new Indexer();
     intake = new Intake();
+    camera = new Camera();
+    chassis = new Chassis(camera);
 
     // Named commands must be registered before the creation of any PathPlanner Autos or Paths
     // Do this in RobotContainer, after subsystem initialization, but before the creation of any other commands.
@@ -66,6 +74,19 @@ public class RobotContainer {
 
   }
 
+  /*
+  Boolean supplier that controls when the path will be mirrored for the red alliance
+  This will flip the path being followed to the red side of the field.
+  THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+   */
+  public static BooleanSupplier isFieldMirrored() {
+    var alliance = DriverStation.getAlliance();
+    if (alliance.isPresent()) {
+      return () -> (alliance.get() == DriverStation.Alliance.Red);
+    }
+    return () -> false;
+  }
+
   /**
    * adds the subsystem {@link edu.wpi.first.util.sendable.Sendable} objects to a 'Subsystems' shuffleboard tab
    */
@@ -74,6 +95,8 @@ public class RobotContainer {
       ShuffleboardTab tab = Shuffleboard.getTab("Subsystems");
       tab.add(shooter);
       tab.add(intake);
+      tab.add(chassis);
+      chassis.exportSwerveModData(Shuffleboard.getTab("Swerve Modules"));
     }
   }
 

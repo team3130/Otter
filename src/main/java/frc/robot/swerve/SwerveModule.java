@@ -63,12 +63,12 @@ public class SwerveModule implements Sendable {
 
     // returns the amount of distance the drive motor has travelled in meters
     public double getDrivePosition() {
-        return driveMotor.getPosition().getValue() * Constants.Conversions.DriveRotToMeters;
+        return driveMotor.getPosition().getValue(); // * Constants.Conversions.DriveRotToMeters;
     }
 
     // returns the position of the steering motor radians
     public double getTurningPosition() {
-        return steerMotor.getPosition().getValue() * Constants.Conversions.SteerRotToRads;
+        return steerMotor.getPosition().getValue(); //Constants.Conversions.SteerRotToRads;
     }
 
     // gets the velocity of the drive motor in m/s
@@ -86,9 +86,7 @@ public class SwerveModule implements Sendable {
         return Math.toRadians(absoluteEncoder.getAbsolutePosition().getValue() * 360);
     }
 
-    /**
-     * @return the position of the steering wheel in degrees
-     */
+    // return the position of the steering wheel in degrees
     public double getAbsoluteEncoderDegrees() {
         return absoluteEncoder.getAbsolutePosition().getValue();
     }
@@ -132,7 +130,7 @@ public class SwerveModule implements Sendable {
     /**
      * Default stop method to stop the motors
      */
-    public void stop(){
+    public void stop() {
         steerMotor.setControl(steerMotorVoltRequest.withOutput(0));
         driveMotor.setControl(driveMotorVoltRequest.withOutput(0));
     }
@@ -207,7 +205,7 @@ public class SwerveModule implements Sendable {
     }
 
     /**
-     * Setter for dervy derv
+     * Setter for derby derv
      * @param newD the new D value
      */
     public void setDValue(double newD) {
@@ -237,9 +235,10 @@ public class SwerveModule implements Sendable {
     @Override
     public void initSendable(SendableBuilder builder) {
         builder.setSmartDashboardType("Swerve Module " + side);
-/*        builder.addDoubleProperty("Drive position", this::getDrivePosition, null);
-        builder.addDoubleProperty("Drive velocity", this::getDriveVelocity, null);*/
+        builder.addDoubleProperty("Drive velocity", this::getDriveVelocity, null);
         builder.addDoubleProperty("Steer position", this::getSteerPositionWrapped, null);
+        builder.addDoubleProperty("Drive position", this::getDrivePosition, null);
+        builder.addDoubleProperty("Turning position", this::getTurningPosition, null);
 /*        builder.addDoubleProperty("Steer velocity", this::getTurningVelocity, null);
         builder.addDoubleProperty("Steer relative", this::getRelativePositionDegrees, null);
         builder.addDoubleProperty("Absolute encoder position", this::getAbsoluteEncoderDegrees, null);*/
