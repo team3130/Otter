@@ -5,6 +5,11 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -12,8 +17,19 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.*;
 import frc.robot.commands.Shooter.*;
+import frc.robot.commands.Amp.AmpIntake;
+import frc.robot.commands.Amp.AmpOuttake;
+import frc.robot.commands.Amp.AmpPrime;
+import frc.robot.commands.Amp.AmpUnPrime;
+import frc.robot.commands.Chassis.FlipDriveOrientation;
+import frc.robot.commands.Chassis.TeleopDrive;
+import frc.robot.commands.Chassis.ZeroEverything;
+import frc.robot.commands.Chassis.ZeroWheels;
 import frc.robot.sensors.Camera;
 import frc.robot.subsystems.*;
+import frc.robot.subsystems.Amp;
+import frc.robot.subsystems.Chassis;
+import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import java.util.function.BooleanSupplier;
@@ -28,6 +44,10 @@ import java.util.function.BooleanSupplier;
 // The robot's subsystems and commands are defined here...
 public class RobotContainer {
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
+  private final Camera limelight;
+  private final Chassis chassis;
+  private final Hopper hopper;
+  private final Amp amp;
   private final XboxController driverController = new XboxController(0);
   private final XboxController operatorController = new XboxController(1);
   private final Shooter shooter;
@@ -43,6 +63,8 @@ public class RobotContainer {
     intake = new Intake();
     camera = new Camera();
     chassis = new Chassis(camera);
+    hopper = new Hopper();
+    amp = new Amp();
 
     // Named commands must be registered before the creation of any PathPlanner Autos or Paths
     // Do this in RobotContainer, after subsystem initialization, but before the creation of any other commands.
@@ -96,6 +118,7 @@ public class RobotContainer {
       tab.add(shooter);
       tab.add(intake);
       tab.add(chassis);
+      tab.add(amp);
       chassis.exportSwerveModData(Shuffleboard.getTab("Swerve Modules"));
     }
   }
@@ -114,6 +137,14 @@ public class RobotContainer {
     // driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
 
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new Shoot(shooter, indexer, intake));
+    new POVButton(driverController, Constants.Buttons.LST_POV_N).whileTrue(new ZeroEverything(chassis));
+    new POVButton(driverController, Constants.Buttons.LST_POV_W).whileTrue(new ZeroWheels(chassis));
+    new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new FlipDriveOrientation(chassis));
+    new JoystickButton(driverController, Constants.Buttons.LST_BTN_A).whileTrue(new AmpIntake(amp));
+    new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new AmpOuttake(amp));
+    new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new AmpPrime(amp));
+    new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new AmpUnPrime(amp));
+    new JoystickButton(driverController, Constants.Buttons.LST_BTN_Y).whileTrue(new SpinHopper(hopper));
 
     //new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new OnlyIndex(indexer));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_A).whileTrue(new OnlyShoot(shooter));
