@@ -4,9 +4,9 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -26,62 +26,38 @@ public class ShooterShifter extends SubsystemBase {
     shifterTwo.set(false);
   }
 
+  public void doubleRetract() {
+    shifterOne.set(false);
+    shifterTwo.set(false);
+    setDoubleRetract(true);
+  }
+
+  public void extendShifterOne() {
+    shifterOne.set(true);
+    shifterTwo.set(false);
+    setShifterOne(true);
+  }
+
+  public void extendShifterTwo() {
+    shifterOne.set(false);
+    shifterTwo.set(true);
+    setShifterTwo(true);
+  }
+
+  public void doubleExtend() {
+    shifterOne.set(true);
+    shifterTwo.set(true);
+    setDoubleExtended(true);
+  }
+
   public boolean getIsParked() { return doubleRetracted; }
   public boolean getIsFirstShootStage() { return shifterOneExtended; }
   public boolean getIsSecondShootStage() { return shifterTwoExtended; }
   public boolean getIsThirdShootStage() { return doubleExtended; }
   public void setDoubleRetract(boolean newIsParked) { doubleRetracted = newIsParked; }
-  public void extendShifterOne(boolean newIsFirstShootStage) { shifterOneExtended = newIsFirstShootStage; }
-  public void extendShifterTwo(boolean newIsSecondShootStage) { shifterTwoExtended = newIsSecondShootStage; }
+  public void setShifterOne(boolean newIsFirstShootStage) { shifterOneExtended = newIsFirstShootStage; }
+  public void setShifterTwo(boolean newIsSecondShootStage) { shifterTwoExtended = newIsSecondShootStage; }
   public void setDoubleExtended(boolean newIsThirdShootStage) { shifterTwoExtended = newIsThirdShootStage; }
-
-  /**
-  METHODS
-   */
-  public void goToParkedStage(){
-    setDoubleRetract(true);
-    shifterOne.set(false);
-    shifterTwo.set(false);
-  }
-  public void goToStage1(){
-    extendShifterOne(true);
-    shifterOne.set(true);
-    shifterTwo.set(false);
-  }
-  public void goToStage2(){
-    extendShifterTwo(true);
-    shifterOne.set(false);
-    shifterTwo.set(true);
-  }
-  public void goToStage3(){
-    setDoubleExtended(true);
-    shifterOne.set(true);
-    shifterTwo.set(true);
-  }
-
-  /**
-   * Example command factory method.
-   *
-   * @return a command
-   */
-  public Command exampleMethodCommand() {
-    // Inline construction of command goes here.
-    // Subsystem::RunOnce implicitly requires `this` subsystem.
-    return runOnce(
-        () -> {
-          /* one-time action goes here */
-        });
-  }
-
-  /**
-   * An example method querying a boolean state of the subsystem (for example, a digital sensor).
-   *
-   * @return value of some boolean subsystem state, such as a digital sensor.
-   */
-  public boolean exampleCondition() {
-    // Query some boolean state, such as a digital sensor.
-    return false;
-  }
 
   @Override
   public void periodic() {
@@ -91,5 +67,14 @@ public class ShooterShifter extends SubsystemBase {
   @Override
   public void simulationPeriodic() {
     // This method will be called once per scheduler run during simulation
+  }
+
+  @Override
+  public void initSendable(SendableBuilder builder) {
+    builder.setSmartDashboardType("Shooter Shifter");
+    builder.addBooleanProperty("speed", this::getIsParked, null);
+    builder.addBooleanProperty("speed", this::getIsFirstShootStage, null);
+    builder.addBooleanProperty("speed", this::getIsSecondShootStage, null);
+    builder.addBooleanProperty("speed", this::getIsThirdShootStage, null);
   }
 }

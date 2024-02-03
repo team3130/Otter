@@ -11,6 +11,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.*;
 import frc.robot.commands.Shooter.*;
+import frc.robot.commands.ShooterShifter.DoubleExtend;
+import frc.robot.commands.ShooterShifter.DoubleRetract;
+import frc.robot.commands.ShooterShifter.ShifterOneExtend;
+import frc.robot.commands.ShooterShifter.ShifterTwoExtend;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -100,10 +104,10 @@ public class RobotContainer {
 
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new VelocityShoot(shooter));
 
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new ShiftToParkedStage(shooterShifter));
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new ShiftToStage1(shooterShifter));
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new ShiftToStage2(shooterShifter));
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new ShiftToStage3(shooterShifter));
+    new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new DoubleRetract(shooterShifter));
+    new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new ShifterOneExtend(shooterShifter));
+    new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new ShifterTwoExtend(shooterShifter));
+    new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new DoubleExtend(shooterShifter));
 
   }
 }
