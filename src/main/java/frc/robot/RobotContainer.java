@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -23,6 +24,8 @@ import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.Hopper;
 import frc.robot.subsystems.Intake;
+
+import java.util.function.BooleanSupplier;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -74,6 +77,19 @@ public class RobotContainer {
 
   public void periodic() {
 
+  }
+
+  /*
+  Boolean supplier that controls when the path will be mirrored for the red alliance
+  This will flip the path being followed to the red side of the field.
+  THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+   */
+  public static BooleanSupplier isFieldMirrored() {
+    var alliance = DriverStation.getAlliance();
+    if (alliance.isPresent()) {
+      return () -> (alliance.get() == DriverStation.Alliance.Red);
+    }
+    return () -> false;
   }
 
   /**

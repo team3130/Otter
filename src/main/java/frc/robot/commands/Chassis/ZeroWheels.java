@@ -45,6 +45,6 @@ public class ZeroWheels extends Command {
    */
   @Override
   public boolean isFinished() {
-    return m_chassis.turnToAnglePIDIsDone();
+    return m_chassis.turnToAnglePIDIsFinished();
   }
 }
