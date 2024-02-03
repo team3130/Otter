@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.*;
 import frc.robot.commands.Shooter.*;
+import frc.robot.sensors.Camera;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -32,12 +33,16 @@ public class RobotContainer {
   private final Shooter shooter;
   private final Indexer indexer;
   private final Intake intake;
+  private final Camera camera;
+  private final Chassis chassis;
 
   // container for the robot containing subsystems, OI devices, and commands
   public RobotContainer() {
     shooter = new Shooter();
     indexer = new Indexer();
     intake = new Intake();
+    camera = new Camera();
+    chassis = new Chassis(camera);
 
     // Named commands must be registered before the creation of any PathPlanner Autos or Paths
     // Do this in RobotContainer, after subsystem initialization, but before the creation of any other commands.
@@ -90,6 +95,8 @@ public class RobotContainer {
       ShuffleboardTab tab = Shuffleboard.getTab("Subsystems");
       tab.add(shooter);
       tab.add(intake);
+      tab.add(chassis);
+      chassis.exportSwerveModData(Shuffleboard.getTab("Swerve Modules"));
     }
   }
 

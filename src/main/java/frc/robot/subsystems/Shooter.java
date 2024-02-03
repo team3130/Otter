@@ -47,8 +47,8 @@ public class Shooter extends SubsystemBase {
     private double feedForwardVolt;
 
     public Shooter() {
-        leftFlywheel9 = new TalonFX(9);
-        rightFlywheel8 = new TalonFX(8);
+        leftFlywheel9 = new TalonFX(8);
+        rightFlywheel8 = new TalonFX(9);
 
         leftFlywheel9.getConfigurator().apply(new TalonFXConfiguration()); // config factory default
         rightFlywheel8.getConfigurator().apply(new TalonFXConfiguration()); // config factory default
@@ -57,7 +57,7 @@ public class Shooter extends SubsystemBase {
 
         rightFlywheel8.setInverted(true);
 
-        rightFlywheel8.getConfigurator().apply(new ClosedLoopRampsConfigs().withVoltageClosedLoopRampPeriod(2));
+        rightFlywheel8.getConfigurator().apply(new ClosedLoopRampsConfigs().withVoltageClosedLoopRampPeriod(5));
 
         slot0Configs = new Slot0Configs(); // gains for specific slot
 
