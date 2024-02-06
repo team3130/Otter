@@ -113,7 +113,7 @@ public class SwerveModule implements Sendable {
      * Resets the relative encoders according the absolute encoder involving the offset
      */
     public void resetEncoders() {
-        steerMotor.setPosition((getAbsoluteEncoderRad() - absoluteEncoderOffset));
+        steerMotor.setPosition((getAbsoluteEncoderRad() - absoluteEncoderOffset) / Constants.Conversions.SteerRotToRads);
         //steerMotor.setPosition((getAbsoluteEncoderRad() - absoluteEncoderOffset) / Constants.Conversions.SteerRotToRads);
     }
 
