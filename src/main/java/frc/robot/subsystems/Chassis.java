@@ -24,6 +24,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -163,11 +164,6 @@ public class Chassis extends SubsystemBase {
     // returns the bots rotation according to NavX
     public Rotation2d getRotation2d(){
         return odometry.getEstimatedPosition().getRotation();
-    }
-
-    // periodic call to update odometry from encoders
-    public void updateOdometryFromSwerve() {
-        odometry.update(Navx.getRotation(), generatePoses());
     }
 
     // Resets odometry: resets relative encoders to what the absolute encoders are, hard reset of odometry object
@@ -343,6 +339,8 @@ public class Chassis extends SubsystemBase {
 
     // return the x position from odometry
     private double getX() { return odometry.getEstimatedPosition().getX(); }
+    // return the y position from odometry
+    private double getY() { return odometry.getEstimatedPosition().getY(); }
 
     /**
      * @return the yaw from odometry
@@ -379,7 +377,6 @@ public class Chassis extends SubsystemBase {
         builder.addDoubleProperty("rotation", this::getYaw, null);
         builder.addDoubleProperty("max speed read", this::getMaxSpeedRead, null);
         builder.addStringProperty("odometry pose2d", this::getOdometry, null);
-        builder.addBooleanProperty("autobuilder confiured", this::getAutoConfig, null);
         builder.addDoubleProperty("Target Distance", this::getInitialAprilTagDistance, null);
     }
 
@@ -425,10 +422,10 @@ public class Chassis extends SubsystemBase {
      * The same as {@link #drive(double, double, double)} except you pass in if you are field relative or not.
      * This method will drive the swerve modules based to x, y and theta vectors.
      *
-     * @param x             velocity in the x dimension m/s
-     * @param y             velocity in the y dimension m/s
-     * @param theta         the angular (holonomic) speed to drive the swerve modules at
-     * @param fieldRelative whether to use
+     * @param //x             velocity in the x dimension m/s
+     * @param //y             velocity in the y dimension m/s
+     * @param //theta         the angular (holonomic) speed to drive the swerve modules at
+     * @param //fieldRelative whether to use
      * @return
      */
 
