@@ -31,7 +31,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.commands.Autos;
 import frc.robot.RobotContainer;
-import frc.robot.sensors.Camera;
 import frc.robot.sensors.Navx;
 import frc.robot.swerve.SwerveModule;
 
@@ -62,7 +61,6 @@ public class Chassis extends SubsystemBase {
     private Translation2d originToAprilTagVector;
     private double theta = 0.0;
     private boolean isFaceTargetting = false;
-
     Rotation2d angleSetpoint = null;
 
     /**
@@ -161,6 +159,7 @@ public class Chassis extends SubsystemBase {
                 modules[Constants.Modules.leftBack].PIDisDone() &&
                 modules[Constants.Modules.rightFront].PIDisDone() &&
                 modules[Constants.Modules.rightBack].PIDisDone();
+    }
     // returns the bots rotation according to NavX
     public Rotation2d getRotation2d(){
         return odometry.getEstimatedPosition().getRotation();
@@ -185,11 +184,6 @@ public class Chassis extends SubsystemBase {
         odometry.resetPosition(Navx.getRotation(), generatePoses(), pose);
     }
 
-    /**
-     * Flip-flops between field relative and bot relative swerve drive
-     */
-    public void flipFieldRelative() {
-        fieldRelative = !fieldRelative;
     // If the PID controllers of the Swerve Modules are done, returning whether the wheels are zeroed/PID controllers finished
     public boolean turnToAnglePIDIsFinished() {
         return modules[Constants.Modules.leftFront].PIDisDone() &&
@@ -205,17 +199,16 @@ public class Chassis extends SubsystemBase {
             positions[i] = modules[i].getPosition();
         }
         return positions;
+    }
     /**
      * Getter for if swerve drive is field relative or not
      * @return bool if field relative
      */
-    public boolean getFieldRelative() {
-        return fieldRelative;
-    }
 
     // Zeros the Navx's heading
-    public void zeroHeading(){
+    public void zeroHeading() {
         Navx.resetNavX();
+    }
     private SwerveModuleState[] getModuleStates() {
         SwerveModuleState[] states = new SwerveModuleState[4];
         for (int i = 0; i < 4; i++) {
@@ -228,8 +221,6 @@ public class Chassis extends SubsystemBase {
      * Returns the heading that navx reads
      * @return the rotation of the bot in degrees
      */
-    public double getHeading() {
-        return Math.IEEEremainder(Navx.getAngle(), 360);
     // set module states to desired states
     public void setModuleStates(SwerveModuleState[] desiredStates) {
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
@@ -244,8 +235,6 @@ public class Chassis extends SubsystemBase {
      * Returns the bots rotation according to Navx as a {@link Rotation2d}
      * @return the bot rotation
      */
-    public Rotation2d getRotation2d(){
-        return odometry.getEstimatedPosition().getRotation();
     // A listener to calculate what the max speed we read was
     public void listener() {
         for (SwerveModule module : modules) {
@@ -268,6 +257,7 @@ public class Chassis extends SubsystemBase {
      */
     public void updateOdometryFromSwerve() {
         odometry.updateWithTime(Timer.getFPGATimestamp(), Navx.getRotation(), generatePoses());
+    }
     // Stops the devices connected to this subsystem
     public void stopModules(){
         for (SwerveModule module : modules) {
@@ -293,14 +283,6 @@ public class Chassis extends SubsystemBase {
         field.setRobotPose(odometry.getEstimatedPosition());
     }
 
-    // Stops the devices connected to this subsystem
-    public void stopModules(){
-        modules[Constants.Modules.leftFront].stop();
-        modules[Constants.Modules.leftBack].stop();
-        modules[Constants.Modules.rightFront].stop();
-        modules[Constants.Modules.rightBack].stop();
-    }
-
     /**
      * Getter for geometry
      * @return the geometry of the swerve modules
@@ -308,41 +290,9 @@ public class Chassis extends SubsystemBase {
     public SwerveDriveKinematics getKinematics() {
         return kinematics;
     }
-
+    // ChassisSpeeds supplier in robot relative
     public ChassisSpeeds getRobotRelativeSpeeds() {
         return kinematics.toChassisSpeeds(getModuleStates());
-    }
-
-    private SwerveModuleState[] getModuleStates() {
-        SwerveModuleState[] states = new SwerveModuleState[4];
-        states[0] = modules[Constants.Modules.leftFront].getState();
-        states[1] = modules[Constants.Modules.leftBack].getState();
-        states[2] = modules[Constants.Modules.rightFront].getState();
-        states[3] = modules[Constants.Modules.rightBack].getState();
-        return states;
-    }
-
-    /**
-     * Sets the module states to desired states
-     * @param desiredStates the states to set the modules to
-     */
-    public void setModuleStates(SwerveModuleState[] desiredStates) {
-        SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
-
-        modules[Constants.Modules.leftFront].setDesiredState(desiredStates[Constants.Modules.leftFront]);
-        modules[Constants.Modules.leftBack].setDesiredState(desiredStates[Constants.Modules.leftBack]);
-        modules[Constants.Modules.rightFront].setDesiredState(desiredStates[Constants.Modules.rightFront]);
-        modules[Constants.Modules.rightBack].setDesiredState(desiredStates[Constants.Modules.rightBack]);
-    }
-
-    /**
-     * Spins the wheels to an angle
-     * @param setpoint angle to spin the motors to
-     */
-    public void turnToAngle(double setpoint) {
-        for (SwerveModule module : modules) {
-            module.turnToAngle(setpoint);
-        }
     }
 
     /**
@@ -396,7 +346,6 @@ public class Chassis extends SubsystemBase {
     /**
      * @return the yaw from odometry
      */
-    private double getYaw() { return odometry.getEstimatedPosition().getRotation().getDegrees(); }
     public double getInitialAprilTagDistance() { return initialAprilTagDistance; }
     public Translation2d getOriginToAprilTagVector() {return originToAprilTagVector;}
     public void setFaceTargetting(boolean newIsFaceTargetting){
@@ -481,10 +430,7 @@ public class Chassis extends SubsystemBase {
      * @param fieldRelative whether to use
      * @return
      */
-    // ChassisSpeeds supplier in robot relative
-    public ChassisSpeeds getRobotRelativeSpeeds() {
-        return kinematics.toChassisSpeeds(getModuleStates());
-    }
+
 
     // passes the x y omega ChassisSpeeds supplied by PathPlanner to driveAuton()
     public void driveRobotRelative(ChassisSpeeds speeds){
