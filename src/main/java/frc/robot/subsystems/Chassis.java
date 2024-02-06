@@ -4,6 +4,10 @@
 
 package frc.robot.subsystems;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.ReplanningConfig;
+import com.pathplanner.lib.util.PIDConstants;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -13,12 +17,26 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.DriverStation;
+import com.pathplanner.lib.path.PathPlannerTrajectory;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.sensors.Camera;
+import frc.robot.commands.Autos;
+import frc.robot.RobotContainer;
 import frc.robot.sensors.Navx;
 import frc.robot.swerve.SwerveModule;
 
@@ -34,7 +52,6 @@ public class Chassis extends SubsystemBase {
     private final SwerveModule[] modules; // list of four swerve modules
     private final Navx navx = Navx.GetInstance(); // initialize Navx
     private boolean fieldRelative = true; // field relative or robot oriented drive
-    private final CameraSubsystem cameraSubsystem;
     private double maxSpeedRead = 0; // updated periodically with the maximum speed that has been read on any of the swerve modules
     private final Field2d field; // sendable that gets put on shuffleboard with the auton trajectory and the robots current position
     private final GenericEntry n_fieldOrriented; // comp network table entry for whether field oriented drivetrain
@@ -45,8 +62,8 @@ public class Chassis extends SubsystemBase {
      * Makes a chassis that starts at 0, 0, 0
      * the limelight object that we can use for updating odometry
      */
-    public Chassis(CameraSubsystem cameraSubsystem){
-        this (new Pose2d(), new Rotation2d(), cameraSubsystem);
+    public Chassis(){
+        this (new Pose2d(), new Rotation2d());
     }
 
     /**
@@ -55,7 +72,7 @@ public class Chassis extends SubsystemBase {
      * @param startingRotation the initial rotation of the bot
      * the limelight object which is used for updating odometry
      */
-    public Chassis(Pose2d startingPos, Rotation2d startingRotation, CameraSubsystem cameraSubsystem1) {
+    public Chassis(Pose2d startingPos, Rotation2d startingRotation) {
         kinematics = new SwerveDriveKinematics(Constants.Swerve.moduleTranslations);
 
         modules = new SwerveModule[4];
@@ -67,11 +84,10 @@ public class Chassis extends SubsystemBase {
         // odometry wrapper class that has functionality for cameras that report position with latency
         odometry = new SwerveDrivePoseEstimator(kinematics, startingRotation, generatePoses(), startingPos);
 
-        cameraSubsystem = cameraSubsystem1;
 
         field = new Field2d();
-        Shuffleboard.getTab("Comp").add("field", field);
-        n_fieldOrriented = Shuffleboard.getTab("Comp").add("field orriented", false).getEntry();
+        Shuffleboard.getTab("Chassis").add("field", field);
+        n_fieldOrriented = Shuffleboard.getTab("Chassis").add("field orriented", false).getEntry();
 
         AutoBuilder.configureHolonomic(
                 this::getPose2d, // Robot pose supplier
@@ -90,6 +106,12 @@ public class Chassis extends SubsystemBase {
      * If the PID controllers of the {@link SwerveModule}'s are all done
      * @return whether the wheels are zereod/PID controllers are done
      */
+    public void drive(double x, double y, double theta) {
+        drive(x, y, theta, getFieldRelative());
+    }
+    public boolean getAutoConfig() {
+        return AutoBuilder.isConfigured();
+    }
     public boolean turnToAnglePIDIsDone() {
         return modules[Constants.Modules.leftFront].PIDisDone() &&
                 modules[Constants.Modules.leftBack].PIDisDone() &&
@@ -103,21 +125,7 @@ public class Chassis extends SubsystemBase {
      * y is the velocity in the y dimension m/s
      * theta is the angular (holonomic) speed of the bot
      */
-    public void drive(double x, double y, double theta) {
-        drive(x, y, theta, getFieldRelative());
-    }
-    
-     * Resets odometry
-     * <p>Resets navx</p>
-     * <p>Resets relative encoders to be what the absolute encoders are</p>
-     * <p>Hard reset of the odometry object</p>
-     * @param pose the position to reset odometry to
-     */
-    public void resetOdometry(Pose2d pose) {
-        resetEncoders();
-        Navx.resetNavX();
-        odometry.resetPosition(Navx.getRotation(), generatePoses(), pose);
-    }
+
 
     /**
      * drive(x, y, theta) with additional parameter for if robot is field relative or not
@@ -151,18 +159,7 @@ public class Chassis extends SubsystemBase {
         fieldRelative = fieldOriented;
     }
 
-    /**
-     * Returns the heading that navx reads
-     * @return the rotation of the bot in degrees
-     */
-    public double getHeading() {
-        return Math.IEEEremainder(Navx.getAngle(), 360);
-    }
 
-    /**
-     * Returns the bots rotation according to Navx as a {@link Rotation2d}
-     * @return the bot rotation
-     */
     public Rotation2d getRotation2d(){
         return odometry.getEstimatedPosition().getRotation();
     }
@@ -223,24 +220,6 @@ public class Chassis extends SubsystemBase {
         modules[Constants.Modules.rightBack].setDesiredState(desiredStates[Constants.Modules.rightBack]);
     }
 
-    /**
-     * Spins the wheels to an angle
-     * @param setpoint angle to spin the motors to
-     */
-    public void turnToAngle(double setpoint) {
-        for (SwerveModule module : modules) {
-            module.turnToAngle(setpoint);
-        }
-    }
-    
-    // A listener to calculate what the max speed we read was
-    public void listener() {
-        for (SwerveModule module : modules) {
-            if (maxSpeedRead < module.getDriveVelocity()) {
-                maxSpeedRead = module.getDriveVelocity();
-            }
-        }
-    }
 
     // Spins the wheels to an angle
     public void turnToAngle(double setpoint) {
@@ -272,14 +251,6 @@ public class Chassis extends SubsystemBase {
     public void periodic() {
         n_fieldOrriented.setBoolean(fieldRelative);
         field.setRobotPose(odometry.getEstimatedPosition());
-    }
-
-    /**
-     * The simulation periodic call
-     */
-    @Override
-    public void simulationPeriodic() {
-        // This method will be called once per scheduler run during simulation
     }
 
 

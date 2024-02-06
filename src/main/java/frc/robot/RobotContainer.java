@@ -16,16 +16,17 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.*;
 import frc.robot.commands.Chassis.FlipDriveOrientation;
 import frc.robot.commands.Chassis.TeleopDrive;
 import frc.robot.commands.Chassis.ZeroEverything;
 import frc.robot.commands.Chassis.ZeroWheels;
 import frc.robot.commands.Shooter.*;
-import frc.robot.sensors.Camera;
 import frc.robot.subsystems.*;
+import frc.robot.subsystems.Chassis;
+import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import java.util.function.BooleanSupplier;
@@ -44,9 +45,8 @@ public class RobotContainer {
   private final XboxController driverController = new XboxController(0);
   private final XboxController operatorController = new XboxController(1);
   private final Shooter shooter;
-  private final Indexer indexer;
   private final Intake intake;
-  private final Camera camera;
+  private final Indexer indexer;
   private final Chassis chassis;
   private final Hopper hopper;
   private final SendableChooser<Command> autoChooser;
@@ -56,8 +56,7 @@ public class RobotContainer {
     shooter = new Shooter();
     indexer = new Indexer();
     intake = new Intake();
-    camera = new Camera();
-    chassis = new Chassis(camera);
+    chassis = new Chassis();
     hopper = new Hopper();
 
     // Named commands must be registered before the creation of any PathPlanner Autos or Paths
@@ -135,7 +134,6 @@ public class RobotContainer {
       tab.add(shooter);
       tab.add(intake);
       tab.add(chassis);
-      tab.add(cameraSubsystem);
       chassis.exportSwerveModData(Shuffleboard.getTab("Swerve Modules"));
     }
   }
@@ -159,11 +157,15 @@ public class RobotContainer {
 
 
     //new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new OnlyIndex(indexer));
+
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_A).whileTrue(new OnlyShoot(shooter));
+    new POVButton(driverController, Constants.Buttons.LST_POV_N).whileTrue(new ZeroEverything(chassis));
+    new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new VelocityShoot(shooter));
 
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new VelocityShoot(shooter));
 
     SmartDashboard.putData(new FlipDriveOrientation(chassis));
 
   }
+
 }
