@@ -246,7 +246,6 @@ public class SwerveModule implements Sendable {
         // builder.addDoubleProperty("Drive velocity", this::getDriveVelocity, null);
         builder.addDoubleProperty("Steer position", this::getSteerPositionWrapped, null);
         builder.addDoubleProperty("Drive position", this::getDrivePosition, null);
-        builder.addDoubleProperty("Turning position", this::getTurningPosition, null);
         builder.addDoubleProperty("Absolute encoder position", this::getAbsoluteEncoderRad, null);
 /*        builder.addDoubleProperty("Steer velocity", this::getTurningVelocity, null);
         builder.addDoubleProperty("Steer relative", this::getRelativePositionDegrees, null);

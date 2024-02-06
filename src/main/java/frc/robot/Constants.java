@@ -150,6 +150,51 @@ public final class Constants {
     );
   }
 
+  public static class Modules {
+    public static final int leftFront = 0;
+    public static final int leftBack = 1;
+    public static final int rightFront = 2;
+    public static final int rightBack = 3;
+  }
+
+  public static class ExncoderOffsets {
+    public static final double kOffsetSwerve0 = -1.633689; // Math.toRadians(268.682);
+    public static final double kOffsetSwerve1 = 1.71; // Math.toRadians(281.426);
+    public static final double kOffsetSwerve2 = 0.036; // Math.toRadians(129.3);
+    public static final double kBottomRightOffset = 0.08; // Math.toRadians(0);
+    public static final double[] kCANCoderOffsets = new double[]{
+            1.498607,
+            1.7518,
+                    - 0.8436,
+            3.14772592
+    };
+    /*
+    1.498607,
+            1.7518,
+                    - 0.8436,
+            3.14772592
+     */
+  }
+
+  public static class EncoderOffsets {
+    public static final double kTopLeftOffset = Math.toRadians(268.682);
+    public static final double kBottomLeftOffset = Math.toRadians(281.426);
+    public static final double kTopRightOffset = Math.toRadians(129.3);
+    public static final double kBottomRightOffset = Math.toRadians(0);
+    public static final double[] kCANCoderOffsets = new double[] {kTopLeftOffset, kBottomLeftOffset, kTopRightOffset, kBottomRightOffset};
+  }
+
+  // gear ratios and/or ticks per rev, etc.
+  public static class Conversions {
+    public final static double kDriveGearRatio = 6.73; // Checked 2/2/24 //6.75  checked 1/19/23
+    public final static double kSteerGearRatio = 21.4317; // Checked 2/2/24 //150d/7d = 21.42857  checked 1/19
+    public static final double kWheelDiameter = Units.inchesToMeters(4);
+    public final static double DriveRotToMeters = kWheelDiameter * Math.PI * 1/(kDriveGearRatio); // multiply by
+    public static final double SteerRotToRads = 1/(kSteerGearRatio) * Math.PI * 2; // multiply by position
+    public static final double DriveRotToMetersPerSecond = DriveRotToMeters * 10; // multiply by velocity
+    public static final double SteerRotToRadsPerSecond = SteerRotToRads * 10; // multiply by velocity
+  }
+
   public static class Auton {
     /** Chassis auton */
     public static final double kPXController = 3;
@@ -169,37 +214,6 @@ public final class Constants {
     // spiny PID constraints
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
             kMaxAngularSpeedRadiansPerSecond, kMaxAngularAccelerationRadiansPerSecondSquared);
-  }
-
-  public static class Modules {
-    public static final int leftFront = 0;
-    public static final int leftBack = 1;
-    public static final int rightFront = 2;
-    public static final int rightBack = 3;
-  }
-
-  public static class EncoderOffsets {
-    public static final double kOffsetSwerve0 = -1.633689; // Math.toRadians(268.682);
-    public static final double kOffsetSwerve1 = 1.71; // Math.toRadians(281.426);
-    public static final double kOffsetSwerve2 = 0.036; // Math.toRadians(129.3);
-    public static final double kBottomRightOffset = 0.08; // Math.toRadians(0);
-    public static final double[] kCANCoderOffsets = new double[]{
-            1.498607,
-            1.7518,
-                    - 0.8436,
-            3.14772592
-    };
-  }
-
-  // gear ratios and/or ticks per rev, etc.
-  public static class Conversions {
-    public final static double kDriveGearRatio = 6.73; // Checked 2/2/24 //6.75  checked 1/19/23
-    public final static double kSteerGearRatio = 21.4317; // Checked 2/2/24 //150d/7d = 21.42857  checked 1/19
-    public static final double kWheelDiameter = Units.inchesToMeters(4);
-    public final static double DriveRotToMeters = kWheelDiameter * Math.PI * 1/(kDriveGearRatio); // multiply by
-    public static final double SteerRotToRads = 1/(kSteerGearRatio) * Math.PI * 2; // multiply by position
-    public static final double DriveRotToMetersPerSecond = DriveRotToMeters * 10; // multiply by velocity
-    public static final double SteerRotToRadsPerSecond = SteerRotToRads * 10; // multiply by velocity
   }
 
   public static class Buttons {
