@@ -50,6 +50,14 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
     robotContainer.periodic();
 
+    // reset chassis pose every kResetTime seconds
+    if (timer.hasElapsed(0.75)) {
+      robotContainer.resetOdo();
+      timer.stop();
+      timer.reset();
+    } else {
+      robotContainer.updateChassisPose();
+    }
   }
 
   /** This function is called once each time the robot enters Disabled mode. */

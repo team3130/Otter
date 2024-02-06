@@ -181,6 +181,7 @@ public class Chassis extends SubsystemBase {
      */
     public void resetOdometry(Pose2d pose) {
         resetEncoders();
+        Navx.resetNavX();
         odometry.resetPosition(Navx.getRotation(), generatePoses(), pose);
     }
 

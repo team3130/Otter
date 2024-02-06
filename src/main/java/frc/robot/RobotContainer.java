@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -19,6 +21,7 @@ import frc.robot.commands.Chassis.ZeroWheels;
 import frc.robot.subsystems.Chassis;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.commands.Shooter.*;
+import frc.robot.sensors.Camera;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -42,6 +45,8 @@ public class RobotContainer {
   private final Shooter shooter;
   private final Indexer indexer;
   private final Intake intake;
+  private final Camera camera;
+  private final Chassis chassis;
   private final TeleopDrive teleopDrive;
 
   // container for the robot containing subsystems, OI devices, and commands
@@ -49,6 +54,8 @@ public class RobotContainer {
     shooter = new Shooter();
     indexer = new Indexer();
     intake = new Intake();
+    camera = new Camera();
+    chassis = new Chassis(camera);
 
     // Named commands must be registered before the creation of any PathPlanner Autos or Paths
     // Do this in RobotContainer, after subsystem initialization, but before the creation of any other commands.
@@ -82,6 +89,14 @@ public class RobotContainer {
 
   }
 
+  public void resetOdo() {
+    chassis.resetOdometry(new Pose2d(0, 0, new Rotation2d()));
+  }
+
+  public void updateChassisPose() {
+    chassis.updateOdometryFromSwerve();
+  }
+
   /*
   Boolean supplier that controls when the path will be mirrored for the red alliance
   This will flip the path being followed to the red side of the field.
@@ -103,6 +118,8 @@ public class RobotContainer {
       ShuffleboardTab tab = Shuffleboard.getTab("Subsystems");
       tab.add(shooter);
       tab.add(intake);
+      tab.add(chassis);
+      chassis.exportSwerveModData(Shuffleboard.getTab("Swerve Modules"));
     }
   }
 
