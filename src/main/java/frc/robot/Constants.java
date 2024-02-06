@@ -158,16 +158,11 @@ public final class Constants {
   }
 
   public static class ExncoderOffsets {
-    public static final double kOffsetSwerve0 = -1.633689; // Math.toRadians(268.682);
-    public static final double kOffsetSwerve1 = 1.71; // Math.toRadians(281.426);
-    public static final double kOffsetSwerve2 = 0.036; // Math.toRadians(129.3);
-    public static final double kBottomRightOffset = 0.08; // Math.toRadians(0);
-    public static final double[] kCANCoderOffsets = new double[]{
-            1.498607,
-            1.7518,
-                    - 0.8436,
-            3.14772592
-    };
+    public static final double kOffsetSwerve0 = -1.633689; // 1.498607; //-1.633689; // Math.toRadians(268.682);
+    public static final double kOffsetSwerve1 = 1.7518; // 1.71; // Math.toRadians(281.426);
+    public static final double kOffsetSwerve2 = 0.036; //-0.8436; // 0.036; // Math.toRadians(129.3);
+    public static final double kBottomRightOffset = 0.08; // 3.14772592; //0.08; // Math.toRadians(0);
+    public static final double[] kCANCoderOffsets = new double[] {kOffsetSwerve0,kOffsetSwerve1, kOffsetSwerve2, kBottomRightOffset};
     /*
     1.498607,
             1.7518,
