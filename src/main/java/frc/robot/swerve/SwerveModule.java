@@ -67,8 +67,8 @@ public class SwerveModule implements Sendable {
     }
 
     // returns the position of the steering motor radians
-    public double getTurningPosition() {
-        return steerMotor.getPosition().getValue(); //Constants.Conversions.SteerRotToRads;
+    public double getTurningPositionDeg() {
+        return (steerMotor.getPosition().getValue()); //Constants.Conversions.SteerRotToRads;
     }
 
     // gets the velocity of the drive motor in m/s
@@ -84,11 +84,6 @@ public class SwerveModule implements Sendable {
     // gets the position of the steering wheel according to the absolute encoders
     public double getAbsoluteEncoderRad() {
         return Math.toRadians(absoluteEncoder.getAbsolutePosition().getValue() * 360);
-    }
-
-    // return the position of the steering wheel in degrees
-    public double getAbsoluteEncoderDegrees() {
-        return absoluteEncoder.getAbsolutePosition().getValue();
     }
 
     // updates steering PID controller
@@ -107,8 +102,7 @@ public class SwerveModule implements Sendable {
      * Resets the relative encoders according the absolute encoder involving the offset
      */
     public void resetEncoders() {
-        steerMotor.setPosition((getAbsoluteEncoderRad() - absoluteEncoderOffset) / Constants.Conversions.SteerRotToRads);
-        // m_driveMotor.setSelectedSensorPosition(0);
+        steerMotor.setPosition((getAbsoluteEncoderRad() - absoluteEncoderOffset));
     }
 
     /**
@@ -116,7 +110,7 @@ public class SwerveModule implements Sendable {
      * @return custom at set-point logic for the PID controller
      */
     public boolean wheelsZeroed() {
-        Rotation2d pos = new Rotation2d(getTurningPosition());
+        Rotation2d pos = new Rotation2d(getTurningPositionDeg());
         return (pos.getDegrees() > 355 || pos.getDegrees() < 5) && getTurningVelocity() < 0.05;
     }
 
@@ -124,7 +118,7 @@ public class SwerveModule implements Sendable {
      * @return the current swerve module state
      */
     public SwerveModuleState getState() {
-        return new SwerveModuleState(getDriveVelocity(), new Rotation2d(getTurningPosition()));
+        return new SwerveModuleState(getDriveVelocity(), new Rotation2d(getTurningPositionDeg()));
     }
 
     /**
@@ -153,15 +147,17 @@ public class SwerveModule implements Sendable {
         // m_driveMotor.setControl(driveMotorVoltRequest.withOutput(12d* (state.speedMetersPerSecond / Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond)));
         driveMotor.setVoltage((10d* (state.speedMetersPerSecond / Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond)));
         // set the steering motor based off the output of the PID controller
-        steerMotor.setVoltage(4d * turningPidController.calculate(Math.IEEEremainder(getTurningPosition(), Math.PI * 2), state.angle.getRadians()));
+        steerMotor.setVoltage(4d * turningPidController.calculate(Math.IEEEremainder(getTurningPositionDeg(), Math.PI * 2), state.angle.getRadians()));
     }
+
+
 
     /**
      * Turns the motors to an angle
      * @param setpoint in radians
      */
     public void turnToAngle(double setpoint) {
-        steerMotor.setVoltage(12d * turningPidController.calculate(Math.IEEEremainder(getTurningPosition(), Math.PI * 2), setpoint));
+        steerMotor.setVoltage(12d * turningPidController.calculate(Math.IEEEremainder(getTurningPositionDeg(), Math.PI * 2), setpoint));
     }
 
     /**
@@ -169,7 +165,7 @@ public class SwerveModule implements Sendable {
      * @return gets with turning position and velocity
      */
     public SwerveModulePosition getPosition() {
-        return new SwerveModulePosition(getDrivePosition(), new Rotation2d(getTurningPosition()));
+        return new SwerveModulePosition(getDrivePosition(), new Rotation2d(getTurningPositionDeg()));
     }
 
     /**
@@ -235,13 +231,14 @@ public class SwerveModule implements Sendable {
     @Override
     public void initSendable(SendableBuilder builder) {
         builder.setSmartDashboardType("Swerve Module " + side);
-        builder.addDoubleProperty("Drive velocity", this::getDriveVelocity, null);
+        // builder.addDoubleProperty("Drive velocity", this::getDriveVelocity, null);
         builder.addDoubleProperty("Steer position", this::getSteerPositionWrapped, null);
         builder.addDoubleProperty("Drive position", this::getDrivePosition, null);
-        builder.addDoubleProperty("Turning position", this::getTurningPosition, null);
+        builder.addDoubleProperty("Turning position", this::getTurningPositionDeg, null);
+        builder.addDoubleProperty("Absolute encoder position", this::getAbsoluteEncoderRad, null);
 /*        builder.addDoubleProperty("Steer velocity", this::getTurningVelocity, null);
         builder.addDoubleProperty("Steer relative", this::getRelativePositionDegrees, null);
-        builder.addDoubleProperty("Absolute encoder position", this::getAbsoluteEncoderDegrees, null);*/
+        */
         builder.addDoubleProperty("Swerve P " + side, this::getPValue, this::setPValue);
         builder.addDoubleProperty("Swerve I " + side, this::getIValue, this::setIValue);
         builder.addDoubleProperty("Swerve D " + side, this::getDValue, this::setDValue);
@@ -252,10 +249,10 @@ public class SwerveModule implements Sendable {
     }
 
     public double getRelativePositionDegrees() {
-        return Math.toDegrees(getTurningPosition());
+        return Math.toDegrees(getTurningPositionDeg());
     }
 
     public double getRelDegrees() {
-        return Math.toDegrees(getTurningPosition());
+        return Math.toDegrees(getTurningPositionDeg());
     }
 }

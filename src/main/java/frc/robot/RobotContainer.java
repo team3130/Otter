@@ -13,6 +13,8 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.*;
+import frc.robot.commands.Chassis.TeleopDrive;
+import frc.robot.commands.Chassis.ZeroWheels;
 import frc.robot.commands.Shooter.*;
 import frc.robot.sensors.Camera;
 import frc.robot.subsystems.*;
@@ -53,7 +55,7 @@ public class RobotContainer {
     exportShuffleBoardData(); // export ShuffleBoardData
 
     // Default commands running in the background when other commands not scheduled
-
+    chassis.setDefaultCommand(new TeleopDrive(chassis, driverController));
     // Build an auto chooser. This will use Commands.none() as the default option.
     // autoChooser = AutoBuilder.buildAutoChooser();
 
@@ -124,6 +126,7 @@ public class RobotContainer {
     // driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
 
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new Shoot(shooter, indexer, intake));
+    new JoystickButton(driverController, Constants.Buttons.LST_BTN_Y).whileTrue(new ZeroWheels(chassis));
 
     //new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new OnlyIndex(indexer));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_A).whileTrue(new OnlyShoot(shooter));

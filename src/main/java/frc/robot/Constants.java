@@ -115,22 +115,22 @@ public final class Constants {
     public final static double kMaxAccelerationDrive = 7;
     public final static double kMaxAccelerationAngularDrive = 4.0*Math.PI;
 
-    public final static double kP_FrontRight = 0.0;
+    public final static double kP_FrontRight = 1.0;
     public final static double kI_FrontRight = 0;
     public final static double kD_FrontRight = 0;
     public final static double kF_FrontRight = 0;
 
-    public final static double kP_FrontLeft = 0;
+    public final static double kP_FrontLeft = 1.0;
     public final static double kI_FrontLeft = 0;
     public final static double kD_FrontLeft = 0;
     public final static double kF_FrontLeft = 0;
 
-    public final static double kP_BackLeft = 0;
+    public final static double kP_BackLeft = 1.0;
     public final static double kI_BackLeft = 0;
     public final static double kD_BackLeft = 0;
     public final static double kF_BackLeft = 0;
 
-    public final static double kP_BackRight = 0;
+    public final static double kP_BackRight = 1.0;
     public final static double kI_BackRight = 0;
     public final static double kD_BackRight = 0;
     public final static double kF_BackRight = 0;
@@ -179,11 +179,16 @@ public final class Constants {
   }
 
   public static class EncoderOffsets {
-    public static final double kTopLeftOffset = 0; // Math.toRadians(268.682);
-    public static final double kBottomLeftOffset = 0; // Math.toRadians(281.426);
-    public static final double kTopRightOffset = 0; // Math.toRadians(129.3);
-    public static final double kBottomRightOffset = 0; // Math.toRadians(0);
-    public static final double[] kCANCoderOffsets = new double[] {kTopLeftOffset, kBottomLeftOffset, kTopRightOffset, kBottomRightOffset};
+    public static final double kOffsetSwerve0 = -1.633689; // Math.toRadians(268.682);
+    public static final double kOffsetSwerve1 = 1.71; // Math.toRadians(281.426);
+    public static final double kOffsetSwerve2 = 0.036; // Math.toRadians(129.3);
+    public static final double kBottomRightOffset = 0.08; // Math.toRadians(0);
+    public static final double[] kCANCoderOffsets = new double[]{
+            1.498607,
+            1.7518,
+                    - 0.8436,
+            3.14772592
+    };
   }
 
   // gear ratios and/or ticks per rev, etc.
