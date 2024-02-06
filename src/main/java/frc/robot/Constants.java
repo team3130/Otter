@@ -52,7 +52,21 @@ public final class Constants {
   }
 
   public static class AprilTags {
-    public static final boolean useAprilTags = false;
+      public static final double TARGET_HEIGHT_METERS = Units.feetToMeters(0);
+      // TEST TODO: change vaues obviously
+      // Constants such as camera and target height stored. Change per robot and goal!
+      public static final double  CAMERA_HEIGHT_METERS = Units.inchesToMeters(0);
+      // Angle between horizontal and the camera.
+      public static final double CAMERA_PITCH_RADIANS = Units.degreesToRadians(0);
+      // TODO: below is wrong
+      public static double kTargetPitch = Units.inchesToMeters(0);
+
+      // How far from the target we want to be
+      final double GOAL_RANGE_METERS = Units.feetToMeters(3);
+
+
+
+      public static final boolean useAprilTags = false;
 
     // The position and orientation of the camera in meters
     public static final double xPos = Units.inchesToMeters(0);
@@ -72,6 +86,10 @@ public final class Constants {
 
     public static double kCameraFOV = 0; // TODO: Find real value
     public static final double AprilTagTrustDistance = 5;
+    public static final int speakerTargetRedFiducialID = 4;
+    public static final int speakerTargetBlueFiducialID = 7;
+    public static final int ampTargetRedFiducialID = 5;
+    public static final int ampTargetBlueFiducialID = 6;
   }
 
   /**

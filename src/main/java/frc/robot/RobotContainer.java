@@ -39,6 +39,7 @@ import java.util.function.BooleanSupplier;
 
 // The robot's subsystems and commands are defined here...
 public class RobotContainer {
+  // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final XboxController driverController = new XboxController(0);
   private final XboxController operatorController = new XboxController(1);
@@ -134,6 +135,7 @@ public class RobotContainer {
       tab.add(shooter);
       tab.add(intake);
       tab.add(chassis);
+      tab.add(cameraSubsystem);
       chassis.exportSwerveModData(Shuffleboard.getTab("Swerve Modules"));
     }
   }
