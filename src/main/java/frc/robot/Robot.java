@@ -94,6 +94,7 @@ public class Robot extends TimedRobot {
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
     }
+    CommandScheduler.getInstance().schedule(robotContainer.resetEverything());
   }
 
   /** This function is called periodically during operator control. */
