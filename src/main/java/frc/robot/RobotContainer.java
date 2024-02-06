@@ -15,16 +15,12 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.Autos;
 import frc.robot.commands.Chassis.FlipDriveOrientation;
 import frc.robot.commands.ExampleCommand;
-import frc.robot.commands.Intake.DumbPneumatics;
-import frc.robot.commands.Intake.DumbSpintake;
-import frc.robot.commands.Intake.DumbSpouttake;
-import frc.robot.commands.Intake.SmartSpintake;
+import frc.robot.commands.Intake.*;
+import frc.robot.commands.Shooter.Handoff;
 import frc.robot.commands.Shooter.OnlyShoot;
 import frc.robot.commands.Shooter.Shoot;
 import frc.robot.commands.Shooter.VelocityShoot;
 import frc.robot.commands.SpinHopper;
-import frc.robot.commands.*;
-import frc.robot.commands.Shooter.*;
 import frc.robot.sensors.Camera;
 import frc.robot.subsystems.*;
 
@@ -143,8 +139,7 @@ public class RobotContainer {
     new JoystickButton(operatorController, Constants.Buttons.LST_BTN_RBUMPER).whileTrue(new DumbSpintake(new Intake()));
     new JoystickButton(operatorController, Constants.Buttons.LST_BTN_A).whileTrue(new SmartSpintake(new Intake()));
     new JoystickButton(operatorController, Constants.Buttons.LST_BTN_B).whileTrue(new DumbPneumatics(new Intake()));
+    new JoystickButton(operatorController, Constants.Buttons.LST_AXS_LTRIGGER).whileTrue(new Handoff(new Indexer(), new Intake()));
+    new JoystickButton(operatorController, Constants.Buttons.LST_AXS_RTRIGGER).whileTrue(new IntakeThroughIndexer(new Indexer(), new Intake()));
   }
-
-
-
-  }
+}
