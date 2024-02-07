@@ -174,26 +174,12 @@ public final class Constants {
     public static final int rightFront = 2;
     public static final int rightBack = 3;
   }
-
-  public static class ExncoderOffsets {
-    public static final double kOffsetSwerve0 = -1.633689; // 1.498607; //-1.633689; // Math.toRadians(268.682);
-    public static final double kOffsetSwerve1 = 1.7518; // 1.71; // Math.toRadians(281.426);
-    public static final double kOffsetSwerve2 = 0.036; //-0.8436; // 0.036; // Math.toRadians(129.3);
-    public static final double kBottomRightOffset = 0.08; // 3.14772592; //0.08; // Math.toRadians(0);
-    public static final double[] kCANCoderOffsets = new double[] {kOffsetSwerve0,kOffsetSwerve1, kOffsetSwerve2, kBottomRightOffset};
-    /*
-    1.498607,
-            1.7518,
-                    - 0.8436,
-            3.14772592
-     */
-  }
-
+  
   public static class EncoderOffsets {
-    public static final double kTopLeftOffset = Math.toRadians(268.682);
-    public static final double kBottomLeftOffset = Math.toRadians(281.426);
-    public static final double kTopRightOffset = Math.toRadians(129.3);
-    public static final double kBottomRightOffset = Math.toRadians(0);
+    public static final double kTopLeftOffset = 1.498607; // Math.toRadians(268.682);
+    public static final double kBottomLeftOffset = 1.71; //Math.toRadians(281.426);
+    public static final double kTopRightOffset = -0.8436; //Math.toRadians(129.3);
+    public static final double kBottomRightOffset = 3.14772592; //Math.toRadians(0);
     public static final double[] kCANCoderOffsets = new double[] {kTopLeftOffset, kBottomLeftOffset, kTopRightOffset, kBottomRightOffset};
   }
 
