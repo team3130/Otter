@@ -20,6 +20,8 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.Autos;
 import frc.robot.commands.Chassis.FlipDriveOrientation;
+import frc.robot.commands.Chassis.TeleopDrive;
+import frc.robot.commands.Chassis.ZeroEverything;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.Intake.*;
 import frc.robot.commands.Shooter.Handoff;
@@ -27,17 +29,7 @@ import frc.robot.commands.Shooter.OnlyShoot;
 import frc.robot.commands.Shooter.Shoot;
 import frc.robot.commands.Shooter.VelocityShoot;
 import frc.robot.commands.SpinHopper;
-import frc.robot.sensors.Camera;
-import edu.wpi.first.wpilibj2.command.button.POVButton;
-import frc.robot.commands.*;
-import frc.robot.commands.Chassis.TeleopDrive;
-import frc.robot.commands.Chassis.ZeroEverything;
-import frc.robot.commands.Chassis.ZeroWheels;
-import frc.robot.commands.Shooter.*;
 import frc.robot.subsystems.*;
-import frc.robot.subsystems.Chassis;
-import frc.robot.subsystems.ExampleSubsystem;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import java.util.function.BooleanSupplier;
 
@@ -59,8 +51,9 @@ public class RobotContainer {
   private final Indexer indexer;
   private final Hopper hopper;
   private final Chassis chassis;
-  private final Hopper hopper;
   private final SendableChooser<Command> autoChooser;
+
+  private final CameraSubsystem camera;
 
 
   // container for the robot containing subsystems, OI devices, and commands
@@ -69,8 +62,8 @@ public class RobotContainer {
     indexer = new Indexer();
     intake = new Intake();
     hopper = new Hopper();
-    camera = new Camera();
-    chassis = new Chassis(camera);
+    camera = new CameraSubsystem();
+    chassis = new Chassis();
 
     // Named commands must be registered before the creation of any PathPlanner Autos or Paths
     // Do this in RobotContainer, after subsystem initialization, but before the creation of any other commands.
