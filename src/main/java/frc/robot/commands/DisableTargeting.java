@@ -11,6 +11,7 @@ import frc.robot.subsystems.Chassis;
 /** An example command that uses an example subsystem. */
 public class DisableTargeting extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
+  private final CameraSubsystem camera;
   private final Chassis chassis;
   private final CameraSubsystem cam;
 
@@ -23,7 +24,7 @@ public class DisableTargeting extends Command {
     chassis = subsystem;
     cam = camSubsystem;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(chassis);
+    addRequirements(camera);
   }
 
   // Called when the command is initially scheduled.

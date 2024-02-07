@@ -28,6 +28,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.commands.Autos;
@@ -49,7 +50,6 @@ public class Chassis extends SubsystemBase {
     private final SwerveModule[] modules; // list of four swerve modules
     private final Navx navx = Navx.GetInstance(); // initialize Navx
     private boolean fieldRelative = true; // field relative or robot oriented drive
-    private final CameraSubsystem cameraSubsystem;
     private double maxSpeedRead = 0; // updated periodically with the maximum speed that has been read on any of the swerve modules
     private final Field2d field; // sendable that gets put on shuffleboard with the auton trajectory and the robots current position
     private final GenericEntry n_fieldOrriented; // comp network table entry for whether field oriented drivetrain
@@ -68,8 +68,8 @@ public class Chassis extends SubsystemBase {
      * Makes a chassis that starts at 0, 0, 0
      * the limelight object that we can use for updating odometry
      */
-    public Chassis(CameraSubsystem cameraSubsystem){
-        this (new Pose2d(), new Rotation2d(), cameraSubsystem);
+    public Chassis(){
+        this (new Pose2d(), new Rotation2d());
     }
 
     /**
@@ -78,7 +78,7 @@ public class Chassis extends SubsystemBase {
      * @param startingRotation the initial rotation of the bot
      * the limelight object which is used for updating odometry
      */
-    public Chassis(Pose2d startingPos, Rotation2d startingRotation, CameraSubsystem cameraSubsystem1) {
+    public Chassis(Pose2d startingPos, Rotation2d startingRotation) {
         kinematics = new SwerveDriveKinematics(Constants.Swerve.moduleTranslations);
 
 
@@ -97,8 +97,8 @@ public class Chassis extends SubsystemBase {
 
 
         field = new Field2d();
-        Shuffleboard.getTab("Comp").add("field", field);
-        n_fieldOrriented = Shuffleboard.getTab("Comp").add("field orriented", false).getEntry();
+        SmartDashboard.putData("Field", field);
+        n_fieldOrriented = Shuffleboard.getTab("Chassis").add("field orriented", false).getEntry();
 
         AutoBuilder.configureHolonomic(
                 this::getPose2d, // Robot pose supplier
@@ -117,9 +117,7 @@ public class Chassis extends SubsystemBase {
      * y is the velocity in the y dimension m/s
      * theta is the angular (holonomic) speed of the bot
      */
-    public void drive(double x, double y, double theta) {
-        drive(x, y, theta, getFieldRelative());
-    }
+
 
     /**
      * drive(x, y, theta) with additional parameter for if robot is field relative or not
@@ -143,6 +141,11 @@ public class Chassis extends SubsystemBase {
         return fieldRelative;
     }
 
+    // Zeros the Navx's heading
+    public void zeroHeading(){
+        Navx.resetNavX();
+    }
+    
     // sets field oriented (field or robot oriented) to the provided boolean
     public void setWhetherFieldOriented(boolean fieldOriented) {
         fieldRelative = fieldOriented;

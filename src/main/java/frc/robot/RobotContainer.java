@@ -4,17 +4,23 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.*;
 import frc.robot.subsystems.CameraSubsystem;
+import frc.robot.commands.Chassis.FlipDriveOrientation;
 import frc.robot.commands.Chassis.TeleopDrive;
 import frc.robot.commands.Chassis.ZeroEverything;
 import frc.robot.commands.Chassis.ZeroWheels;
@@ -23,6 +29,8 @@ import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.commands.Shooter.*;
 import frc.robot.subsystems.CameraSubsystem;
 import frc.robot.subsystems.*;
+import frc.robot.subsystems.Chassis;
+import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import java.util.function.BooleanSupplier;
@@ -43,18 +51,23 @@ public class RobotContainer {
   private final XboxController driverController = new XboxController(0);
   private final XboxController operatorController = new XboxController(1);
   private final Shooter shooter;
-  private final Indexer indexer;
   private final Intake intake;
   private final TeleopDrive teleopDrive = new TeleopDrive(chassis,driverController,cameraSubsystem);
+  private final Indexer indexer;
+  private final Chassis chassis;
+  private final Hopper hopper;
+  private final SendableChooser<Command> autoChooser;
 
   // container for the robot containing subsystems, OI devices, and commands
   public RobotContainer() {
     shooter = new Shooter();
     indexer = new Indexer();
     intake = new Intake();
+    hopper = new Hopper();
 
     // Named commands must be registered before the creation of any PathPlanner Autos or Paths
     // Do this in RobotContainer, after subsystem initialization, but before the creation of any other commands.
+    NamedCommands.registerCommand("spinHopper", hopper.spinHopperAuto());
 
     configureBindings(); // configure button bindings
     exportShuffleBoardData(); // export ShuffleBoardData
@@ -62,13 +75,22 @@ public class RobotContainer {
     chassis.setDefaultCommand(new TeleopDrive(chassis, driverController, cameraSubsystem));
     configureBindings();
     // Default commands running in the background when other commands not scheduled
+    chassis.setDefaultCommand(new TeleopDrive(chassis, driverController));
 
     // Build an auto chooser. This will use Commands.none() as the default option.
     // autoChooser = AutoBuilder.buildAutoChooser();
+    autoChooser = AutoBuilder.buildAutoChooser("up");
 
-    // An
+    SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
+  public Command pick() {
+    return autoChooser.getSelected();
+  }
+
+  public Command getPullOut() {
+    return new PathPlannerAuto("Pull out");
+  }
 
 
   /**
@@ -80,6 +102,11 @@ public class RobotContainer {
     // An example command will be run in autonomous
     return Autos.exampleAuto(m_exampleSubsystem);
   }
+
+  public Command resetEverything() {
+    return new ZeroEverything(chassis);
+  }
+
 
   public void periodic() {
 
@@ -153,5 +180,7 @@ public class RobotContainer {
     //new JoystickButton(driverController, Constants.Buttons.LST_BTN_A).whileTrue(new OnlyShoot(shooter));
 
     //new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new VelocityShoot(shooter));
+
+    SmartDashboard.putData(new FlipDriveOrientation(chassis));
 
   }

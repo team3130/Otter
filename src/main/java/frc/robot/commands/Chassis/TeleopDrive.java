@@ -25,6 +25,9 @@ public class TeleopDrive extends Command {
   private final XboxController xboxController;
   private final CameraSubsystem camera;
   private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
+  public TeleopDrive(Chassis chassis, XboxController xboxController) {
+    this.chassis = chassis;
+    this.xboxController = xboxController;
 
   public TeleopDrive(Chassis chassis, XboxController xboxController, CameraSubsystem camera) {
     this.chassis = chassis;

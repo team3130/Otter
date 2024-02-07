@@ -38,6 +38,10 @@ public class CameraSubsystem extends SubsystemBase {
   private double targetI = 0d;
   private double targetD = 0d;
 
+  private double XtargetV = 0.2;
+  private double YtargetF = 0.8;
+
+
   /**
    * Constructs a new Limelight object.
    * The limelight object will be full of null values if Constants.useAprilTags is false.
@@ -80,6 +84,12 @@ public class CameraSubsystem extends SubsystemBase {
   public void setTryingToTargetFalse(){
     isTryingToTarget=false;
   }
+  public void setXTargetV(double newXF){
+    XtargetV = newXF ;
+  }
+  public void setYTargetV(double newYF){
+    YtargetF = newYF ;
+  }
 
 
   public double getTargetP() {
@@ -95,6 +105,18 @@ public class CameraSubsystem extends SubsystemBase {
   public double getTargetD() {
     return targetD;
   }
+
+  public double getXTargetV() {
+    return XtargetV;
+  }
+  public double getYTargetV() {
+    return YtargetF;
+  }
+  public int getFiducialID() {
+    return fiducialID;
+  }
+
+
   public void setTargetP(double newP){
     targetP = newP;
   }
@@ -163,7 +185,7 @@ public class CameraSubsystem extends SubsystemBase {
     } else {
       PhotonPipelineResult result = camera.getLatestResult();
       if (result.getBestTarget() != null && result.getBestTarget().getPitch() != -400.0) {
-        return -Math.toRadians(result.getBestTarget().getPitch());
+        return Math.toRadians(result.getBestTarget().getYaw());
       }
     }
     return -400d;
@@ -191,6 +213,12 @@ public class CameraSubsystem extends SubsystemBase {
     builder.addDoubleProperty("target I", this::getTargetI, this::setTargetI);
     builder.addDoubleProperty("target D", this::getTargetD, this::setTargetD);
     builder.addBooleanProperty("is targeting", this::getIsTryingToTarget, null);
+    builder.addDoubleProperty("target F", this::getXTargetV, this::setXTargetV);
+    builder.addDoubleProperty("target YF", this::getYTargetV, this::setYTargetV);
+    builder.addDoubleProperty("target XF", this::getXTargetV, this::setXTargetV);
+
+
+
   }
 
   // This method will be called once per scheduler run
