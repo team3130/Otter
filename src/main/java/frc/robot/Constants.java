@@ -72,7 +72,21 @@ public final class Constants {
 
   }
   public static class AprilTags {
-    public static final boolean useAprilTags = false;
+      public static final double TARGET_HEIGHT_METERS = Units.feetToMeters(0);
+      // TEST TODO: change vaues obviously
+      // Constants such as camera and target height stored. Change per robot and goal!
+      public static final double  CAMERA_HEIGHT_METERS = Units.inchesToMeters(0);
+      // Angle between horizontal and the camera.
+      public static final double CAMERA_PITCH_RADIANS = Units.degreesToRadians(0);
+      // TODO: below is wrong
+      public static double kTargetPitch = Units.inchesToMeters(0);
+
+      // How far from the target we want to be
+      final double GOAL_RANGE_METERS = Units.feetToMeters(3);
+
+
+
+      public static final boolean useAprilTags = false;
 
     // The position and orientation of the camera in meters
     public static final double xPos = Units.inchesToMeters(0);
@@ -92,6 +106,10 @@ public final class Constants {
 
     public static double kCameraFOV = 0; // TODO: Find real value
     public static final double AprilTagTrustDistance = 5;
+    public static final int speakerTargetRedFiducialID = 4;
+    public static final int speakerTargetBlueFiducialID = 7;
+    public static final int ampTargetRedFiducialID = 5;
+    public static final int ampTargetBlueFiducialID = 6;
   }
 
   /**
@@ -135,22 +153,22 @@ public final class Constants {
     public final static double kMaxAccelerationDrive = 7;
     public final static double kMaxAccelerationAngularDrive = 4.0*Math.PI;
 
-    public final static double kP_FrontRight = 0.0;
+    public final static double kP_FrontRight = 1.0;
     public final static double kI_FrontRight = 0;
     public final static double kD_FrontRight = 0;
     public final static double kF_FrontRight = 0;
 
-    public final static double kP_FrontLeft = 0;
+    public final static double kP_FrontLeft = 1.0;
     public final static double kI_FrontLeft = 0;
     public final static double kD_FrontLeft = 0;
     public final static double kF_FrontLeft = 0;
 
-    public final static double kP_BackLeft = 0;
+    public final static double kP_BackLeft = 1.0;
     public final static double kI_BackLeft = 0;
     public final static double kD_BackLeft = 0;
     public final static double kF_BackLeft = 0;
 
-    public final static double kP_BackRight = 0;
+    public final static double kP_BackRight = 1.0;
     public final static double kI_BackRight = 0;
     public final static double kD_BackRight = 0;
     public final static double kF_BackRight = 0;
@@ -168,6 +186,32 @@ public final class Constants {
       0.35, // Drive base radius in meters. Distance from robot center to furthest module.
       new ReplanningConfig() // Default path replanning config. See the API for the options here
     );
+  }
+
+  public static class Modules {
+    public static final int leftFront = 0;
+    public static final int leftBack = 1;
+    public static final int rightFront = 2;
+    public static final int rightBack = 3;
+  }
+  
+  public static class EncoderOffsets {
+    public static final double kTopLeftOffset = 1.498607; // Math.toRadians(268.682);
+    public static final double kBottomLeftOffset = 1.71; //Math.toRadians(281.426);
+    public static final double kTopRightOffset = -0.8436; //Math.toRadians(129.3);
+    public static final double kBottomRightOffset = 3.14772592; //Math.toRadians(0);
+    public static final double[] kCANCoderOffsets = new double[] {kTopLeftOffset, kBottomLeftOffset, kTopRightOffset, kBottomRightOffset};
+  }
+
+  // gear ratios and/or ticks per rev, etc.
+  public static class Conversions {
+    public final static double kDriveGearRatio = 6.73; // Checked 2/2/24 //6.75  checked 1/19/23
+    public final static double kSteerGearRatio = 21.4317; // Checked 2/2/24 //150d/7d = 21.42857  checked 1/19
+    public static final double kWheelDiameter = Units.inchesToMeters(4);
+    public final static double DriveRotToMeters = kWheelDiameter * Math.PI * 1/(kDriveGearRatio); // multiply by
+    public static final double SteerRotToRads = 1/(kSteerGearRatio) * Math.PI * 2; // multiply by position
+    public static final double DriveRotToMetersPerSecond = DriveRotToMeters * 10; // multiply by velocity
+    public static final double SteerRotToRadsPerSecond = SteerRotToRads * 10; // multiply by velocity
   }
 
   public static class Auton {
@@ -189,32 +233,6 @@ public final class Constants {
     // spiny PID constraints
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
             kMaxAngularSpeedRadiansPerSecond, kMaxAngularAccelerationRadiansPerSecondSquared);
-  }
-
-  public static class Modules {
-    public static final int leftFront = 0;
-    public static final int leftBack = 1;
-    public static final int rightFront = 2;
-    public static final int rightBack = 3;
-  }
-
-  public static class EncoderOffsets {
-    public static final double kTopLeftOffset = 0; // Math.toRadians(268.682);
-    public static final double kBottomLeftOffset = 0; // Math.toRadians(281.426);
-    public static final double kTopRightOffset = 0; // Math.toRadians(129.3);
-    public static final double kBottomRightOffset = 0; // Math.toRadians(0);
-    public static final double[] kCANCoderOffsets = new double[] {kTopLeftOffset, kBottomLeftOffset, kTopRightOffset, kBottomRightOffset};
-  }
-
-  // gear ratios and/or ticks per rev, etc.
-  public static class Conversions {
-    public final static double kDriveGearRatio = 6.73; // Checked 2/2/24 //6.75  checked 1/19/23
-    public final static double kSteerGearRatio = 21.4317; // Checked 2/2/24 //150d/7d = 21.42857  checked 1/19
-    public static final double kWheelDiameter = Units.inchesToMeters(4);
-    public final static double DriveRotToMeters = kWheelDiameter * Math.PI * 1/(kDriveGearRatio); // multiply by
-    public static final double SteerRotToRads = 1/(kSteerGearRatio) * Math.PI * 2; // multiply by position
-    public static final double DriveRotToMetersPerSecond = DriveRotToMeters ; // multiply by velocity
-    public static final double SteerRotToRadsPerSecond = SteerRotToRads; // multiply by velocity
   }
 
   public static class Buttons {
