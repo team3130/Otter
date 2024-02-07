@@ -25,6 +25,7 @@ public class CameraSubsystem extends SubsystemBase {
   AprilTagFieldLayout aprilTagFieldLayout;
   Pose2d targetPose = new Pose2d(16.58, 5.55, Rotation2d.fromRadians(0));
   Transform2d cameraToRobot = new Transform2d(3, 0, Rotation2d.fromRadians(0));
+  private PhotonTrackedTarget CorrectTarget;
   private double previousPipelineTimestamp = 0;
   private int speakerTargetFiducialID;
   private int ampTargetFiducialID;
@@ -166,18 +167,16 @@ public class CameraSubsystem extends SubsystemBase {
   // AprilTagFieldLayout.getTagPose(getTarget().getFiducialId())
 
   public boolean hasTarget() {
-    PhotonPipelineResult result = camera.getLatestResult();
-    return result.hasTargets();
+    return ! (CorrectTarget == null);
   }
-
-
+  
   public double getTargetYaw() {
     if (!hasTarget()) {
       return -400.0;
     } else {
-      PhotonPipelineResult result = camera.getLatestResult();
-      if (result.getBestTarget() != null && result.getBestTarget().getPitch() != -400.0) {
-        return Math.toRadians(result.getBestTarget().getYaw());
+      PhotonTrackedTarget result = CorrectTarget;
+      if (result != null && result.getYaw() != -400.0) {
+        return Math.toRadians(result.getYaw());
       }
     }
     return -400d;
@@ -209,11 +208,22 @@ public class CameraSubsystem extends SubsystemBase {
   public void periodic() {
     PhotonPipelineResult result = camera.getLatestResult();
     double resultTimestamp = result.getTimestampSeconds();
-    if (result.hasTargets() && result.getBestTarget() != null) {
-      previousPipelineTimestamp = resultTimestamp;
-      PhotonTrackedTarget target = result.getBestTarget();
-      fiducialID = result.getBestTarget().getFiducialId();
+    int i = 0;
+    int correctTagIndex = 0;
+    while (result.getTargets().get(i)!= null){
+      if (result.getTargets().get(i).getFiducialId() == speakerTargetFiducialID){
+        correctTagIndex = i;
+      }
+      i++;
     }
+    if (result.hasTargets() && result.getTargets().get(correctTagIndex) != null) {
+      previousPipelineTimestamp = resultTimestamp;
+      setCurrentTag(result.getTargets().get(correctTagIndex));
+      //fiducialID = result.getBestTarget().getFiducialId();
+    }
+  }
+  public void setCurrentTag(PhotonTrackedTarget target){
+    CorrectTarget = target;
   }
 
   @Override
