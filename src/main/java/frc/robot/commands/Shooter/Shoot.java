@@ -4,28 +4,22 @@
 
 package frc.robot.commands.Shooter;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Indexer;
-import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 
 /** An example command that uses an example subsystem. */
 public class Shoot extends Command {
     @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
     private final Shooter m_shooter;
-    private final Indexer m_indexer;
-    private final Intake m_intake;
+    //private final Intake m_intake;
     private Timer spinUpTime = new Timer();
-    public Shoot(Shooter shooter, Indexer index, Intake intake) {
+    public Shoot(Shooter shooter) {
         m_shooter = shooter;
-        m_indexer = index;
-        m_intake = intake;
+       // m_intake = intake;
 
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(shooter);
-        addRequirements(index);
     }
 
     // Called when the command is initially scheduled.
@@ -34,14 +28,14 @@ public class Shoot extends Command {
         spinUpTime.reset();
         spinUpTime.start();
         m_shooter.runShooters();
-        m_intake.runIntake();
+        //m_intake.runIntake();
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        if (spinUpTime.hasElapsed(0.5)){
-            m_indexer.runIndexers();
+        if (spinUpTime.hasElapsed(1)){
+            m_shooter.runIndexers();
         }
     }
 
@@ -49,8 +43,8 @@ public class Shoot extends Command {
     @Override
     public void end(boolean interrupted) {
         m_shooter.stopShooters();
-        m_indexer.stopIndexers();
-        m_intake.stopIntake();
+        m_shooter.stopIndexers();
+       // m_intake.stopIntake();
     }
 
     // Returns true when the command should end.

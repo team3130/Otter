@@ -4,6 +4,9 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VelocityVoltage;
@@ -14,19 +17,15 @@ import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Shooter extends SubsystemBase {
-    private final TalonFX leftFlywheel9; // we should probably change these names once we learn more
-    private final TalonFX rightFlywheel8; // we should probably change these names once we learn more
-    double proportionVolt = 1.05;
-    final double leftFlywheelVolt = 9;
-    final double rightFlywheelVolt = 9 * proportionVolt ;
-    final VoltageOut leftFlywheelVoltReq = new VoltageOut(0);
-    final VoltageOut rightFlywheelVoltReq = new VoltageOut(0);
-
-
+    private final TalonFX leftFlywheel; // we should probably change these names once we learn more
+    private final TalonFX rightFlywheel; // we should probably change these names once we learn more
+    double proportionVolt = 1d;
+    final VoltageOut leftVoltReq = new VoltageOut(0);
+    final VoltageOut rightVoltReq = new VoltageOut(0);
     final VelocityVoltage leftVelocityRequest = new VelocityVoltage(0).withSlot(0); // class instance
     final VelocityVoltage rightVelocityRequest = new VelocityVoltage(0).withSlot(0);
-
-    final double flyWheelVelocity = 8;
+    final double leftVelocitySetpoint = 8;
+    private double flywheelVolts = 3;
 
     Slot0Configs slot0Configs; // gains for specific slot
     /*
@@ -42,17 +41,23 @@ public class Shooter extends SubsystemBase {
     private double kD = 0;
     private double feedForwardVolt;
 
+    private final WPI_TalonSRX indexMotor; // we should probably change these names once we learn more
+    //private final WPI_TalonSRX motor6; // we should probably change these names once we learn more
+    private double indexSpeed = 0.50;
+
 
     public Shooter() {
-        leftFlywheel9 = new TalonFX(9);
-        rightFlywheel8 = new TalonFX(8);
+        leftFlywheel = new TalonFX(9);
+        rightFlywheel = new TalonFX(8);
 
-        leftFlywheel9.getConfigurator().apply(new TalonFXConfiguration()); // config factory default
-        rightFlywheel8.getConfigurator().apply(new TalonFXConfiguration()); // config factory default
-        leftFlywheel9.setNeutralMode(NeutralModeValue.Coast);
-        rightFlywheel8.setNeutralMode(NeutralModeValue.Coast);
+        leftFlywheel.getConfigurator().apply(new TalonFXConfiguration()); // config factory default
+        rightFlywheel.getConfigurator().apply(new TalonFXConfiguration()); // config factory default
 
-        rightFlywheel8.setInverted(true);
+        leftFlywheel.setNeutralMode(NeutralModeValue.Coast);
+        rightFlywheel.setNeutralMode(NeutralModeValue.Coast);
+
+        rightFlywheel.setInverted(true);
+        leftFlywheel.setInverted(true);
 
         slot0Configs = new Slot0Configs(); // gains for specific slot
 
@@ -63,27 +68,49 @@ public class Shooter extends SubsystemBase {
         slot0Configs.kI = kI; // 1/rot - output per unit of integrated error in velocity (output/rotation)
         slot0Configs.kD = kD; // output per unit of error derivative in velocity (output/ (rps/s))
         // leftFlywheel9.getConfigurator().apply(new Slot0Configs());
+
+        indexMotor = new WPI_TalonSRX(10);
+
+        indexMotor.configVoltageCompSaturation(4);
+
+        indexMotor.configFactoryDefault();
+        indexMotor.setNeutralMode(NeutralMode.Brake);
+        indexMotor.setInverted(true);
+
     }
 
     public void runShooters() {
-        leftFlywheel9.setControl(leftFlywheelVoltReq.withOutput(5));
-        rightFlywheel8.setControl(rightFlywheelVoltReq.withOutput(5));
+        leftFlywheel.setControl(leftVoltReq.withOutput(flywheelVolts));
+        rightFlywheel.setControl(rightVoltReq.withOutput(flywheelVolts));
     }
 
     public void stopShooters() {
-        leftFlywheel9.setControl(leftFlywheelVoltReq.withOutput(0));
-        rightFlywheel8.setControl(rightFlywheelVoltReq.withOutput(0));
+        leftFlywheel.setControl(leftVoltReq.withOutput(0));
+        rightFlywheel.setControl(rightVoltReq.withOutput(0));
+    }
+
+    public void runIndexers() {
+        indexMotor.set(ControlMode.PercentOutput, indexSpeed);
+    }
+
+    public double getIndexSpeed() {return indexSpeed;}
+    public void setIndexSpeed(double speedy){
+        indexSpeed = speedy;
+    }
+
+    public void stopIndexers() {
+        indexMotor.set(ControlMode.PercentOutput, 0);
     }
 
     public void updateVelocityPID() {
-        leftFlywheel9.getConfigurator().apply(slot0Configs);
-        rightFlywheel8.getConfigurator().apply(slot0Configs);
+        leftFlywheel.getConfigurator().apply(slot0Configs);
+        rightFlywheel.getConfigurator().apply(slot0Configs);
         // leftFlywheel9.getConfigurator().apply(new Slot0Configs());
     }
 
     public void setFlywheelVelocity() {
         // velocityRequest.Slot = 0; // this is probably redudant now
-        rightFlywheel8.setControl(leftVelocityRequest.withVelocity(flyWheelVelocity).withFeedForward(feedForwardVolt));
+        rightFlywheel.setControl(leftVelocityRequest.withVelocity(leftVelocitySetpoint).withFeedForward(feedForwardVolt));
 
         // ALT way: set velocity to 8 rps, add 0.5 V to overcome gravity
         // m_talonFX.setControl(velocityRequest.withVelocity(8).withFeedForward(0.5));
@@ -111,32 +138,37 @@ public class Shooter extends SubsystemBase {
     }
 
     public double getSpeed8() {
-        return rightFlywheel8.getSupplyVoltage().getValue();
+        return rightFlywheel.getSupplyVoltage().getValue();
     }
     public double getSpeed9() {
-        return leftFlywheel9.getSupplyVoltage().getValue();
+        return leftFlywheel.getSupplyVoltage().getValue();
     }
 
     public double getVelocityMotor8() {
-        return rightFlywheel8.getVelocity().getValue() * 60;
+        return rightFlywheel.getVelocity().getValue() * 60;
     }
 
     public double getVelocityMotor9() {
-        return leftFlywheel9.getVelocity().getValue() * 60;
+        return leftFlywheel.getVelocity().getValue() * 60;
     }
 
     public double getRightFlyVoltSupply() {
-        return rightFlywheel8.getSupplyVoltage().getValue();
+        return rightFlywheel.getSupplyVoltage().getValue();
     }
 
     public double getLeftFlywheelVoltSupply() {
-        return leftFlywheel9.getSupplyVoltage().getValue();
+        return leftFlywheel.getSupplyVoltage().getValue();
     }
 
     public double getRightFlyCurrent() {
-        return rightFlywheel8.getSupplyCurrent().getValue();
+        return rightFlywheel.getSupplyCurrent().getValue();
     }
 
+    public double getFlywheelVolts(){
+        return flywheelVolts;
+    }
+    public void setFlywheelVolts(double volt){flywheelVolts = volt;
+    }
     public double getkS() { return kS; }
     public double getkV() { return kV; }
     public double getkP() { return kP; }
@@ -161,12 +193,17 @@ public class Shooter extends SubsystemBase {
 
         builder.addDoubleProperty("right volt supply", this::getRightFlyVoltSupply, null);
         builder.addDoubleProperty("left volt supply", this::getLeftFlywheelVoltSupply, null);
+        builder.addDoubleProperty("shooter volts", this::getFlywheelVolts, this::setFlywheelVolts);
+
 
         builder.addDoubleProperty("velocity kS", this::getkS, this::setkS);
         builder.addDoubleProperty("velocity kV", this::getkV, this::setkV);
         builder.addDoubleProperty("velocity kP", this::getkP, this::setkP);
         builder.addDoubleProperty("velocity kI", this::getkI, this::setkI);
         builder.addDoubleProperty("velocity kD", this::getkD, this::setkD);
+
+        builder.setSmartDashboardType("Indexer");
+        builder.addDoubleProperty("speed", this::getIndexSpeed, this::setIndexSpeed);
     }
 
     @Override

@@ -31,15 +31,11 @@ public class RobotContainer {
   private final XboxController driverController = new XboxController(0);
   private final XboxController operatorController = new XboxController(1);
   private final Shooter shooter;
-  private final Indexer indexer;
-  private final Intake intake;
   private final ShooterShifter shooterShifter;
 
   // container for the robot containing subsystems, OI devices, and commands
   public RobotContainer() {
     shooter = new Shooter();
-    indexer = new Indexer();
-    intake = new Intake();
     shooterShifter = new ShooterShifter();
 
     // Named commands must be registered before the creation of any PathPlanner Autos or Paths
@@ -79,7 +75,6 @@ public class RobotContainer {
     if (Constants.debugMode) {
       ShuffleboardTab tab = Shuffleboard.getTab("Subsystems");
       tab.add(shooter);
-      tab.add(intake);
     }
   }
 
@@ -96,18 +91,18 @@ public class RobotContainer {
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed, cancelling on release.
     // driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
 
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new Shoot(shooter, indexer, intake));
 
-    //new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new OnlyIndex(indexer));
+    new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new OnlyIndex(shooter));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_A).whileTrue(new OnlyShoot(shooter));
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_Y).whileTrue(new IntakeCommand(intake));
+    new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new Shoot(shooter));
 
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new VelocityShoot(shooter));
+
+    /*new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new VelocityShoot(shooter));
 
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new DoubleRetract(shooterShifter));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new ShifterOneExtend(shooterShifter));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new ShifterTwoExtend(shooterShifter));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new DoubleExtend(shooterShifter));
-
+*/
   }
 }
