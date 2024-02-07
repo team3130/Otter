@@ -12,19 +12,17 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.*;
-import frc.robot.commands.Chassis.FlipDriveOrientation;
 import frc.robot.commands.Chassis.TeleopDrive;
 import frc.robot.commands.Chassis.ZeroEverything;
 import frc.robot.commands.Chassis.ZeroWheels;
+import frc.robot.commands.Climber.PitClimber;
 import frc.robot.commands.Climber.ClimberExtend;
-import frc.robot.commands.Climber.ResetClimbers;
 import frc.robot.sensors.Camera;
 import frc.robot.subsystems.Chassis;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.commands.Shooter.*;
 import frc.robot.subsystems.*;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import java.util.function.BooleanSupplier;
 
@@ -54,8 +52,10 @@ public class RobotContainer {
     limelight = new Camera();
     chassis = new Chassis(limelight);
     hopper = new Hopper();
-    leftClimber = new Climber(10, 0);
-    rightClimber = new Climber(11, 1);
+
+    leftClimber = new Climber(Constants.Climber.kLMotor, Constants.Climber.kLLimitSwitch, Constants.Buttons.LST_AXS_LJOYSTICKY);
+    rightClimber = new Climber(Constants.Climber.kRMotor, Constants.Climber.kRLimitSwitch, Constants.Buttons.LST_AXS_RJOYSTICKY);
+
     shooter = new Shooter();
     indexer = new Indexer();
     intake = new Intake();
@@ -68,8 +68,9 @@ public class RobotContainer {
 
     // Default commands running in the background when other commands not scheduled
     chassis.setDefaultCommand(new TeleopDrive(chassis, driverController));
-    leftClimber.setDefaultCommand(new ClimberExtend(leftClimber, driverController, Constants.Buttons.LST_AXS_RJOYSTICKY));
-    rightClimber.setDefaultCommand(new ClimberExtend(rightClimber, driverController, Constants.Buttons.LST_AXS_LJOYSTICKY));
+    leftClimber.setDefaultCommand(new ClimberExtend(leftClimber, operatorController));
+    rightClimber.setDefaultCommand(new ClimberExtend(rightClimber, operatorController));
+
 
     // Build an auto chooser. This will use Commands.none() as the default option.
     // autoChooser = AutoBuilder.buildAutoChooser();
@@ -123,18 +124,16 @@ public class RobotContainer {
   // CommandPS4Controller subclass for PS4 Controller
   // CommandJoystick for flight joysticks
   private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    new Trigger(m_exampleSubsystem::exampleCondition).onTrue(new ExampleCommand(m_exampleSubsystem));
-
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed, cancelling on release.
-    // driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
 
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new Shoot(shooter, indexer, intake));
     new POVButton(driverController, Constants.Buttons.LST_POV_N).whileTrue(new ZeroEverything(chassis));
     new POVButton(driverController, Constants.Buttons.LST_POV_W).whileTrue(new ZeroWheels(chassis));
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new FlipDriveOrientation(chassis));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_Y).whileTrue(new SpinHopper(hopper));
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_A).whileTrue(new ResetClimbers(leftClimber));
+
+
+    new JoystickButton(driverController, Constants.Buttons.LST_POV_E).whileTrue(new PitClimber(leftClimber));
+    new JoystickButton(driverController, Constants.Buttons.LST_POV_S).whileTrue(new PitClimber(rightClimber));
+
 
     //new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new OnlyIndex(indexer));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_A).whileTrue(new OnlyShoot(shooter));

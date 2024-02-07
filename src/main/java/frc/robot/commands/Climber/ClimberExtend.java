@@ -6,13 +6,12 @@ package frc.robot.commands.Climber;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc.robot.Constants;
 import frc.robot.subsystems.Climber;
 
 /** An example command that uses an example subsystem. */
 public class ClimberExtend extends Command {
     private final Climber climber;
+
     private XboxController xboxController;
     private int joystickButton;
 
@@ -21,10 +20,9 @@ public class ClimberExtend extends Command {
      *
      * @param subsystem The subsystem used by this command.
     */
-    public ClimberExtend(Climber subsystem, XboxController xboxController, int joystickButton) {
-        climber = subsystem;
+    public ClimberExtend(Climber side,  XboxController xboxController) {
+        climber = side;
         this.xboxController = xboxController;
-        this.joystickButton = joystickButton;
         addRequirements(climber);
     }
 
@@ -36,16 +34,18 @@ public class ClimberExtend extends Command {
     @Override
     public void execute() {
         // reads joystick input as y
-        double y = xboxController.getRawAxis(joystickButton);
-        y = y * Math.abs(y);
+        double power = xboxController.getRawAxis(climber.getJoystick());
+        power = power * Math.abs(power);
+
 
         // checks if limit switch has been broken
-        if (climber.brokeLimit() && y < 0) {
-            y = 0;
+        if (climber.brokeLimit() || power > 0) {
+            power = 0;
+            //TODO Flash LEDS
         }
 
         //sets the speed of the motor
-        climber.setSpeed(y);
+        climber.setMotorSpeed(power);
     }
 
     // Called once the command ends or is interrupted.
