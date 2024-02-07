@@ -21,7 +21,7 @@ import frc.robot.commands.Chassis.ZeroWheels;
 import frc.robot.subsystems.Chassis;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.commands.Shooter.*;
-import frc.robot.sensors.Camera;
+import frc.robot.subsystems.CameraSubsystem;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -45,8 +45,7 @@ public class RobotContainer {
   private final Shooter shooter;
   private final Indexer indexer;
   private final Intake intake;
-  private final Camera camera;
-  private final Chassis chassis;
+  private final CameraSubsystem camera;
   private final TeleopDrive teleopDrive;
 
   // container for the robot containing subsystems, OI devices, and commands
@@ -54,7 +53,7 @@ public class RobotContainer {
     shooter = new Shooter();
     indexer = new Indexer();
     intake = new Intake();
-    camera = new Camera();
+    camera = new CameraSubsystem();
     chassis = new Chassis(camera);
 
     // Named commands must be registered before the creation of any PathPlanner Autos or Paths
@@ -63,7 +62,7 @@ public class RobotContainer {
     configureBindings(); // configure button bindings
     exportShuffleBoardData(); // export ShuffleBoardData
 
-    chassis.setDefaultCommand(new TeleopDrive(chassis, driverGamepad, cameraSubsystem));
+    chassis.setDefaultCommand(new TeleopDrive(chassis, driverController, cameraSubsystem));
     configureBindings();
     // Default commands running in the background when other commands not scheduled
 
@@ -142,7 +141,7 @@ public class RobotContainer {
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new ToggleOdoFaceTarget(chassis));
   }
 
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new Shoot(shooter, indexer, intake));
+    //new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new Shoot(shooter, indexer, intake));
   /*
   Sendable Commands
    */
@@ -154,9 +153,8 @@ public class RobotContainer {
   }
 
     //new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new OnlyIndex(indexer));
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_A).whileTrue(new OnlyShoot(shooter));
+    //new JoystickButton(driverController, Constants.Buttons.LST_BTN_A).whileTrue(new OnlyShoot(shooter));
 
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new VelocityShoot(shooter));
+    //new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new VelocityShoot(shooter));
 
   }
-}
