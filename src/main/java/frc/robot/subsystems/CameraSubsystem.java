@@ -20,7 +20,6 @@ import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
-import org.photonvision.
 
 
 public class CameraSubsystem extends SubsystemBase {
@@ -169,6 +168,10 @@ public class CameraSubsystem extends SubsystemBase {
     }
     return -400d;
   }
+  public int getFiducialID() {
+    return fiducialID;
+  }
+
   public double getTargetDegrees() {
     return Math.toDegrees(getTargetYaw());
   }

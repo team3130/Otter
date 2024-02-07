@@ -45,16 +45,13 @@ public class RobotContainer {
   private final Shooter shooter;
   private final Indexer indexer;
   private final Intake intake;
-  private final CameraSubsystem camera;
-  private final TeleopDrive teleopDrive;
+  private final TeleopDrive teleopDrive = new TeleopDrive(chassis,driverController,cameraSubsystem);
 
   // container for the robot containing subsystems, OI devices, and commands
   public RobotContainer() {
     shooter = new Shooter();
     indexer = new Indexer();
     intake = new Intake();
-    camera = new CameraSubsystem();
-    chassis = new Chassis(camera);
 
     // Named commands must be registered before the creation of any PathPlanner Autos or Paths
     // Do this in RobotContainer, after subsystem initialization, but before the creation of any other commands.
