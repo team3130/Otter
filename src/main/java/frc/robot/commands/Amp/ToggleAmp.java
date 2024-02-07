@@ -8,13 +8,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Amp;
 
 /** An example command that uses an example subsystem. */
-public class AmpPrime extends Command {
+public class ToggleAmp extends Command {
   private final Amp amp;
 
   /**
    * @param amp The subsystem used by this command.
    */
-  public AmpPrime(Amp amp) {
+  public ToggleAmp(Amp amp) {
     this.amp = amp;
     addRequirements(amp);
   }
@@ -22,7 +22,7 @@ public class AmpPrime extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    amp.primeAmp();
+    amp.toggleAmp();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

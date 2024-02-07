@@ -19,36 +19,39 @@ public class Intake extends SubsystemBase {
   /**
    * Creates a new ExampleSubsystem.
    */
-  private final WPI_TalonSRX intakemotor;
+  private final WPI_TalonSRX intakeMotor;
   private final Solenoid intakesolenoid1;
   private final Solenoid intakesolenoid2;
 
   private final DigitalInput limitSwitch1;
+  private double dropTime = 0.2;
 
   public static double maxIntakeTicks = 300; //This number represents the distance from the Limit Switch to the point where we want the disk to stop
 
   public static double bufferIntakeTicks = 200; //This number represents the distance that we want the disk to go before slowing down.
 
   public static double slowSpeed = .4; //Speed slower than dumbSpeed, in order to slow down the disk
+  public static double groundSpeed = .8; //Speed slower than dumbSpeed, in order to slow down the disk
 
   public static double dumbSpeed = .85; //Speeed value for the high speed intake/outake
 
 
   public Intake() {
-    intakemotor = new WPI_TalonSRX(Constants.CAN.intakeMotor);
+    intakeMotor = new WPI_TalonSRX(Constants.CAN.intakeMotor);
     intakesolenoid1 = new Solenoid(Constants.CAN.intakesolenoid1, PneumaticsModuleType.CTREPCM, PNM_INTAKE_ACTUATOR);
     intakesolenoid2 = new Solenoid(Constants.CAN.intakesolenoid2, PneumaticsModuleType.CTREPCM, PNM_INTAKE_ACTUATOR);
     limitSwitch1 = new DigitalInput(Constants.CAN.intakeLimitSwitch1);
 
-    intakemotor.configFactoryDefault();
+    intakeMotor.configFactoryDefault();
+    intakeMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
 
-    intakemotor.configVoltageCompSaturation(Constants.Intake.kMaxVoltageIntake);
+    intakeMotor.configVoltageCompSaturation(Constants.Intake.kMaxVoltageIntake);
 
-    intakemotor.enableVoltageCompensation(true);
+    intakeMotor.enableVoltageCompensation(true);
 
-    intakemotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+    intakeMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
 
-    intakemotor.setInverted(false);
+    intakeMotor.setInverted(false);
 
   }
   /*
@@ -62,11 +65,11 @@ public class Intake extends SubsystemBase {
    * @return value of some boolean subsystem state, such as a digital sensor.
    */
   public double getPosition() {
-    return intakemotor.getSelectedSensorPosition();
+    return intakeMotor.getSelectedSensorPosition();
   }
 
   public double getVelocity() {
-    return intakemotor.getSelectedSensorVelocity();
+    return intakeMotor.getSelectedSensorVelocity();
   }
   public double getMaxIntakeTicks() {
     return maxIntakeTicks;
@@ -74,14 +77,6 @@ public class Intake extends SubsystemBase {
 
   public void setMaxIntakeTicks(double MaxTicks) {
     maxIntakeTicks = MaxTicks;
-  }
-
-  public double getBufferIntakeTicks() {
-    return bufferIntakeTicks;
-  }
-
-  public void setBufferIntakeTicks(double BufferTicks) {
-    bufferIntakeTicks = BufferTicks;
   }
 
   public double getSlowSpeed() {
@@ -99,94 +94,58 @@ public class Intake extends SubsystemBase {
   public void setDumbSpeed(double dumbSpeed1) {
     dumbSpeed = dumbSpeed1;
   }
-
-  //This function is only ever called with the pneumatics being extending out of the frame perimeter. Need to consult with operator for preference for control scheme
-  //Linear Deceleration after a set point
-  /*
-  public void SmartIntake() {
-    if (getPosition() < bufferIntakeTicks) {
-      // this checks to see how far the motor has traveled. Because decelerating over a large time period is slower than decelerating over a shorter one,
-      // the intake will maintain its current speed for a short time until the ticks surpass the buffer tick count
-      DumbIntake();
-    } else {
-        intakemotor.set(((dumbSpeed * -1) / (maxIntakeTicks - bufferIntakeTicks)) * (getPosition() - bufferIntakeTicks) + dumbSpeed);
-      //dumb speed = ds, max ticks = mt, buffer ticks = bt, intakemotor.getSelected sensor position = x, output speed = y. All non x variables are constants which can be changed in tuning
-      // y= ((-ds)/(mt-bt))(x-bt)+ds
-      // this equation is based on the point slope equation with ((-ds)/(mt-bt)) being the equation for slope, and bt and ds being for x and y coordinates of where the two equations intersect
-      //currently ds = .85, mt = 300, and bt = 200.
-      // when paired with the above equation y = .85 in a piecewise function
-      // x < 200 { y = .85
-      // x >= 200 { y= ds*((mt-(x-bt))/mt)
-    }
-  }
-   */
-
-  //Deceleration logic in a exponential form. Might have difficulty getting the disk to its final location as it's percentage output drops below 2% after 42 ticks
-  /*
-  public void SmartIntake() {
-    if (getPosition() < bufferIntakeTicks) {
-      DumbIntake();
-    }
-    else {
-      intakemotor.set((dumbSpeed) * (1 / (getPosition()) - (bufferIntakeTicks - 1)));
-    }
-  }
-   */
-
-  //Two preset Speeds, no deceleration logic
-  public void SmartIntake(){
-    if (getPosition() < bufferIntakeTicks) {
-      DumbIntake();
-    }
-    else {
-      if (getPosition() <= bufferIntakeTicks && getPosition() < maxIntakeTicks){
-        SlowIntake();
-      }
-      else {
-        Stoptake();
-      }
-    }
-  }
-  public boolean intakeLimitSwitch1(){
+ public boolean intakeLimitSwitch1(){
     return limitSwitch1.get();
   }
   public void DumbIntake(){
-    intakemotor.set(dumbSpeed);
+    intakeMotor.set(dumbSpeed);
   }
   public void DumbOuttake(){
-    intakemotor.set(-dumbSpeed);
+    intakeMotor.set(-dumbSpeed);
   }
-  public void SlowIntake(){
-    intakemotor.set(slowSpeed);
+    public void GroundIntake(){
+        intakeMotor.set(groundSpeed);
+    }
+
+    public void gentleIntake(){
+    intakeMotor.set(slowSpeed);
   }
 
-  public void ResetEncoders() {
-    intakemotor.setSelectedSensorPosition(0);
+  public void resetEncoders() {
+    intakeMotor.setSelectedSensorPosition(0);
+  }
+  public boolean getLimitSwitch(){
+      return limitSwitch1.get();
   }
   
 
   public void Stoptake(){
-    intakemotor.set(0);
+    intakeMotor.set(0);
   }
 
-  public void limitSwitchCheck(){
-    if(intakeLimitSwitch1()) {
-      ResetEncoders();
-    }
-  }
+
 //This function is only ever called with the pneumatics being extending out of the frame perimeter. Need to consult with operator for preference for control scheme
 
   public void SolenoidToggle() {
     intakesolenoid1.toggle();
     intakesolenoid2.toggle();
   }
+  public void intakeDown(){
+      intakesolenoid1.set(true);
+      intakesolenoid2.set(true);
+  }
+  public void intakeUp(){
+        intakesolenoid1.set(false);
+        intakesolenoid2.set(false);
+  }
 
   public void initSendable(SendableBuilder builder) {
     builder.setSmartDashboardType("Intake");
     builder.addDoubleProperty("Distance from Limit Switch to Stop point", this::getMaxIntakeTicks, this::setMaxIntakeTicks);
-    builder.addDoubleProperty("Distance from limit Switch to Slowing Down point", this::getBufferIntakeTicks, this::setBufferIntakeTicks);
     builder.addDoubleProperty("slowSpeed", this::getSlowSpeed, this::setSlowSpeed);
     builder.addDoubleProperty("dumbSpeed", this::getDumbSpeed, this::setDumbSpeed);
+    builder.addDoubleProperty("drop time", this::getDropTime, this::setDropTime);
+
   }
   @Override
   public void periodic() {
@@ -197,4 +156,12 @@ public class Intake extends SubsystemBase {
   public void simulationPeriodic() {
     // This method will be called once per scheduler run during simulation
   }
+
+    public double getDropTime() {
+        return dropTime;
+    }
+
+    public void setDropTime(double dropTime) {
+        this.dropTime = dropTime;
+    }
 }

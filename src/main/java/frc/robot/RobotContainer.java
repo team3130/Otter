@@ -5,11 +5,6 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.commands.PathPlannerAuto;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -21,23 +16,17 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.Autos;
 import frc.robot.commands.Chassis.FlipDriveOrientation;
 import frc.robot.commands.ExampleCommand;
-import frc.robot.commands.Intake.DumbPneumatics;
-import frc.robot.commands.Intake.DumbSpintake;
-import frc.robot.commands.Intake.DumbSpouttake;
+import frc.robot.commands.Intake.Toggle;
+import frc.robot.commands.Intake.Drop_UnlimitedIntake;
 import frc.robot.commands.Intake.SmartSpintake;
 import frc.robot.commands.LED.LightUpWithNote;
 import frc.robot.commands.Shooter.OnlyShoot;
 import frc.robot.commands.Shooter.Shoot;
 import frc.robot.commands.Shooter.VelocityShoot;
 import frc.robot.commands.SpinHopper;
-import frc.robot.commands.*;
-import frc.robot.commands.Shooter.*;
 import frc.robot.commands.Amp.AmpIntake;
 import frc.robot.commands.Amp.AmpOuttake;
-import frc.robot.commands.Amp.AmpPrime;
-import frc.robot.commands.Amp.AmpUnPrime;
-import frc.robot.commands.Chassis.FlipDriveOrientation;
-import frc.robot.commands.Chassis.TeleopDrive;
+import frc.robot.commands.Amp.ToggleAmp;
 import frc.robot.commands.Chassis.ZeroEverything;
 import frc.robot.commands.Chassis.ZeroWheels;
 import frc.robot.sensors.Camera;
@@ -45,7 +34,6 @@ import frc.robot.subsystems.*;
 import frc.robot.subsystems.Amp;
 import frc.robot.subsystems.Chassis;
 import frc.robot.subsystems.ExampleSubsystem;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import java.util.function.BooleanSupplier;
 
@@ -59,7 +47,6 @@ import java.util.function.BooleanSupplier;
 // The robot's subsystems and commands are defined here...
 public class RobotContainer {
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-  private final Camera limelight;
   private final Chassis chassis;
   private final Hopper hopper;
   private final Amp amp;
@@ -160,7 +147,7 @@ public class RobotContainer {
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new FlipDriveOrientation(chassis));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_A).whileTrue(new AmpIntake(amp));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new AmpOuttake(amp));
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new AmpPrime(amp));
+    new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new ToggleAmp(amp));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new AmpUnPrime(amp));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_Y).whileTrue(new SpinHopper(hopper));
 
@@ -174,9 +161,9 @@ public class RobotContainer {
 
     SmartDashboard.putData(new FlipDriveOrientation(chassis));
     new JoystickButton(operatorController, Constants.Buttons.LST_BTN_LBUMPER).whileTrue(new DumbSpouttake(new Intake()));
-    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_RBUMPER).whileTrue(new DumbSpintake(new Intake()));
+    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_RBUMPER).whileTrue(new Drop_UnlimitedIntake(new Intake()));
     new JoystickButton(operatorController, Constants.Buttons.LST_BTN_A).whileTrue(new SmartSpintake(new Intake()));
-    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_B).whileTrue(new DumbPneumatics(new Intake()));
+    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_B).whileTrue(new Toggle(new Intake()));
   }
 
 

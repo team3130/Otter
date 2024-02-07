@@ -11,6 +11,8 @@ import frc.robot.subsystems.Intake;
 public class SmartSpintake extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final Intake intake;
+  private boolean hasPiece = false;
+  private boolean
 
   /**
    * Creates a new ExampleCommand.
@@ -25,15 +27,24 @@ public class SmartSpintake extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    intake.SolenoidToggle();
-   
+    intake.intakeDown();
+    intake.GroundIntake();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    intake.limitSwitchCheck();
-    intake.SmartIntake();
+    if (intake.getLimitSwitch() && !hasPiece){
+      hasPiece = true;
+      intake.resetEncoders();
+    }
+    if (hasPiece){
+      if (intake.getPosition() >= intake.getMaxIntakeTicks()){
+        intake.Stoptake();
+      }
+      else {intake.gentleIntake();}
+    }
+
   }
 
   // Called once the command ends or is interrupted.

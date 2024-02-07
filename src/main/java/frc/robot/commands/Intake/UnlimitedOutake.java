@@ -4,34 +4,39 @@
 
 package frc.robot.commands.Intake;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Intake;
 
 /** An example command that uses an example subsystem. */
-public class DumbSpintake extends Command {
+public class UnlimitedOutake extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final Intake intake;
+  private Timer timer;
 
   /**
    * Creates a new ExampleCommand.
    *
    * @param //subsystem The subsystem used by this command.
    */
-  public DumbSpintake(Intake Intake) {
+  public UnlimitedOutake(Intake Intake) {
     intake = Intake;
+    timer = new Timer();
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    intake.DumbIntake();
-    intake.SolenoidToggle();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    if (timer.hasElapsed(intake.getDropTime())){
+      intake.DumbOuttake();
+    }
+  }
 
   // Called once the command ends or is interrupted.
   @Override
