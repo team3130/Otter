@@ -63,6 +63,7 @@ public class Chassis extends SubsystemBase {
     private double theta = 0.0;
     private boolean isFaceTargetting = false;
     Rotation2d angleSetpoint = null;
+    private final CameraSubsystem cameraSubsystem = new CameraSubsystem();
 
     /**
      * Makes a chassis that starts at 0, 0, 0
@@ -91,9 +92,6 @@ public class Chassis extends SubsystemBase {
 
         // odometry wrapper class that has functionality for cameras that report position with latency
         odometry = new SwerveDrivePoseEstimator(kinematics, startingRotation, generatePoses(), startingPos);
-
-
-        cameraSubsystem = cameraSubsystem1;
 
 
         field = new Field2d();
@@ -204,11 +202,6 @@ public class Chassis extends SubsystemBase {
      * Getter for if swerve drive is field relative or not
      * @return bool if field relative
      */
-
-    // Zeros the Navx's heading
-    public void zeroHeading() {
-        Navx.resetNavX();
-    }
     private SwerveModuleState[] getModuleStates() {
         SwerveModuleState[] states = new SwerveModuleState[4];
         for (int i = 0; i < 4; i++) {
@@ -422,7 +415,7 @@ public class Chassis extends SubsystemBase {
         originToAprilTagVector = initialPosition.getTranslation().plus(initialAprilTagVector);
     }
     /**
-     * The same as {@link #drive(double, double, double)} except you pass in if you are field relative or not.
+     * The same as {@link #//drive(double, double, double)} except you pass in if you are field relative or not.
      * This method will drive the swerve modules based to x, y and theta vectors.
      *
      * @param //x             velocity in the x dimension m/s

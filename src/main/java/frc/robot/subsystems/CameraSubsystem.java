@@ -190,9 +190,6 @@ public class CameraSubsystem extends SubsystemBase {
     }
     return -400d;
   }
-  public int getFiducialID() {
-    return fiducialID;
-  }
 
   public double getTargetDegrees() {
     return Math.toDegrees(getTargetYaw());

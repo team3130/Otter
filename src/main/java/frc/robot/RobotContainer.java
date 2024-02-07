@@ -47,14 +47,13 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final CameraSubsystem cameraSubsystem = new CameraSubsystem();
-  private final Chassis chassis = new Chassis(cameraSubsystem);
+  private final Chassis chassis = new Chassis();
   private final XboxController driverController = new XboxController(0);
   private final XboxController operatorController = new XboxController(1);
   private final Shooter shooter;
   private final Intake intake;
   private final TeleopDrive teleopDrive = new TeleopDrive(chassis,driverController,cameraSubsystem);
   private final Indexer indexer;
-  private final Chassis chassis;
   private final Hopper hopper;
   private final SendableChooser<Command> autoChooser;
 
@@ -75,7 +74,7 @@ public class RobotContainer {
     chassis.setDefaultCommand(new TeleopDrive(chassis, driverController, cameraSubsystem));
     configureBindings();
     // Default commands running in the background when other commands not scheduled
-    chassis.setDefaultCommand(new TeleopDrive(chassis, driverController));
+    chassis.setDefaultCommand(new TeleopDrive(chassis, driverController, cameraSubsystem));
 
     // Build an auto chooser. This will use Commands.none() as the default option.
     // autoChooser = AutoBuilder.buildAutoChooser();
@@ -169,18 +168,13 @@ public class RobotContainer {
   /*
   Sendable Commands
    */
-  public Command resetEverything() {
-    return new ZeroEverything(chassis);
-  }
   public Command dontTarget() {
-    return new DisableTargeting(chassis,cameraSubsystem);
+    return new DisableTargeting(chassis, cameraSubsystem);
   }
 
     //new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new OnlyIndex(indexer));
     //new JoystickButton(driverController, Constants.Buttons.LST_BTN_A).whileTrue(new OnlyShoot(shooter));
 
     //new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new VelocityShoot(shooter));
-
-    SmartDashboard.putData(new FlipDriveOrientation(chassis));
 
   }
