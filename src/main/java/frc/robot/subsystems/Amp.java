@@ -19,7 +19,6 @@ public class Amp extends SubsystemBase {
   private final WPI_TalonSRX ampMotor;
   private double intakeAmpSpeed = 0.1;
   private double outtakeAmpSpeed = -0.1;
-  // the amount of seconds it takes for the amp to prime (pnematic to go up)
 
   public Amp() {
     pneumatic = new Solenoid(Constants.CAN.ampPCM, PneumaticsModuleType.CTREPCM, Constants.CAN.ampChannel);

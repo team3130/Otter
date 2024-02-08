@@ -7,7 +7,6 @@ package frc.robot.commands.Amp;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Amp;
 
-/** An example command that uses an example subsystem. */
 public class AmpIntake extends Command {
   private final Amp amp;
 
