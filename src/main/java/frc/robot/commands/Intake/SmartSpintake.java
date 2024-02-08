@@ -55,7 +55,6 @@ public class SmartSpintake extends Command {
   @Override
   public void end(boolean interrupted) {
     intake.Stoptake();
-    intake.SolenoidToggle();
     hasPiece = false;
   }
 
