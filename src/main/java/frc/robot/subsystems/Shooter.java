@@ -94,7 +94,9 @@ public class Shooter extends SubsystemBase {
 
         ShuffleboardTab tab = Shuffleboard.getTab("Shooter Velocity");
         tab.addDouble("Top Velocity Graph", this::getTopFlyVelocityRPS).withWidget("Graph").withPosition(0, 0).withSize(4, 3);
-        tab.addDouble("Top Velocity", this::getTopFlyVelocityRPS).withPosition(0, 3).withSize(2, 1);
+        tab.addDouble("Bottom Velocity Graph", this::getBottomFlyVelocityRPS).withWidget("Graph").withPosition(0, 3).withSize(4, 3);
+        tab.addDouble("Top Flywheel Velocity", this::getTopFlyVelocityRPS).withPosition(4, 0).withSize(1, 1);
+        tab.addDouble("Bottom Flywheel Velocity", this::getBottomFlyVelocityRPM).withPosition(4, 3).withSize(1, 1);
     }
 
     public void runShooters() {
@@ -178,11 +180,22 @@ public class Shooter extends SubsystemBase {
     public double getSlot0_kP() { return slot0_kP; }
     public double getSlot0_kI() { return slot0_kI; }
     public double getSlot0_kD() { return slot0_kD; }
-    public void setSlot0_kS(double newS) { slot0Configs.kS = newS; }
-    public void setSlot0_kV(double newV) { slot0Configs.kV = newV; }
-    public void setSlot0_kP(double newP) { slot0Configs.kP = newP; }
-    public void setSlot0_kI(double newI) { slot0Configs.kI = newI; }
-    public void setSlot0_kD(double newD) { slot0Configs.kD = newD; }
+    public void setSlot0_kS(double newS) { this.slot0_kS = newS; }
+    public void setSlot0_kV(double newV) { this.slot0_kV = newV; }
+    public void setSlot0_kP(double newP) { this.slot0_kP = newP; }
+    public void setSlot0_kI(double newI) { this.slot0_kI = newI; }
+    public void setSlot0_kD(double newD) { this.slot0_kD = newD; }
+
+    public double getSlot1_kS() { return slot1_kS; }
+    public double getSlot1_kV() { return slot1_kV; }
+    public double getSlot1_kP() { return slot1_kP; }
+    public double getSlot1_kI() { return slot1_kI; }
+    public double getSlot1_kD() { return slot1_kD; }
+    public void setSlot1_kS(double newS) { this.slot1_kS = newS; }
+    public void setSlot1_kV(double newV) { this.slot1_kV = newV; }
+    public void setSlot1_kP(double newP) { this.slot1_kP = newP; }
+    public void setSlot1_kI(double newI) { this.slot1_kI = newI; }
+    public void setSlot1_kD(double newD) { this.slot1_kD = newD; }
 
     public void setTopVelocitySetpoint(double newVelocity) {this.topVelocitySetpoint = newVelocity;}
     public void setBottomVelocitySetpoint(double newVelocity) {this.bottomVelocitySetpoint = newVelocity;}
@@ -207,11 +220,17 @@ public class Shooter extends SubsystemBase {
         builder.addDoubleProperty("top volt supply", this::getTopFlyVoltSupply, null);
         builder.addDoubleProperty("bottom volt supply", this::getBottomFlyVoltSupply, null);
 
-        builder.addDoubleProperty("velocity kS", this::getSlot0_kS, this::setSlot0_kS);
-        builder.addDoubleProperty("velocity kV", this::getSlot0_kV, this::setSlot0_kV);
-        builder.addDoubleProperty("velocity kP", this::getSlot0_kP, this::setSlot0_kP);
-        builder.addDoubleProperty("velocity kI", this::getSlot0_kI, this::setSlot0_kI);
-        builder.addDoubleProperty("velocity kD", this::getSlot0_kD, this::setSlot0_kD);
+        builder.addDoubleProperty("slot 0 kS", this::getSlot0_kS, this::setSlot0_kS);
+        builder.addDoubleProperty("slot 0 kV", this::getSlot0_kV, this::setSlot0_kV);
+        builder.addDoubleProperty("slot 0 kP", this::getSlot0_kP, this::setSlot0_kP);
+        builder.addDoubleProperty("slot 0 kI", this::getSlot0_kI, this::setSlot0_kI);
+        builder.addDoubleProperty("slot 0 kD", this::getSlot0_kD, this::setSlot0_kD);
+
+        builder.addDoubleProperty("slot 1 kS", this::getSlot1_kS, this::setSlot1_kS);
+        builder.addDoubleProperty("slot 1 kV", this::getSlot1_kV, this::setSlot1_kV);
+        builder.addDoubleProperty("slot 1 kP", this::getSlot1_kP, this::setSlot1_kP);
+        builder.addDoubleProperty("slot 1 kI", this::getSlot1_kI, this::setSlot1_kI);
+        builder.addDoubleProperty("slot 1 kD", this::getSlot1_kD, this::setSlot1_kD);
 
         builder.setSmartDashboardType("Indexer");
         builder.addDoubleProperty("speed", this::getIndexSpeed, this::setIndexSpeed);
