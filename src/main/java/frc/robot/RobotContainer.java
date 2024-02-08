@@ -88,19 +88,14 @@ public class RobotContainer {
     new Trigger(m_exampleSubsystem::exampleCondition)
             .onTrue(new ExampleCommand(m_exampleSubsystem));
 
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed, cancelling on release.
-    // driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+    new JoystickButton(driverController, Constants.Buttons.LST_POV_S).whileTrue(new DoubleRetract(shooterShifter));
+    new JoystickButton(driverController, Constants.Buttons.LST_POV_E).whileTrue(new DoubleExtend(shooterShifter));
+    new JoystickButton(driverController, Constants.Buttons.LST_POV_W).whileTrue(new ShifterOneExtend(shooterShifter));
+    new JoystickButton(driverController, Constants.Buttons.LST_POV_W).whileTrue(new ShifterTwoExtend(shooterShifter));
 
-
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new OnlyIndex(shooter));
+    // new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new OnlyIndex(shooter));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_A).whileTrue(new OnlyShoot(shooter));
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new Shoot(shooter));
+    new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new DumbShoot(shooter));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new VelocityShoot(shooter));
-/*
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new DoubleRetract(shooterShifter));
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new ShifterOneExtend(shooterShifter));
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new ShifterTwoExtend(shooterShifter));
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new DoubleExtend(shooterShifter));
-*/
   }
 }

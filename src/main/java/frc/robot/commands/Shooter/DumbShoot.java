@@ -8,17 +8,13 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Shooter;
 
-/** An example command that uses an example subsystem. */
-public class Shoot extends Command {
-    @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
+public class DumbShoot extends Command {
     private final Shooter m_shooter;
     //private final Intake m_intake;
     private Timer spinUpTime = new Timer();
-    public Shoot(Shooter shooter) {
+    public DumbShoot(Shooter shooter) {
         m_shooter = shooter;
-       // m_intake = intake;
-
-        // Use addRequirements() here to declare subsystem dependencies.
+        //m_intake = intake;
         addRequirements(shooter);
     }
 

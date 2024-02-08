@@ -5,17 +5,13 @@
 package frc.robot.commands.Shooter;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Shooter;
 
-/** An example command that uses an example subsystem. */
 public class OnlyShoot extends Command {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final Shooter m_shooter;
 
   public OnlyShoot(Shooter shooter) {
     m_shooter = shooter;
-    // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(shooter);
   }
 

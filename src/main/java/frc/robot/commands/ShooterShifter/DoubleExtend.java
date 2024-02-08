@@ -7,16 +7,9 @@ package frc.robot.commands.ShooterShifter;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ShooterShifter;
 
-/** An example command that uses an example subsystem. */
 public class DoubleExtend extends Command {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final ShooterShifter shooterShifter;
 
-  /**
-   * Creates a new ExampleCommand.
-   *
-   * @param shifter The subsystem used by this command.
-   */
   public DoubleExtend(ShooterShifter shifter) {
     shooterShifter = shifter;
     addRequirements(shifter);

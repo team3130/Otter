@@ -9,17 +9,10 @@ import frc.robot.subsystems.ShooterShifter;
 
 /** An example command that uses an example subsystem. */
 public class ShifterTwoExtend extends Command {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final ShooterShifter shooterShifter;
 
-  /**
-   * Creates a new ExampleCommand.
-   *
-   * @param shifter The subsystem used by this command.
-   */
   public ShifterTwoExtend(ShooterShifter shifter) {
     shooterShifter = shifter;
-    // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(shifter);
   }
 

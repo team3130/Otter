@@ -12,7 +12,6 @@ import frc.robot.subsystems.Shooter;
 public class VelocityShoot extends Command {
   private final Shooter shooter;
 
-
   /**
    * Creates a new ExampleCommand.
    *
@@ -20,7 +19,6 @@ public class VelocityShoot extends Command {
    */
   public VelocityShoot(Shooter shooter) {
     this.shooter = shooter;
-    // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(shooter);
   }
 

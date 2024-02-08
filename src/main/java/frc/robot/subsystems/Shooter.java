@@ -7,7 +7,6 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix6.configs.ClosedLoopRampsConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.Slot1Configs;
@@ -52,7 +51,7 @@ public class Shooter extends SubsystemBase {
     ClosedLoopRampsConfigs topClosedLoopRamp;
     ClosedLoopRampsConfigs bottomClosedLoopRamp;
     private final TalonSRX indexMotor;
-    private double indexSpeed = 0.50;
+    private double shooterIndexSpeed = 0.50;
 
 
     public Shooter() {
@@ -110,7 +109,7 @@ public class Shooter extends SubsystemBase {
     }
 
     public void runIndexers() {
-        indexMotor.set(ControlMode.PercentOutput, indexSpeed);
+        indexMotor.set(ControlMode.PercentOutput, shooterIndexSpeed);
     }
 
     public void stopIndexers() {
@@ -157,8 +156,8 @@ public class Shooter extends SubsystemBase {
     }
      */
 
-    public double getIndexSpeed() {return indexSpeed;}
-    public void setIndexSpeed(double speedy){ indexSpeed = speedy;}
+    public double getShooterIndexSpeed() {return shooterIndexSpeed;}
+    public void setShooterIndexSpeed(double speedy){ shooterIndexSpeed = speedy;}
 
     public double getTopFlyVelocityRPS() { return topFlywheel.getVelocity().getValue(); }
     public double getBottomFlyVelocityRPS() { return bottomFlywheel.getVelocity().getValue();}
@@ -233,7 +232,7 @@ public class Shooter extends SubsystemBase {
         builder.addDoubleProperty("slot 1 kD", this::getSlot1_kD, this::setSlot1_kD);
 
         builder.setSmartDashboardType("Indexer");
-        builder.addDoubleProperty("speed", this::getIndexSpeed, this::setIndexSpeed);
+        builder.addDoubleProperty("speed", this::getShooterIndexSpeed, this::setShooterIndexSpeed);
     }
 
     @Override
