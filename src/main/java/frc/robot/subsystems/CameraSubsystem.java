@@ -47,11 +47,6 @@ public class CameraSubsystem extends SubsystemBase {
    * The limelight object will be full of null values if Constants.useAprilTags is false.
    */
   public CameraSubsystem() {
-    ShuffleboardTab tab = Shuffleboard.getTab("Vision");
-    // Shuffleboard.getTab("Camerapls").add("target", target);
-    tab.addBoolean("hasTarget", this::hasTarget);
-    tab.addDouble("Target Yaw", this::getTargetYaw);
-    tab.addInteger("fiducial ID", this::getFiducialID);
 
 
     // SuppliedValueWidget<Double> targetYaw = tab.addDouble("Target Yaw", this::getTargetYaw);
@@ -184,7 +179,7 @@ public class CameraSubsystem extends SubsystemBase {
       return -400.0;
     } else {
       PhotonPipelineResult result = camera.getLatestResult();
-      if (result.getBestTarget() != null && result.getBestTarget().getPitch() != -400.0) {
+      if (result.getBestTarget() != null && result.getBestTarget().getYaw() != -400.0) {
         return Math.toRadians(result.getBestTarget().getYaw());
       }
     }

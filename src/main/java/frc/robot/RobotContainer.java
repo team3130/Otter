@@ -18,20 +18,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.*;
-import frc.robot.subsystems.CameraSubsystem;
-import frc.robot.commands.Chassis.FlipDriveOrientation;
 import frc.robot.commands.Chassis.TeleopDrive;
 import frc.robot.commands.Chassis.ZeroEverything;
 import frc.robot.commands.Chassis.ZeroWheels;
-import frc.robot.subsystems.Chassis;
-import frc.robot.subsystems.ExampleSubsystem;
-import frc.robot.commands.Shooter.*;
-import frc.robot.subsystems.CameraSubsystem;
 import frc.robot.subsystems.*;
-import frc.robot.subsystems.Chassis;
-import frc.robot.subsystems.ExampleSubsystem;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import java.util.function.BooleanSupplier;
 
@@ -50,7 +42,6 @@ public class RobotContainer {
   private final Chassis chassis = new Chassis();
   private final XboxController driverController = new XboxController(0);
   private final XboxController operatorController = new XboxController(1);
-  private final Shooter shooter;
   private final Intake intake;
   private final TeleopDrive teleopDrive = new TeleopDrive(chassis,driverController,cameraSubsystem);
   private final Indexer indexer;
@@ -59,7 +50,6 @@ public class RobotContainer {
 
   // container for the robot containing subsystems, OI devices, and commands
   public RobotContainer() {
-    shooter = new Shooter();
     indexer = new Indexer();
     intake = new Intake();
     hopper = new Hopper();
@@ -138,9 +128,9 @@ public class RobotContainer {
   public void exportShuffleBoardData() {
     if (Constants.debugMode) {
       ShuffleboardTab tab = Shuffleboard.getTab("Subsystems");
-      tab.add(shooter);
       tab.add(intake);
       tab.add(chassis);
+      tab.add(cameraSubsystem);
       chassis.exportSwerveModData(Shuffleboard.getTab("Swerve Modules"));
     }
   }
@@ -159,7 +149,7 @@ public class RobotContainer {
     // driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
     new POVButton(driverController, Constants.Buttons.LST_POV_N).whileTrue(new ZeroEverything(chassis));
     new POVButton(driverController, Constants.Buttons.LST_POV_W).whileTrue(new ZeroWheels(chassis));
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).onTrue(new EnableTargeting(cameraSubsystem));
+    new JoystickButton(driverController, Constants.Buttons.LST_BTN_Y).onTrue(new EnableTargeting(cameraSubsystem));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_A).whileTrue(new TargetingPressed(cameraSubsystem));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new ToggleOdoFaceTarget(chassis));
   }
