@@ -174,9 +174,8 @@ public class CameraSubsystem extends SubsystemBase {
     if (!hasTarget()) {
       return -400.0;
     } else {
-      PhotonTrackedTarget result = CorrectTarget;
-      if (result != null && result.getYaw() != -400.0) {
-        return Math.toRadians(result.getYaw());
+      if (CorrectTarget != null && CorrectTarget.getYaw() != -400.0) {
+        return Math.toRadians(CorrectTarget.getYaw());
       }
     }
     return -400d;
@@ -209,14 +208,14 @@ public class CameraSubsystem extends SubsystemBase {
     PhotonPipelineResult result = camera.getLatestResult();
     double resultTimestamp = result.getTimestampSeconds();
     int i = 0;
-    int correctTagIndex = 0;
-    while (result.getTargets().get(i)!= null){
+    int correctTagIndex = -1;
+    while (result.getTargets().toArray().length >= i && result.getTargets() != null){
       if (result.getTargets().get(i).getFiducialId() == speakerTargetFiducialID){
         correctTagIndex = i;
       }
       i++;
     }
-    if (result.hasTargets() && result.getTargets().get(correctTagIndex) != null) {
+    if (result.hasTargets() && result.getTargets().get(correctTagIndex) != null && correctTagIndex != -1) {
       previousPipelineTimestamp = resultTimestamp;
       setCurrentTag(result.getTargets().get(correctTagIndex));
       //fiducialID = result.getBestTarget().getFiducialId();

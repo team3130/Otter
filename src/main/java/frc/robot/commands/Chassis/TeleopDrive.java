@@ -49,12 +49,13 @@ public class TeleopDrive extends Command {
     double theta = 0.0;
     double y = m_xboxController.getRawAxis(Constants.Buttons.LST_AXS_LJOYSTICKX); // left stick y-axis (y-axis is inverted)
     double x = m_xboxController.getRawAxis(Constants.Buttons.LST_AXS_LJOYSTICKY); // left stick x-axis
+    double thetaJoystick = -m_xboxController.getRawAxis(Constants.Buttons.LST_AXS_RJOYSTICKX);
+    theta = Math.abs(theta) > Constants.Swerve.kDeadband ? theta : 0.0;
 
-    if (m_camera.isTryingToTarget()){
+    if (m_camera.isTryingToTarget() && (thetaJoystick != 0d)){
         theta = (x * m_camera.getXTargetV()) + (m_camera.goToTargetPower()) + (-y * m_camera.getYTargetV());
     } else {
-      theta = -m_xboxController.getRawAxis(Constants.Buttons.LST_AXS_RJOYSTICKX); // right stick x-axis
-      theta = Math.abs(theta) > Constants.Swerve.kDeadband ? theta : 0.0;
+      theta = thetaJoystick;
       theta = turningLimiter.calculate(theta) * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond;
     }
     // square the inputs
