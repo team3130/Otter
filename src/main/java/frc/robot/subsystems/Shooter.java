@@ -39,11 +39,13 @@ public class Shooter extends SubsystemBase {
       final VelocityVoltage velocityRequest = new VelocityVoltage(0).withSlot(0);
     */
 
+
+    //TODO get better values and get values for top flywheel
     private double kS = 0;
-    private double kV = 0.135;
-    private double kP = 0.3;
+    private double kV = 0.12;
+    private double kP = 0.4;
     private double kI = 0;
-    private double kD = 0.01;
+    private double kD = 0.2;
     private double feedForwardVolt;
     ClosedLoopRampsConfigs closedLoopRamp;
 
