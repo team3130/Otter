@@ -27,7 +27,7 @@ public class SmartSpintake extends Command {
   @Override
   public void initialize() {
     intake.intakeDown();
-    intakeIsDown =true;
+    intakeIsDown = true;
     intake.GroundIntake();
   }
 
@@ -39,15 +39,13 @@ public class SmartSpintake extends Command {
       intake.resetEncoders();
     }
     if (hasPiece){
-      if (intake.getPosition() >= intake.getMaxIntakeTicks()){
+      if (intakeIsDown || intake.getPosition() >= intake.getMaxIntakeTicks()){
         intake.Stoptake();
+        intake.intakeUp();
+        intakeIsDown = false;
       }
       else {
         intake.gentleIntake();
-        if (intakeIsDown){
-          intake.intakeUp();
-          intakeIsDown = false;
-        }
       }
     }
 
