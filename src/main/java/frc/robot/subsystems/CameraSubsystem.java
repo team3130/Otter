@@ -196,8 +196,11 @@ public class CameraSubsystem extends SubsystemBase {
   }
 
   public double getTargetDistance() {
-    return PhotonUtils.calculateDistanceToTargetMeters(Constants.AprilTags.CAMERA_HEIGHT_METERS, Constants.AprilTags.TARGET_HEIGHT_METERS,
-            Constants.AprilTags.CAMERA_PITCH_RADIANS, getTarget().getPitch());
+    if(getTarget() != null) {
+      return PhotonUtils.calculateDistanceToTargetMeters(Constants.AprilTags.CAMERA_HEIGHT_METERS, Constants.AprilTags.TARGET_HEIGHT_METERS,
+              Constants.AprilTags.CAMERA_PITCH_RADIANS, getTarget().getPitch());
+    }
+    return 0.0;
   }
 
   public void initSendable(SendableBuilder builder) {
