@@ -10,16 +10,14 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.Autos;
 import frc.robot.commands.Chassis.FlipDriveOrientation;
 import frc.robot.commands.ExampleCommand;
-import frc.robot.commands.Intake.Toggle;
-import frc.robot.commands.Intake.Drop_UnlimitedIntake;
-import frc.robot.commands.Intake.SmartSpintake;
-import frc.robot.commands.Intake.UnlimitedIntake;
+import frc.robot.commands.Intake.*;
 import frc.robot.commands.LED.LightUpWithNote;
 import frc.robot.commands.Shooter.OnlyShoot;
 import frc.robot.commands.Shooter.Shoot;
@@ -154,6 +152,7 @@ public class RobotContainer {
     new JoystickButton(operatorController, Constants.Buttons.LST_BTN_RBUMPER).whileTrue(new UnlimitedIntake(intake));
     //new JoystickButton(operatorController, Constants.Buttons.LST_BTN_A).whileTrue(new SmartSpintake(new Intake()));
     new JoystickButton(operatorController, Constants.Buttons.LST_BTN_B).whileTrue(new Toggle(intake));
+    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_RBUMPER).whileTrue(new SequentialCommandGroup(new SmartSpintake(intake), new Index(intake)));
   }
 
 

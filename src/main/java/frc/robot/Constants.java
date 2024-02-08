@@ -58,6 +58,7 @@ public final class Constants {
 
     public final static int CAN_hopperright = 16;
     public final static int CAN_hopperleft = 17;
+    public final static int shooterBreakBeam = 2; //TODO
 
     public final static int ampPCM = 18;
     public final static int ampChannel = 19;

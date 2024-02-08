@@ -24,7 +24,9 @@ public class Intake extends SubsystemBase {
   private final Solenoid intakesolenoid2;
 
   private final DigitalInput limitSwitch1;
-  private double dropTime = 0.2;
+    private final DigitalInput breakbeam;
+
+    private double dropTime = 0.2;
 
   public static double maxIntakeTicks = 300; //This number represents the distance from the Limit Switch to the point where we want the disk to stop
 
@@ -41,6 +43,7 @@ public class Intake extends SubsystemBase {
     intakesolenoid1 = new Solenoid(Constants.CAN.intakesolenoid1, PneumaticsModuleType.CTREPCM, PNM_INTAKE_ACTUATOR);
     intakesolenoid2 = new Solenoid(Constants.CAN.intakesolenoid2, PneumaticsModuleType.CTREPCM, PNM_INTAKE_ACTUATOR);
     limitSwitch1 = new DigitalInput(Constants.CAN.intakeLimitSwitch1);
+    breakbeam = new DigitalInput(Constants.CAN.shooterBreakBeam);
 
     intakeMotor.configFactoryDefault();
     intakeMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
@@ -116,6 +119,9 @@ public class Intake extends SubsystemBase {
   }
   public boolean getLimitSwitch(){
       return limitSwitch1.get();
+  }
+  public boolean getBreakBeam (){
+      return  breakbeam.get();
   }
   
 
