@@ -169,7 +169,11 @@ public class CameraSubsystem extends SubsystemBase {
   public boolean hasTarget() {
     return ! (CorrectTarget == null);
   }
-  
+  public int getCorrectTargetID(){
+    if (CorrectTarget.getFiducialId() != -1){
+    return CorrectTarget.getFiducialId();}
+    else {return 0; }
+  }
   public double getTargetYaw() {
     if (!hasTarget()) {
       return -400.0;
@@ -188,7 +192,7 @@ public class CameraSubsystem extends SubsystemBase {
     builder.setSmartDashboardType("Camera");
     builder.addBooleanProperty("hasTarget", this::hasTarget, null);
     builder.addDoubleProperty("targetYaw", this::getTargetDegrees, null);
-    builder.addIntegerProperty("fiducial", this::getFiducialID, null);
+    builder.addIntegerProperty("fiducial", this::getCorrectTargetID, null);
 
     builder.addDoubleProperty("target P", this::getTargetP, this::setTargetP);
     builder.addDoubleProperty("target I", this::getTargetI, this::setTargetI);

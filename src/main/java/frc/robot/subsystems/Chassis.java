@@ -340,7 +340,7 @@ public class Chassis extends SubsystemBase {
         builder.setSmartDashboardType("Chassis");
 
         // add field relative
-        builder.addBooleanProperty("fieldRelative", this::getFieldRelative, this::setWhetherFieldOriented);
+       // builder.addBooleanProperty("fieldRelative", this::getFieldRelative, this::setWhetherFieldOriented);
         builder.addDoubleProperty("Navx", this::getHeading, null);
         builder.addDoubleProperty("X position", this::getX, null);
         builder.addDoubleProperty("Y position", this::getY, null);
