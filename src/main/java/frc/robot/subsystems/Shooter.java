@@ -57,7 +57,7 @@ public class Shooter extends SubsystemBase {
     public Shooter() {
         topFlywheel = new TalonFX(8);
         bottomFlywheel = new TalonFX(9);
-        indexMotor = new TalonSRX(0);
+        indexMotor = new TalonSRX(10);
         indexMotor.configFactoryDefault();
         indexMotor.setNeutralMode(NeutralMode.Brake);
         indexMotor.setInverted(true);

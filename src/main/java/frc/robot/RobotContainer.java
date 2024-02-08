@@ -93,9 +93,9 @@ public class RobotContainer {
     new JoystickButton(driverController, Constants.Buttons.LST_POV_W).whileTrue(new ShifterOneExtend(shooterShifter));
     new JoystickButton(driverController, Constants.Buttons.LST_POV_W).whileTrue(new ShifterTwoExtend(shooterShifter));
 
-    // new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new OnlyIndex(shooter));
+    new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new OnlyIndex(shooter));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_A).whileTrue(new OnlyShoot(shooter));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new DumbShoot(shooter));
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new VelocityShoot(shooter));
+    //new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new VelocityShoot(shooter));
   }
 }
