@@ -5,7 +5,6 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -16,22 +15,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.*;
 import frc.robot.commands.Amp.AmpIntake;
 import frc.robot.commands.Amp.AmpOuttake;
 import frc.robot.commands.Amp.AmpPrime;
 import frc.robot.commands.Amp.AmpUnPrime;
-import frc.robot.commands.Chassis.FlipDriveOrientation;
-import frc.robot.commands.Chassis.TeleopDrive;
-import frc.robot.commands.Chassis.ZeroEverything;
-import frc.robot.commands.Chassis.ZeroWheels;
-import frc.robot.sensors.Camera;
 import frc.robot.subsystems.Amp;
-import frc.robot.subsystems.Chassis;
 import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.subsystems.Hopper;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -43,9 +34,6 @@ import frc.robot.subsystems.Hopper;
 // The robot's subsystems and commands are defined here...
 public class RobotContainer {
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-  private final Camera limelight;
-  private final Chassis chassis;
-  private final Hopper hopper;
   private final Amp amp;
   private final XboxController driverController = new XboxController(0);
   private final XboxController operatorController = new XboxController(1);
@@ -53,20 +41,15 @@ public class RobotContainer {
 
   // container for the robot containing subsystems, OI devices, and commands
   public RobotContainer() {
-    limelight = new Camera();
-    chassis = new Chassis(limelight);
-    hopper = new Hopper();
     amp = new Amp();
 
     // Named commands must be registered before the creation of any PathPlanner Autos or Paths
     // Do this in RobotContainer, after subsystem initialization, but before the creation of any other commands.
-    NamedCommands.registerCommand("spinHopper", hopper.spinHopperAuto());
 
     configureBindings(); // configure button bindings
     exportShuffleBoardData(); // export ShuffleBoardData
 
     // Default commands running in the background when other commands not scheduled
-    chassis.setDefaultCommand(new TeleopDrive(chassis, driverController));
 
     // Build an auto chooser. This will use Commands.none() as the default option.
     // autoChooser = AutoBuilder.buildAutoChooser();
@@ -102,9 +85,7 @@ public class RobotContainer {
   public void exportShuffleBoardData() {
     if (Constants.debugMode) {
       ShuffleboardTab tab = Shuffleboard.getTab("Subsystems");
-      tab.add(chassis);
       tab.add(amp);
-      chassis.exportSwerveModData(Shuffleboard.getTab("Swerve Modules"));
     }
   }
 
@@ -120,33 +101,9 @@ public class RobotContainer {
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed, cancelling on release.
     // driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
-    new POVButton(driverController, Constants.Buttons.LST_POV_N).whileTrue(new ZeroEverything(chassis));
-    new POVButton(driverController, Constants.Buttons.LST_POV_W).whileTrue(new ZeroWheels(chassis));
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new FlipDriveOrientation(chassis));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_A).whileTrue(new AmpIntake(amp));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new AmpOuttake(amp));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new AmpPrime(amp));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new AmpUnPrime(amp));
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_Y).whileTrue(new SpinHopper(hopper));
-
-    SmartDashboard.putData(new FlipDriveOrientation(chassis));
-  }
-
-  /*
-  Sendable Commands
-   */
-  public Command resetEverything() {
-    return new ZeroEverything(chassis);
-  }
-
-  /*
-  Odometry and Chassis methods
-   */
-  public void resetOdometryWithoutApril() {
-    chassis.resetOdometry(new Pose2d(0, 0, new Rotation2d()));
-  }
-
-  public void updateChassisPose() {
-    chassis.updateOdometery();
   }
 }

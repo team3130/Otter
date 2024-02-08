@@ -17,13 +17,14 @@ public class Amp extends SubsystemBase {
   private final Solenoid pneumatic;
   private final DigitalInput ampLimit;
   private final WPI_TalonSRX ampMotor;
-  private double intakeAmpSpeed = 0.1;
-  private double outtakeAmpSpeed = -0.1;
+  private double intakeAmpSpeed = 0.5;
+  private double outtakeAmpSpeed = -0.5;
 
   public Amp() {
     pneumatic = new Solenoid(Constants.CAN.ampPCM, PneumaticsModuleType.CTREPCM, Constants.CAN.ampChannel);
     ampLimit = new DigitalInput(Constants.CAN.ampLimitSwitch);
     ampMotor = new WPI_TalonSRX(Constants.CAN.ampMotor);
+
     ampMotor.configFactoryDefault();
     ampMotor.configVoltageCompSaturation(3);
     ampMotor.setInverted(false);
