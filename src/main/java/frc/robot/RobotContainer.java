@@ -19,6 +19,7 @@ import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.Intake.Toggle;
 import frc.robot.commands.Intake.Drop_UnlimitedIntake;
 import frc.robot.commands.Intake.SmartSpintake;
+import frc.robot.commands.Intake.UnlimitedIntake;
 import frc.robot.commands.LED.LightUpWithNote;
 import frc.robot.commands.Shooter.OnlyShoot;
 import frc.robot.commands.Shooter.Shoot;
@@ -142,28 +143,17 @@ public class RobotContainer {
     // driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
 
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new Shoot(shooter, indexer, intake));
-    new POVButton(driverController, Constants.Buttons.LST_POV_N).whileTrue(new ZeroEverything(chassis));
-    new POVButton(driverController, Constants.Buttons.LST_POV_W).whileTrue(new ZeroWheels(chassis));
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new FlipDriveOrientation(chassis));
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_A).whileTrue(new AmpIntake(amp));
+
+  /*   new JoystickButton(driverController, Constants.Buttons.LST_BTN_A).whileTrue(new AmpIntake(amp));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new AmpOuttake(amp));
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new ToggleAmp(amp));
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new AmpUnPrime(amp));
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_Y).whileTrue(new SpinHopper(hopper));
+    new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new ToggleAmp(amp)); */
 
     //new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new OnlyIndex(indexer));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_A).whileTrue(new OnlyShoot(shooter));
-    SmartDashboard.putData(new FlipDriveOrientation(chassis));
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new FlipDriveOrientation(chassis));
 
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_Y).whileTrue(new SpinHopper(hopper));
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new VelocityShoot(shooter));
-
-    SmartDashboard.putData(new FlipDriveOrientation(chassis));
-    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_LBUMPER).whileTrue(new DumbSpouttake(new Intake()));
-    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_RBUMPER).whileTrue(new Drop_UnlimitedIntake(new Intake()));
-    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_A).whileTrue(new SmartSpintake(new Intake()));
-    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_B).whileTrue(new Toggle(new Intake()));
+    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_RBUMPER).whileTrue(new UnlimitedIntake(intake));
+    //new JoystickButton(operatorController, Constants.Buttons.LST_BTN_A).whileTrue(new SmartSpintake(new Intake()));
+    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_B).whileTrue(new Toggle(intake));
   }
 
 

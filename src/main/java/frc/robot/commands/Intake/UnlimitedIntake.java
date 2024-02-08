@@ -4,21 +4,22 @@
 
 package frc.robot.commands.Intake;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Intake;
 
 /** An example command that uses an example subsystem. */
-public class SmartSpintake extends Command {
+public class UnlimitedIntake extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final Intake intake;
-  private boolean hasPiece = false;
-  private boolean intakeIsDown = false;
+  private Timer timer;
+
   /**
    * Creates a new ExampleCommand.
    *
    * @param //subsystem The subsystem used by this command.
    */
-  public SmartSpintake(Intake Intake) {
+  public UnlimitedIntake(Intake Intake) {
     intake = Intake;
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -26,39 +27,18 @@ public class SmartSpintake extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    intake.intakeDown();
-    intakeIsDown =true;
-    intake.GroundIntake();
+    intake.DumbIntake();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (intake.getLimitSwitch() && !hasPiece){
-      hasPiece = true;
-      intake.resetEncoders();
-    }
-    if (hasPiece){
-      if (intake.getPosition() >= intake.getMaxIntakeTicks()){
-        intake.Stoptake();
-      }
-      else {
-        intake.gentleIntake();
-        if (intakeIsDown){
-          intake.intakeUp();
-          intakeIsDown = false;
-        }
-      }
-    }
-
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     intake.Stoptake();
-    intake.SolenoidToggle();
-    hasPiece = false;
   }
 
   // Returns true when the command should end.

@@ -70,7 +70,7 @@ public final class Constants {
     //TODO find these values
 
 
-    public static int kMaxVoltageIntake = 3;
+    public static int kMaxVoltageIntake = 5;
 
   }
   public static class AprilTags {

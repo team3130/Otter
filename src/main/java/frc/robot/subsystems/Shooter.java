@@ -76,8 +76,8 @@ public class Shooter extends SubsystemBase {
     }
 
     public void runShooters() {
-        leftFlywheel9.setControl(leftFlywheelVoltReq.withOutput(5));
-        rightFlywheel8.setControl(rightFlywheelVoltReq.withOutput(5));
+        leftFlywheel9.setControl(leftFlywheelVoltReq.withOutput(4));
+        rightFlywheel8.setControl(rightFlywheelVoltReq.withOutput(4));
     }
 
     public void stopShooters() {

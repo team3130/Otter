@@ -25,6 +25,7 @@ public class Shoot extends Command {
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(shooter);
         addRequirements(index);
+        addRequirements(intake);
     }
 
     // Called when the command is initially scheduled.
@@ -38,7 +39,7 @@ public class Shoot extends Command {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        if (spinUpTime.hasElapsed(0.5)){
+        if (spinUpTime.hasElapsed(1)){
             m_indexer.runIndexers();
             m_intake.DumbIntake();
         }
