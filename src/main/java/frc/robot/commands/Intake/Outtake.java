@@ -27,9 +27,8 @@ public class Outtake extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (timer.hasElapsed(intake.getDropTime())){
       intake.outtake();
-    }
+
   }
 
   // Called once the command ends or is interrupted.

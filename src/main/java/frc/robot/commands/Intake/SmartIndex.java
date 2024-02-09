@@ -19,12 +19,13 @@ public class SmartIndex extends Command {
 
   @Override
   public void initialize() {
+    intake.slowTake();
   }
 
   // intake slowly
   @Override
   public void execute() {
-    intake.slowTake();
+
   }
 
   // Called once the command ends or is interrupted.

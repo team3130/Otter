@@ -4,6 +4,7 @@
 
 package frc.robot.commands.Intake;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Intake;
 
@@ -13,6 +14,7 @@ public class SmartSpintake extends Command {
   private final Intake intake;
   public static boolean intakeHasNote;
   private boolean intakeIsDown = false;
+  private Timer timer = new Timer();
 
   public SmartSpintake(Intake intake) {
     this.intake = intake;
@@ -23,14 +25,18 @@ public class SmartSpintake extends Command {
   // intake down, running at groundIntake speed
   @Override
   public void initialize() {
+    timer.reset();
     intake.intakeDown();
+    timer.start();
     intakeIsDown = true;
-    intake.groundIntake();
   }
 
   // once the limit switch is hit and we did not have a note, reset encoders and intake up
   @Override
   public void execute() {
+    if (timer.hasElapsed(intake.getDropTime())){
+      intake.groundIntake();
+    }
     if (intake.getIntakeLimitSwitch() && !intake.getIntakeHasNote()){
       intake.setIntakeHasNote(true);
       intake.resetEncoders();

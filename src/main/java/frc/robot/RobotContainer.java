@@ -53,7 +53,7 @@ public class RobotContainer {
     ledSubsystem = new LEDSubsystem();
     shooter = new Shooter(ledSubsystem);
     indexer = new Indexer();
-    intake = new Intake();
+    intake = new Intake(ledSubsystem);
     hopper = new Hopper();
     camera = new Camera();
     chassis = new Chassis(camera);
@@ -139,7 +139,7 @@ public class RobotContainer {
     //new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new OnlyIndex(indexer));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_A).whileTrue(new OnlyShoot(shooter));
 
-    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_RBUMPER).whileTrue(new UnlimitedIntake(intake));
+    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_RBUMPER).whileTrue(new Spintake(intake));
     //new JoystickButton(operatorController, Constants.Buttons.LST_BTN_A).whileTrue(new SmartSpintake(new Intake()));
     new JoystickButton(operatorController, Constants.Buttons.LST_BTN_B).whileTrue(new ToggleIntake(intake));
     new JoystickButton(operatorController, Constants.Buttons.LST_BTN_RBUMPER).whileTrue(new SequentialCommandGroup(new SmartSpintake(intake), new SmartIndex(intake)));

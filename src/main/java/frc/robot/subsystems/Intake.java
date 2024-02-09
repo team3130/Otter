@@ -142,7 +142,7 @@ public class Intake extends SubsystemBase {
         if (getIntakeHasNote()) {
             leds.green();
         } else {
-            leds.red();
+            leds.red(); //TODO YEllOW
         }
     }
 
