@@ -11,56 +11,51 @@ import frc.robot.subsystems.Intake;
 public class SmartSpintake extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final Intake intake;
-  private boolean hasPiece = false;
+  public static boolean intakeHasNote;
   private boolean intakeIsDown = false;
-  /**
-   * Creates a new ExampleCommand.
-   *
-   * @param //subsystem The subsystem used by this command.
-   */
-  public SmartSpintake(Intake Intake) {
-    intake = Intake;
-    // Use addRequirements() here to declare subsystem dependencies.
+
+  public SmartSpintake(Intake intake) {
+    this.intake = intake;
+    addRequirements(intake);
+    intake.setIntakeHasNote(false);
   }
 
-  // Called when the command is initially scheduled.
+  // intake down, running at groundIntake speed
   @Override
   public void initialize() {
     intake.intakeDown();
     intakeIsDown = true;
-    intake.GroundIntake();
+    intake.groundIntake();
   }
 
-  // Called every time the scheduler runs while the command is scheduled.
+  // once the limit switch is hit and we did not have a note, reset encoders and intake up
   @Override
   public void execute() {
-    if (intake.getLimitSwitch() && !hasPiece){
-      hasPiece = true;
+    if (intake.getIntakeLimitSwitch() && !intake.getIntakeHasNote()){
+      intake.setIntakeHasNote(true);
       intake.resetEncoders();
-    }
-    if (hasPiece){
-      if (intakeIsDown || intake.getPosition() >= intake.getMaxIntakeTicks()){
-        intake.Stoptake();
-        intake.intakeUp();
-        intakeIsDown = false;
-      }
-      else {
-        intake.gentleIntake();
-      }
+      intake.intakeUp();
+      intakeIsDown = false;
     }
 
+    // if we have a piece, slow intake
+    if (intake.getIntakeHasNote()) {
+      intake.slowTake();
+    }
   }
 
-  // Called once the command ends or is interrupted.
+  // stop the note
   @Override
   public void end(boolean interrupted) {
-    intake.Stoptake();
-    hasPiece = false;
+    intake.stoptake();
   }
 
-  // Returns true when the command should end.
+  // end this command once the note is at its desired place to stop (via encoders)
   @Override
   public boolean isFinished() {
+    if (intake.getEncoderPosition() >= intake.getIntakeNoteSetpoint()) {
+      return true;
+    }
     return false;
   }
 }

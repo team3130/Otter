@@ -8,26 +8,16 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.Autos;
-import frc.robot.commands.Chassis.FlipDriveOrientation;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.Intake.*;
 import frc.robot.commands.LED.LightUpWithNote;
 import frc.robot.commands.Shooter.OnlyShoot;
 import frc.robot.commands.Shooter.Shoot;
-import frc.robot.commands.Shooter.VelocityShoot;
-import frc.robot.commands.SpinHopper;
-import frc.robot.commands.Amp.AmpIntake;
-import frc.robot.commands.Amp.AmpOuttake;
-import frc.robot.commands.Amp.ToggleAmp;
-import frc.robot.commands.Chassis.ZeroEverything;
-import frc.robot.commands.Chassis.ZeroWheels;
 import frc.robot.sensors.Camera;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.Amp;
@@ -60,14 +50,14 @@ public class RobotContainer {
 
   // container for the robot containing subsystems, OI devices, and commands
   public RobotContainer() {
-    shooter = new Shooter();
+    ledSubsystem = new LEDSubsystem();
+    shooter = new Shooter(ledSubsystem);
     indexer = new Indexer();
     intake = new Intake();
     hopper = new Hopper();
     camera = new Camera();
     chassis = new Chassis(camera);
     amp = new Amp();
-    ledSubsystem = new LEDSubsystem();
 
     // Named commands must be registered before the creation of any PathPlanner Autos or Paths
     // Do this in RobotContainer, after subsystem initialization, but before the creation of any other commands.
@@ -151,8 +141,8 @@ public class RobotContainer {
 
     new JoystickButton(operatorController, Constants.Buttons.LST_BTN_RBUMPER).whileTrue(new UnlimitedIntake(intake));
     //new JoystickButton(operatorController, Constants.Buttons.LST_BTN_A).whileTrue(new SmartSpintake(new Intake()));
-    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_B).whileTrue(new Toggle(intake));
-    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_RBUMPER).whileTrue(new SequentialCommandGroup(new SmartSpintake(intake), new Index(intake)));
+    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_B).whileTrue(new ToggleIntake(intake));
+    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_RBUMPER).whileTrue(new SequentialCommandGroup(new SmartSpintake(intake), new SmartIndex(intake)));
   }
 
 

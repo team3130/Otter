@@ -6,7 +6,6 @@ package frc.robot.commands.LED;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Amp;
-import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.LEDSubsystem;
 
@@ -37,10 +36,11 @@ public class LightUpWithNote extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (amp.getLimitSwitch() || intake.intakeLimitSwitch1()) {
+    if (amp.getLimitSwitch() || intake.intakeLimitSwitch()) {
       ledSubsystem.green();
     }
-    else {
+    else
+    {
       ledSubsystem.reset();
     }
   }

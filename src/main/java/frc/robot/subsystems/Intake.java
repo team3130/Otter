@@ -12,162 +12,142 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.commands.Intake.SmartSpintake;
 
 import static frc.robot.Constants.PNM_INTAKE_ACTUATOR;
 
 public class Intake extends SubsystemBase {
-  /**
-   * Creates a new ExampleSubsystem.
-   */
-  private final WPI_TalonSRX intakeMotor;
-  private final Solenoid intakesolenoid1;
-  private final Solenoid intakesolenoid2;
-
-  private final DigitalInput limitSwitch1;
+    private final LEDSubsystem leds;
+    private final WPI_TalonSRX intakeMotor;
+    private final Solenoid intakePNMOne;
+    private final Solenoid intakePNMTwo;
+    private final DigitalInput intakeLimitSwitch;
     private final DigitalInput breakbeam;
-
     private double dropTime = 0.2;
+    public static double intakeNoteSetpoint = 300; // number of rotations from limit switch to when note should stop in intake
 
-  public static double maxIntakeTicks = 300; //This number represents the distance from the Limit Switch to the point where we want the disk to stop
+    private double outakeSpeed = -0.85;
+    private double spintakeSpeed = 0.85;
+    private double groundSpeed = 0.8;
 
-  public static double bufferIntakeTicks = 200; //This number represents the distance that we want the disk to go before slowing down.
+    private double slowSpeed = .4; //S peed slower than dumbSpeed, in order to slow down the disk
 
-  public static double slowSpeed = .4; //Speed slower than dumbSpeed, in order to slow down the disk
-  public static double groundSpeed = .8; //Speed slower than dumbSpeed, in order to slow down the disk
-
-  public static double dumbSpeed = .85; //Speeed value for the high speed intake/outake
+    private boolean intakeHasNote;
 
 
-  public Intake() {
-    intakeMotor = new WPI_TalonSRX(Constants.CAN.intakeMotor);
-    intakesolenoid1 = new Solenoid(Constants.CAN.intakesolenoid1, PneumaticsModuleType.CTREPCM, PNM_INTAKE_ACTUATOR);
-    intakesolenoid2 = new Solenoid(Constants.CAN.intakesolenoid2, PneumaticsModuleType.CTREPCM, PNM_INTAKE_ACTUATOR);
-    limitSwitch1 = new DigitalInput(Constants.CAN.intakeLimitSwitch1);
-    breakbeam = new DigitalInput(Constants.CAN.shooterBreakBeam);
+    public Intake(LEDSubsystem leds) {
+        this.leds = leds;
+        intakeMotor = new WPI_TalonSRX(Constants.CAN.intakeMotor);
+        intakePNMOne = new Solenoid(Constants.CAN.intakesolenoid1, PneumaticsModuleType.CTREPCM, PNM_INTAKE_ACTUATOR);
+        intakePNMTwo = new Solenoid(Constants.CAN.intakesolenoid2, PneumaticsModuleType.CTREPCM, PNM_INTAKE_ACTUATOR);
 
-    intakeMotor.configFactoryDefault();
-    intakeMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+        intakeLimitSwitch = new DigitalInput(Constants.CAN.intakeLimitSwitch1);
+        breakbeam = new DigitalInput(Constants.CAN.shooterBreakBeam);
 
-    intakeMotor.configVoltageCompSaturation(Constants.Intake.kMaxVoltageIntake);
+        intakeMotor.configFactoryDefault();
+        intakeMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+        intakeMotor.configVoltageCompSaturation(Constants.Intake.kMaxVoltageIntake);
+        intakeMotor.enableVoltageCompensation(true);
 
-    intakeMotor.enableVoltageCompensation(true);
+        intakeMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
 
-    intakeMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+        intakeMotor.setInverted(false);
 
-    intakeMotor.setInverted(false);
+        intakeHasNote = false;
+    }
 
-  }
-  /*
-   * Example command factory method.
-   *
-   * @return a command
-   */
-  /*
-   * An example method querying a boolean state of the subsystem (for example, a digital sensor).
-   *
-   * @return value of some boolean subsystem state, such as a digital sensor.
-   */
-  public double getPosition() {
-    return intakeMotor.getSelectedSensorPosition();
-  }
+    public void spintake() {
+        intakeMotor.set(spintakeSpeed);
+    }
 
-  public double getVelocity() {
-    return intakeMotor.getSelectedSensorVelocity();
-  }
-  public double getMaxIntakeTicks() {
-    return maxIntakeTicks;
-  }
+    public void outtake(){
+        intakeMotor.set(outakeSpeed);
+    }
 
-  public void setMaxIntakeTicks(double MaxTicks) {
-    maxIntakeTicks = MaxTicks;
-  }
-
-  public double getSlowSpeed() {
-    return slowSpeed;
-  }
-
-  public void setSlowSpeed(double slowSpeed1) {
-    slowSpeed = slowSpeed1;
-  }
-
-  public double getDumbSpeed() {
-    return dumbSpeed;
-  }
-
-  public void setDumbSpeed(double dumbSpeed1) {
-    dumbSpeed = dumbSpeed1;
-  }
- public boolean intakeLimitSwitch1(){
-    return limitSwitch1.get();
-  }
-  public void DumbIntake(){
-    intakeMotor.set(dumbSpeed);
-  }
-  public void DumbOuttake(){
-    intakeMotor.set(-dumbSpeed);
-  }
-    public void GroundIntake(){
+    public void groundIntake(){
         intakeMotor.set(groundSpeed);
     }
 
-    public void gentleIntake(){
-    intakeMotor.set(slowSpeed);
-  }
-
-  public void resetEncoders() {
-    intakeMotor.setSelectedSensorPosition(0);
-  }
-  public boolean getLimitSwitch(){
-      return limitSwitch1.get();
-  }
-  public boolean getBreakBeam (){
-      return  breakbeam.get();
-  }
-  
-
-  public void Stoptake(){
-    intakeMotor.set(0);
-  }
-
-
-//This function is only ever called with the pneumatics being extending out of the frame perimeter. Need to consult with operator for preference for control scheme
-
-  public void SolenoidToggle() {
-    intakesolenoid1.toggle();
-    intakesolenoid2.toggle();
-  }
-  public void intakeDown(){
-      intakesolenoid1.set(true);
-      intakesolenoid2.set(true);
-  }
-  public void intakeUp(){
-        intakesolenoid1.set(false);
-        intakesolenoid2.set(false);
-  }
-
-  public void initSendable(SendableBuilder builder) {
-    builder.setSmartDashboardType("Intake");
-    builder.addDoubleProperty("Distance from Limit Switch to Stop point", this::getMaxIntakeTicks, this::setMaxIntakeTicks);
-    builder.addDoubleProperty("slowSpeed", this::getSlowSpeed, this::setSlowSpeed);
-    builder.addDoubleProperty("dumbSpeed", this::getDumbSpeed, this::setDumbSpeed);
-    builder.addDoubleProperty("drop time", this::getDropTime, this::setDropTime);
-
-  }
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-  }
-
-  @Override
-  public void simulationPeriodic() {
-    // This method will be called once per scheduler run during simulation
-  }
-
-    public double getDropTime() {
-        return dropTime;
+    public void slowTake(){
+        intakeMotor.set(slowSpeed);
     }
 
-    public void setDropTime(double dropTime) {
-        this.dropTime = dropTime;
+    public void stoptake(){
+        intakeMotor.set(0);
+    }
+
+    public void resetEncoders() {
+        intakeMotor.setSelectedSensorPosition(0);
+    }
+
+    public boolean getIntakeLimitSwitch() {
+        return intakeLimitSwitch.get();
+    }
+
+    public boolean getShooterBreakBeam(){
+        return breakbeam.get();
+    }
+
+    public double getEncoderPosition() {
+        return intakeMotor.getSelectedSensorPosition();
+    }
+
+    public void SolenoidToggle() {
+        intakePNMOne.toggle();
+        intakePNMTwo.toggle();
+    }
+
+    public void intakeDown(){
+        intakePNMOne.set(true);
+        intakePNMTwo.set(true);
+    }
+    public void intakeUp() {
+        intakePNMOne.set(false);
+        intakePNMTwo.set(false);
+    }
+
+    public boolean getIntakeHasNote() {
+        return intakeHasNote;
+    }
+
+    public void setIntakeHasNote(boolean setNote) {
+        intakeHasNote = setNote;
+    }
+
+    public double getDropTime() { return dropTime; }
+    public void setDropTime(double dropTime) { this.dropTime = dropTime; }
+    public double getIntakeNoteSetpoint() {return intakeNoteSetpoint;}
+    public void setIntakeNoteSetpoint(double max) { intakeNoteSetpoint = max;}
+    public double getGroundSpeed() { return groundSpeed; }
+    public void setGroundSpeed(double newS) { groundSpeed = newS; }
+    public void setSpintakeSpeed(double newSpeed) { spintakeSpeed = newSpeed; }
+    public double getSpintakeSpeed() { return spintakeSpeed; }
+    public void setOutakeSpeed(double newS) { outakeSpeed = newS; }
+    public double getOutakeSpeed() { return outakeSpeed; }
+    public double getSlowSpeed() { return slowSpeed; }
+    public void setSlowSpeed(double slow) { slowSpeed = slow; }
+
+    public void initSendable(SendableBuilder builder) {
+        builder.setSmartDashboardType("Intake");
+        builder.addDoubleProperty("Intake Note Setpoint", this::getIntakeNoteSetpoint, this::setIntakeNoteSetpoint);
+
+        builder.addDoubleProperty("Ground intake speed", this::getGroundSpeed, this::setGroundSpeed );
+        builder.addDoubleProperty("Drop time", this::getDropTime, this::setDropTime);
+        builder.addDoubleProperty("Dumb spintake speed", this::getSpintakeSpeed, this::setSpintakeSpeed);
+        builder.addDoubleProperty("Dumb outtake speed", this::getOutakeSpeed, this::setOutakeSpeed);
+        builder.addDoubleProperty("slow speed", this::getSlowSpeed, this::setSlowSpeed);
+    }
+    @Override
+    public void periodic() {
+        if (getIntakeHasNote()) {
+            leds.green();
+        } else {
+            leds.red();
+        }
+    }
+
+    @Override
+    public void simulationPeriodic() {
+    // This method will be called once per scheduler run during simulation
     }
 }

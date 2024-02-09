@@ -8,18 +8,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Intake;
 
 /** An example command that uses an example subsystem. */
-public class Toggle extends Command {
+public class ToggleIntake extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final Intake intake;
 
-  /**
-   * Creates a new ExampleCommand.
-   *
-   * @param //subsystem The subsystem used by this command.
-   */
-  public Toggle(Intake Intake) {
-    intake = Intake;
-    // Use addRequirements() here to declare subsystem dependencies.
+  public ToggleIntake(Intake intake) {
+    this.intake = intake;
+    addRequirements(intake);
   }
 
   // Called when the command is initially scheduled.

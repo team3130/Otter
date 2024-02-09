@@ -16,8 +16,10 @@ import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.commands.Intake.SmartSpintake;
 
 public class Shooter extends SubsystemBase {
+    private final LEDSubsystem leds;
     private final TalonFX leftFlywheel9; // we should probably change these names once we learn more
     private final TalonFX rightFlywheel8; // we should probably change these names once we learn more
     double proportionVolt = 1.05;
@@ -46,9 +48,10 @@ public class Shooter extends SubsystemBase {
     private double kD = 0.01;
     private double feedForwardVolt;
 
-    public Shooter() {
+    public Shooter(LEDSubsystem leds) {
         leftFlywheel9 = new TalonFX(8);
         rightFlywheel8 = new TalonFX(9);
+        this.leds = leds;
 
         leftFlywheel9.getConfigurator().apply(new TalonFXConfiguration()); // config factory default
         rightFlywheel8.getConfigurator().apply(new TalonFXConfiguration()); // config factory default
@@ -111,6 +114,7 @@ public class Shooter extends SubsystemBase {
 
     @Override
     public void periodic() {
+
     }
 
     public double getProportionVolt() {

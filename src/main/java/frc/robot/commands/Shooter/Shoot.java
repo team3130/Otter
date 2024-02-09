@@ -50,7 +50,7 @@ public class Shoot extends Command {
     public void end(boolean interrupted) {
         m_shooter.stopShooters();
         m_indexer.stopIndexers();
-        m_intake.Stoptake();
+        m_intake.stoptake();
     }
 
     // Returns true when the command should end.
