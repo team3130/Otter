@@ -27,6 +27,11 @@ public class CameraSubsystem extends SubsystemBase {
   private static final ShuffleboardTab tab = Shuffleboard.getTab("PhotonCamera");
   AprilTagFieldLayout aprilTagFieldLayout;
 
+  private double cameraHeight =  0.965; //meters
+  private double speakerTagHeight = 1.3; //meters
+  private double cameraPitch = Math.toRadians(-0.59); //radians
+
+
   Pose2d targetPose = new Pose2d(16.58, 5.55, Rotation2d.fromRadians(0));
   Transform2d cameraToRobot = new Transform2d(3, 0, Rotation2d.fromRadians(0));
   private PhotonTrackedTarget CorrectTarget =new PhotonTrackedTarget(0,0,0, 0, -1, new Transform3d(), new Transform3d(), 0, new ArrayList<>(), new ArrayList<>());
@@ -183,6 +188,16 @@ public class CameraSubsystem extends SubsystemBase {
     }
     return -400d;
   }
+  public double getTargetPitch() {
+    if (!hasTarget()) {
+      return -400.0;
+    } else {
+      if (CorrectTarget != null && CorrectTarget.getPitch() != -400.0) {
+        return Math.toRadians(CorrectTarget.getPitch());
+      }
+    }
+    return -400d;
+  }
   public double getTargetDegrees() {
     return Math.toDegrees(getTargetYaw());
   }
@@ -200,6 +215,7 @@ public class CameraSubsystem extends SubsystemBase {
     builder.addDoubleProperty("target F", this::getXTargetV, this::setXTargetV);
     builder.addDoubleProperty("target YF", this::getYTargetV, this::setYTargetV);
     builder.addDoubleProperty("target XF", this::getXTargetV, this::setXTargetV);
+    builder.addDoubleProperty("target dist", this::getCorrectTargetDist, null);
 
 
 
@@ -221,6 +237,9 @@ public class CameraSubsystem extends SubsystemBase {
   }
   public void setCurrentTag(PhotonTrackedTarget target){
     CorrectTarget = target;
+  }
+  public double getCorrectTargetDist(){
+    return PhotonUtils.calculateDistanceToTargetMeters(cameraHeight, speakerTagHeight, cameraPitch, getTargetPitch());
   }
 
   @Override
