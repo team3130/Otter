@@ -57,7 +57,7 @@ public class RobotContainer {
   private final Amp amp;
   private final Shooter shooter;
   private final Intake intake;
-  private final LEDSubsystem ledSubsystem;
+  private final LEDSubsystem led;
   private final XboxController driverController = new XboxController(0);
   private final XboxController operatorController = new XboxController(1);
   private final SendableChooser<Command> autoChooser;
@@ -67,7 +67,7 @@ public class RobotContainer {
     shooter = new Shooter();
     intake = new Intake();
     amp = new Amp();
-    ledSubsystem = new LEDSubsystem();
+    led = new LEDSubsystem();
     chassis = new Chassis();
 
     // Named commands must be registered before the creation of any PathPlanner Autos or Paths
@@ -79,12 +79,12 @@ public class RobotContainer {
 
     // Default commands running in the background when other commands not scheduled
     chassis.setDefaultCommand(new TeleopDrive(chassis, driverController));
+    led.defaultYellow();
 
 
     // Build an auto chooser. This will use Commands.none() as the default option.
     // autoChooser = AutoBuilder.buildAutoChooser();
     autoChooser = AutoBuilder.buildAutoChooser("up");
-
     SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
