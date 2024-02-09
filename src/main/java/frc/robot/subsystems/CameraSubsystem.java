@@ -3,7 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.subsystems;
-
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.*;
@@ -19,15 +19,21 @@ import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
+import java.util.ArrayList;
+import java.util.Optional;
+
 public class CameraSubsystem extends SubsystemBase {
   protected PhotonCamera camera = new PhotonCamera("cam");
   private static final ShuffleboardTab tab = Shuffleboard.getTab("PhotonCamera");
   AprilTagFieldLayout aprilTagFieldLayout;
+
   Pose2d targetPose = new Pose2d(16.58, 5.55, Rotation2d.fromRadians(0));
   Transform2d cameraToRobot = new Transform2d(3, 0, Rotation2d.fromRadians(0));
-  private PhotonTrackedTarget CorrectTarget;
+  private PhotonTrackedTarget CorrectTarget =new PhotonTrackedTarget(0,0,0, 0, -1, new Transform3d(), new Transform3d(), 0, new ArrayList<>(), new ArrayList<>());
   private double previousPipelineTimestamp = 0;
-  private int speakerTargetFiducialID;
+  private int redSpeakerTargetFiducialID;
+  private int blueSpeakerTargetFiducialID;
+
   private int ampTargetFiducialID;
   private boolean isTryingToTarget = false;
   private int fiducialID = 0;
@@ -49,24 +55,21 @@ public class CameraSubsystem extends SubsystemBase {
     // Shuffleboard.getTab("Camerapls").add("target", target);
     tab.addBoolean("hasTarget", this::hasTarget);
     tab.addDouble("Target Yaw", this::getTargetYaw);
-    tab.addInteger("fiducial ID", this::getFiducialID);
 
     // SuppliedValueWidget<Double> targetYaw = tab.addDouble("Target Yaw", this::getTargetYaw);
     // tab.addDouble("Target Yaw", this::getTargetYaw).withPosition(2, 0).withSize(6, 4)
 
     // hasTargetQuestion = Shuffleboard.getTab("Camerapls").add("hasTarget", hasTargets).getEntry();
     // hasTargetQuestion = Shuffleboard.getTab("Camerapls").add("targetYaw", targetYaw).getEntry();
-    if (DriverStation.getAlliance().equals(DriverStation.Alliance.Red)) {
-      speakerTargetFiducialID = Constants.AprilTags.speakerTargetRedFiducialID;
-      ampTargetFiducialID = Constants.AprilTags.ampTargetRedFiducialID;
-    }
-    else {
-      speakerTargetFiducialID = Constants.AprilTags.speakerTargetBlueFiducialID;
-      ampTargetFiducialID = Constants.AprilTags.ampTargetBlueFiducialID;
-    }
-    targetController = new PIDController(targetP, targetI, targetD);
+        redSpeakerTargetFiducialID = Constants.AprilTags.speakerTargetRedFiducialID;
 
-  }
+        blueSpeakerTargetFiducialID = Constants.AprilTags.speakerTargetBlueFiducialID;
+
+
+      targetController = new PIDController(targetP, targetI, targetD);
+
+    }
+
   public boolean targetControllerDone(){
     return targetController.atSetpoint();
   }
@@ -118,9 +121,7 @@ public class CameraSubsystem extends SubsystemBase {
   public void setTargetD(double newD){
     targetD = newD;
   }
-  public boolean getIsTryingToTarget() {
-    return isTryingToTarget;
-  }
+
 
   public double goToTargetPower() {
     if(hasTarget()){
@@ -167,12 +168,10 @@ public class CameraSubsystem extends SubsystemBase {
   // AprilTagFieldLayout.getTagPose(getTarget().getFiducialId())
 
   public boolean hasTarget() {
-    return ! (CorrectTarget == null);
+    return camera.hasTargets();
   }
   public int getCorrectTargetID(){
-    if (CorrectTarget.getFiducialId() != -1){
-    return CorrectTarget.getFiducialId();}
-    else {return 0; }
+    return fiducialID;
   }
   public double getTargetYaw() {
     if (!hasTarget()) {
@@ -184,7 +183,7 @@ public class CameraSubsystem extends SubsystemBase {
     }
     return -400d;
   }
-  public double getTargetDegrees(){
+  public double getTargetDegrees() {
     return Math.toDegrees(getTargetYaw());
   }
 
@@ -197,7 +196,7 @@ public class CameraSubsystem extends SubsystemBase {
     builder.addDoubleProperty("target P", this::getTargetP, this::setTargetP);
     builder.addDoubleProperty("target I", this::getTargetI, this::setTargetI);
     builder.addDoubleProperty("target D", this::getTargetD, this::setTargetD);
-    builder.addBooleanProperty("is targeting", this::getIsTryingToTarget, null);
+    builder.addBooleanProperty("is targeting", this::isTryingToTarget, null);
     builder.addDoubleProperty("target F", this::getXTargetV, this::setXTargetV);
     builder.addDoubleProperty("target YF", this::getYTargetV, this::setYTargetV);
     builder.addDoubleProperty("target XF", this::getXTargetV, this::setXTargetV);
@@ -212,17 +211,12 @@ public class CameraSubsystem extends SubsystemBase {
     PhotonPipelineResult result = camera.getLatestResult();
     double resultTimestamp = result.getTimestampSeconds();
     int i = 0;
-    int correctTagIndex = -1;
-    while (result.getTargets().toArray().length >= i && result.getTargets() != null){
-      if (result.getTargets().get(i).getFiducialId() == speakerTargetFiducialID){
-        correctTagIndex = i;
+    while (result.getTargets().size() > i && result.getTargets() != null && hasTarget() && result.getTargets().get(i).getFiducialId() != -1) {
+      if (result.getTargets().get(i).getFiducialId() == 4 || result.getTargets().get(i).getFiducialId() == 7) {
+        fiducialID = result.getTargets().get(i).getFiducialId();
+        setCurrentTag(result.getTargets().get(i));
       }
       i++;
-    }
-    if (result.hasTargets() && result.getTargets().get(correctTagIndex) != null && correctTagIndex != -1) {
-      previousPipelineTimestamp = resultTimestamp;
-      setCurrentTag(result.getTargets().get(correctTagIndex));
-      //fiducialID = result.getBestTarget().getFiducialId();
     }
   }
   public void setCurrentTag(PhotonTrackedTarget target){

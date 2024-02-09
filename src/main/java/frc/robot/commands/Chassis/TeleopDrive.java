@@ -52,15 +52,18 @@ public class TeleopDrive extends Command {
     double thetaJoystick = -m_xboxController.getRawAxis(Constants.Buttons.LST_AXS_RJOYSTICKX);
     theta = Math.abs(theta) > Constants.Swerve.kDeadband ? theta : 0.0;
 
+
     if (m_camera.isTryingToTarget() && (thetaJoystick != 0d)){
         theta = (x * m_camera.getXTargetV()) + (m_camera.goToTargetPower()) + (-y * m_camera.getYTargetV());
     } else {
       theta = thetaJoystick;
+      theta = Math.abs(theta) > Constants.Swerve.kDeadband ? theta : 0.0;
       theta = turningLimiter.calculate(theta) * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond;
     }
     // square the inputs
     y = y * Math.abs(y);
     x = x * Math.abs(x);
+
 
     // apply dead-band
     if (Math.abs(x) < Constants.Swerve.kDeadband) {
