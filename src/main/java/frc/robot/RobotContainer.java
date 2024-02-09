@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.Autos;
 import frc.robot.commands.Chassis.FlipDriveOrientation;
+import frc.robot.commands.Chassis.TeleopDrive;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.Intake.Toggle;
 import frc.robot.commands.Intake.Drop_UnlimitedIntake;
@@ -60,7 +61,6 @@ public class RobotContainer {
   private final Intake intake;
   private final Indexer indexer;
   private final Intake intake;
-  private final Camera camera;
   private final LEDSubsystem ledSubsystem;
   private final XboxController driverController = new XboxController(0);
   private final XboxController operatorController = new XboxController(1);
@@ -72,7 +72,6 @@ public class RobotContainer {
     indexer = new Indexer();
     intake = new Intake();
     hopper = new Hopper();
-    camera = new Camera();
     chassis = new Chassis(camera);
     amp = new Amp();
     ledSubsystem = new LEDSubsystem();

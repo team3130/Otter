@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -14,16 +15,12 @@ public class LEDSubsystem extends SubsystemBase {
   private final int ledLength = 61;
   AddressableLED led;
   AddressableLEDBuffer ledBuffer;
+  private int testShuff = 0;
 
-  /** Creates a new ExampleSubsystem. */
   public LEDSubsystem() {
-    /// PWM port 9
-    // Must be a PWM header, not MXP or DIO
-    led = new AddressableLED(0);
+    led = new AddressableLED(0); // PWM Port
 
-    // Reuse buffer
-    // Length is expensive to set, so only set it once, then just update data
-    ledBuffer = new AddressableLEDBuffer(ledLength);
+    ledBuffer = new AddressableLEDBuffer(ledLength); // set length once
     led.setLength(ledBuffer.getLength());
 
     // Set the data
@@ -31,50 +28,53 @@ public class LEDSubsystem extends SubsystemBase {
     led.start();
   }
 
-  // HSV: h == set the value, s == saturation, v == brightness value
-  // Red falls between 0 and 60 degrees.
-  // Yellow falls between 61 and 120 degrees.
-  // Green falls between 121 and 180 degrees.
-  // Cyan falls between 181 and 240 degrees.
-  // Blue falls between 241 and 300 degrees.
-  // Magenta falls between 301 and 360 degrees.
+  /* HSV: h == set the value, s == saturation, v == brightness value
+    Red: 0 - 60
+    Yellow: 61 - 120
+    Green: 121 - 180
+    Cyan: 181 - 240
+    Blue: 241 - 300
+    Magenta: 301 and 360 degrees.
+  */
+
+  public void testShuffleboard() {
+    for (var i = 0; i < ledBuffer.getLength(); i++) {
+      ledBuffer.setHSV(i, testShuff, 255, 128);
+    }
+    led.setData(ledBuffer);
+  }
 
   public void red() {
     for (var i = 0; i < ledBuffer.getLength(); i++) {
-      // Sets the specified LED to the RGB values for red
-      ledBuffer.setHSV(i, 0, 0, 128);
+      ledBuffer.setHSV(i, 0, 255, 128);
     }
     led.setData(ledBuffer);
   }
 
   public void green() {
     for (var i = 0; i < ledBuffer.getLength(); i++) {
-      // Sets the specified LED to the RGB values for red
-      ledBuffer.setHSV(i, 150, 0, 128);
+      ledBuffer.setHSV(i, 150, 255, 128);
     }
     led.setData(ledBuffer);
   }
 
   public void blue() {
     for (var i = 0; i < ledBuffer.getLength(); i++) {
-      // Sets the specified LED to the RGB values for red
-      ledBuffer.setHSV(i, 260, 0, 128);
+      ledBuffer.setHSV(i, 260, 255, 128);
     }
     led.setData(ledBuffer);
   }
 
   public void selectGreen() {
     for (var i = 20; i < 40; i++) {
-      // Sets the specified LED to the RGB values for red
-      ledBuffer.setHSV(i, 150, 0, 128);
+      ledBuffer.setHSV(i, 150, 255, 128);
     }
     led.setData(ledBuffer);
   }
 
   public void reset() {
     for (var i = 0; i < ledBuffer.getLength(); i++) {
-      // Sets the specified LED to the RGB values for red
-      ledBuffer.setHSV(i, 0, 0, 0);
+      ledBuffer.setHSV(i, 0, 255, 0);
     }
     led.setData(ledBuffer);
   }
@@ -93,6 +93,14 @@ public class LEDSubsystem extends SubsystemBase {
     // Check bounds
     rainbowFirstPixelHue %= 180;
     led.setData(ledBuffer);
+  }
+
+  public int getTestShuff() { return testShuff; }
+  public void setTestShuff(long lol) { testShuff = (int) lol; }
+
+  public void initSendable(SendableBuilder builder) {
+    builder.setSmartDashboardType("LED");
+    builder.addIntegerProperty("Test Color", this::getTestShuff, this::setTestShuff);
   }
 
   @Override
