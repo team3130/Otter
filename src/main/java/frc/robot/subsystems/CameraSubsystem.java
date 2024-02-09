@@ -29,7 +29,7 @@ public class CameraSubsystem extends SubsystemBase {
 
   private double cameraHeight =  0.965; //meters
   private double speakerTagHeight = 1.3; //meters
-  private double cameraPitch = Math.toRadians(-0.59); //radians
+  private double cameraPitch = 0.0045; //radians
 
 
   Pose2d targetPose = new Pose2d(16.58, 5.55, Rotation2d.fromRadians(0));
