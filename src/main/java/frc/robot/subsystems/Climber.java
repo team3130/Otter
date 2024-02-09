@@ -18,6 +18,8 @@ public class Climber extends SubsystemBase {
     private final WPI_TalonSRX climberMotor;
     private int joystickUsed;
 
+    private boolean invalidInput = false;
+
     public Climber(int CANID, int limitSwitchPort, int joystick) {
         climberMotor = new WPI_TalonSRX(CANID);
         this.limitSwitch = new DigitalInput(limitSwitchPort);
@@ -31,6 +33,13 @@ public class Climber extends SubsystemBase {
     public boolean brokeLimit() {
         return !limitSwitch.get();
     }
+    public boolean getInvalidInput() {
+        return invalidInput;
+    }
+    public void setInvalidInput(boolean valid){
+        invalidInput = valid;
+    }
+
 
     // sets speed of right arm
     public void setMotorCheckingSpeed() {
@@ -75,6 +84,12 @@ public class Climber extends SubsystemBase {
 
     @Override
     public void periodic() {
+        if (brokeLimit()){
+            //TODO LEDS GREEN
+        }
+        if (getInvalidInput()){
+            //TODO LEDS RED
+        }
     }
 
     @Override

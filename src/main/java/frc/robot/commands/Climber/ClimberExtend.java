@@ -28,14 +28,22 @@ public class ClimberExtend extends Command {
     @Override
     public void execute() {
         // reads joystick input as y
-        double power = xboxController.getRawAxis(climber.getJoystick());
+        double power = xboxController.getRawAxis(climber.getJoystick()); //TODO CHECK IF INVERTED
         power = power * Math.abs(power);
 
 
-        // checks if limit switch has been broken
-        if (climber.brokeLimit() || power > 0) {
+        if (power < 0){
+            climber.setInvalidInput(true);
+            //leds go red
             power = 0;
-            //TODO Flash LEDS
+        } else{
+            climber.setInvalidInput(false);
+        }
+
+        // checks if limit switch has been broken or if theyre trying to move the climber down
+        if (climber.brokeLimit()) {
+            power = 0;
+            //LEDS go green
         }
 
         //sets the speed of the motor
