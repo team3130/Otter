@@ -4,6 +4,11 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -46,11 +51,13 @@ import java.util.function.BooleanSupplier;
 
 // The robot's subsystems and commands are defined here...
 public class RobotContainer {
+  // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final Chassis chassis;
   private final Hopper hopper;
   private final Amp amp;
   private final Shooter shooter;
+  private final Intake intake;
   private final Indexer indexer;
   private final Intake intake;
   private final Camera camera;
@@ -72,19 +79,29 @@ public class RobotContainer {
 
     // Named commands must be registered before the creation of any PathPlanner Autos or Paths
     // Do this in RobotContainer, after subsystem initialization, but before the creation of any other commands.
+    NamedCommands.registerCommand("spinHopper", hopper.spinHopperAuto());
 
     configureBindings(); // configure button bindings
     exportShuffleBoardData(); // export ShuffleBoardData
 
     // Default commands running in the background when other commands not scheduled
+    chassis.setDefaultCommand(new TeleopDrive(chassis, driverController));
 
 
     // Build an auto chooser. This will use Commands.none() as the default option.
     // autoChooser = AutoBuilder.buildAutoChooser();
+    autoChooser = AutoBuilder.buildAutoChooser("up");
 
-    // An
+    SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
+  public Command pick() {
+    return autoChooser.getSelected();
+  }
+
+  public Command getPullOut() {
+    return new PathPlannerAuto("Pull out");
+  }
 
 
   /**
@@ -97,8 +114,21 @@ public class RobotContainer {
     return Autos.exampleAuto(m_exampleSubsystem);
   }
 
+  public Command resetEverything() {
+    return new ZeroEverything(chassis);
+  }
+
+
   public void periodic() {
     ledSubsystem.selectGreen();
+  }
+
+  public void resetOdo() {
+    chassis.resetOdometry(new Pose2d(0, 0, new Rotation2d()));
+  }
+
+  public void updateChassisPose() {
+    chassis.updateOdometryFromSwerve();
   }
 
   /*
@@ -150,7 +180,9 @@ public class RobotContainer {
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new ToggleAmp(amp));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_Y).whileTrue(new SpinHopper(hopper));
 
+
     //new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new OnlyIndex(indexer));
+
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_A).whileTrue(new OnlyShoot(shooter));
     SmartDashboard.putData(new FlipDriveOrientation(chassis));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new FlipDriveOrientation(chassis));
