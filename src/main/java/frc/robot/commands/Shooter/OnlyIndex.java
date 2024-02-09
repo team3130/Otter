@@ -5,7 +5,6 @@
 package frc.robot.commands.Shooter;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Indexer;
 
 /** An example command that uses an example subsystem. */
 public class OnlyIndex extends Command {
