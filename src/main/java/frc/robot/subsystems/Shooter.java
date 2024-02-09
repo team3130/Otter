@@ -24,6 +24,10 @@ public class Shooter extends SubsystemBase {
     private final TalonFX topFlywheel; // we should probably change these names once we learn more
     private final TalonFX bottomFlywheel; // we should probably change these names once we learn more
     // double proportionVolt = 1.05;
+    private final TalonSRX indexMotor;
+    private double shooterIndexSpeed = 0.50;
+    private double flywheelRampTime = 0;
+
 
     final VoltageOut topVoltReq = new VoltageOut(0);
     final VoltageOut bottomVoltReq = new VoltageOut(0);
@@ -50,8 +54,6 @@ public class Shooter extends SubsystemBase {
     private double bottomFeedForwardVolt;
     ClosedLoopRampsConfigs topClosedLoopRamp;
     ClosedLoopRampsConfigs bottomClosedLoopRamp;
-    private final TalonSRX indexMotor;
-    private double shooterIndexSpeed = 0.50;
 
 
     public Shooter() {
@@ -170,6 +172,9 @@ public class Shooter extends SubsystemBase {
     public double getTopCurrent() {return topFlywheel.getSupplyCurrent().getValue();}
     public double getBottomCurrent() {return bottomFlywheel.getSupplyCurrent().getValue();}
 
+    public double getFlywheelRampTime() { return this.getFlywheelVolts();}
+    public void setFlywheelRampTime(double newTime) { this.flywheelRampTime = newTime;}
+
 
     public double getFlywheelVolts(){ return flywheelVolts;}
     public void setFlywheelVolts(double volt){flywheelVolts = volt;}
@@ -205,6 +210,7 @@ public class Shooter extends SubsystemBase {
     public void initSendable(SendableBuilder builder) {
         builder.setSmartDashboardType("Shooter");
         //builder.addDoubleProperty("proportion speed", this::getProportionVolt, this::setProportionVolt);
+        builder.addDoubleProperty("Flywheel Ramp Time", this::getFlywheelRampTime, this::setFlywheelRampTime);
         builder.addDoubleProperty("shooter volts", this::getFlywheelVolts, this::setFlywheelVolts);
 
         builder.addDoubleProperty("Top Flywheel Velocity (RPS)", this::getTopFlyVelocityRPS, null);

@@ -6,11 +6,13 @@
 package frc.robot.commands.Shooter;
 
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Shooter;
 
 public class VelocityShoot extends Command {
   private final Shooter shooter;
+  private Timer spinUpTime = new Timer();
 
   /**
    * Creates a new ExampleCommand.
@@ -26,21 +28,30 @@ public class VelocityShoot extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    spinUpTime.reset();
+    spinUpTime.start();
+
     shooter.configureVelocitySlots();
     shooter.updateVelocityPID();
+
     shooter.setFlywheelVelocity();
   }
 
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    if (spinUpTime.hasElapsed(shooter.getFlywheelRampTime())){
+      shooter.runIndexers();
+    }
+  }
 
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     shooter.stopShooters();
+    shooter.stopIndexers();
   }
 
 

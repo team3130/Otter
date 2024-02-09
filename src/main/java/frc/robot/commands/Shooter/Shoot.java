@@ -8,12 +8,11 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Shooter;
 
-public class DumbShoot extends Command {
-    private final Shooter m_shooter;
-    //private final Intake m_intake;
+public class Shoot extends Command {
+    private final Shooter shooter;
     private Timer spinUpTime = new Timer();
-    public DumbShoot(Shooter shooter) {
-        m_shooter = shooter;
+    public Shoot(Shooter shooter) {
+        this.shooter = shooter;
         //m_intake = intake;
         addRequirements(shooter);
     }
@@ -23,24 +22,22 @@ public class DumbShoot extends Command {
     public void initialize() {
         spinUpTime.reset();
         spinUpTime.start();
-        m_shooter.runShooters();
-        //m_intake.runIntake();
+        shooter.runShooters();
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        if (spinUpTime.hasElapsed(1)){
-            m_shooter.runIndexers();
+        if (spinUpTime.hasElapsed(shooter.getFlywheelRampTime())){
+            shooter.runIndexers();
         }
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        m_shooter.stopShooters();
-        m_shooter.stopIndexers();
-       // m_intake.stopIntake();
+        shooter.stopShooters();
+        shooter.stopIndexers();
     }
 
     // Returns true when the command should end.
