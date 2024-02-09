@@ -6,24 +6,15 @@ package frc.robot.commands.Shooter;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 
-/** An example command that uses an example subsystem. */
 public class Shoot extends Command {
-    @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-    private final Shooter m_shooter;
-    private final Indexer m_indexer;
-    private final Intake m_intake;
+    private final Shooter shooter;
     private Timer spinUpTime = new Timer();
-    public Shoot(Shooter shooter, Indexer index, Intake intake) {
-        m_shooter = shooter;
-        m_indexer = index;
-        m_intake = intake;
-
-        // Use addRequirements() here to declare subsystem dependencies.
+    public Shoot(Shooter shooter) {
+        this.shooter = shooter;
+        //m_intake = intake;
         addRequirements(shooter);
-        addRequirements(index);
     }
 
     // Called when the command is initially scheduled.
@@ -31,24 +22,22 @@ public class Shoot extends Command {
     public void initialize() {
         spinUpTime.reset();
         spinUpTime.start();
-        m_shooter.runShooters();
+        shooter.runShooters();
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        if (spinUpTime.hasElapsed(0.5)){
-            m_indexer.runIndexers();
-            m_intake.DumbIntake();
+        if (spinUpTime.hasElapsed(shooter.getFlywheelRampTime())){
+            shooter.runIndexers();
         }
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        m_shooter.stopShooters();
-        m_indexer.stopIndexers();
-        m_intake.Stoptake();
+        shooter.stopShooters();
+        shooter.stopIndexers();
     }
 
     // Returns true when the command should end.

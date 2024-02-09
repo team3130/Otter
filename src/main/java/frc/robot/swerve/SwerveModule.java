@@ -63,18 +63,11 @@ public class SwerveModule implements Sendable {
 
     // returns the amount of distance the drive motor has travelled in meters
     public double getDrivePosition() {
-        //return driveMotor.getPosition().getValue() * Constants.Conversions.DriveRotToMeters;
         return driveMotor.getPosition().getValue() * Constants.Conversions.DriveRotToMeters;
     }
 
     // returns the position of the steering motor radians
-    public Rotation2d getTurningPosition() {
-        // return steerMotor.getPosition().getValue() * Constants.Conversions.SteerRotToRads;
-
-        return new Rotation2d(steerMotor.getPosition().getValue() * Constants.Conversions.SteerRotToRads);
-    }
-
-    public double getTurningPositionRadians() {
+    public double getTurningPosition() {
         return steerMotor.getPosition().getValue() * Constants.Conversions.SteerRotToRads;
     }
 
@@ -93,6 +86,9 @@ public class SwerveModule implements Sendable {
         return Math.toRadians(absoluteEncoder.getAbsolutePosition().getValue() * 360);
     }
 
+    /**
+     * @return the position of the steering wheel in degrees
+     */
     public double getAbsoluteEncoderDegrees() {
         return absoluteEncoder.getAbsolutePosition().getValue();
     }
@@ -114,7 +110,7 @@ public class SwerveModule implements Sendable {
      */
     public void resetEncoders() {
         steerMotor.setPosition((getAbsoluteEncoderRad() - absoluteEncoderOffset) / Constants.Conversions.SteerRotToRads);
-        //steerMotor.setPosition((getAbsoluteEncoderRad() - absoluteEncoderOffset) / Constants.Conversions.SteerRotToRads);
+        // m_driveMotor.setSelectedSensorPosition(0);
     }
 
     /**
@@ -122,7 +118,7 @@ public class SwerveModule implements Sendable {
      * @return custom at set-point logic for the PID controller
      */
     public boolean wheelsZeroed() {
-        Rotation2d pos = getTurningPosition();
+        Rotation2d pos = new Rotation2d(getTurningPosition());
         return (pos.getDegrees() > 355 || pos.getDegrees() < 5) && getTurningVelocity() < 0.05;
     }
 
@@ -130,13 +126,13 @@ public class SwerveModule implements Sendable {
      * @return the current swerve module state
      */
     public SwerveModuleState getState() {
-        return new SwerveModuleState(getDriveVelocity(), getTurningPosition());
+        return new SwerveModuleState(getDriveVelocity(), new Rotation2d(getTurningPosition()));
     }
 
     /**
      * Default stop method to stop the motors
      */
-    public void stop() {
+    public void stop(){
         steerMotor.setControl(steerMotorVoltRequest.withOutput(0));
         driveMotor.setControl(driveMotorVoltRequest.withOutput(0));
     }
@@ -159,17 +155,15 @@ public class SwerveModule implements Sendable {
         // m_driveMotor.setControl(driveMotorVoltRequest.withOutput(12d* (state.speedMetersPerSecond / Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond)));
         driveMotor.setVoltage((10d* (state.speedMetersPerSecond / Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond)));
         // set the steering motor based off the output of the PID controller
-        steerMotor.setVoltage(4d * turningPidController.calculate(Math.IEEEremainder(getTurningPositionRadians(), Math.PI * 2), state.angle.getRadians()));
+        steerMotor.setVoltage(4d * turningPidController.calculate(Math.IEEEremainder(getTurningPosition(), Math.PI * 2), state.angle.getRadians()));
     }
-
-
 
     /**
      * Turns the motors to an angle
      * @param setpoint in radians
      */
     public void turnToAngle(double setpoint) {
-        steerMotor.setVoltage(12d * turningPidController.calculate(Math.IEEEremainder(getTurningPositionRadians(), Math.PI * 2), setpoint));
+        steerMotor.setVoltage(12d * turningPidController.calculate(Math.IEEEremainder(getTurningPosition(), Math.PI * 2), setpoint));
     }
 
     /**
@@ -177,7 +171,7 @@ public class SwerveModule implements Sendable {
      * @return gets with turning position and velocity
      */
     public SwerveModulePosition getPosition() {
-        return new SwerveModulePosition(getDrivePosition(), getTurningPosition());
+        return new SwerveModulePosition(getDrivePosition(), new Rotation2d(getTurningPosition()));
     }
 
     /**
@@ -213,7 +207,7 @@ public class SwerveModule implements Sendable {
     }
 
     /**
-     * Setter for derby derv
+     * Setter for dervy derv
      * @param newD the new D value
      */
     public void setDValue(double newD) {
@@ -243,13 +237,12 @@ public class SwerveModule implements Sendable {
     @Override
     public void initSendable(SendableBuilder builder) {
         builder.setSmartDashboardType("Swerve Module " + side);
-        // builder.addDoubleProperty("Drive velocity", this::getDriveVelocity, null);
+/*        builder.addDoubleProperty("Drive position", this::getDrivePosition, null);
+        builder.addDoubleProperty("Drive velocity", this::getDriveVelocity, null);*/
         builder.addDoubleProperty("Steer position", this::getSteerPositionWrapped, null);
-        builder.addDoubleProperty("Drive position", this::getDrivePosition, null);
-        builder.addDoubleProperty("Absolute encoder position", this::getAbsoluteEncoderRad, null);
 /*        builder.addDoubleProperty("Steer velocity", this::getTurningVelocity, null);
         builder.addDoubleProperty("Steer relative", this::getRelativePositionDegrees, null);
-        */
+        builder.addDoubleProperty("Absolute encoder position", this::getAbsoluteEncoderDegrees, null);*/
         builder.addDoubleProperty("Swerve P " + side, this::getPValue, this::setPValue);
         builder.addDoubleProperty("Swerve I " + side, this::getIValue, this::setIValue);
         builder.addDoubleProperty("Swerve D " + side, this::getDValue, this::setDValue);
@@ -260,10 +253,10 @@ public class SwerveModule implements Sendable {
     }
 
     public double getRelativePositionDegrees() {
-        return Math.toDegrees(getTurningPositionRadians());
+        return Math.toDegrees(getTurningPosition());
     }
 
     public double getRelDegrees() {
-        return Math.toDegrees(getTurningPositionRadians());
+        return Math.toDegrees(getTurningPosition());
     }
 }

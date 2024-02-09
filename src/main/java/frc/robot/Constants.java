@@ -58,7 +58,14 @@ public final class Constants {
 
     public final static int CAN_hopperright = 16;
     public final static int CAN_hopperleft = 17;
+    public final static int CAN_Solenoid1 = 18;
+    public final static int CAN_Solenoid2 = 19;
 
+    public final static int shifterOnePNM = 20;
+    public final static int shifterOneChannel = 0;
+    public final static int shifterTwoPNM = 21;
+    public final static int shifterTwoChannel = 1;
+    
     public final static int ampPCM = 18;
     public final static int ampChannel = 19;
     public final static int ampLimitSwitch = 20; //TODO

@@ -2,35 +2,32 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.Shooter;
+package frc.robot.commands.ShooterShifter;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.ShooterShifter;
 
-public class OnlyShoot extends Command {
-  private final Shooter m_shooter;
+public class DoubleExtend extends Command {
+  private final ShooterShifter shooterShifter;
 
-  public OnlyShoot(Shooter shooter) {
-    m_shooter = shooter;
-    addRequirements(shooter);
+  public DoubleExtend(ShooterShifter shifter) {
+    shooterShifter = shifter;
+    addRequirements(shifter);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_shooter.runShooters();
+    shooterShifter.doubleExtend();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    m_shooter.stopShooters();
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override
