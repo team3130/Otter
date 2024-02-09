@@ -11,16 +11,10 @@ import frc.robot.subsystems.Climber;
 /** An example command that uses an example subsystem. */
 public class ClimberExtend extends Command {
     private final Climber climber;
-
     private XboxController xboxController;
     private int joystickButton;
 
-    /**
-     * Creates a new ExampleCommand.
-     *
-     * @param subsystem The subsystem used by this command.
-    */
-    public ClimberExtend(Climber side,  XboxController xboxController) {
+    public ClimberExtend(Climber side, XboxController xboxController) {
         climber = side;
         this.xboxController = xboxController;
         addRequirements(climber);
@@ -45,7 +39,7 @@ public class ClimberExtend extends Command {
         }
 
         //sets the speed of the motor
-        climber.setMotorSpeed(power);
+        climber.setClimberSpeed(power);
     }
 
     // Called once the command ends or is interrupted.

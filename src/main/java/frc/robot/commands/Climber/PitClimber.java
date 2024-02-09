@@ -10,11 +10,7 @@ import edu.wpi.first.wpilibj.Timer;
 
 /** An example command that uses an example subsystem. */
 public class PitClimber extends Command {
-
     private final Climber climber;
-
-    private boolean isDone = false;
-
     private final Timer timer;
 
     public PitClimber(Climber climber) {

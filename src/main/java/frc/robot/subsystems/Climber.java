@@ -13,43 +13,18 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 public class Climber extends SubsystemBase {
     private double currentMax = 0.0;
     private double timerAmount = 0.1;
-    private double checkingSpeed = 0.1;
+    private double pitCheckingSpeed = 0.1;
     private final DigitalInput limitSwitch;
     private final WPI_TalonSRX climberMotor;
     private int joystickUsed;
 
     public Climber(int CANID, int limitSwitchPort, int joystick) {
         climberMotor = new WPI_TalonSRX(CANID);
+        this.limitSwitch = new DigitalInput(limitSwitchPort);
         climberMotor.configFactoryDefault();
         climberMotor.configVoltageCompSaturation(3);
         climberMotor.setInverted(false);
         joystickUsed = joystick;
-        this.limitSwitch = new DigitalInput(limitSwitchPort);
-    }
-
-    public double getCurrentMax() {
-        return currentMax;
-    }
-
-    public void setCurrentMax(double current) {
-        currentMax = current;
-    }
-
-    public double getTimerAmount() {
-        return timerAmount;
-    }
-    public int getJoystick() {
-        return joystickUsed;
-    }
-    public double getCheckingSpeed(){
-        return checkingSpeed;
-    }
-    public void setCheckingSpeed(double speed){
-        checkingSpeed= speed;
-    }
-
-    public void setTimerAmount(double timer) {
-        timerAmount = timer;
     }
 
     // returns the status of the left arm's limitswitch
@@ -57,9 +32,18 @@ public class Climber extends SubsystemBase {
         return !limitSwitch.get();
     }
 
-    // inverts the motor direction
-    public void invert() {
-        climberMotor.setInverted(!climberMotor.getInverted());
+    // sets speed of right arm
+    public void setMotorCheckingSpeed() {
+        climberMotor.set(ControlMode.PercentOutput, pitCheckingSpeed);
+    }
+
+    public void setClimberSpeed(double speed) {
+        climberMotor.set(ControlMode.PercentOutput, speed);
+    }
+
+    // sets left arm speed to zero
+    public void stop() {
+        climberMotor.set(ControlMode.PercentOutput, 0);
     }
 
     // returns the amount of current the motor is using
@@ -67,18 +51,26 @@ public class Climber extends SubsystemBase {
         return climberMotor.getSupplyCurrent();
     }
 
-    // sets speed of right arm
-    public void setMotorCheckingSpeed() {
-        climberMotor.set(ControlMode.PercentOutput, checkingSpeed);
+    public double getCurrentMax() {
+        return currentMax;
     }
-    public void setMotorSpeed(double speed) {
-        climberMotor.set(ControlMode.PercentOutput, speed);
+    public void setCurrentMax(double current) {
+        currentMax = current;
     }
-
-
-    // sets left arm speed to zero
-    public void stop() {
-        climberMotor.set(ControlMode.PercentOutput, 0);
+    public double getTimerAmount() {
+        return timerAmount;
+    }
+    public int getJoystick() {
+        return joystickUsed;
+    }
+    public double getPitCheckingSpeed(){
+        return pitCheckingSpeed;
+    }
+    public void setPitCheckingSpeed(double speed){
+        pitCheckingSpeed = speed;
+    }
+    public void setTimerAmount(double timer) {
+        timerAmount = timer;
     }
 
     @Override
@@ -94,7 +86,7 @@ public class Climber extends SubsystemBase {
         builder.addBooleanProperty("ClimberBrokeLeft", this::brokeLimit, null);
         builder.addDoubleProperty("currentMaxRight", this::getCurrentMax, this::setCurrentMax);
         builder.addDoubleProperty("timerAmount", this::getTimerAmount, this::setTimerAmount);
-        builder.addDoubleProperty("checking speed", this::getCheckingSpeed, this::setCheckingSpeed);
+        builder.addDoubleProperty("checking speed", this::getPitCheckingSpeed, this::setPitCheckingSpeed);
 
     }
 }
