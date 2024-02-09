@@ -22,7 +22,6 @@ public class LEDSubsystem extends SubsystemBase {
     led = new AddressableLED(0);
 
     // Reuse buffer
-    // Default to a length of 60, start empty output
     // Length is expensive to set, so only set it once, then just update data
     ledBuffer = new AddressableLEDBuffer(ledLength);
     led.setLength(ledBuffer.getLength());
@@ -64,6 +63,14 @@ public class LEDSubsystem extends SubsystemBase {
     led.setData(ledBuffer);
   }
 
+  public void selectGreen() {
+    for (var i = 20; i < 40; i++) {
+      // Sets the specified LED to the RGB values for red
+      ledBuffer.setHSV(i, 150, 0, 128);
+    }
+    led.setData(ledBuffer);
+  }
+
   public void reset() {
     for (var i = 0; i < ledBuffer.getLength(); i++) {
       // Sets the specified LED to the RGB values for red
@@ -86,30 +93,6 @@ public class LEDSubsystem extends SubsystemBase {
     // Check bounds
     rainbowFirstPixelHue %= 180;
     led.setData(ledBuffer);
-  }
-
-  /**
-   * Example command factory method.
-   *
-   * @return a command
-   */
-  public Command exampleMethodCommand() {
-    // Inline construction of command goes here.
-    // Subsystem::RunOnce implicitly requires `this` subsystem.
-    return runOnce(
-        () -> {
-          /* one-time action goes here */
-        });
-  }
-
-  /**
-   * An example method querying a boolean state of the subsystem (for example, a digital sensor).
-   *
-   * @return value of some boolean subsystem state, such as a digital sensor.
-   */
-  public boolean exampleCondition() {
-    // Query some boolean state, such as a digital sensor.
-    return false;
   }
 
   @Override

@@ -77,7 +77,7 @@ public class RobotContainer {
     exportShuffleBoardData(); // export ShuffleBoardData
 
     // Default commands running in the background when other commands not scheduled
-    ledSubsystem.setDefaultCommand(new LightUpWithNote(ledSubsystem, amp, intake));
+
 
     // Build an auto chooser. This will use Commands.none() as the default option.
     // autoChooser = AutoBuilder.buildAutoChooser();
@@ -98,7 +98,7 @@ public class RobotContainer {
   }
 
   public void periodic() {
-
+    ledSubsystem.selectGreen();
   }
 
   /*
@@ -148,7 +148,6 @@ public class RobotContainer {
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_A).whileTrue(new AmpIntake(amp));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new AmpOuttake(amp));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new ToggleAmp(amp));
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new AmpUnPrime(amp));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_Y).whileTrue(new SpinHopper(hopper));
 
     //new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new OnlyIndex(indexer));
@@ -160,7 +159,6 @@ public class RobotContainer {
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new VelocityShoot(shooter));
 
     SmartDashboard.putData(new FlipDriveOrientation(chassis));
-    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_LBUMPER).whileTrue(new DumbSpouttake(new Intake()));
     new JoystickButton(operatorController, Constants.Buttons.LST_BTN_RBUMPER).whileTrue(new Drop_UnlimitedIntake(new Intake()));
     new JoystickButton(operatorController, Constants.Buttons.LST_BTN_A).whileTrue(new SmartSpintake(new Intake()));
     new JoystickButton(operatorController, Constants.Buttons.LST_BTN_B).whileTrue(new Toggle(new Intake()));

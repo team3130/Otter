@@ -12,7 +12,6 @@ public class SmartSpintake extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final Intake intake;
   private boolean hasPiece = false;
-  private boolean
 
   /**
    * Creates a new ExampleCommand.
