@@ -58,6 +58,7 @@ public final class Constants {
 
     public final static int CAN_hopperright = 16;
     public final static int CAN_hopperleft = 17;
+    public final static int shooterBreakBeam = 2; //TODO
     public final static int CAN_Solenoid1 = 18;
     public final static int CAN_Solenoid2 = 19;
 
@@ -77,7 +78,7 @@ public final class Constants {
     //TODO find these values
 
 
-    public static int kMaxVoltageIntake = 3;
+    public static int kMaxVoltageIntake = 5;
 
   }
   public static class AprilTags {

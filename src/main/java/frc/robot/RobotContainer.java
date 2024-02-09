@@ -18,7 +18,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.*;
 import frc.robot.commands.Chassis.FlipDriveOrientation;
@@ -26,6 +25,13 @@ import frc.robot.commands.Chassis.TeleopDrive;
 import frc.robot.commands.Chassis.ZeroEverything;
 import frc.robot.commands.Shooter.*;
 import frc.robot.commands.ShooterShifter.*;
+import frc.robot.commands.Autos;
+import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.Intake.*;
+import frc.robot.commands.LED.LightUpWithNote;
+import frc.robot.commands.Shooter.OnlyShoot;
+import frc.robot.commands.Shooter.Shoot;
+import frc.robot.sensors.Camera;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.Amp;
 import frc.robot.subsystems.Chassis;
@@ -56,12 +62,14 @@ public class RobotContainer {
 
   // container for the robot containing subsystems, OI devices, and commands
   public RobotContainer() {
-    shooter = new Shooter();
-    shooterShifter = new ShooterShifter();
-    intake = new Intake();
-    amp = new Amp();
     led = new LEDSubsystem();
-    chassis = new Chassis();
+    shooter = new Shooter(ledSubsystem);
+    indexer = new Indexer();
+    intake = new Intake(ledSubsystem);
+    hopper = new Hopper();
+    camera = new Camera();
+    chassis = new Chassis(camera);
+    amp = new Amp();
 
     // Named commands must be registered before the creation of any PathPlanner Autos or Paths
     // Do this in RobotContainer, after subsystem initialization, but before the creation of any other commands.
@@ -162,13 +170,22 @@ public class RobotContainer {
     new JoystickButton(driverController, Constants.Buttons.LST_POV_W).whileTrue(new ShifterOneExtend(shooterShifter));
     new JoystickButton(driverController, Constants.Buttons.LST_POV_W).whileTrue(new ShifterTwoExtend(shooterShifter));
 
+    new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new Shoot(shooter, indexer, intake));
     new POVButton(driverController, Constants.Buttons.LST_POV_N).whileTrue(new ZeroEverything(chassis));
+    new POVButton(driverController, Constants.Buttons.LST_POV_W).whileTrue(new ZeroWheels(chassis));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new FlipDriveOrientation(chassis));
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new OnlyIndex(shooter));
+    new JoystickButton(driverController, Constants.Buttons.LST_BTN_A).whileTrue(new AmpIntake(amp));
+    new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new AmpOuttake(amp));
+    new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new ToggleAmp(amp));
+    new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new AmpUnPrime(amp));
+    new JoystickButton(driverController, Constants.Buttons.LST_BTN_Y).whileTrue(new SpinHopper(hopper));
+
+    //new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new OnlyIndex(indexer));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_A).whileTrue(new OnlyShoot(shooter));
+    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_RBUMPER).whileTrue(new SequentialCommandGroup(new SmartSpintake(intake), new SmartIndex(intake)));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new Shoot(shooter));
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(visionShifterVelocityShoot());
     //new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new VelocityShoot(shooter));
+    new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(visionShifterVelocityShoot());
   }
 
 

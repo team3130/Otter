@@ -4,50 +4,40 @@
 
 package frc.robot.commands.Intake;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Intake;
 
 /** An example command that uses an example subsystem. */
-public class UnlimitedOutake extends Command {
+public class SmartIndex extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final Intake intake;
-  private Timer timer;
 
-  /**
-   * Creates a new ExampleCommand.
-   *
-   * @param //subsystem The subsystem used by this command.
-   */
-  public UnlimitedOutake(Intake Intake) {
-    intake = Intake;
-    timer = new Timer();
-    // Use addRequirements() here to declare subsystem dependencies.
+  public SmartIndex(Intake intake) {
+    this.intake = intake;
+    addRequirements(intake);
   }
 
-  // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    intake.slowTake();
   }
 
-  // Called every time the scheduler runs while the command is scheduled.
+  // intake slowly
   @Override
   public void execute() {
-    if (timer.hasElapsed(intake.getDropTime())){
-      intake.DumbOuttake();
-    }
+
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    intake.Stoptake();
-    intake.SolenoidToggle();
+    intake.stoptake();
+    intake.setIntakeHasNote(false);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return intake.getShooterBreakBeam();
   }
 }
