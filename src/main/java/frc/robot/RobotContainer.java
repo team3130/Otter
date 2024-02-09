@@ -46,22 +46,18 @@ public class RobotContainer {
   private final XboxController operatorController = new XboxController(1);
   private final Shooter shooter;
   private final Intake intake;
-  private final Indexer indexer;
   private final Chassis chassis;
-  private final Hopper hopper;
   private final SendableChooser<Command> autoChooser;
 
   // container for the robot containing subsystems, OI devices, and commands
   public RobotContainer() {
     shooter = new Shooter();
-    indexer = new Indexer();
     intake = new Intake();
     chassis = new Chassis();
-    hopper = new Hopper();
 
     // Named commands must be registered before the creation of any PathPlanner Autos or Paths
     // Do this in RobotContainer, after subsystem initialization, but before the creation of any other commands.
-    NamedCommands.registerCommand("spinHopper", hopper.spinHopperAuto());
+      // NamedCommands.registerCommand("spinHopper", hopper.spinHopperAuto());
 
     configureBindings(); // configure button bindings
     exportShuffleBoardData(); // export ShuffleBoardData
@@ -151,7 +147,7 @@ public class RobotContainer {
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed, cancelling on release.
     // driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
 
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new Shoot(shooter, indexer, intake));
+    new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new Shoot(shooter, intake));
     //new JoystickButton(driverController, Constants.Buttons.LST_BTN_Y).whileTrue(new ZeroWheels(chassis));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_Y).whileTrue(new FlipDriveOrientation(chassis));
 
