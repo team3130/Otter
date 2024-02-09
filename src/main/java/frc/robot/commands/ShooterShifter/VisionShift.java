@@ -9,6 +9,7 @@ import frc.robot.subsystems.ShooterShifter;
 
 public class VisionShift extends Command {
   private final ShooterShifter shooterShifter;
+  private boolean isShifted;
   public VisionShift(ShooterShifter shifter) {
     shooterShifter = shifter;
     addRequirements(shifter);
@@ -17,7 +18,7 @@ public class VisionShift extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-
+    this.isShifted = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -25,20 +26,24 @@ public class VisionShift extends Command {
   public void execute() {
     if (CameraSubsystem.getDistance())  {
       if (distance == firstGoalDistance) {
-        shooterShifter.extendShifterOne();
+        shooterShifter.extendShifterOne(); // TODO
+        isShifted = true;
       } else if (distance == secondGoalDistance) {
-        shooterShifter.doubleExtend();
+        shooterShifter.doubleExtend(); // TODO
+        isShifted = true;
       }
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return isShifted;
   }
 }
