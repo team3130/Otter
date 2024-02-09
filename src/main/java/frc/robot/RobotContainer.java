@@ -18,8 +18,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.*;
+import frc.robot.commands.Chassis.FlipDriveOrientation;
+import frc.robot.commands.Chassis.TeleopDrive;
+import frc.robot.commands.Chassis.ZeroEverything;
 import frc.robot.commands.Shooter.*;
+import frc.robot.commands.ShooterShifter.*;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.Amp;
 import frc.robot.subsystems.Chassis;
@@ -46,7 +52,6 @@ public class RobotContainer {
   private final XboxController driverController = new XboxController(0);
   private final XboxController operatorController = new XboxController(1);
   private final SendableChooser<Command> autoChooser;
-  private final Shooter shooter;
   private final ShooterShifter shooterShifter;
 
   // container for the robot containing subsystems, OI devices, and commands
@@ -101,7 +106,7 @@ public class RobotContainer {
 
 
   public void periodic() {
-    ledSubsystem.selectGreen();
+
   }
 
   public void resetOdo() {
@@ -159,7 +164,6 @@ public class RobotContainer {
 
     new POVButton(driverController, Constants.Buttons.LST_POV_N).whileTrue(new ZeroEverything(chassis));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new FlipDriveOrientation(chassis));
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_Y).whileTrue(new FlipDriveOrientation(chassis));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new OnlyIndex(shooter));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_A).whileTrue(new OnlyShoot(shooter));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new Shoot(shooter));

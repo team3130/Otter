@@ -21,8 +21,6 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.commands.Autos;
-import frc.robot.sensors.Camera;
 import frc.robot.sensors.Navx;
 import frc.robot.swerve.SwerveModule;
 
@@ -39,28 +37,22 @@ public class Chassis extends SubsystemBase {
     private final SwerveModule[] modules; // list of four swerve modules
     private final Navx navx = Navx.GetInstance(); // initialize Navx
     private boolean fieldRelative = true; // field relative or robot oriented drive
-    private final Camera m_limelight;
     private double maxSpeedRead = 0; // updated periodically with the maximum speed that has been read on any of the swerve modules
     private final Field2d field; // sendable that gets put on shuffleboard with the auton trajectory and the robots current position
     private final GenericEntry n_fieldOrriented; // comp network table entry for whether field oriented drivetrain
 
     Rotation2d angleSetpoint = null;
 
-    /**
-     * Makes a chassis that starts at 0, 0, 0
-     * @param limelight the limelight object that we can use for updating odometry
-     */
-    public Chassis(Camera limelight){
-      this (new Pose2d(), new Rotation2d(), limelight);
+    public Chassis(){
+      this (new Pose2d(), new Rotation2d());
     }
 
     /**
      * Makes a chassis with a starting position
      * @param startingPos the initial position to say that the robot is at
      * @param startingRotation the initial rotation of the bot
-     * @param limelight the limelight object which is used for updating odometry
      */
-    public Chassis(Pose2d startingPos, Rotation2d startingRotation, Camera limelight) {
+    public Chassis(Pose2d startingPos, Rotation2d startingRotation) {
         kinematics = new SwerveDriveKinematics(Constants.Swerve.moduleTranslations);
 
         modules = new SwerveModule[4];
@@ -71,8 +63,6 @@ public class Chassis extends SubsystemBase {
 
         // odometry wrapper class that has functionality for cameras that report position with latency
         odometry = new SwerveDrivePoseEstimator(kinematics, startingRotation, generatePoses(), startingPos);
-
-        m_limelight = limelight;
 
         field = new Field2d();
         Shuffleboard.getTab("Comp").add("field", field);
