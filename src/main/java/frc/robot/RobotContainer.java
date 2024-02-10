@@ -23,6 +23,9 @@ import frc.robot.commands.Chassis.FlipDriveOrientation;
 import frc.robot.commands.Chassis.TeleopDrive;
 import frc.robot.commands.Chassis.ZeroEverything;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.*;
+import frc.robot.commands.Chassis.*;
+import frc.robot.subsystems.*;
 import frc.robot.subsystems.Chassis;
 import frc.robot.subsystems.ExampleSubsystem;
 
@@ -50,7 +53,8 @@ public class RobotContainer {
 
     // Named commands must be registered before the creation of any PathPlanner Autos or Paths
     // Do this in RobotContainer, after subsystem initialization, but before the creation of any other commands.
-      // NamedCommands.registerCommand("spinHopper", hopper.spinHopperAuto());
+    NamedCommands.registerCommand("Turn90Deg", new TurnToAngle(chassis, 90));
+    NamedCommands.registerCommand("ZeroEverything", new ZeroEverything(chassis));
 
     configureBindings(); // configure button bindings
     exportShuffleBoardData(); // export ShuffleBoardData
@@ -135,9 +139,10 @@ public class RobotContainer {
     new Trigger(m_exampleSubsystem::exampleCondition)
             .onTrue(new ExampleCommand(m_exampleSubsystem));
 
-    //new JoystickButton(driverController, Constants.Buttons.LST_BTN_Y).whileTrue(new ZeroWheels(chassis));
+    new JoystickButton(driverController, Constants.Buttons.LST_BTN_A).whileTrue(new ZeroWheels(chassis));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_Y).whileTrue(new FlipDriveOrientation(chassis));
     new POVButton(driverController, Constants.Buttons.LST_POV_N).whileTrue(new ZeroEverything(chassis));
+    new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new TurnToAngle(chassis, 90));
 
     SmartDashboard.putData(new FlipDriveOrientation(chassis));
 
