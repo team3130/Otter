@@ -34,15 +34,15 @@ public class Intake extends SubsystemBase {
 
     public Intake() {
         intakeMotor = new WPI_TalonSRX(Constants.CAN.intakeMotor);
-        intakePNMOne = new Solenoid(Constants.CAN.intakesolenoid1, PneumaticsModuleType.CTREPCM, PNM_INTAKE_ACTUATOR);
-        intakePNMTwo = new Solenoid(Constants.CAN.intakesolenoid2, PneumaticsModuleType.CTREPCM, PNM_INTAKE_ACTUATOR);
+        intakePNMOne = new Solenoid(Constants.CAN.intakesolenoid1, PneumaticsModuleType.CTREPCM, Constants.PNM_Intake);
+        intakePNMTwo = new Solenoid(Constants.CAN.intakesolenoid2, PneumaticsModuleType.CTREPCM, Constants.PNM_Intake);
 
         intakeLimitSwitch = new DigitalInput(Constants.CAN.intakeLimitSwitch1);
         breakbeam = new DigitalInput(Constants.CAN.shooterBreakBeam);
 
         intakeMotor.configFactoryDefault();
         intakeMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
-        intakeMotor.configVoltageCompSaturation(Constants.Intake.kMaxVoltageIntake);
+        intakeMotor.configVoltageCompSaturation(4);
         intakeMotor.enableVoltageCompensation(true);
 
         intakeMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);

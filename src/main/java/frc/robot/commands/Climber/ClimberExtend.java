@@ -33,8 +33,7 @@ public class ClimberExtend extends Command {
 
 
         if (power < 0){
-            climber.setInvalidInput(true);
-            //leds go red
+            climber.setInvalidInput(true); // LED red
             power = 0;
         } else{
             climber.setInvalidInput(false);
@@ -42,8 +41,7 @@ public class ClimberExtend extends Command {
 
         // checks if limit switch has been broken or if theyre trying to move the climber down
         if (climber.brokeLimit()) {
-            power = 0;
-            //LEDS go green
+            power = 0; // LED green
         }
 
         //sets the speed of the motor

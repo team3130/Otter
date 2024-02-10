@@ -33,6 +33,7 @@ public class Climber extends SubsystemBase {
     public boolean brokeLimit() {
         return !limitSwitch.get();
     }
+
     public boolean getInvalidInput() {
         return invalidInput;
     }

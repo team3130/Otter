@@ -120,7 +120,7 @@ public class RobotContainer {
 
 
   public void periodic() {
-    if (intake.getIntakeHasNote() || amp.getAmpLimitSwitch()) {
+    if (intake.getIntakeHasNote() || amp.getAmpLimitSwitch() || leftClimber.brokeLimit()) {
       led.greenRobot();
     } else if (intake.getNoteReadyToShoot()) {
       led.greenShooter();

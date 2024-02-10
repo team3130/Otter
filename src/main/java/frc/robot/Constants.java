@@ -21,15 +21,10 @@ import edu.wpi.first.math.util.Units;
  */
 @SuppressWarnings("ALL")
 public final class Constants {
+    public static final int PNM_Intake = 0;
     public static final boolean debugMode = true; //TODO: make false after testing
     public static final boolean kNavxReversed = true;
     public final static double kMaxVoltageHopper = 9d;
-
-    public static class CAN {
-        public final static int leftFrontSteer = 2;
-        public final static int leftFrontDrive = 3;
-        public final static int rightFrontSteer = 4;
-        public final static int rightFrontDrive = 5;
 
     public class CAN {
         public final static int leftFrontSteer = 2;
@@ -68,6 +63,7 @@ public final class Constants {
         public final static int intakesolenoid2 = 16;
 
         public final static int intakeLimitSwitch1 = 17;
+        public final static int shooterBreakBeam = 0;
     }
 
     public static class AprilTags {
@@ -234,45 +230,18 @@ public final class Constants {
                 kMaxAngularSpeedRadiansPerSecond, kMaxAngularAccelerationRadiansPerSecondSquared);
     }
 
-  public static class Modules {
-    public static final int leftFront = 0;
-    public static final int leftBack = 1;
-    public static final int rightFront = 2;
-    public static final int rightBack = 3;
-  }
-
-  public static class EncoderOffsets {
-    public static final double kTopLeftOffset = Math.toRadians(268.682);
-    public static final double kBottomLeftOffset = Math.toRadians(281.426);
-    public static final double kTopRightOffset = Math.toRadians(129.3);
-    public static final double kBottomRightOffset = Math.toRadians(0);
-    public static final double[] kCANCoderOffsets = new double[] {kTopLeftOffset, kBottomLeftOffset, kTopRightOffset, kBottomRightOffset};
-  }
-
-  // gear ratios and/or ticks per rev, etc.
-  public static class Conversions {
-    public final static double kDriveGearRatio = 6.75; // checked 1/19
-    public final static double kSteerGearRatio = 150d/7d; // checked 1/19
-    public static final double kEncoderResolution = 2048;
-    public static final double kWheelDiameter = Units.inchesToMeters(3.86);
-    public final static double DriveRotToMeters = kWheelDiameter * Math.PI * 1/(kDriveGearRatio); // multiply by
-    public static final double SteerRotToRads = 1/(kSteerGearRatio) * Math.PI * 2; // multiply by position
-    public static final double DriveRotToMetersPerSecond = DriveRotToMeters ; // multiply by velocity
-    public static final double SteerRotToRadsPerSecond = SteerRotToRads; // multiply by velocity
-  }
-
-  public static class Buttons {
+    public static class Buttons {
     // Gamepad Button List
-    public static final int LST_BTN_A = 1;
-    public static final int LST_BTN_B = 2;
-    public static final int LST_BTN_X = 3;
-    public static final int LST_BTN_Y = 4;
-    public static final int LST_BTN_LBUMPER = 5;
-    public static final int LST_BTN_RBUMPER = 6;
-    public static final int LST_BTN_WINDOW = 7;
-    public static final int LST_BTN_MENU = 8;
-    public static final int LST_BTN_LJOYSTICKPRESS = 9;
-    public static final int LST_BTN_RJOYSTICKPRESS = 10;
+        public static final int LST_BTN_A = 1;
+        public static final int LST_BTN_B = 2;
+        public static final int LST_BTN_X = 3;
+        public static final int LST_BTN_Y = 4;
+        public static final int LST_BTN_LBUMPER = 5;
+        public static final int LST_BTN_RBUMPER = 6;
+        public static final int LST_BTN_WINDOW = 7;
+        public static final int LST_BTN_MENU = 8;
+        public static final int LST_BTN_LJOYSTICKPRESS = 9;
+        public static final int LST_BTN_RJOYSTICKPRESS = 10;
 
         // Gamepad POV List
         public static final int LST_POV_UNPRESSED = -1;
