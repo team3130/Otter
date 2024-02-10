@@ -13,17 +13,14 @@ import frc.robot.subsystems.Shooter;
 public class Shoot extends Command {
     @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
     private final Shooter m_shooter;
-    private final Indexer m_indexer;
     private final Intake m_intake;
     private Timer spinUpTime = new Timer();
-    public Shoot(Shooter shooter, Indexer index, Intake intake) {
+    public Shoot(Shooter shooter, Intake intake) {
         m_shooter = shooter;
-        m_indexer = index;
         m_intake = intake;
 
         // Use addRequirements() here to declare subsystem dependencies.
         addRequirements(shooter);
-        addRequirements(index);
     }
 
     // Called when the command is initially scheduled.
@@ -39,7 +36,6 @@ public class Shoot extends Command {
     @Override
     public void execute() {
         if (spinUpTime.hasElapsed(0.5)){
-            m_indexer.runIndexers();
         }
     }
 
@@ -47,7 +43,6 @@ public class Shoot extends Command {
     @Override
     public void end(boolean interrupted) {
         m_shooter.stopShooters();
-        m_indexer.stopIndexers();
         m_intake.stopIntake();
     }
 
