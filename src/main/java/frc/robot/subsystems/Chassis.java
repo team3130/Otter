@@ -5,9 +5,7 @@
 package frc.robot.subsystems;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
-import com.pathplanner.lib.util.ReplanningConfig;
-import com.pathplanner.lib.util.PIDConstants;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -24,7 +22,6 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.commands.Autos;
 import frc.robot.RobotContainer;
 import frc.robot.sensors.Navx;
 import frc.robot.swerve.SwerveModule;
@@ -46,6 +43,10 @@ public class Chassis extends SubsystemBase {
     private final GenericEntry n_fieldOrriented; // comp network table entry for whether field oriented drivetrain
     private double targetMaxVelo = Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond; //TODO real
     private double targetMaxAcc = Constants.Swerve.kMaxAccelerationDrive; //TODO real
+    private PIDController robotAngleController;
+    private double targetP = 10d;
+    private double targetI = 0d;
+    private double targetD = 0d;
 
     /**
      * Makes a chassis that starts at 0, 0, 0
@@ -73,6 +74,9 @@ public class Chassis extends SubsystemBase {
         // odometry wrapper class that has functionality for cameras that report position with latency
         odometry = new SwerveDrivePoseEstimator(kinematics, startingRotation, generatePoses(), startingPos);
 
+        robotAngleController = new PIDController(targetP, targetI, targetD);
+        robotAngleController.enableContinuousInput(-Math.PI, Math.PI); // wrap for circles
+        robotAngleController.setTolerance(0.0025, 0.05); // at position tolerance
 
         field = new Field2d();
         SmartDashboard.putData("Field", field);
@@ -183,6 +187,18 @@ public class Chassis extends SubsystemBase {
         return positions;
     }
 
+    public void goToAnglePower(double angleSetpoint) {
+        robotAngleController.calculate(getHeading(), angleSetpoint);
+    }
+
+    public boolean goToAnglePIDIsFinished() {
+        return robotAngleController.atSetpoint();
+    }
+
+    public void shuffleboardUpdatePID() {
+        robotAngleController.setPID(targetP, targetI, targetD);
+    }
+
     /**
      * Getter for geometry
      * @return the geometry of the swerve modules
@@ -274,10 +290,18 @@ public class Chassis extends SubsystemBase {
         return modules[0].getDValue();
     }
 
-    // returns the heading the NavX is reading, returning the rotation of the robot in degrees
+    // returns the heading the NavX is reading, returning the rotation of the robot in radians
     public double getHeading() {
-        return Math.IEEEremainder(Navx.getAngle(), 360);
+        return Math.toRadians(Math.IEEEremainder(Navx.getAngle(), 360));
     }
+
+    public double getTargetP() { return targetP; }
+    public double getTargetI() { return targetI; }
+    public double getTargetD() { return targetD; }
+    public void setTargetP(double p) { targetP = p; }
+    public void setTargetI(double i) { targetI = i; }
+    public void setTargetD(double d) { targetD = d; }
+
 
     // return the x position from odometry
     private double getX() { return odometry.getEstimatedPosition().getX(); }
@@ -300,6 +324,10 @@ public class Chassis extends SubsystemBase {
      */
     public void initSendable(SendableBuilder builder) {
         builder.setSmartDashboardType("Chassis");
+
+        builder.addDoubleProperty("Face Angle P", this::getTargetP, this::setTargetP);
+        builder.addDoubleProperty("Face Angle I", this::getTargetI, this::setTargetI);
+        builder.addDoubleProperty("Face Angle I", this::getTargetD, this::setTargetD);
 
         builder.addBooleanProperty("fieldRelative", this::getFieldRelative, this::setWhetherFieldOriented);
         builder.addDoubleProperty("Navx", this::getHeading, null);
