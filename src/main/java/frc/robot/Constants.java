@@ -35,6 +35,12 @@ public final class Constants {
 
   public static final int PNM_INTAKE_ACTUATOR = 0;
 
+    public class CAN {
+        public final static int leftFrontSteer = 2;
+        public final static int leftFrontDrive = 3;
+        public final static int rightFrontSteer = 4;
+        public final static int rightFrontDrive = 5;
+
         public final static int leftBackSteer = 6;
         public final static int leftBackDrive = 7;
         public final static int rightBackSteer = 8;
@@ -255,32 +261,6 @@ public final class Constants {
     public static final double wheelBase_m = 0.61;
   }
 
-  public static class Modules {
-    public static final int leftFront = 0;
-    public static final int leftBack = 1;
-    public static final int rightFront = 2;
-    public static final int rightBack = 3;
-  }
-
-  public static class EncoderOffsets {
-    public static final double kTopLeftOffset = Math.toRadians(268.682);
-    public static final double kBottomLeftOffset = Math.toRadians(281.426);
-    public static final double kTopRightOffset = Math.toRadians(129.3);
-    public static final double kBottomRightOffset = Math.toRadians(0);
-    public static final double[] kCANCoderOffsets = new double[] {kTopLeftOffset, kBottomLeftOffset, kTopRightOffset, kBottomRightOffset};
-  }
-
-  // gear ratios and/or ticks per rev, etc.
-  public static class Conversions {
-    public final static double kDriveGearRatio = 6.75; // checked 1/19
-    public final static double kSteerGearRatio = 150d/7d; // checked 1/19
-    public static final double kEncoderResolution = 2048;
-    public static final double kWheelDiameter = Units.inchesToMeters(3.86);
-    public final static double DriveRotToMeters = kWheelDiameter * Math.PI * 1/(kDriveGearRatio); // multiply by
-    public static final double SteerRotToRads = 1/(kSteerGearRatio) * Math.PI * 2; // multiply by position
-    public static final double DriveRotToMetersPerSecond = DriveRotToMeters ; // multiply by velocity
-    public static final double SteerRotToRadsPerSecond = SteerRotToRads; // multiply by velocity
-  }
 
   public static class Buttons {
     // Gamepad Button List
