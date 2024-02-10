@@ -23,7 +23,6 @@ import frc.robot.commands.Chassis.FlipDriveOrientation;
 import frc.robot.commands.Chassis.TeleopDrive;
 import frc.robot.commands.Chassis.ZeroEverything;
 import frc.robot.commands.Chassis.ZeroWheels;
-import frc.robot.commands.Shooter.*;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.Chassis;
 import frc.robot.subsystems.ExampleSubsystem;
@@ -44,15 +43,11 @@ public class RobotContainer {
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final XboxController driverController = new XboxController(0);
   private final XboxController operatorController = new XboxController(1);
-  private final Shooter shooter;
-  private final Intake intake;
   private final Chassis chassis;
   private final SendableChooser<Command> autoChooser;
 
   // container for the robot containing subsystems, OI devices, and commands
   public RobotContainer() {
-    shooter = new Shooter();
-    intake = new Intake();
     chassis = new Chassis();
 
     // Named commands must be registered before the creation of any PathPlanner Autos or Paths
@@ -127,8 +122,6 @@ public class RobotContainer {
   public void exportShuffleBoardData() {
     if (Constants.debugMode) {
       ShuffleboardTab tab = Shuffleboard.getTab("Subsystems");
-      tab.add(shooter);
-      tab.add(intake);
       tab.add(chassis);
       chassis.exportSwerveModData(Shuffleboard.getTab("Swerve Modules"));
     }
@@ -144,20 +137,9 @@ public class RobotContainer {
     new Trigger(m_exampleSubsystem::exampleCondition)
             .onTrue(new ExampleCommand(m_exampleSubsystem));
 
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed, cancelling on release.
-    // driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
-
     //new JoystickButton(driverController, Constants.Buttons.LST_BTN_Y).whileTrue(new ZeroWheels(chassis));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_Y).whileTrue(new FlipDriveOrientation(chassis));
-
-
-    //new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new OnlyIndex(indexer));
-
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_A).whileTrue(new OnlyShoot(shooter));
     new POVButton(driverController, Constants.Buttons.LST_POV_N).whileTrue(new ZeroEverything(chassis));
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new VelocityShoot(shooter));
-
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new VelocityShoot(shooter));
 
     SmartDashboard.putData(new FlipDriveOrientation(chassis));
 
