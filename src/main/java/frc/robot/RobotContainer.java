@@ -108,7 +108,7 @@ public class RobotContainer {
 
 
   public void periodic() {
-    if (intake.getIntakeHasNote()) {
+    if (intake.getIntakeHasNote() || amp.getAmpLimitSwitch()) {
       led.greenRobot();
     } else if (intake.getNoteReadyToShoot()) {
       led.greenShooter();

@@ -58,7 +58,7 @@ public class Amp extends SubsystemBase {
     ampMotor.set(ControlMode.PercentOutput, 0);
   }
 
-  public boolean getLimitSwitch() {
+  public boolean getAmpLimitSwitch() {
     return ampLimit.get();
   }
   public boolean getPneumaticState() {
@@ -93,7 +93,7 @@ public class Amp extends SubsystemBase {
     builder.setSmartDashboardType("Amp");
     builder.addDoubleProperty("Intake Amp Speed", this::getIntakeAmpSpeed, this::setIntakeAmpSpeed);
     builder.addDoubleProperty("Outtake Amp Speed", this::getOuttakeAmpSpeed, this::setOuttakeAmpSpeed);
-    builder.addBooleanProperty("Limit Switch", this::getLimitSwitch, null);
+    builder.addBooleanProperty("Limit Switch", this::getAmpLimitSwitch, null);
     builder.addBooleanProperty("Pneumatic Status", this::getPneumaticState, null);
   }
 

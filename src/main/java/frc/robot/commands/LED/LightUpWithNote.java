@@ -36,7 +36,7 @@ public class LightUpWithNote extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (amp.getLimitSwitch() || intake.intakeLimitSwitch()) {
+    if (amp.getAmpLimitSwitch() || intake.intakeLimitSwitch()) {
       ledSubsystem.green();
     }
     else
