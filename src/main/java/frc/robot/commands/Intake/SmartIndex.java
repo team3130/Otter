@@ -6,13 +6,14 @@ package frc.robot.commands.Intake;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Shooter;
 
 /** An example command that uses an example subsystem. */
 public class SmartIndex extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final Intake intake;
 
-  public SmartIndex(Intake intake) {
+  public SmartIndex(Intake intake, Shooter shooter) {
     this.intake = intake;
     addRequirements(intake);
   }
@@ -33,6 +34,7 @@ public class SmartIndex extends Command {
   public void end(boolean interrupted) {
     intake.stoptake();
     intake.setIntakeHasNote(false);
+    intake.setNoteReadyToShoot(true);
   }
 
   // Returns true when the command should end.

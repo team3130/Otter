@@ -12,12 +12,10 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.commands.Intake.SmartSpintake;
 
 import static frc.robot.Constants.PNM_INTAKE_ACTUATOR;
 
 public class Intake extends SubsystemBase {
-    private final LEDSubsystem leds;
     private final WPI_TalonSRX intakeMotor;
     private final Solenoid intakePNMOne;
     private final Solenoid intakePNMTwo;
@@ -33,10 +31,10 @@ public class Intake extends SubsystemBase {
     private double slowSpeed = .4; //S peed slower than dumbSpeed, in order to slow down the disk
 
     private boolean intakeHasNote;
+    private boolean noteReadyToShoot;
 
 
-    public Intake(LEDSubsystem leds) {
-        this.leds = leds;
+    public Intake() {
         intakeMotor = new WPI_TalonSRX(Constants.CAN.intakeMotor);
         intakePNMOne = new Solenoid(Constants.CAN.intakesolenoid1, PneumaticsModuleType.CTREPCM, PNM_INTAKE_ACTUATOR);
         intakePNMTwo = new Solenoid(Constants.CAN.intakesolenoid2, PneumaticsModuleType.CTREPCM, PNM_INTAKE_ACTUATOR);
@@ -54,6 +52,7 @@ public class Intake extends SubsystemBase {
         intakeMotor.setInverted(false);
 
         intakeHasNote = false;
+        noteReadyToShoot = false;
     }
 
     public void spintake() {
@@ -109,10 +108,11 @@ public class Intake extends SubsystemBase {
     public boolean getIntakeHasNote() {
         return intakeHasNote;
     }
-
     public void setIntakeHasNote(boolean setNote) {
         intakeHasNote = setNote;
     }
+    public boolean getNoteReadyToShoot() { return noteReadyToShoot; }
+    public void setNoteReadyToShoot(boolean noteHand) { noteReadyToShoot = noteHand; }
 
     public double getDropTime() { return dropTime; }
     public void setDropTime(double dropTime) { this.dropTime = dropTime; }
@@ -139,11 +139,6 @@ public class Intake extends SubsystemBase {
     }
     @Override
     public void periodic() {
-        if (getIntakeHasNote()) {
-            leds.green();
-        } else {
-            leds.red(); //TODO YEllOW
-        }
     }
 
     @Override

@@ -19,7 +19,6 @@ import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.commands.Intake.SmartSpintake;
 
 public class Shooter extends SubsystemBase {
     private final TalonFX topFlywheel; // we should probably change these names once we learn more
@@ -28,7 +27,6 @@ public class Shooter extends SubsystemBase {
     private final TalonSRX indexMotor;
     private double shooterIndexSpeed = 0.50;
     private double flywheelRampTime = 0;
-
 
     final VoltageOut topVoltReq = new VoltageOut(0);
     final VoltageOut bottomVoltReq = new VoltageOut(0);
@@ -61,6 +59,7 @@ public class Shooter extends SubsystemBase {
         topFlywheel = new TalonFX(8);
         bottomFlywheel = new TalonFX(9);
         indexMotor = new TalonSRX(10);
+
         indexMotor.configFactoryDefault();
         indexMotor.setNeutralMode(NeutralMode.Brake);
         indexMotor.setInverted(true);

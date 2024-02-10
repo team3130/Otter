@@ -59,8 +59,15 @@ public class LEDSubsystem extends SubsystemBase {
     led.setData(ledBuffer);
   }
 
-  public void green() {
+  public void greenRobot() {
     for (var i = 0; i < ledBuffer.getLength(); i++) {
+      ledBuffer.setHSV(i, 150, 255, 128);
+    }
+    led.setData(ledBuffer);
+  }
+
+  public void greenShooter() {
+    for (var i = 5; i < 15; i++) {
       ledBuffer.setHSV(i, 150, 255, 128);
     }
     led.setData(ledBuffer);
