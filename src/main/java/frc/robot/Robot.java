@@ -86,6 +86,9 @@ public class Robot extends TimedRobot {
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
     }
+    //This is so climber command can assume climbers are reset before a match
+    robotContainer.leftClimber.setIsReset(true);
+    robotContainer.rightClimber.setIsReset(true);
   }
 
   /** This function is called periodically during operator control. */

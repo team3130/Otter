@@ -16,6 +16,7 @@ public class Climber extends SubsystemBase {
     private double timerAmount = 0.1;
     private final DigitalInput limitSwitch;
     private final WPI_TalonSRX climberMotor;
+    private boolean isReset;
 
     public Climber(int CANID, int limitSwitch) {
         climberMotor = new WPI_TalonSRX(CANID);
@@ -72,7 +73,7 @@ public class Climber extends SubsystemBase {
 
     // sets left arm speed to zero
     public void stop() {
-        climberMotor.set(ControlMode.PercentOutput, 0);
+        setSpeed(0);
     }
 
     @Override
@@ -89,5 +90,14 @@ public class Climber extends SubsystemBase {
         builder.addDoubleProperty("currentMaxRight", this::getCurrentMaxRight, this::setCurrentMaxRight);
         builder.addDoubleProperty("currentMaxLeft", this::getCurrentMaxLeft, this::setCurrentMaxLeft);
         builder.addDoubleProperty("timerAmount", this::getTimerAmount, this::setTimerAmount);
+        builder.addBooleanProperty("ClimberIsReset", this::getIsReset, null);
+    }
+
+    public boolean getIsReset() {
+        return isReset;
+    }
+
+    public void setIsReset(boolean reset) {
+        isReset = reset;
     }
 }

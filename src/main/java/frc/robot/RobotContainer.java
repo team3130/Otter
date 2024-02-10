@@ -41,8 +41,8 @@ public class RobotContainer {
   private final Camera limelight;
   private final Chassis chassis;
   private final Hopper hopper;
-  private final Climber leftClimber;
-  private final Climber rightClimber;
+  public final Climber leftClimber;
+  public final Climber rightClimber;
   private final XboxController driverController = new XboxController(0);
   private final XboxController operatorController = new XboxController(1);
   private final Shooter shooter;

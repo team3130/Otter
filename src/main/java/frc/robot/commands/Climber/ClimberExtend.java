@@ -37,10 +37,16 @@ public class ClimberExtend extends Command {
     public void execute() {
         // reads joystick input as y
         double y = xboxController.getRawAxis(joystickButton);
-        y = y * Math.abs(y);
+        //this ensures the output is always positive, so the driver can only spin
+        // the motor one way, because the motor is on a ratchet
+        y = y * y;
+
+        if (!climber.brokeLimit()) {
+            climber.setIsReset(false);
+        }
 
         // checks if limit switch has been broken
-        if (climber.brokeLimit() && y < 0) {
+        if (climber.brokeLimit() && !climber.getIsReset()) {
             y = 0;
         }
 
