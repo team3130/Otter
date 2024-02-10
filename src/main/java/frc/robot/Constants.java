@@ -175,10 +175,10 @@ public final class Constants {
   }
   
   public static class EncoderOffsets {
-    public static final double kTopLeftOffset = 1.498607; // Math.toRadians(268.682);
-    public static final double kBottomLeftOffset = 1.71; //Math.toRadians(281.426);
-    public static final double kTopRightOffset = -0.8436; //Math.toRadians(129.3);
-    public static final double kBottomRightOffset = 3.14772592; //Math.toRadians(0);
+    public static final double kTopLeftOffset = Math.toRadians(268.682); // 1.498607; //
+    public static final double kBottomLeftOffset = Math.toRadians(281.426); // 1.71; //
+    public static final double kTopRightOffset = Math.toRadians(129.3); //-0.8436; //
+    public static final double kBottomRightOffset = Math.toRadians(0); //3.14772592; //
     public static final double[] kCANCoderOffsets = new double[] {kTopLeftOffset, kBottomLeftOffset, kTopRightOffset, kBottomRightOffset};
   }
 
