@@ -13,8 +13,6 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-import static frc.robot.Constants.PNM_INTAKE_ACTUATOR;
-
 public class Intake extends SubsystemBase {
     private final WPI_TalonSRX intakeMotor;
     private final Solenoid intakePNMOne;

@@ -24,7 +24,6 @@ import frc.robot.commands.Chassis.ZeroEverything;
 import frc.robot.commands.Chassis.ZeroWheels;
 import frc.robot.commands.Climber.PitClimber;
 import frc.robot.commands.Climber.ClimberExtend;
-import frc.robot.sensors.Camera;
 import frc.robot.subsystems.Chassis;
 import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.ExampleSubsystem;
@@ -51,12 +50,9 @@ import java.util.function.BooleanSupplier;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-  private final Camera limelight;
   private final Chassis chassis;
-  private final Hopper hopper;
   private final Climber leftClimber;
   private final Climber rightClimber;
-  private final Chassis chassis;
   private final Amp amp;
   private final Shooter shooter;
   private final Intake intake;
@@ -68,9 +64,6 @@ public class RobotContainer {
 
   // container for the robot containing subsystems, OI devices, and commands
   public RobotContainer() {
-    limelight = new Camera();
-    chassis = new Chassis(limelight);
-    hopper = new Hopper();
 
     leftClimber = new Climber(Constants.Climber.kLMotor, Constants.Climber.kLLimitSwitch, Constants.Buttons.LST_AXS_LJOYSTICKY);
     rightClimber = new Climber(Constants.Climber.kRMotor, Constants.Climber.kRLimitSwitch, Constants.Buttons.LST_AXS_RJOYSTICKY);
@@ -132,6 +125,10 @@ public class RobotContainer {
     } else if (intake.getNoteReadyToShoot()) {
       led.greenShooter();
     }
+
+    if (leftClimber.getInvalidInput() || rightClimber.getInvalidInput()) {
+      led.red();
+    }
   }
 
   public void resetOdo() {
@@ -178,13 +175,6 @@ public class RobotContainer {
   // CommandPS4Controller subclass for PS4 Controller
   // CommandJoystick for flight joysticks
   private void configureBindings() {
-
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new Shoot(shooter, indexer, intake));
-    new POVButton(driverController, Constants.Buttons.LST_POV_N).whileTrue(new ZeroEverything(chassis));
-    new POVButton(driverController, Constants.Buttons.LST_POV_W).whileTrue(new ZeroWheels(chassis));
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_Y).whileTrue(new SpinHopper(hopper));
-
-
     new JoystickButton(driverController, Constants.Buttons.LST_POV_E).whileTrue(new PitClimber(leftClimber));
     new JoystickButton(driverController, Constants.Buttons.LST_POV_S).whileTrue(new PitClimber(rightClimber));
 
