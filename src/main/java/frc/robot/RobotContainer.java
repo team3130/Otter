@@ -9,12 +9,14 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.*;
 import frc.robot.commands.Chassis.TeleopDrive;
 import frc.robot.commands.Chassis.ZeroEverything;
 import frc.robot.commands.Chassis.ZeroWheels;
+import frc.robot.commands.Climber.ClimberReset;
 import frc.robot.commands.Climber.PitClimber;
 import frc.robot.commands.Climber.ClimberExtend;
 import frc.robot.sensors.Camera;
@@ -88,6 +90,11 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
     return Autos.exampleAuto(m_exampleSubsystem);
+  }
+
+  // TODO: ask mikhail if this is tweaky
+  public Command isClimberReset() {
+    return new ParallelCommandGroup(new ClimberReset(rightClimber, true), new ClimberReset(rightClimber, true));
   }
 
   public void periodic() {

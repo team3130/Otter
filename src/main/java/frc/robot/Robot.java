@@ -86,6 +86,10 @@ public class Robot extends TimedRobot {
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
     }
+
+    // assumption that climbers are reset before a match
+    // TODO: is this real or necessary?
+    CommandScheduler.getInstance().schedule(robotContainer.isClimberReset());
   }
 
   /** This function is called periodically during operator control. */

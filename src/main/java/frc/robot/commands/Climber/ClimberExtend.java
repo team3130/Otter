@@ -40,8 +40,12 @@ public class ClimberExtend extends Command {
             climber.setInvalidInput(false);
         }
 
+        if (!climber.brokeLimit()) {
+            climber.setIsClimberReset(false);
+        }
+
         // checks if limit switch has been broken or if theyre trying to move the climber down
-        if (climber.brokeLimit()) {
+        if (climber.brokeLimit() && !climber.getIsClimberReset()) {
             power = 0;
             //LEDS go green
         }
