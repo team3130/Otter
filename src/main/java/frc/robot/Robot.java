@@ -32,7 +32,7 @@ public class Robot extends TimedRobot {
     timer = new Timer();
     timer.reset();
     timer.start();
-
+    robotContainer.LEDDefaultYellow();
   }
 
   /**
@@ -49,7 +49,7 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
-    robotContainer.periodic();
+    robotContainer.LEDPeriodic();
 
     // reset chassis pose every kResetTime seconds
     if (timer.hasElapsed(0.75)) {

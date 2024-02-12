@@ -17,11 +17,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.POVButton;
-import frc.robot.commands.*;
 import frc.robot.commands.Chassis.TeleopDrive;
 import frc.robot.commands.Chassis.ZeroEverything;
-import frc.robot.commands.Chassis.ZeroWheels;
 import frc.robot.commands.Climber.PitClimber;
 import frc.robot.commands.Climber.ClimberExtend;
 import frc.robot.subsystems.Chassis;
@@ -30,12 +27,10 @@ import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.commands.Shooter.*;
 import frc.robot.commands.ShooterShifter.*;
 import frc.robot.commands.Autos;
-import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.Intake.*;
 import frc.robot.commands.Shooter.OnlyShoot;
 import frc.robot.commands.Shooter.Shoot;
 import frc.robot.subsystems.*;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import java.util.function.BooleanSupplier;
 
@@ -84,7 +79,6 @@ public class RobotContainer {
 
     // Default commands running in the background when other commands not scheduled
     chassis.setDefaultCommand(new TeleopDrive(chassis, driverController));
-    led.defaultYellow();
     leftClimber.setDefaultCommand(new ClimberExtend(leftClimber, operatorController));
     rightClimber.setDefaultCommand(new ClimberExtend(rightClimber, operatorController));
 
@@ -119,16 +113,24 @@ public class RobotContainer {
   }
 
 
-  public void periodic() {
+  public void LEDPeriodic() {
     if (intake.getIntakeHasNote() || amp.getAmpLimitSwitch() || leftClimber.brokeLimit()) {
       led.greenRobot();
     } else if (intake.getNoteReadyToShoot()) {
       led.greenShooter();
+    } else {
+      led.defaultYellow();
     }
 
     if (leftClimber.getInvalidInput() || rightClimber.getInvalidInput()) {
       led.red();
+    } else {
+      led.defaultYellow();
     }
+  }
+
+  public void LEDDefaultYellow() {
+    led.defaultYellow();
   }
 
   public void resetOdo() {
@@ -186,7 +188,4 @@ public class RobotContainer {
     //new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new VelocityShoot(shooter));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(visionShifterVelocityShoot());
   }
-
-
-
-  }
+}
