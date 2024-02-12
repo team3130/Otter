@@ -25,6 +25,7 @@ import frc.robot.subsystems.Chassis;
 import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
+import javax.naming.Name;
 import java.util.function.BooleanSupplier;
 
 /**
@@ -51,6 +52,7 @@ public class RobotContainer {
     // Do this in RobotContainer, after subsystem initialization, but before the creation of any other commands.
     NamedCommands.registerCommand("Turn90Deg", new TurnToAngle(chassis, 90));
     NamedCommands.registerCommand("FakeShoot", new ZeroWheels(chassis));
+    NamedCommands.registerCommand("FakeIntake", new ZeroWheels(chassis));
 
     configureBindings(); // configure button bindings
     exportShuffleBoardData(); // export ShuffleBoardData
