@@ -70,9 +70,6 @@ public class CameraSubsystem extends SubsystemBase {
   public boolean targetControllerDone(){
     return targetController.atSetpoint();
   }
-  public boolean isTryingToTarget(){
-    return isTryingToTarget;
-  }
   public void setTryingToTargetTrue(){
     isTryingToTarget=true;
   }

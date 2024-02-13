@@ -374,6 +374,7 @@ public class Chassis extends SubsystemBase {
         builder.addDoubleProperty("max speed read", this::getMaxSpeedRead, null);
         builder.addStringProperty("odometry pose2d", this::getOdometry, null);
         builder.addDoubleProperty("Target Distance", this::getInitialAprilTagDistance, null);
+
     }
 
     /**

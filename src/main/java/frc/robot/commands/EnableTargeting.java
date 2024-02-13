@@ -28,7 +28,7 @@ public class EnableTargeting extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if(cam.isTryingToTarget()){
+    if(cam.getIsTryingToTarget()){
       cam.setTryingToTargetFalse();
     }
     else{

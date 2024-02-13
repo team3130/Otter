@@ -61,7 +61,6 @@ public class RobotContainer {
     configureBindings(); // configure button bindings
     exportShuffleBoardData(); // export ShuffleBoardData
 
-    chassis.setDefaultCommand(new TeleopDrive(chassis, driverController, cameraSubsystem));
     configureBindings();
     // Default commands running in the background when other commands not scheduled
     chassis.setDefaultCommand(new TeleopDrive(chassis, driverController, cameraSubsystem));

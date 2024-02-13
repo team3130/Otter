@@ -64,7 +64,7 @@ public class TeleopDrive extends Command {
         chassis.prepareForFaceTarget();
       }
       // set theta to face target
-      if (camera.isTryingToTarget()) {
+      if (camera.getIsTryingToTarget()) {
         theta = camera.goToTargetPower();
       }
       // sets theta to controller output
