@@ -49,6 +49,22 @@ public final class Constants {
     public final static int CAN_hopperright = 16;
     public final static int CAN_hopperleft = 17;
 
+    public final static int climberLeft = 0;
+    public final static int climberRight = 1;
+    public final static int ampMotor = 2;
+    public final static int intakeMotor = 3;
+
+  }
+
+  public static class IDs {
+    public final static int intakeSolenoidOne = 4;
+    public final static int intakeSolenoidTwo = 5;
+    public final static int ampPCM = 6;
+    public final static int ampChannel = 0;
+
+    public final static int intakeLimitSwitch = 1;
+    public final static int shooterBreakBeam = 2;
+    public final static int ampLimitSwitch = 0;
   }
 
   public static class AprilTags {
