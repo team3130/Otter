@@ -6,7 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.XboxControllerVibration;
-//Call this command when the second intake is triggered
+//Call this command when the second intake limit switch is triggered
 /** An example command that uses an example subsystem. */
 public class OperatorControllerVibrateUponPickup extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})

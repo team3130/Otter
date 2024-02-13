@@ -25,19 +25,14 @@ public class DriverControllerVibrateAfterTime extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+
+    vibration.TimedVibrateDriver();
     //start the timer
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    if (/*timer is greater than 105 seconds and timer is less than 115 seconds*/true){
-      vibration.VibrateDriver();
-    }
-    else {
-      vibration.StopVibrateDriver();
-    }
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override

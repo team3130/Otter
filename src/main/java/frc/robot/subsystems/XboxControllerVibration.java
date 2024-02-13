@@ -11,9 +11,8 @@ public class XboxControllerVibration {
   XboxController driverController = new XboxController(0); // Driver Controller
   XboxController operatorController = new XboxController(1); //Operator Controller
   double vibrationIntensity = 0.5; // Example intensity, can be set between 0 and 1
-  double delayInSeconds = 5.0; //time in seconds before vibration
+  double delayInSeconds = 115.0; //time in seconds before vibration
   double vibrationDuration = 2.0; //how long the controller will vibrate for
-  public Timer DriverVibrationTimer;
   public void VibrateDriver() {
     // Activate vibration
     driverController.setRumble(XboxController.RumbleType.kLeftRumble, vibrationIntensity);
@@ -43,6 +42,7 @@ public class XboxControllerVibration {
   }
 
   public void TimedVibrateOperator(){
+    Timer.delay(115);
     operatorController.setRumble(XboxController.RumbleType.kLeftRumble, vibrationIntensity);
     operatorController.setRumble(XboxController.RumbleType.kRightRumble, vibrationIntensity);
 
