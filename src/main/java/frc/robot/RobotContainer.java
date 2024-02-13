@@ -26,13 +26,8 @@ import frc.robot.commands.Chassis.ZeroEverything;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.Intake.*;
 import frc.robot.commands.Shooter.Handoff;
-import frc.robot.commands.Shooter.OnlyShoot;
-import frc.robot.commands.Shooter.Shoot;
-import frc.robot.commands.Shooter.VelocityShoot;
-import frc.robot.commands.SpinHopper;
 import frc.robot.subsystems.*;
 import frc.robot.commands.Chassis.ZeroWheels;
-import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.Chassis;
 import frc.robot.subsystems.ExampleSubsystem;
 
@@ -51,10 +46,8 @@ public class RobotContainer {
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final XboxController driverController = new XboxController(0);
   private final XboxController operatorController = new XboxController(1);
-  private final Shooter shooter;
   private final Intake intake;
   private final Indexer indexer;
-  private final Hopper hopper;
   private final Chassis chassis;
   private final SendableChooser<Command> autoChooser;
 
@@ -63,16 +56,14 @@ public class RobotContainer {
 
   // container for the robot containing subsystems, OI devices, and commands
   public RobotContainer() {
-    shooter = new Shooter();
     indexer = new Indexer();
     intake = new Intake();
-    hopper = new Hopper();
     camera = new CameraSubsystem();
     chassis = new Chassis();
 
     // Named commands must be registered before the creation of any PathPlanner Autos or Paths
     // Do this in RobotContainer, after subsystem initialization, but before the creation of any other commands.
-    NamedCommands.registerCommand("Turn90Deg", new TurnToAngle(chassis, 90));
+    //NamedCommands.registerCommand("Turn90Deg", new TurnToAngle(chassis, 90));
     NamedCommands.registerCommand("ZeroEverything", new ZeroEverything(chassis));
 
     configureBindings(); // configure button bindings
@@ -164,24 +155,17 @@ public class RobotContainer {
 
     //new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new OnlyIndex(indexer));
 
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_A).whileTrue(new OnlyShoot(shooter));
     SmartDashboard.putData(new FlipDriveOrientation(chassis));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new FlipDriveOrientation(chassis));
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new VelocityShoot(shooter));
     new POVButton(driverController, Constants.Buttons.LST_POV_N).whileTrue(new ZeroEverything(chassis));
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new TurnToAngle(chassis, 90));
-
+    //new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new TurnToAngle(chassis, 90));
     SmartDashboard.putData(new FlipDriveOrientation(chassis));
-
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_Y).whileTrue(new SpinHopper(hopper));
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new VelocityShoot(shooter));
-
     new JoystickButton(operatorController, Constants.Buttons.LST_BTN_LBUMPER).whileTrue(new DumbSpouttake(new Intake()));
     new JoystickButton(operatorController, Constants.Buttons.LST_BTN_RBUMPER).whileTrue(new DumbSpintake(new Intake()));
     new JoystickButton(operatorController, Constants.Buttons.LST_BTN_A).whileTrue(new SmartSpintake(new Intake()));
     new JoystickButton(operatorController, Constants.Buttons.LST_BTN_B).whileTrue(new DumbPneumatics(new Intake()));
-    new JoystickButton(operatorController, Constants.Buttons.LST_AXS_LTRIGGER).whileTrue(new Handoff(new Indexer(), new Intake()));
-    new JoystickButton(operatorController, Constants.Buttons.LST_AXS_RTRIGGER).whileTrue(new IntakeThroughIndexer(new Indexer(), new Intake()));
+    new JoystickButton(operatorController, Constants.Buttons.LST_AXS_LTRIGGER).whileTrue(new Handoff(new Indexer(), new Intake(), new XboxControllerVibration()));
+    new JoystickButton(operatorController, Constants.Buttons.LST_AXS_RTRIGGER).whileTrue(new IntakeThroughIndexer(new Indexer(), new Intake(), new XboxControllerVibration()));
   }
 
 }
