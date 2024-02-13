@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.sensors.Navx;
+
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonPipelineResult;
@@ -29,7 +30,10 @@ public class CameraSubsystem extends SubsystemBase {
 
   private double cameraHeight =  0.965; //meters
   private double speakerTagHeight = 1.3; //meters
-  private double cameraPitch = 0.0045; //radians
+  private double cameraPitch = 0; //radians
+
+  double currentTimestamp = 0;
+
 
 
   Pose2d targetPose = new Pose2d(16.58, 5.55, Rotation2d.fromRadians(0));
@@ -175,24 +179,30 @@ public class CameraSubsystem extends SubsystemBase {
   public boolean hasTarget() {
     return camera.hasTargets();
   }
+  public boolean weAreUp(){
+    return ( camera != null &&
+            camera.getLatestResult() != null &&
+            camera.getLatestResult().hasTargets() &&
+            CorrectTarget != null &&
+            CorrectTarget.getYaw() != -400d &&
+            CorrectTarget.getPitch() != -400d &&
+            CorrectTarget.getFiducialId() != -1);
+  }
   public int getCorrectTargetID(){
     return fiducialID;
   }
   public double getTargetYaw() {
-    if (!hasTarget()) {
-      return -400.0;
-    } else {
-      if (CorrectTarget != null && CorrectTarget.getYaw() != -400.0) {
+    if (weAreUp()) {
         return Math.toRadians(CorrectTarget.getYaw());
-      }
-    }
+    } else {
     return -400d;
+    }
   }
   public double getTargetPitch() {
     if (!hasTarget()) {
       return -400.0;
     } else {
-      if (CorrectTarget != null && CorrectTarget.getPitch() != -400.0) {
+      if (weAreUp()) {
         return Math.toRadians(CorrectTarget.getPitch());
       }
     }
@@ -227,10 +237,11 @@ public class CameraSubsystem extends SubsystemBase {
     PhotonPipelineResult result = camera.getLatestResult();
     double resultTimestamp = result.getTimestampSeconds();
     int i = 0;
-    while (result.getTargets().size() > i && result.getTargets() != null && hasTarget() && result.getTargets().get(i).getFiducialId() != -1) {
+    while (result.getTargets().size() > i && weAreUp() && resultTimestamp != currentTimestamp) {
       if (result.getTargets().get(i).getFiducialId() == 4 || result.getTargets().get(i).getFiducialId() == 7) {
         fiducialID = result.getTargets().get(i).getFiducialId();
         setCurrentTag(result.getTargets().get(i));
+        currentTimestamp = resultTimestamp;
       }
       i++;
     }
@@ -238,8 +249,11 @@ public class CameraSubsystem extends SubsystemBase {
   public void setCurrentTag(PhotonTrackedTarget target){
     CorrectTarget = target;
   }
-  public double getCorrectTargetDist(){
-    return PhotonUtils.calculateDistanceToTargetMeters(cameraHeight, speakerTagHeight, cameraPitch, getTargetPitch());
+  public double getCorrectTargetDist() {
+    if (weAreUp()) {
+      return PhotonUtils.calculateDistanceToTargetMeters(cameraHeight, speakerTagHeight, cameraPitch, getTargetPitch());
+    }
+    else return 0d;
   }
 
   @Override
