@@ -2,34 +2,32 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.Shooter;
+package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.XboxControllerVibration;
 
 /** An example command that uses an example subsystem. */
-public class VelocityShoot extends Command {
+public class DriverControllerVibrateAfterTime extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final Shooter shooter;
+  private final XboxControllerVibration vibration;
 
   /**
    * Creates a new ExampleCommand.
    *
-   * @param shooter  The subsystem used by this command.
+   * @param subsystem The subsystem used by this command.
    */
-  public VelocityShoot(Shooter shooter) {
-    this.shooter = shooter;
+  public DriverControllerVibrateAfterTime(XboxControllerVibration subsystem) {
+    vibration = subsystem;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(shooter);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    // configureVelocitySlot();
-    shooter.configureVelocitySlot();
-    shooter.updateVelocityPID();
-    shooter.setFlywheelVelocity();
+
+    vibration.TimedVibrateDriver();
+    //start the timer
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -38,9 +36,7 @@ public class VelocityShoot extends Command {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    shooter.stopShooters();
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override

@@ -169,8 +169,10 @@ public class SwerveModule implements Sendable {
      * @param setpoint in radians
      */
     public void turnToAngle(double setpoint) {
-        steerMotor.setVoltage(12d * turningPidController.calculate(Math.IEEEremainder(getTurningPositionRadians(), Math.PI * 2), setpoint));
+        //steerMotor.setVoltage(12d * turningPidController.calculate(Math.IEEEremainder(getTurningPositionRadians(), Math.PI * 2), setpoint));
+        steerMotor.setVoltage(12d * turningPidController.calculate(Math.IEEEremainder(getTurningPositionRadians(), Math.PI * 2), Math.toRadians(setpoint)));
     }
+
 
     /**
      * Get the position of the swerve module
