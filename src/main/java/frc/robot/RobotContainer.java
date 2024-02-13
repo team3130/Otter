@@ -42,17 +42,19 @@ public class RobotContainer {
   private final XboxController driverController = new XboxController(0);
   private final XboxController operatorController = new XboxController(1);
   private final Chassis chassis;
+  private final Hopper hopper;
   private final SendableChooser<Command> autoChooser;
 
   // container for the robot containing subsystems, OI devices, and commands
   public RobotContainer() {
     chassis = new Chassis();
+    hopper = new Hopper();
 
     // Named commands must be registered before the creation of any PathPlanner Autos or Paths
     // Do this in RobotContainer, after subsystem initialization, but before the creation of any other commands.
     NamedCommands.registerCommand("Turn90Deg", new TurnToAngle(chassis, 90));
-    NamedCommands.registerCommand("FakeShoot", new ZeroWheels(chassis));
-    NamedCommands.registerCommand("FakeIntake", new ZeroWheels(chassis));
+    NamedCommands.registerCommand("FakeShoot", new SpinHopper(hopper));
+    NamedCommands.registerCommand("FakeIntake", new SpinHopper(hopper));
 
     configureBindings(); // configure button bindings
     exportShuffleBoardData(); // export ShuffleBoardData
@@ -138,7 +140,7 @@ public class RobotContainer {
             .onTrue(new ExampleCommand(m_exampleSubsystem));
 
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_A).whileTrue(new ZeroWheels(chassis));
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_Y).whileTrue(new FlipDriveOrientation(chassis));
+    new JoystickButton(driverController, Constants.Buttons.LST_BTN_Y).whileTrue(new SpinHopper(hopper));
     new POVButton(driverController, Constants.Buttons.LST_POV_N).whileTrue(new ZeroEverything(chassis));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new TurnToAngle(chassis, 90));
 
