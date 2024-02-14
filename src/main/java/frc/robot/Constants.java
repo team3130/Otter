@@ -26,44 +26,62 @@ public final class Constants {
   public final static double kMaxVoltageHopper = 9d;
 
   public static class CAN {
-    public final static int leftFrontSteer = 2;
-    public final static int leftFrontDrive = 3;
-    public final static int rightFrontSteer = 4;
-    public final static int rightFrontDrive = 5;
+    // SWERVE CAN NUMBERED LIKE CARTESIAN COORDIANTE QUADRANTS
+    // front left
+    public final static int MOD_ONE_STEER = 2;
+    public final static int MOD_ONE_DRIVE = 3;
 
-    public final static int leftBackSteer = 6;
-    public final static int leftBackDrive = 7;
-    public final static int rightBackSteer = 8;
-    public final static int rightBackDrive = 9;
+    // back left
+    public final static int MOD_TWO_STEER = 4;
+    public final static int MOD_TWO_DRIVE = 5;
 
+    // back right
+    public final static int MOD_THREE_STEER = 6;
+    public final static int MOD_THREE_DRIVE = 7;
+
+    public final static int MOD_FOUR_STEER = 8;
+    public final static int MOD_FOUR_DRIVE = 9;
+
+    // front right
     public final static int CANCoderTopRight = 10;
     public final static int CANCoderBottomRight = 11;
     public final static int CANCoderTopLeft = 12;
     public final static int CANCoderBottomLeft = 13;
 
     // Order should match side
-    public static final int[] turningID = new int[] {leftFrontSteer, leftBackSteer, rightFrontSteer, rightBackSteer};
-    public static final int[] spinningID = new int[] {leftFrontDrive, leftBackDrive, rightFrontDrive, rightBackDrive};
+    public static final int[] turningID = new int[] {MOD_ONE_STEER, MOD_TWO_STEER, MOD_THREE_STEER, MOD_FOUR_STEER};
+    public static final int[] spinningID = new int[] {MOD_ONE_DRIVE, MOD_TWO_DRIVE, MOD_THREE_DRIVE, MOD_FOUR_DRIVE};
     public final static int[] CANCoders = new int[] {CANCoderTopLeft, CANCoderBottomLeft, CANCoderTopRight, CANCoderBottomRight};
 
     public final static int CAN_hopperright = 16;
     public final static int CAN_hopperleft = 17;
 
-    public final static int climberLeft = 0;
-    public final static int climberRight = 1;
-    public final static int ampMotor = 2;
-    public final static int intakeMotor = 3;
+    public final static int intakeIndexer = 20;
+
+    public final static int shooterIndexer = 30;
+    public final static int shooterTopFlywheel = 31;
+    public final static int shooterBottomFlywheel = 32;
+
+
+    public final static int ampMotor = 40;
+
+    public final static int climberLeft = 20;
+    public final static int climberRight = 21;
 
   }
 
   public static class IDs {
-    public final static int intakeSolenoidOne = 4;
-    public final static int intakeSolenoidTwo = 5;
-    public final static int ampPCM = 6;
-    public final static int ampChannel = 0;
 
-    public final static int intakeLimitSwitch = 1;
+    public final static int intakeSolenoidOne = 22;
+    public final static int intakeSolenoidTwo = 23;
+
+
+    public final static int intakeLimitSwitch = 21;
+
     public final static int shooterBreakBeam = 2;
+
+    public final static int ampPCM = 41;
+    public final static int ampChannel = 0;
     public final static int ampLimitSwitch = 0;
   }
 
