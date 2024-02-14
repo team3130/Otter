@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.*;
+import frc.robot.sensors.DistanceCalcs;
 import frc.robot.subsystems.CameraSubsystem;
 import frc.robot.commands.Chassis.TeleopDrive;
 import frc.robot.commands.Chassis.ZeroEverything;
@@ -37,6 +38,8 @@ public class RobotContainer {
   private final Chassis chassis = new Chassis(cameraSubsystem);
   private final XboxController driverGamepad = new XboxController(0);
   private final XboxController operatorController = new XboxController(1);
+  protected DistanceCalcs m_distanceCalcs = new DistanceCalcs();
+
   public RobotContainer() {
     exportShuffleBoardData(); // export ShuffleBoardData
 

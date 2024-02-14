@@ -3,34 +3,39 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.subsystems;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.util.sendable.SendableBuilder;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.sensors.DistanceCalcs;
 import frc.robot.sensors.Navx;
-
+import frc.robot.sensors.LinearInterp;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 import java.util.ArrayList;
-import java.util.Optional;
 
 public class CameraSubsystem extends SubsystemBase {
   protected PhotonCamera camera = new PhotonCamera("cam");
   private static final ShuffleboardTab tab = Shuffleboard.getTab("PhotonCamera");
   AprilTagFieldLayout aprilTagFieldLayout;
+  private DistanceCalcs distanceCalcs = new DistanceCalcs();
+
+
 
   private double cameraHeight =  0.965; //meters
   private double speakerTagHeight = 1.3; //meters
   private double cameraPitch = 0; //radians
+  private double Angle1LowBound = 0d;
+  private double Angle1HighBound = 2d;
+  private double Angle2HighBound = 4d;
+  private double Angle3HighBound = 6d;
 
   double currentTimestamp = 0;
 
@@ -79,8 +84,30 @@ public class CameraSubsystem extends SubsystemBase {
 
     }
 
-  public boolean targetControllerDone(){
+  public boolean facingTarget(){
     return targetController.atSetpoint();
+  }
+  public boolean readyToShoot(int shooterPose){
+    return (shooterPose==desiredAngle() && facingTarget());
+  }
+  public boolean shouldBeAngle1(){
+    return (getREALdistToTarget() <= Angle1HighBound);
+  }
+  public boolean shouldBeAngle2(){
+    return (getREALdistToTarget() <= Angle2HighBound);
+  }
+  public boolean shouldBeAngle3(){
+    return (getREALdistToTarget() <= Angle3HighBound);
+  }
+
+  public int desiredAngle(){
+    if(getREALdistToTarget() <= Angle1HighBound){
+      return 1;
+    }else if (getREALdistToTarget() <= Angle2HighBound){
+      return 2;
+    }else if(getREALdistToTarget() <= Angle3HighBound){
+      return 3;
+    }else {return 0;}
   }
   public boolean isTryingToTarget(){
     return isTryingToTarget;
@@ -225,7 +252,8 @@ public class CameraSubsystem extends SubsystemBase {
     builder.addDoubleProperty("target F", this::getXTargetV, this::setXTargetV);
     builder.addDoubleProperty("target YF", this::getYTargetV, this::setYTargetV);
     builder.addDoubleProperty("target XF", this::getXTargetV, this::setXTargetV);
-    builder.addDoubleProperty("target dist", this::getCorrectTargetDist, null);
+    builder.addDoubleProperty("target dist", this::getFakeTargetDist, null);
+    builder.addDoubleProperty("REAL dist", this::getREALdistToTarget, null);
 
 
 
@@ -249,12 +277,17 @@ public class CameraSubsystem extends SubsystemBase {
   public void setCurrentTag(PhotonTrackedTarget target){
     CorrectTarget = target;
   }
-  public double getCorrectTargetDist() {
+  public double getFakeTargetDist() {
     if (weAreUp()) {
       return PhotonUtils.calculateDistanceToTargetMeters(cameraHeight, speakerTagHeight, cameraPitch, getTargetPitch());
     }
     else return 0d;
   }
+  public double getREALdistToTarget() {
+    return distanceCalcs.getREALDistanceToTarget(getFakeTargetDist());
+  }
+
+
 
   @Override
   public void simulationPeriodic() {
