@@ -44,7 +44,7 @@ public class RobotContainer {
   public final XboxController driverController = new XboxController(0);
   public final XboxController operatorController = new XboxController(1);
   private final Chassis chassis;
-  private final SendableChooser<Command> autoChooser;
+  //private final SendableChooser<Command> autoChooser;
 
   // container for the robot containing subsystems, OI devices, and commands
   public RobotContainer() {
@@ -62,13 +62,13 @@ public class RobotContainer {
 
     // Build an auto chooser. This will use Commands.none() as the default option.
     // autoChooser = AutoBuilder.buildAutoChooser();
-    autoChooser = AutoBuilder.buildAutoChooser("up");
+    //autoChooser = AutoBuilder.buildAutoChooser("up");
 
-    SmartDashboard.putData("Auto Chooser", autoChooser);
+    //SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
   public Command pick() {
-    return autoChooser.getSelected();
+    return null;//autoChooser.getSelected();
   }
 
   public Command getPullOut() {
