@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -13,7 +12,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -23,13 +21,11 @@ import frc.robot.commands.Autos;
 import frc.robot.commands.Chassis.FlipDriveOrientation;
 import frc.robot.commands.Chassis.TeleopDrive;
 import frc.robot.commands.Chassis.ZeroEverything;
+import frc.robot.commands.Chassis.ZeroWheels;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.Intake.*;
 import frc.robot.commands.Shooter.Handoff;
 import frc.robot.subsystems.*;
-import frc.robot.commands.Chassis.ZeroWheels;
-import frc.robot.subsystems.Chassis;
-import frc.robot.subsystems.ExampleSubsystem;
 
 import java.util.function.BooleanSupplier;
 
@@ -152,7 +148,6 @@ public class RobotContainer {
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_A).whileTrue(new ZeroWheels(chassis));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_Y).whileTrue(new FlipDriveOrientation(chassis));
     new POVButton(driverController, Constants.Buttons.LST_POV_N).whileTrue(new ZeroEverything(chassis));
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new TurnToAngle(chassis, 90));
 
 
     //new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new OnlyIndex(indexer));
