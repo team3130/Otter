@@ -58,7 +58,6 @@ public class RobotContainer {
     // Do this in RobotContainer, after subsystem initialization, but before the creation of any other commands.
     NamedCommands.registerCommand("spinHopper", hopper.spinHopperAuto());
 
-    configureBindings(); // configure button bindings
     exportShuffleBoardData(); // export ShuffleBoardData
 
     configureBindings();

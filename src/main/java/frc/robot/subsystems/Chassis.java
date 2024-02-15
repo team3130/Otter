@@ -56,8 +56,8 @@ public class Chassis extends SubsystemBase {
     private double targetMaxVelo = Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond; //TODO real
     private double targetMaxAcc = Constants.Swerve.kMaxAccelerationDrive; //TODO real
     private Pose2d initialPosition;
-    private double initialAprilTagDistance = 2.0;
-    private double initialAprilTagAngle = 30.0;
+    private double initialAprilTagDistance = 0;
+    private double initialAprilTagAngle = 0;
     private Translation2d initialAprilTagVector;
     private Translation2d originToAprilTagVector;
     private double theta = 0.0;
