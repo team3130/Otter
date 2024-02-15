@@ -49,7 +49,7 @@ public class RobotContainer {
   private final Intake intake;
   private final Indexer indexer;
   private final Chassis chassis;
-  private final SendableChooser<Command> autoChooser;
+  //private final SendableChooser<Command> autoChooser;
 
   private final CameraSubsystem camera;
 
@@ -74,13 +74,13 @@ public class RobotContainer {
 
     // Build an auto chooser. This will use Commands.none() as the default option.
     // autoChooser = AutoBuilder.buildAutoChooser();
-    autoChooser = AutoBuilder.buildAutoChooser("up");
+    //autoChooser = AutoBuilder.buildAutoChooser("up");
 
-    SmartDashboard.putData("Auto Chooser", autoChooser);
+    //SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
   public Command pick() {
-    return autoChooser.getSelected();
+    return null;//autoChooser.getSelected();
   }
 
   public Command getPullOut() {
@@ -151,6 +151,8 @@ public class RobotContainer {
 
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_A).whileTrue(new ZeroWheels(chassis));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_Y).whileTrue(new FlipDriveOrientation(chassis));
+    new POVButton(driverController, Constants.Buttons.LST_POV_N).whileTrue(new ZeroEverything(chassis));
+    new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new TurnToAngle(chassis, 90));
 
 
     //new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new OnlyIndex(indexer));
