@@ -21,15 +21,13 @@ public class ToggleOdoFaceTarget extends Command {
    */
   public ToggleOdoFaceTarget(Chassis subsystem) {
     chassis = subsystem;
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(subsystem);
+    m_requirements.add(chassis);
   }
-
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    chassis.setFaceTargetting(!chassis.getFaceTargetting());
+    chassis.setFaceTargetting(true);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -38,7 +36,10 @@ public class ToggleOdoFaceTarget extends Command {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    System.out.println(chassis.getFaceTargetting());
+
+  }
 
   // Returns true when the command should end.
   @Override

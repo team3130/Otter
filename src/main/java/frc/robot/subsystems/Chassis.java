@@ -56,12 +56,12 @@ public class Chassis extends SubsystemBase {
     private double targetMaxVelo = Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond; //TODO real
     private double targetMaxAcc = Constants.Swerve.kMaxAccelerationDrive; //TODO real
     private Pose2d initialPosition;
-    private double initialAprilTagDistance = 0;
-    private double initialAprilTagAngle;
+    private double initialAprilTagDistance = 2.0;
+    private double initialAprilTagAngle = 30.0;
     private Translation2d initialAprilTagVector;
     private Translation2d originToAprilTagVector;
     private double theta = 0.0;
-    private boolean isFaceTargetting = false;
+    private boolean isFaceTargetting;
     Rotation2d angleSetpoint = null;
     private final CameraSubsystem cameraSubsystem = new CameraSubsystem();
 
@@ -81,7 +81,7 @@ public class Chassis extends SubsystemBase {
      */
     public Chassis(Pose2d startingPos, Rotation2d startingRotation) {
         kinematics = new SwerveDriveKinematics(Constants.Swerve.moduleTranslations);
-
+        isFaceTargetting = false;
 
         modules = new SwerveModule[4];
         modules[Constants.Modules.leftFront] = new SwerveModule(Constants.Modules.leftFront);
@@ -374,6 +374,7 @@ public class Chassis extends SubsystemBase {
         builder.addDoubleProperty("max speed read", this::getMaxSpeedRead, null);
         builder.addStringProperty("odometry pose2d", this::getOdometry, null);
         builder.addDoubleProperty("Target Distance", this::getInitialAprilTagDistance, null);
+        builder.addBooleanProperty("IsFaceTargetToggled", this::getFaceTargetting, null);
 
     }
 
@@ -410,7 +411,7 @@ public class Chassis extends SubsystemBase {
     // gets the information like distance to april tag and angle to make vectors (uses FaceTarget info)
     public void prepareForFaceTarget(){
         initialPosition = getInitialPosition();
-        initialAprilTagDistance = cameraSubsystem.getTargetDistance();
+        //initialAprilTagDistance = cameraSubsystem.getTargetDistance();
         initialAprilTagAngle = initialPosition.getRotation().getRadians(); // can maybe use yaw later
         initialAprilTagVector = new Translation2d(initialAprilTagDistance * Math.sin(Math.PI - initialAprilTagAngle), initialAprilTagDistance * Math.cos(Math.PI - initialAprilTagAngle));
         originToAprilTagVector = initialPosition.getTranslation().plus(initialAprilTagVector);

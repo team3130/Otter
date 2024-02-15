@@ -46,7 +46,7 @@ public class RobotContainer {
   private final TeleopDrive teleopDrive = new TeleopDrive(chassis,driverController,cameraSubsystem);
   private final Indexer indexer;
   private final Hopper hopper;
-  private final SendableChooser<Command> autoChooser;
+ // private final SendableChooser<Command> autoChooser;
 
   // container for the robot containing subsystems, OI devices, and commands
   public RobotContainer() {
@@ -67,19 +67,19 @@ public class RobotContainer {
 
     // Build an auto chooser. This will use Commands.none() as the default option.
     // autoChooser = AutoBuilder.buildAutoChooser();
-    autoChooser = AutoBuilder.buildAutoChooser("up");
+   // autoChooser = AutoBuilder.buildAutoChooser("up");
 
-    SmartDashboard.putData("Auto Chooser", autoChooser);
+  //  SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
-  public Command pick() {
+  /*(public Command pick() {
     return autoChooser.getSelected();
   }
 
   public Command getPullOut() {
     return new PathPlannerAuto("Pull out");
   }
-
+  */
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -148,8 +148,8 @@ public class RobotContainer {
     // driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
     new POVButton(driverController, Constants.Buttons.LST_POV_N).whileTrue(new ZeroEverything(chassis));
     new POVButton(driverController, Constants.Buttons.LST_POV_W).whileTrue(new ZeroWheels(chassis));
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_Y).onTrue(new EnableTargeting(cameraSubsystem));
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_A).whileTrue(new TargetingPressed(cameraSubsystem));
+    //new JoystickButton(driverController, Constants.Buttons.LST_BTN_Y).onTrue(new EnableTargeting(cameraSubsystem));
+    //new JoystickButton(driverController, Constants.Buttons.LST_BTN_A).whileTrue(new TargetingPressed(cameraSubsystem));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new ToggleOdoFaceTarget(chassis));
   }
 
