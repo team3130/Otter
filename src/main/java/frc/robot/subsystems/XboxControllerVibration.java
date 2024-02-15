@@ -130,7 +130,7 @@ public class XboxControllerVibration {
       operatorController.setRumble(XboxController.RumbleType.kRightRumble, 0);
     }
   }
-
+  //need to figure out the Sendable Builder
   public void initSendable(SendableBuilder builder) {
     builder.setSmartDashboardType("Vibration");
 
