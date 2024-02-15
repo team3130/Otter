@@ -50,8 +50,8 @@ public class SwerveModule implements Sendable {
         turningPidController.setTolerance(0.0025, 0.05); // at position tolerance
 
         absoluteEncoderOffset = Constants.EncoderOffsets.kCANCoderOffsets[side];
+        this.side =side;
 
-        this.side = side;
 
         resetEncoders();
 
@@ -89,11 +89,12 @@ public class SwerveModule implements Sendable {
     }
 
     // gets the position of the steering wheel according to the absolute encoders
-    public double getAbsoluteEncoderRad() {
-        return Math.toRadians(absoluteEncoder.getAbsolutePosition().getValue() * 360);
+    public double getAbsoluteEncoderRads() {
+        return Math.toRadians(absoluteEncoder.getAbsolutePosition().getValue() * 360);// / (Math.PI *2);
     }
 
-    public double getAbsoluteEncoderDegrees() {
+
+    public double getAbsoluteEncoderRotation() {
         return absoluteEncoder.getAbsolutePosition().getValue();
     }
 
@@ -113,7 +114,7 @@ public class SwerveModule implements Sendable {
      * Resets the relative encoders according the absolute encoder involving the offset
      */
     public void resetEncoders() {
-        steerMotor.setPosition((getAbsoluteEncoderRad() - absoluteEncoderOffset) / Constants.Conversions.SteerRotToRads);
+        steerMotor.setPosition((getAbsoluteEncoderRads() - absoluteEncoderOffset) / Constants.Conversions.SteerRotToRads);
         //steerMotor.setPosition((getAbsoluteEncoderRad() - absoluteEncoderOffset) / Constants.Conversions.SteerRotToRads);
     }
 
@@ -234,8 +235,15 @@ public class SwerveModule implements Sendable {
      * The string representation of the swerve module
      * @return "Swerve module side: " + sideNumber: int
      */
-    public String toString() {
-        return "Swerve module side: " + side;
+    /*public String toString() {
+        return "Swerve module side: " + (side+1);
+    }*/
+    public int getRealSide(){
+        int real = side + 1;
+        return real;
+    }
+    public double getSteerRotations(){
+        return steerMotor.getPosition().getValue();
     }
 
     /**
@@ -244,17 +252,17 @@ public class SwerveModule implements Sendable {
      */
     @Override
     public void initSendable(SendableBuilder builder) {
-        builder.setSmartDashboardType("Swerve Module " + side);
+        builder.setSmartDashboardType("Swerve Module " + (getRealSide()));
         // builder.addDoubleProperty("Drive velocity", this::getDriveVelocity, null);
-        builder.addDoubleProperty("Steer position", this::getSteerPositionWrapped, null);
+        builder.addDoubleProperty("Steer position", this::getSteerRotations, null);
         builder.addDoubleProperty("Drive position", this::getDrivePosition, null);
-        builder.addDoubleProperty("Absolute encoder position", this::getAbsoluteEncoderRad, null);
+        builder.addDoubleProperty("Absolute encoder position", this::getAbsoluteEncoderRads, null);
 /*        builder.addDoubleProperty("Steer velocity", this::getTurningVelocity, null);
         builder.addDoubleProperty("Steer relative", this::getRelativePositionDegrees, null);
         */
-        builder.addDoubleProperty("Swerve P " + side, this::getPValue, this::setPValue);
-        builder.addDoubleProperty("Swerve I " + side, this::getIValue, this::setIValue);
-        builder.addDoubleProperty("Swerve D " + side, this::getDValue, this::setDValue);
+        builder.addDoubleProperty("Swerve P " + getRealSide(), this::getPValue, this::setPValue);
+        builder.addDoubleProperty("Swerve I " + getRealSide(), this::getIValue, this::setIValue);
+        builder.addDoubleProperty("Swerve D " + getRealSide(), this::getDValue, this::setDValue);
     }
 
     public double getSteerPositionWrapped() {

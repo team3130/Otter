@@ -22,7 +22,7 @@ import edu.wpi.first.math.util.Units;
 @SuppressWarnings("ALL")
 public final class Constants {
   public static final boolean debugMode = true; //TODO: make false after testing
-  public static final boolean kNavxReversed = true;
+  public static final boolean kNavxReversed = false;
   public final static double kMaxVoltageHopper = 9d;
 
   public static class CAN {
@@ -43,15 +43,15 @@ public final class Constants {
     public final static int MOD_FOUR_DRIVE = 9;
 
     // front right
-    public final static int CANCoderTopRight = 10;
-    public final static int CANCoderBottomRight = 11;
-    public final static int CANCoderTopLeft = 12;
-    public final static int CANCoderBottomLeft = 13;
+    public final static int MOD_ONE_CANCODER = 10;
+    public final static int MOD_TWO_CANCODER = 11;
+    public final static int MOD_THREE_CANCODER = 12;
+    public final static int MOD_FOUR_CANCODER = 13;
 
     // Order should match side
     public static final int[] turningID = new int[] {MOD_ONE_STEER, MOD_TWO_STEER, MOD_THREE_STEER, MOD_FOUR_STEER};
     public static final int[] spinningID = new int[] {MOD_ONE_DRIVE, MOD_TWO_DRIVE, MOD_THREE_DRIVE, MOD_FOUR_DRIVE};
-    public final static int[] CANCoders = new int[] {CANCoderTopLeft, CANCoderBottomLeft, CANCoderTopRight, CANCoderBottomRight};
+    public final static int[] CANCoders = new int[] {MOD_ONE_CANCODER, MOD_TWO_CANCODER, MOD_THREE_CANCODER, MOD_FOUR_CANCODER};
 
     public final static int CAN_hopperright = 16;
     public final static int CAN_hopperleft = 17;
@@ -146,27 +146,28 @@ public final class Constants {
 
     /* Length and width as measured as distances between center of wheels */
     // the left-to-right distance between the drivetrain wheels, should be measured from center to center
-    public static final double trackWidth = 0.508;
+    public static final double trackWidth = 0.584;
     // the front-to-back distance between the drivetrain wheels, should be measured from center to center
-    public static final double wheelBase = 0.508;
+    public static final double wheelBase = 0.584;
 
     public static final Translation2d[] moduleTranslations = {
-            new Translation2d(wheelBase / 2.0, trackWidth / 2.0),
+            new Translation2d(wheelBase / 2.0, -trackWidth / 2.0), // 1 pos neg
+            new Translation2d(-wheelBase / 2.0, -trackWidth / 2.0),
             new Translation2d(-wheelBase / 2.0, trackWidth / 2.0),
-            new Translation2d(wheelBase / 2.0, -trackWidth / 2.0),
-            new Translation2d(-wheelBase / 2.0, -trackWidth / 2.0)
+            new Translation2d(wheelBase / 2.0, trackWidth / 2.0) // 4, pos pos
     };
 
-    public static final boolean kNavxReversed = true;
-    public final static double kPhysicalMaxSpeedMetersPerSecond = 4.19; // 3.54 with 8 volts of voltage compensation and 4.19 with 10 volts
+    public static final boolean kNavxReversed = true; //TODO huh
+    public final static double kPhysicalMaxSpeedMetersPerSecond = 4.60; // 3.54 with 8 volts of voltage compensation and 4.19 with 10 volts
     public final static double kMaxSteerVoltage = 5d;
     public final static double kMaxDriveVoltage = 10d;
 
     public final static double kDeadband = 0.075;
 
-    public final static double kMaxAccelerationDrive = 7;
+    public final static double kMaxAccelerationDrive = 7.5;
     public final static double kMaxAccelerationAngularDrive = 4.0*Math.PI;
 
+    //TODO TUNE SWERVE
     public final static double kP_FrontRight = 1.35;
     public final static double kI_FrontRight = 0.05;
     public final static double kD_FrontRight = 0;
@@ -202,24 +203,24 @@ public final class Constants {
   }
 
   public static class Modules {
-    public static final int leftFront = 0;
-    public static final int leftBack = 1;
-    public static final int rightFront = 2;
-    public static final int rightBack = 3;
+    public static final int one = 0;
+    public static final int two = 1;
+    public static final int three = 2;
+    public static final int four = 3;
   }
   
   public static class EncoderOffsets {
-    public static final double kTopLeftOffset = Math.toRadians(268.682); // 1.498607; //
-    public static final double kBottomLeftOffset = Math.toRadians(281.426); // 1.71; //
-    public static final double kTopRightOffset = Math.toRadians(129.3); //-0.8436; //
-    public static final double kBottomRightOffset = Math.toRadians(0); //3.14772592; //
-    public static final double[] kCANCoderOffsets = new double[] {kTopLeftOffset, kBottomLeftOffset, kTopRightOffset, kBottomRightOffset};
+    public static final double MOD_ONE_OFFSET = -2.856; // 1.498607; //
+    public static final double MOD_TWO_OFFSET = 2.1107; // 1.71; //
+    public static final double MOD_THREE_OFFSET = 1.7855; //-0.8436; //
+    public static final double MOD_FOUR_OFFSET = 0.56143; //3.14772592; //
+    public static final double[] kCANCoderOffsets = new double[] {MOD_ONE_OFFSET, MOD_TWO_OFFSET, MOD_THREE_OFFSET, MOD_FOUR_OFFSET};
   }
 
   // gear ratios and/or ticks per rev, etc.
   public static class Conversions {
-    public final static double kDriveGearRatio = 6.73; // Checked 2/2/24 //6.75  checked 1/19/23
-    public final static double kSteerGearRatio = 21.4317; // Checked 2/2/24 //150d/7d = 21.42857  checked 1/19
+    public final static double kDriveGearRatio = 6.12; // Checked 2/2/24 //6.75  checked 1/19/23
+    public final static double kSteerGearRatio = 21.4; // Checked 2/2/24 //150d/7d = 21.42857  checked 1/19
     public static final double kWheelDiameter = Units.inchesToMeters(4);
     public final static double DriveRotToMeters = kWheelDiameter * Math.PI * 1/(kDriveGearRatio); // multiply by
     public static final double SteerRotToRads = 1/(kSteerGearRatio) * Math.PI * 2; // multiply by position

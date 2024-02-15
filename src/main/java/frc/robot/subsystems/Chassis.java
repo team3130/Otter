@@ -5,9 +5,6 @@
 package frc.robot.subsystems;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
-import com.pathplanner.lib.util.ReplanningConfig;
-import com.pathplanner.lib.util.PIDConstants;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -24,7 +21,6 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.commands.Autos;
 import frc.robot.RobotContainer;
 import frc.robot.sensors.Navx;
 import frc.robot.swerve.SwerveModule;
@@ -65,10 +61,10 @@ public class Chassis extends SubsystemBase {
         kinematics = new SwerveDriveKinematics(Constants.Swerve.moduleTranslations);
 
         modules = new SwerveModule[4];
-        modules[Constants.Modules.leftFront] = new SwerveModule(Constants.Modules.leftFront);
-        modules[Constants.Modules.leftBack] = new SwerveModule(Constants.Modules.leftBack);
-        modules[Constants.Modules.rightFront] = new SwerveModule(Constants.Modules.rightFront);
-        modules[Constants.Modules.rightBack] = new SwerveModule(Constants.Modules.rightBack);
+        modules[Constants.Modules.one] = new SwerveModule(Constants.Modules.one);
+        modules[Constants.Modules.two] = new SwerveModule(Constants.Modules.two);
+        modules[Constants.Modules.three] = new SwerveModule(Constants.Modules.three);
+        modules[Constants.Modules.four] = new SwerveModule(Constants.Modules.four);
 
         // odometry wrapper class that has functionality for cameras that report position with latency
         odometry = new SwerveDrivePoseEstimator(kinematics, startingRotation, generatePoses(), startingPos);
@@ -102,10 +98,10 @@ public class Chassis extends SubsystemBase {
         return AutoBuilder.isConfigured();
     }
     public boolean turnToAnglePIDIsDone() {
-        return modules[Constants.Modules.leftFront].PIDisDone() &&
-                modules[Constants.Modules.leftBack].PIDisDone() &&
-                modules[Constants.Modules.rightFront].PIDisDone() &&
-                modules[Constants.Modules.rightBack].PIDisDone();
+        return modules[Constants.Modules.one].PIDisDone() &&
+                modules[Constants.Modules.two].PIDisDone() &&
+                modules[Constants.Modules.three].PIDisDone() &&
+                modules[Constants.Modules.four].PIDisDone();
     }
 
     /**
@@ -168,10 +164,10 @@ public class Chassis extends SubsystemBase {
 
     // If the PID controllers of the Swerve Modules are done, returning whether the wheels are zeroed/PID controllers finished
     public boolean turnToAnglePIDIsFinished() {
-        return modules[Constants.Modules.leftFront].PIDisDone() &&
-                modules[Constants.Modules.leftBack].PIDisDone() &&
-                modules[Constants.Modules.rightFront].PIDisDone() &&
-                modules[Constants.Modules.rightBack].PIDisDone();
+        return modules[Constants.Modules.one].PIDisDone() &&
+                modules[Constants.Modules.two].PIDisDone() &&
+                modules[Constants.Modules.three].PIDisDone() &&
+                modules[Constants.Modules.four].PIDisDone();
     }
 
     // Generates the position of the swerve modules, retuning the position
@@ -203,10 +199,10 @@ public class Chassis extends SubsystemBase {
     public void setModuleStates(SwerveModuleState[] desiredStates) {
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
 
-        modules[Constants.Modules.leftFront].setDesiredState(desiredStates[Constants.Modules.leftFront]);
-        modules[Constants.Modules.leftBack].setDesiredState(desiredStates[Constants.Modules.leftBack]);
-        modules[Constants.Modules.rightFront].setDesiredState(desiredStates[Constants.Modules.rightFront]);
-        modules[Constants.Modules.rightBack].setDesiredState(desiredStates[Constants.Modules.rightBack]);
+        modules[Constants.Modules.one].setDesiredState(desiredStates[Constants.Modules.one]);
+        modules[Constants.Modules.two].setDesiredState(desiredStates[Constants.Modules.two]);
+        modules[Constants.Modules.three].setDesiredState(desiredStates[Constants.Modules.three]);
+        modules[Constants.Modules.four].setDesiredState(desiredStates[Constants.Modules.four]);
     }
 
 

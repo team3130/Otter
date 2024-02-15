@@ -41,7 +41,7 @@ public class RobotContainer {
   private final XboxController driverController = new XboxController(0);
   private final XboxController operatorController = new XboxController(1);
   private final Chassis chassis;
-  private final SendableChooser<Command> autoChooser;
+  //private final SendableChooser<Command> autoChooser;
 
   // container for the robot containing subsystems, OI devices, and commands
   public RobotContainer() {
@@ -49,7 +49,7 @@ public class RobotContainer {
 
     // Named commands must be registered before the creation of any PathPlanner Autos or Paths
     // Do this in RobotContainer, after subsystem initialization, but before the creation of any other commands.
-    NamedCommands.registerCommand("Turn90Deg", new TurnToAngle(chassis, 90));
+    //NamedCommands.registerCommand("Turn90Deg", new TurnToAngle(chassis, 90));
     NamedCommands.registerCommand("ZeroEverything", new ZeroEverything(chassis));
 
     configureBindings(); // configure button bindings
@@ -60,13 +60,13 @@ public class RobotContainer {
 
     // Build an auto chooser. This will use Commands.none() as the default option.
     // autoChooser = AutoBuilder.buildAutoChooser();
-    autoChooser = AutoBuilder.buildAutoChooser("up");
+    //autoChooser = AutoBuilder.buildAutoChooser("up");
 
-    SmartDashboard.putData("Auto Chooser", autoChooser);
+    //SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
   public Command pick() {
-    return autoChooser.getSelected();
+    return null;//autoChooser.getSelected();
   }
 
   public Command getPullOut() {
@@ -138,7 +138,7 @@ public class RobotContainer {
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_A).whileTrue(new ZeroWheels(chassis));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_Y).whileTrue(new FlipDriveOrientation(chassis));
     new POVButton(driverController, Constants.Buttons.LST_POV_N).whileTrue(new ZeroEverything(chassis));
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new TurnToAngle(chassis, 90));
+    //new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new TurnToAngle(chassis, 90));
 
     SmartDashboard.putData(new FlipDriveOrientation(chassis));
 
