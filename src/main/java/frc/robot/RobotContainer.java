@@ -59,7 +59,6 @@ public class RobotContainer {
 
     // Named commands must be registered before the creation of any PathPlanner Autos or Paths
     // Do this in RobotContainer, after subsystem initialization, but before the creation of any other commands.
-    //NamedCommands.registerCommand("Turn90Deg", new TurnToAngle(chassis, 90));
     NamedCommands.registerCommand("ZeroEverything", new ZeroEverything(chassis));
 
     configureBindings(); // configure button bindings
