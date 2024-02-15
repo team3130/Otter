@@ -51,8 +51,7 @@ public class Indexer extends SubsystemBase {
     }
 
     @Override
-    public void periodic() {
-    }
+    public void periodic() {}
 
     @Override
     public void initSendable(SendableBuilder builder) {
@@ -61,5 +60,5 @@ public class Indexer extends SubsystemBase {
     }
 
     @Override
-    public void simulationPeriodic() {  }
+    public void simulationPeriodic() {}
 }

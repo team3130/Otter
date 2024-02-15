@@ -32,6 +32,6 @@ public class IntakeThroughIndexer extends SequentialCommandGroup {
     addRequirements(index);
     addRequirements(intake);
 
-    addCommands(new SmartSpintake(intake), new Handoff(index, intake, vibrate), new OperatorControllerVibrateUponPickup(vibrate));
+    addCommands(new SmartSpintake(intake, vibrate), new Handoff(index, intake, vibrate), new OperatorControllerVibrateUponPickup(vibrate));
   }
 }
