@@ -16,7 +16,23 @@ public class XboxControllerVibration {
   double smallVibrationIntensity = 0.4; // intensity of the smaller vibrations. Can be set between 1 and 0
   double delayInSeconds = 5.0; //time in seconds before vibration
   double vibrationDuration = 10.0; //how long the controller will vibrate for
+  boolean smallTimedVibrateDriverBool = true;
+  boolean timedVibrateDriverBool = true;
+  boolean smallTimedVibrateOperatorBool = true;
+  boolean timedVibrateOperatorBool = true;
 
+  public boolean getSmallTimedVibrateDriverBool(){
+    return smallTimedVibrateDriverBool;
+  }
+  public boolean getTimedVibrateDriverBool(){
+    return timedVibrateDriverBool;
+  }
+  public boolean getSmallTimedVibrateOperatorBool(){
+    return smallTimedVibrateOperatorBool;
+  }
+  public boolean getTimedVibrateOperatorBool(){
+    return timedVibrateOperatorBool;
+  }
   public double getVibrationIntensity() {
     return vibrationIntensity;
   }
