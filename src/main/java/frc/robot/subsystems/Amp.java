@@ -25,8 +25,8 @@ public class Amp extends SubsystemBase {
   // the amount of seconds it takes for the amp to prime (pnematic to go up)
 
   public Amp() {
-    pneumatic = new Solenoid(Constants.CAN.ampPCM, PneumaticsModuleType.CTREPCM, Constants.CAN.ampChannel);
-    ampLimit = new DigitalInput(Constants.CAN.ampLimitSwitch);
+    pneumatic = new Solenoid(Constants.CAN.PCM, PneumaticsModuleType.CTREPCM, Constants.IDs.ampChannel);
+    ampLimit = new DigitalInput(Constants.IDs.ampLimitSwitch);
     ampMotor = new WPI_TalonSRX(Constants.CAN.ampMotor);
     ampMotor.configFactoryDefault();
     ampMotor.configVoltageCompSaturation(3);

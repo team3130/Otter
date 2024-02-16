@@ -30,6 +30,10 @@ public final class Constants {
   public static class CAN {
     // SWERVE CAN NUMBERED LIKE CARTESIAN COORDIANTE QUADRANTS
     // front left
+
+    public final static int PCM = 41;
+
+
     public final static int MOD_ONE_STEER = 2;
     public final static int MOD_ONE_DRIVE = 3;
 
@@ -55,30 +59,19 @@ public final class Constants {
     public static final int[] spinningID = new int[] {MOD_ONE_DRIVE, MOD_TWO_DRIVE, MOD_THREE_DRIVE, MOD_FOUR_DRIVE};
     public final static int[] CANCoders = new int[] {MOD_ONE_CANCODER, MOD_TWO_CANCODER, MOD_THREE_CANCODER, MOD_FOUR_CANCODER};
 
-    public final static int CAN_hopperright = 16;
-    public final static int CAN_hopperleft = 17;
-    public final static int shooterBreakBeam = 2; //TODO
-
     public final static int intakeIndexer = 20;
 
     public final static int shooterIndexer = 30;
     public final static int shooterTopFlywheel = 31;
     public final static int shooterBottomFlywheel = 32;
 
-
     public final static int ampMotor = 40;
 
     public final static int climberLeft = 20;
     public final static int climberRight = 21;
-
-    public final static int ampPCM = 1;
-    public final static int ampChannel = 4;
-    public final static int ampLimitSwitch = 20; //TODO
-    public final static int ampMotor = 21; //TODO
   }
 
   public static class IDs {
-
     public final static int intakeSolenoidOne = 22;
     public final static int intakeSolenoidTwo = 23;
 
@@ -87,7 +80,6 @@ public final class Constants {
 
     public final static int shooterBreakBeam = 2;
 
-    public final static int ampPCM = 41;
     public final static int ampChannel = 0;
     public final static int ampLimitSwitch = 0;
   }

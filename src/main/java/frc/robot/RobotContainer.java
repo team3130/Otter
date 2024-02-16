@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -13,20 +12,19 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.Amp.ToggleAmp;
 import frc.robot.commands.Autos;
+import frc.robot.commands.Chassis.FlipDriveOrientation;
+import frc.robot.commands.Chassis.TeleopDrive;
+import frc.robot.commands.Chassis.ZeroEverything;
+import frc.robot.commands.Chassis.ZeroWheels;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.Intake.*;
-import frc.robot.commands.LED.LightUpWithNote;
-import frc.robot.commands.Shooter.OnlyShoot;
-import frc.robot.commands.Shooter.Shoot;
-import frc.robot.sensors.Camera;
 import frc.robot.subsystems.*;
 import frc.robot.subsystems.Amp;
 import frc.robot.subsystems.Chassis;
@@ -46,12 +44,9 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final Chassis chassis;
-  private final Hopper hopper;
   private final Amp amp;
   private final Shooter shooter;
-  private final Indexer indexer;
   private final Intake intake;
-  private final Camera camera;
   private final LEDSubsystem ledSubsystem;
   private final XboxController driverController = new XboxController(0);
   private final XboxController operatorController = new XboxController(1);
@@ -62,16 +57,12 @@ public class RobotContainer {
     chassis = new Chassis();
     ledSubsystem = new LEDSubsystem();
     shooter = new Shooter(ledSubsystem);
-    indexer = new Indexer();
     intake = new Intake(ledSubsystem);
-    hopper = new Hopper();
-    camera = new Camera();
     amp = new Amp();
 
     // Named commands must be registered before the creation of any PathPlanner Autos or Paths
     // Do this in RobotContainer, after subsystem initialization, but before the creation of any other commands.
     //NamedCommands.registerCommand("Turn90Deg", new TurnToAngle(chassis, 90));
-    NamedCommands.registerCommand("ZeroEverything", new ZeroEverything(chassis));
 
     configureBindings(); // configure button bindings
     exportShuffleBoardData(); // export ShuffleBoardData
@@ -168,7 +159,6 @@ public class RobotContainer {
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new ToggleAmp(amp)); */
 
     //new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new OnlyIndex(indexer));
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_A).whileTrue(new OnlyShoot(shooter));
 
     new JoystickButton(operatorController, Constants.Buttons.LST_BTN_RBUMPER).whileTrue(new Spintake(intake));
     //new JoystickButton(operatorController, Constants.Buttons.LST_BTN_A).whileTrue(new SmartSpintake(new Intake()));

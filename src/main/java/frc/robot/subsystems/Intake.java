@@ -36,16 +36,16 @@ public class Intake extends SubsystemBase {
 
     public Intake(LEDSubsystem leds) {
         this.leds = leds;
-        intakeMotor = new WPI_TalonSRX(Constants.CAN.intakeMotor);
+        intakeMotor = new WPI_TalonSRX(Constants.CAN.intakeIndexer);
         intakePNMOne = new Solenoid(1, PneumaticsModuleType.CTREPCM, PNM_INTAKE_ACTUATOR);
         //intakePNMTwo = new Solenoid(1, PneumaticsModuleType.CTREPCM, PNM_INTAKE_ACTUATOR);
 
-        intakeLimitSwitch = new DigitalInput(Constants.CAN.intakeLimitSwitch1);
-        breakbeam = new DigitalInput(Constants.CAN.shooterBreakBeam);
+        intakeLimitSwitch = new DigitalInput(Constants.IDs.intakeLimitSwitch);
+        breakbeam = new DigitalInput(Constants.IDs.shooterBreakBeam);
 
         intakeMotor.configFactoryDefault();
         intakeMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
-        intakeMotor.configVoltageCompSaturation(Constants.Intake.kMaxVoltageIntake);
+        intakeMotor.configVoltageCompSaturation(3);
         intakeMotor.enableVoltageCompensation(true);
 
         intakeMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
