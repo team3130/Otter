@@ -25,7 +25,7 @@ public final class Constants {
   public static final boolean kNavxReversed = true;
   public final static double kMaxVoltageHopper = 9d;
 
-  public static final int PNM_INTAKE_ACTUATOR = 0;
+  public static final int PNM_INTAKE_ACTUATOR = 1;
 
   public static class CAN {
     public final static int leftFrontSteer = 2;
@@ -43,7 +43,7 @@ public final class Constants {
     public final static int CANCoderTopLeft = 12;
     public final static int CANCoderBottomLeft = 13;
 
-    public final static int intakeMotor = 14;
+    public final static int intakeMotor = 41;
 
     public final static int intakesolenoid1 = 15;
 
@@ -60,8 +60,8 @@ public final class Constants {
     public final static int CAN_hopperleft = 17;
     public final static int shooterBreakBeam = 2; //TODO
 
-    public final static int ampPCM = 18;
-    public final static int ampChannel = 19;
+    public final static int ampPCM = 1;
+    public final static int ampChannel = 4;
     public final static int ampLimitSwitch = 20; //TODO
     public final static int ampMotor = 21; //TODO
   }
@@ -71,7 +71,7 @@ public final class Constants {
     //TODO find these values
 
 
-    public static int kMaxVoltageIntake = 5;
+    public static int kMaxVoltageIntake = 3;
 
   }
   public static class AprilTags {

@@ -20,7 +20,6 @@ public class Intake extends SubsystemBase {
     private final LEDSubsystem leds;
     private final WPI_TalonSRX intakeMotor;
     private final Solenoid intakePNMOne;
-    private final Solenoid intakePNMTwo;
     private final DigitalInput intakeLimitSwitch;
     private final DigitalInput breakbeam;
     private double dropTime = 0.2;
@@ -38,8 +37,8 @@ public class Intake extends SubsystemBase {
     public Intake(LEDSubsystem leds) {
         this.leds = leds;
         intakeMotor = new WPI_TalonSRX(Constants.CAN.intakeMotor);
-        intakePNMOne = new Solenoid(Constants.CAN.intakesolenoid1, PneumaticsModuleType.CTREPCM, PNM_INTAKE_ACTUATOR);
-        intakePNMTwo = new Solenoid(Constants.CAN.intakesolenoid2, PneumaticsModuleType.CTREPCM, PNM_INTAKE_ACTUATOR);
+        intakePNMOne = new Solenoid(1, PneumaticsModuleType.CTREPCM, PNM_INTAKE_ACTUATOR);
+        //intakePNMTwo = new Solenoid(1, PneumaticsModuleType.CTREPCM, PNM_INTAKE_ACTUATOR);
 
         intakeLimitSwitch = new DigitalInput(Constants.CAN.intakeLimitSwitch1);
         breakbeam = new DigitalInput(Constants.CAN.shooterBreakBeam);
@@ -94,16 +93,13 @@ public class Intake extends SubsystemBase {
 
     public void SolenoidToggle() {
         intakePNMOne.toggle();
-        intakePNMTwo.toggle();
     }
 
     public void intakeDown(){
         intakePNMOne.set(true);
-        intakePNMTwo.set(true);
     }
     public void intakeUp() {
         intakePNMOne.set(false);
-        intakePNMTwo.set(false);
     }
 
     public boolean getIntakeHasNote() {

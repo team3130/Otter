@@ -41,7 +41,7 @@ public class Shoot extends Command {
     public void execute() {
         if (spinUpTime.hasElapsed(1)){
             m_indexer.runIndexers();
-            m_intake.DumbIntake();
+            //m_intake.DumbIntake();
         }
     }
 
