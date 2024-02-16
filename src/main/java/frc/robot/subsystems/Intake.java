@@ -12,9 +12,6 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.commands.Intake.SmartSpintake;
-
-import static frc.robot.Constants.PNM_INTAKE_ACTUATOR;
 
 public class Intake extends SubsystemBase {
     private final WPI_TalonSRX intakeMotor;
@@ -35,7 +32,7 @@ public class Intake extends SubsystemBase {
 
     public Intake() {
         intakeMotor = new WPI_TalonSRX(Constants.CAN.intakeIndexer);
-        intakePNMOne = new Solenoid(1, PneumaticsModuleType.CTREPCM, PNM_INTAKE_ACTUATOR);
+        intakePNMOne = new Solenoid(Constants.CAN.PCM, PneumaticsModuleType.CTREPCM, Constants.IDs.intakePNMChannel);
         //intakePNMTwo = new Solenoid(1, PneumaticsModuleType.CTREPCM, PNM_INTAKE_ACTUATOR);
 
         intakeLimitSwitch = new DigitalInput(Constants.IDs.intakeLimitSwitch);

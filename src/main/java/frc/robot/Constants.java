@@ -25,8 +25,6 @@ public final class Constants {
   public static final boolean kNavxReversed = false;
   public final static double kMaxVoltageHopper = 9d;
 
-  public static final int PNM_INTAKE_ACTUATOR = 1;
-
   public static class CAN {
     // SWERVE CAN NUMBERED LIKE CARTESIAN COORDIANTE QUADRANTS
     // front left
@@ -54,35 +52,29 @@ public final class Constants {
     public static final int[] spinningID = new int[] {MOD_ONE_DRIVE, MOD_TWO_DRIVE, MOD_THREE_DRIVE, MOD_FOUR_DRIVE};
     public final static int[] CANCoders = new int[] {MOD_ONE_CANCODER, MOD_TWO_CANCODER, MOD_THREE_CANCODER, MOD_FOUR_CANCODER};
 
-    public final static int PCM = 41;
+    public final static int PCM = 1;
 
-    public final static int intakeIndexer = 20;
+    public final static int ampMotor = 14;
+    public final static int climberLeft = 15;
+    public final static int climberRight = 16;
 
-    public final static int shooterIndexer = 30;
-    public final static int shooterTopFlywheel = 31;
-    public final static int shooterBottomFlywheel = 32;
-
-    public final static int ampMotor = 40;
-
-    public final static int climberLeft = 20;
-    public final static int climberRight = 21;
+    public final static int shooterTopFlywheel = 20;
+    public final static int shooterBottomFlywheel = 21;
+    public final static int intakeIndexer = 22;
   }
 
   public static class IDs {
-    public final static int intakeSolenoidOne = 22;
-    public final static int intakeSolenoidTwo = 23;
-
-
+    public static final int intakePNMChannel = 1; // real
     public final static int intakeLimitSwitch = 1; // real
-    public final static int shooterBreakBeam = 2;
 
-    public final static int ampPCM = 41;
+    public final static int shooterBreakBeam = 2; // unreal
+
     public final static int ampChannel = 0;
     public final static int ampLimitSwitch = 0; // real
   }
 
   public static class AprilTags {
-      public static final double TARGET_HEIGHT_METERS = Units.feetToMeters(0);
+    public static final double TARGET_HEIGHT_METERS = Units.feetToMeters(0);
       // TEST TODO: change vaues obviously
       // Constants such as camera and target height stored. Change per robot and goal!
       public static final double  CAMERA_HEIGHT_METERS = Units.inchesToMeters(0);
@@ -93,7 +85,6 @@ public final class Constants {
 
       // How far from the target we want to be
       final double GOAL_RANGE_METERS = Units.feetToMeters(3);
-
 
 
       public static final boolean useAprilTags = false;
@@ -189,7 +180,6 @@ public final class Constants {
     public final static double[] kF_Swerve = new double[] {kF_FrontLeft, kF_BackLeft, kF_FrontRight, kF_BackRight};
 
     public static final HolonomicPathFollowerConfig holonomicPathFollowerConfig = new HolonomicPathFollowerConfig(
-      // TODO: change constants below
       new PIDConstants(3, 0, 0), // Translation PID constants
       new PIDConstants(7, 0, 0), // Rotation PID constants
       3, // Max module speed, in m/s
@@ -225,17 +215,6 @@ public final class Constants {
   }
 
   public static class Auton {
-    /** Chassis auton */
-    public static final double kPXController = 3;
-    public static final double kIXController = 0;
-    public static final double kDXController = 0;
-    public static final double kPYController = 3;
-    public static final double kIYController = 0;
-    public static final double kDYController = 0;
-    public static final double kPThetaController = 7;
-    public static final double kIThetaController = 0;
-    public static final double kDThetaController = 0;
-
     public static final double kMaxAngularAccelerationRadiansPerSecondSquared = Math.PI; // max spiny acceleration
     public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2 * 2 * Math.PI; // max spiny velocity
     // real max spiny speed (multiply by some number for safety)
