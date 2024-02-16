@@ -93,9 +93,9 @@ public class RobotContainer {
     return new ZeroEverything(chassis);
   }
 
-  public Command EndgameVibrateDriver(){
-    return new EndgameVibrateDriver(vibration);
-  }
+  //public Command EndgameVibrateDriver(){
+  //  return new EndgameVibrateDriver(vibration);
+  //}
 
 
   public void periodic() {
