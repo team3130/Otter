@@ -6,22 +6,19 @@ package frc.robot.commands.Intake;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.XboxControllerVibration;
 
 /** An example command that uses an example subsystem. */
 public class SmartSpintake extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final Intake intake;
-  private final XboxControllerVibration vibrate;
 
   /**
    * Creates a new ExampleCommand.
    *
    * @param //subsystem The subsystem used by this command.
    */
-  public SmartSpintake(Intake Intake, XboxControllerVibration vibration) {
+  public SmartSpintake(Intake Intake) {
     intake = Intake;
-    vibrate = vibration;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -44,8 +41,6 @@ public class SmartSpintake extends Command {
   public void end(boolean interrupted) {
     intake.Stoptake();
     intake.SolenoidToggle();
-    vibrate.SmallTimedVibrateDriver();
-    vibrate.SmallTimedVibrateOperator();
   }
 
   // Returns true when the command should end.

@@ -7,24 +7,21 @@ package frc.robot.commands.Shooter;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.XboxControllerVibration;
 
 /** An example command that uses an example subsystem. */
 public class Handoff extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final Indexer index;
   private final Intake intake;
-  private final XboxControllerVibration vibration;
 
   /**
    * Creates a new ExampleCommand.
    *
    * @param //subsystem The subsystem used by this command.
    */
-  public Handoff(Indexer indexer, Intake intaker, XboxControllerVibration vibrate) {
+  public Handoff(Indexer indexer, Intake intaker) {
     index = indexer;
     intake = intaker;
-    vibration = vibrate;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(index);
     addRequirements(intake);
