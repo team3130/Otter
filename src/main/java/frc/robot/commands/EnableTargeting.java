@@ -2,34 +2,38 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.Shooter;
+package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.CameraSubsystem;
+import frc.robot.subsystems.Chassis;
+import frc.robot.subsystems.ExampleSubsystem;
 
 /** An example command that uses an example subsystem. */
-public class VelocityShoot extends Command {
+public class EnableTargeting extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final Shooter shooter;
+  private final CameraSubsystem cam;
 
   /**
    * Creates a new ExampleCommand.
    *
-   * @param shooter  The subsystem used by this command.
+   * @param subsystem The subsystem used by this command.
    */
-  public VelocityShoot(Shooter shooter) {
-    this.shooter = shooter;
+  public EnableTargeting(CameraSubsystem subsystem) {
+    cam = subsystem;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(shooter);
+    addRequirements(cam);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    // configureVelocitySlot();
-    shooter.configureVelocitySlot();
-    shooter.updateVelocityPID();
-    shooter.setFlywheelVelocity();
+    if(cam.isTryingToTarget()){
+      cam.setTryingToTargetFalse();
+    }
+    else{
+     cam.setTryingToTargetTrue();
+     cam.resetTargetController();}
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -39,7 +43,6 @@ public class VelocityShoot extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    shooter.stopShooters();
   }
 
   // Returns true when the command should end.

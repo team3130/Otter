@@ -2,27 +2,33 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.Shooter;
+package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.CameraSubsystem;
+import frc.robot.subsystems.Chassis;
 
 /** An example command that uses an example subsystem. */
-public class OnlyShoot extends Command {
+public class TargetingPressed extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final Shooter m_shooter;
+  private final CameraSubsystem cam;
 
-  public OnlyShoot(Shooter shooter) {
-    m_shooter = shooter;
+  /**
+   * Creates a new ExampleCommand.
+   *
+   * @param subsystem The subsystem used by this command.
+   */
+  public TargetingPressed(CameraSubsystem subsystem) {
+    cam = subsystem;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(shooter);
+    addRequirements(cam);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_shooter.runShooters();
+    cam.setTryingToTargetTrue();
+    cam.resetTargetController();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -33,7 +39,7 @@ public class OnlyShoot extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_shooter.stopShooters();
+    cam.setTryingToTargetFalse();
   }
 
   // Returns true when the command should end.

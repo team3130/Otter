@@ -8,23 +8,27 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.*;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
-import frc.robot.sensors.Camera;
 import frc.robot.sensors.Navx;
 import frc.robot.swerve.SwerveModule;
 
 import java.util.Arrays;
 
 /**
- * Chassis is the drivetrain subsystem of our bot. Our physical chassis is a swerve drive, 
+ * Chassis is the drivetrain subsystem of our bot. Our physical chassis is a swerve drive,
  * so we use wpilib SwerveDriveKinematics and SwerveDrivePoseEstimator as opposed to Differential Drive objects
  */
 public class Chassis extends SubsystemBase {
@@ -33,44 +37,42 @@ public class Chassis extends SubsystemBase {
     private final SwerveModule[] modules; // list of four swerve modules
     private final Navx navx = Navx.GetInstance(); // initialize Navx
     private boolean fieldRelative = true; // field relative or robot oriented drive
-    private final Camera m_limelight;
     private double maxSpeedRead = 0; // updated periodically with the maximum speed that has been read on any of the swerve modules
     private final Field2d field; // sendable that gets put on shuffleboard with the auton trajectory and the robots current position
     private final GenericEntry n_fieldOrriented; // comp network table entry for whether field oriented drivetrain
-
-    Rotation2d angleSetpoint = null;
+    private double targetMaxVelo = Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond; //TODO real
+    private double targetMaxAcc = Constants.Swerve.kMaxAccelerationDrive; //TODO real
 
     /**
      * Makes a chassis that starts at 0, 0, 0
-     * @param limelight the limelight object that we can use for updating odometry
+     * the limelight object that we can use for updating odometry
      */
-    public Chassis(Camera limelight){
-      this (new Pose2d(), new Rotation2d(), limelight);
+    public Chassis(){
+        this (new Pose2d(), new Rotation2d());
     }
 
     /**
      * Makes a chassis with a starting position
      * @param startingPos the initial position to say that the robot is at
      * @param startingRotation the initial rotation of the bot
-     * @param limelight the limelight object which is used for updating odometry
+     * the limelight object which is used for updating odometry
      */
-    public Chassis(Pose2d startingPos, Rotation2d startingRotation, Camera limelight) {
+    public Chassis(Pose2d startingPos, Rotation2d startingRotation) {
         kinematics = new SwerveDriveKinematics(Constants.Swerve.moduleTranslations);
 
         modules = new SwerveModule[4];
-        modules[Constants.Modules.leftFront] = new SwerveModule(Constants.Modules.leftFront);
-        modules[Constants.Modules.leftBack] = new SwerveModule(Constants.Modules.leftBack);
-        modules[Constants.Modules.rightFront] = new SwerveModule(Constants.Modules.rightFront);
-        modules[Constants.Modules.rightBack] = new SwerveModule(Constants.Modules.rightBack);
+        modules[Constants.Modules.one] = new SwerveModule(Constants.Modules.one);
+        modules[Constants.Modules.two] = new SwerveModule(Constants.Modules.two);
+        modules[Constants.Modules.three] = new SwerveModule(Constants.Modules.three);
+        modules[Constants.Modules.four] = new SwerveModule(Constants.Modules.four);
 
         // odometry wrapper class that has functionality for cameras that report position with latency
         odometry = new SwerveDrivePoseEstimator(kinematics, startingRotation, generatePoses(), startingPos);
 
-        m_limelight = limelight;
 
         field = new Field2d();
-        Shuffleboard.getTab("Comp").add("field", field);
-        n_fieldOrriented = Shuffleboard.getTab("Comp").add("field orriented", false).getEntry();
+        SmartDashboard.putData("Field", field);
+        n_fieldOrriented = Shuffleboard.getTab("Chassis").add("field orriented", false).getEntry();
 
         AutoBuilder.configureHolonomic(
                 this::getPose2d, // Robot pose supplier
@@ -83,15 +85,32 @@ public class Chassis extends SubsystemBase {
         );
     }
 
+
+
+    /**
+     * If the PID controllers of the {@link SwerveModule}'s are all done
+     * @return whether the wheels are zereod/PID controllers are done
+     */
+    public void drive(double x, double y, double theta) {
+        drive(x, y, theta, getFieldRelative());
+    }
+    public boolean getAutoConfig() {
+        return AutoBuilder.isConfigured();
+    }
+    public boolean turnToAnglePIDIsDone() {
+        return modules[Constants.Modules.one].PIDisDone() &&
+                modules[Constants.Modules.two].PIDisDone() &&
+                modules[Constants.Modules.three].PIDisDone() &&
+                modules[Constants.Modules.four].PIDisDone();
+    }
+
     /**
      * Our main method to drive using three variables. Locked to field relative or robot oriented based off of fieldRelative
      * x is the velocity in the x dimension m/s
      * y is the velocity in the y dimension m/s
      * theta is the angular (holonomic) speed of the bot
      */
-    public void drive(double x, double y, double theta) {
-        drive(x, y, theta, getFieldRelative());
-    }
+
 
     /**
      * drive(x, y, theta) with additional parameter for if robot is field relative or not
@@ -115,34 +134,40 @@ public class Chassis extends SubsystemBase {
         return fieldRelative;
     }
 
+    // Zeros the Navx's heading
+    public void zeroHeading(){
+        Navx.resetNavX();
+    }
+    
     // sets field oriented (field or robot oriented) to the provided boolean
     public void setWhetherFieldOriented(boolean fieldOriented) {
         fieldRelative = fieldOriented;
     }
 
-    // returns the bots rotation according to NavX
+
     public Rotation2d getRotation2d(){
         return odometry.getEstimatedPosition().getRotation();
     }
 
     // periodic call to update odometry from encoders
     public void updateOdometryFromSwerve() {
-        odometry.update(Navx.getRotation(), generatePoses());
+        odometry.updateWithTime(Timer.getFPGATimestamp(), Navx.getRotation(), generatePoses());
     }
 
     // Resets odometry: resets relative encoders to what the absolute encoders are, hard reset of odometry object
     // parameter pose is the pose2d to reset the odometry to
     public void resetOdometry(Pose2d pose) {
         resetEncoders();
+        Navx.resetNavX();
         odometry.resetPosition(Navx.getRotation(), generatePoses(), pose);
     }
 
     // If the PID controllers of the Swerve Modules are done, returning whether the wheels are zeroed/PID controllers finished
     public boolean turnToAnglePIDIsFinished() {
-        return modules[Constants.Modules.leftFront].PIDisDone() &&
-                modules[Constants.Modules.leftBack].PIDisDone() &&
-                modules[Constants.Modules.rightFront].PIDisDone() &&
-                modules[Constants.Modules.rightBack].PIDisDone();
+        return modules[Constants.Modules.one].PIDisDone() &&
+                modules[Constants.Modules.two].PIDisDone() &&
+                modules[Constants.Modules.three].PIDisDone() &&
+                modules[Constants.Modules.four].PIDisDone();
     }
 
     // Generates the position of the swerve modules, retuning the position
@@ -154,6 +179,14 @@ public class Chassis extends SubsystemBase {
         return positions;
     }
 
+    /**
+     * Getter for geometry
+     * @return the geometry of the swerve modules
+     */
+    public SwerveDriveKinematics getKinematics() {
+        return kinematics;
+    }
+    
     private SwerveModuleState[] getModuleStates() {
         SwerveModuleState[] states = new SwerveModuleState[4];
         for (int i = 0; i < 4; i++) {
@@ -166,20 +199,12 @@ public class Chassis extends SubsystemBase {
     public void setModuleStates(SwerveModuleState[] desiredStates) {
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
 
-        modules[Constants.Modules.leftFront].setDesiredState(desiredStates[Constants.Modules.leftFront]);
-        modules[Constants.Modules.leftBack].setDesiredState(desiredStates[Constants.Modules.leftBack]);
-        modules[Constants.Modules.rightFront].setDesiredState(desiredStates[Constants.Modules.rightFront]);
-        modules[Constants.Modules.rightBack].setDesiredState(desiredStates[Constants.Modules.rightBack]);
+        modules[Constants.Modules.one].setDesiredState(desiredStates[Constants.Modules.one]);
+        modules[Constants.Modules.two].setDesiredState(desiredStates[Constants.Modules.two]);
+        modules[Constants.Modules.three].setDesiredState(desiredStates[Constants.Modules.three]);
+        modules[Constants.Modules.four].setDesiredState(desiredStates[Constants.Modules.four]);
     }
 
-    // A listener to calculate what the max speed we read was
-    public void listener() {
-        for (SwerveModule module : modules) {
-            if (maxSpeedRead < module.getDriveVelocity()) {
-                maxSpeedRead = module.getDriveVelocity();
-            }
-        }
-    }
 
     // Spins the wheels to an angle
     public void turnToAngle(double setpoint) {
@@ -211,14 +236,6 @@ public class Chassis extends SubsystemBase {
     public void periodic() {
         n_fieldOrriented.setBoolean(fieldRelative);
         field.setRobotPose(odometry.getEstimatedPosition());
-    }
-
-    /**
-     * The simulation periodic call
-     */
-    @Override
-    public void simulationPeriodic() {
-        // This method will be called once per scheduler run during simulation
     }
 
 

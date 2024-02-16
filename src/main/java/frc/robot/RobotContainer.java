@@ -4,10 +4,17 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -36,6 +43,7 @@ import java.util.function.BooleanSupplier;
 
 // The robot's subsystems and commands are defined here...
 public class RobotContainer {
+  // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final Chassis chassis;
   private final Hopper hopper;
@@ -51,30 +59,40 @@ public class RobotContainer {
 
   // container for the robot containing subsystems, OI devices, and commands
   public RobotContainer() {
+    chassis = new Chassis();
     ledSubsystem = new LEDSubsystem();
     shooter = new Shooter(ledSubsystem);
     indexer = new Indexer();
     intake = new Intake(ledSubsystem);
     hopper = new Hopper();
     camera = new Camera();
-    chassis = new Chassis(camera);
     amp = new Amp();
 
     // Named commands must be registered before the creation of any PathPlanner Autos or Paths
     // Do this in RobotContainer, after subsystem initialization, but before the creation of any other commands.
+    //NamedCommands.registerCommand("Turn90Deg", new TurnToAngle(chassis, 90));
+    NamedCommands.registerCommand("ZeroEverything", new ZeroEverything(chassis));
 
     configureBindings(); // configure button bindings
     exportShuffleBoardData(); // export ShuffleBoardData
 
     // Default commands running in the background when other commands not scheduled
-    ledSubsystem.setDefaultCommand(new LightUpWithNote(ledSubsystem, amp, intake));
+    chassis.setDefaultCommand(new TeleopDrive(chassis, driverController));
 
     // Build an auto chooser. This will use Commands.none() as the default option.
     // autoChooser = AutoBuilder.buildAutoChooser();
+    //autoChooser = AutoBuilder.buildAutoChooser("up");
 
-    // An
+    //SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
+  public Command pick() {
+    return null;//autoChooser.getSelected();
+  }
+
+  public Command getPullOut() {
+    return new PathPlannerAuto("Pull out");
+  }
 
 
   /**
@@ -87,8 +105,21 @@ public class RobotContainer {
     return Autos.exampleAuto(m_exampleSubsystem);
   }
 
+  public Command resetEverything() {
+    return new ZeroEverything(chassis);
+  }
+
+
   public void periodic() {
 
+  }
+
+  public void resetOdo() {
+    chassis.resetOdometry(new Pose2d(0, 0, new Rotation2d()));
+  }
+
+  public void updateChassisPose() {
+    chassis.updateOdometryFromSwerve();
   }
 
   /*
@@ -110,8 +141,6 @@ public class RobotContainer {
   public void exportShuffleBoardData() {
     if (Constants.debugMode) {
       ShuffleboardTab tab = Shuffleboard.getTab("Subsystems");
-      tab.add(shooter);
-      tab.add(intake);
       tab.add(chassis);
       tab.add(amp);
       chassis.exportSwerveModData(Shuffleboard.getTab("Swerve Modules"));
@@ -128,8 +157,9 @@ public class RobotContainer {
     new Trigger(m_exampleSubsystem::exampleCondition)
             .onTrue(new ExampleCommand(m_exampleSubsystem));
 
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed, cancelling on release.
-    // driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+    new JoystickButton(driverController, Constants.Buttons.LST_BTN_A).whileTrue(new ZeroWheels(chassis));
+    new JoystickButton(driverController, Constants.Buttons.LST_BTN_Y).whileTrue(new FlipDriveOrientation(chassis));
+    new POVButton(driverController, Constants.Buttons.LST_POV_N).whileTrue(new ZeroEverything(chassis));
 
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new ToggleAmp(amp));
 
