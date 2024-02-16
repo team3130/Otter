@@ -45,6 +45,18 @@ public class XboxControllerVibration {
   public double getDelayInSeconds(){
     return delayInSeconds;
   }
+  public void setSmallTimedVibrateDriverBool(boolean SmallTimedDriver){
+    smallTimedVibrateDriverBool = SmallTimedDriver;
+  }
+  public void setTimedVibrateDriverBool(boolean TimedDriver){
+    timedVibrateDriverBool = TimedDriver;
+  }
+  public void setSmallTimedVibrateOperatorBool(boolean SmallTimedOperator){
+    smallTimedVibrateOperatorBool = SmallTimedOperator;
+  }
+  public void setTimedVibrateOperatorBool(boolean TimedOperator){
+    timedVibrateOperatorBool = TimedOperator;
+  }
   public void setVibrationIntensity(double intensity){
     vibrationIntensity = intensity;
   }
@@ -78,7 +90,7 @@ public class XboxControllerVibration {
   }
 
   public void SmallTimedVibrateDriver(){
-    //if (smallTimedVibrateDriverBool) {
+    if (smallTimedVibrateDriverBool) {
       driverController.setRumble(XboxController.RumbleType.kLeftRumble, smallVibrationIntensity);
       driverController.setRumble(XboxController.RumbleType.kRightRumble, smallVibrationIntensity);
 
@@ -86,10 +98,10 @@ public class XboxControllerVibration {
 
       //driverController.setRumble(XboxController.RumbleType.kLeftRumble, 0);
       //driverController.setRumble(XboxController.RumbleType.kRightRumble, 0);
-    //}
+    }
   }
   public void TimedVibrateDriver(){
-    //if (timedVibrateDriverBool) {
+    if (timedVibrateDriverBool) {
       //Timer.delay(delayInSeconds);
       driverController.setRumble(XboxController.RumbleType.kLeftRumble, vibrationIntensity);
       driverController.setRumble(XboxController.RumbleType.kRightRumble, vibrationIntensity);
@@ -98,11 +110,11 @@ public class XboxControllerVibration {
 
       //driverController.setRumble(XboxController.RumbleType.kLeftRumble, 0);
       //driverController.setRumble(XboxController.RumbleType.kRightRumble, 0);
-    //}
+    }
   }
 
   public void SmallTimedVibrateOperator(){
-    //if (smallTimedVibrateOperatorBool) {
+    if (smallTimedVibrateOperatorBool) {
       operatorController.setRumble(XboxController.RumbleType.kLeftRumble, smallVibrationIntensity);
       operatorController.setRumble(XboxController.RumbleType.kRightRumble, smallVibrationIntensity);
 
@@ -110,10 +122,10 @@ public class XboxControllerVibration {
 
       //operatorController.setRumble(XboxController.RumbleType.kLeftRumble, 0);
       //operatorController.setRumble(XboxController.RumbleType.kRightRumble, 0);
-    //}
+    }
   }
   public void TimedVibrateOperator(){
-    //if (timedVibrateOperatorBool) {
+    if (timedVibrateOperatorBool) {
       operatorController.setRumble(XboxController.RumbleType.kLeftRumble, vibrationIntensity);
       operatorController.setRumble(XboxController.RumbleType.kRightRumble, vibrationIntensity);
 
@@ -121,7 +133,7 @@ public class XboxControllerVibration {
 
       //operatorController.setRumble(XboxController.RumbleType.kLeftRumble, 0);
       //operatorController.setRumble(XboxController.RumbleType.kRightRumble, 0);
-    //}
+    }
   }
 
   public void initSendable(SendableBuilder builder) {
