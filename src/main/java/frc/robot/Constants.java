@@ -76,13 +76,12 @@ public final class Constants {
     public final static int intakeSolenoidTwo = 23;
 
 
-    public final static int intakeLimitSwitch = 21;
-
+    public final static int intakeLimitSwitch = 1; // real
     public final static int shooterBreakBeam = 2;
 
-    public final static int ampPCM = 41;
+    public final static int ampPCM = 8;
     public final static int ampChannel = 0;
-    public final static int ampLimitSwitch = 0;
+    public final static int ampLimitSwitch = 0; // real
   }
 
   public static class AprilTags {
