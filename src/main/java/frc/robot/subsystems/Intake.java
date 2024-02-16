@@ -124,6 +124,7 @@ public class Intake extends SubsystemBase {
     public void initSendable(SendableBuilder builder) {
         builder.setSmartDashboardType("Intake");
         builder.addDoubleProperty("Intake Note Setpoint", this::getIntakeNoteSetpoint, this::setIntakeNoteSetpoint);
+        builder.addBooleanProperty("intake limit switch", this::getIntakeLimitSwitch, null);
 
         builder.addDoubleProperty("Ground intake speed", this::getGroundSpeed, this::setGroundSpeed );
         builder.addDoubleProperty("Drop time", this::getDropTime, this::setDropTime);
