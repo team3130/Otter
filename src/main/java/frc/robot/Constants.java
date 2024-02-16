@@ -30,10 +30,6 @@ public final class Constants {
   public static class CAN {
     // SWERVE CAN NUMBERED LIKE CARTESIAN COORDIANTE QUADRANTS
     // front left
-
-    public final static int PCM = 41;
-
-
     public final static int MOD_ONE_STEER = 2;
     public final static int MOD_ONE_DRIVE = 3;
 
@@ -58,6 +54,8 @@ public final class Constants {
     public static final int[] turningID = new int[] {MOD_ONE_STEER, MOD_TWO_STEER, MOD_THREE_STEER, MOD_FOUR_STEER};
     public static final int[] spinningID = new int[] {MOD_ONE_DRIVE, MOD_TWO_DRIVE, MOD_THREE_DRIVE, MOD_FOUR_DRIVE};
     public final static int[] CANCoders = new int[] {MOD_ONE_CANCODER, MOD_TWO_CANCODER, MOD_THREE_CANCODER, MOD_FOUR_CANCODER};
+
+    public final static int PCM = 41;
 
     public final static int intakeIndexer = 20;
 
