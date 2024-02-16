@@ -41,7 +41,6 @@ public final class Constants {
 
     public final static int MOD_FOUR_STEER = 8;
     public final static int MOD_FOUR_DRIVE = 9;
-
     // front right
     public final static int MOD_ONE_CANCODER = 10;
     public final static int MOD_TWO_CANCODER = 11;
