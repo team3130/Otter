@@ -4,39 +4,36 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.XboxControllerVibration;
-
-/** An example command that uses an example subsystem. */
-public class DriverControllerVibrateAfterTime extends Command {
+public class EndgameVibrateDriver extends InstantCommand {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final XboxControllerVibration vibration;
+  private final XboxControllerVibration vibrate;
 
-  /**
-   * Creates a new ExampleCommand.
-   *
-   * @param subsystem The subsystem used by this command.
-   */
-  public DriverControllerVibrateAfterTime(XboxControllerVibration subsystem) {
-    vibration = subsystem;
+  public EndgameVibrateDriver(XboxControllerVibration subsystem) {
+    vibrate = subsystem;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    System.out.println("TESTING VIBRATION");
+    //vibrate.TimedVibrateOperator();
 
-    vibration.TimedVibrateDriver();
-    //start the timer
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    vibrate.VibrateDriver();
+  }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    vibrate.StopVibrateDriver();
+  }
 
   // Returns true when the command should end.
   @Override

@@ -95,8 +95,8 @@ public class Robot extends TimedRobot {
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
     }
-    vibration.TimedVibrateDriver();
     CommandScheduler.getInstance().schedule(robotContainer.resetEverything());
+    //CommandScheduler.getInstance().schedule(robotContainer.EndgameVibrateDriver());
   }
 
   /** This function is called periodically during operator control. */

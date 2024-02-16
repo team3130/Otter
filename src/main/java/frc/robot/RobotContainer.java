@@ -24,6 +24,7 @@ import frc.robot.commands.Chassis.FlipDriveOrientation;
 import frc.robot.commands.Chassis.TeleopDrive;
 import frc.robot.commands.Chassis.ZeroEverything;
 import frc.robot.commands.Chassis.ZeroWheels;
+import frc.robot.commands.EndgameVibrateDriver;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.Chassis;
 import frc.robot.subsystems.ExampleSubsystem;
@@ -41,14 +42,19 @@ import java.util.function.BooleanSupplier;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-  public final XboxController driverController = new XboxController(0);
+  public static final XboxController driverController = new XboxController(0);
   public final XboxController operatorController = new XboxController(1);
+  private final Intake intake;
+  private final Indexer indexer;
   private final Chassis chassis;
+  private final XboxControllerVibration vibration;
   //private final SendableChooser<Command> autoChooser;
 
   // container for the robot containing subsystems, OI devices, and commands
   public RobotContainer() {
     chassis = new Chassis();
+    vibration = new XboxControllerVibration();
+
 
     // Named commands must be registered before the creation of any PathPlanner Autos or Paths
     // Do this in RobotContainer, after subsystem initialization, but before the creation of any other commands.
@@ -88,6 +94,10 @@ public class RobotContainer {
 
   public Command resetEverything() {
     return new ZeroEverything(chassis);
+  }
+
+  public Command EndgameVibrateDriver(){
+    return new EndgameVibrateDriver(vibration);
   }
 
 
@@ -142,7 +152,17 @@ public class RobotContainer {
     new POVButton(driverController, Constants.Buttons.LST_POV_N).whileTrue(new ZeroEverything(chassis));
 
     SmartDashboard.putData(new FlipDriveOrientation(chassis));
-
+    new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new FlipDriveOrientation(chassis));
+    new POVButton(driverController, Constants.Buttons.LST_POV_N).whileTrue(new ZeroEverything(chassis));
+    //new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new TurnToAngle(chassis, 90));
+    SmartDashboard.putData(new FlipDriveOrientation(chassis));
+    new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new EndgameVibrateDriver(vibration));
+    //new JoystickButton(operatorController, Constants.Buttons.LST_BTN_LBUMPER).whileTrue(new DumbSpouttake(new Intake()));
+    //new JoystickButton(operatorController, Constants.Buttons.LST_BTN_RBUMPER).whileTrue(new DumbSpintake(new Intake()));
+    //new JoystickButton(operatorController, Constants.Buttons.LST_BTN_A).whileTrue(new SmartSpintake(new Intake(), new XboxControllerVibration()));
+    //new JoystickButton(operatorController, Constants.Buttons.LST_BTN_B).whileTrue(new DumbPneumatics(new Intake()));
+    //new JoystickButton(operatorController, Constants.Buttons.LST_AXS_LTRIGGER).whileTrue(new Handoff(new Indexer(), new Intake(), new XboxControllerVibration()));
+    //new JoystickButton(operatorController, Constants.Buttons.LST_AXS_RTRIGGER).whileTrue(new IntakeThroughIndexer(new Indexer(), new Intake(), new XboxControllerVibration()));
   }
 
 }
