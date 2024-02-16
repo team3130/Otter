@@ -17,7 +17,6 @@ import frc.robot.commands.Intake.SmartSpintake;
 import static frc.robot.Constants.PNM_INTAKE_ACTUATOR;
 
 public class Intake extends SubsystemBase {
-    private final LEDSubsystem leds;
     private final WPI_TalonSRX intakeMotor;
     private final Solenoid intakePNMOne;
     private final DigitalInput intakeLimitSwitch;
@@ -34,8 +33,7 @@ public class Intake extends SubsystemBase {
     private boolean intakeHasNote;
 
 
-    public Intake(LEDSubsystem leds) {
-        this.leds = leds;
+    public Intake() {
         intakeMotor = new WPI_TalonSRX(Constants.CAN.intakeIndexer);
         intakePNMOne = new Solenoid(1, PneumaticsModuleType.CTREPCM, PNM_INTAKE_ACTUATOR);
         //intakePNMTwo = new Solenoid(1, PneumaticsModuleType.CTREPCM, PNM_INTAKE_ACTUATOR);
@@ -135,11 +133,6 @@ public class Intake extends SubsystemBase {
     }
     @Override
     public void periodic() {
-        if (getIntakeHasNote()) {
-            leds.green();
-        } else {
-            leds.red(); //TODO YEllOW
-        }
     }
 
     @Override

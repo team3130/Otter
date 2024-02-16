@@ -45,9 +45,7 @@ public class RobotContainer {
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final Chassis chassis;
   private final Amp amp;
-  private final Shooter shooter;
   private final Intake intake;
-  private final LEDSubsystem ledSubsystem;
   private final XboxController driverController = new XboxController(0);
   private final XboxController operatorController = new XboxController(1);
 
@@ -55,9 +53,7 @@ public class RobotContainer {
   // container for the robot containing subsystems, OI devices, and commands
   public RobotContainer() {
     chassis = new Chassis();
-    ledSubsystem = new LEDSubsystem();
-    shooter = new Shooter(ledSubsystem);
-    intake = new Intake(ledSubsystem);
+    intake = new Intake();
     amp = new Amp();
 
     // Named commands must be registered before the creation of any PathPlanner Autos or Paths
