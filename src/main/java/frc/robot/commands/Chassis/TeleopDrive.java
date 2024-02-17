@@ -2,9 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-
 package frc.robot.commands.Chassis;
-
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -17,7 +15,6 @@ import frc.robot.Constants;
 import frc.robot.sensors.Navx;
 import frc.robot.subsystems.CameraSubsystem;
 import frc.robot.subsystems.Chassis;
-
 
 /** A default command to drive in teleop based off the joysticks*/
 public class TeleopDrive extends Command {
@@ -59,10 +56,6 @@ public class TeleopDrive extends Command {
       double y = xboxController.getRawAxis(Constants.Buttons.LST_AXS_LJOYSTICKX); // left stick y-axis (y-axis is inverted)
       double x = xboxController.getRawAxis(Constants.Buttons.LST_AXS_LJOYSTICKY); // left stick x-axis
 
-      //gets the initial values
-      //if (camera.hasTarget()){
-        chassis.prepareForFaceTarget();
-      //}
       // set theta to face target
       //if (camera.getIsTryingToTarget()) {
         //theta = camera.goToTargetPower();
@@ -74,8 +67,9 @@ public class TeleopDrive extends Command {
         theta = turningLimiter.calculate(theta) * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond;
       }
       // sets theta to odometry face target
-      else */if (chassis.getFaceTargetting()) {
-        theta = camera.targetController.calculate(chassis.getRotation2d().getRadians(), chassis.getAngleToFaceTarget(chassis.getOriginToAprilTagVector()));
+      else */
+      if (chassis.getFaceTargetting()) {
+        theta = camera.targetController.calculate(chassis.getRotation2d().getRadians(), chassis.getAngleToFaceTarget2());
       }
 
       // square the inputs

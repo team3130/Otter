@@ -56,13 +56,13 @@ public class Chassis extends SubsystemBase {
     private double targetMaxVelo = Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond; //TODO real
     private double targetMaxAcc = Constants.Swerve.kMaxAccelerationDrive; //TODO real
     private Pose2d initialPosition;
-    private double initialAprilTagDistance = 0;
-    private double initialAprilTagAngle = 0;
+    private double initialAprilTagDistance = 0d;
+    private double initialAprilTagAngle = 0d;
     private Translation2d initialAprilTagVector;
     private Translation2d originToAprilTagVector;
     private double theta = 0.0;
     private boolean isFaceTargetting;
-    Rotation2d angleSetpoint = null;
+    private Translation2d aprilTagPosition = new Translation2d(0, 2);
     private final CameraSubsystem cameraSubsystem = new CameraSubsystem();
 
     /**
@@ -375,7 +375,7 @@ public class Chassis extends SubsystemBase {
         builder.addStringProperty("odometry pose2d", this::getOdometry, null);
         builder.addDoubleProperty("Target Distance", this::getInitialAprilTagDistance, null);
         builder.addBooleanProperty("IsFaceTargetToggled", this::getFaceTargetting, null);
-
+        builder.addDoubleProperty("angle to face target", this::getTheta, null);
     }
 
     /**
@@ -397,9 +397,19 @@ public class Chassis extends SubsystemBase {
      */
     public double getAngleToFaceTarget(Translation2d originToAprilTagVector) {
         // the vector from the position that we are at currently to the april tag (target)
-        Translation2d currentPositionToAprilTagVector = getPose2d().getTranslation().minus(originToAprilTagVector);
+        Translation2d currentPosition = new Translation2d(getX(), getY());
+        Translation2d currentPositionToAprilTagVector = currentPosition.minus(originToAprilTagVector);
         // the angle that we need to turn to from our current holonomic at our current position to face target (setpoint)
         theta = Math.atan2(currentPositionToAprilTagVector.getY(), currentPositionToAprilTagVector.getX()) - Math.PI;
+        return theta;
+    }
+
+    public double getAngleToFaceTarget2() {
+        Translation2d currentPosition = new Translation2d(getX(), getY());
+        return Math.PI - Math.atan2((aprilTagPosition.getY() - currentPosition.getY()), (aprilTagPosition.getX() - currentPosition.getX()));
+    }
+
+    public double getTheta() {
         return theta;
     }
 
