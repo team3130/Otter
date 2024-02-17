@@ -5,9 +5,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.util.sendable.SendableBuilder;
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
@@ -17,15 +15,19 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 
 
 public class Amp extends SubsystemBase {
-  private final Solenoid pneumatic;
+  private final Solenoid ampPneumatic;
   private final DigitalInput ampLimit;
   private final WPI_TalonSRX ampMotor;
-  private double intakeAmpSpeed = 0.1;
-  private double outtakeAmpSpeed = -0.1;
+  private double intakeAmpSpeed = 0.8;
+  private double outtakeAmpSpeed = -0.8;
+  private Timer timer = new Timer();
+  private final XboxController controller;
   // the amount of seconds it takes for the amp to prime (pnematic to go up)
 
-  public Amp() {
-    pneumatic = new Solenoid(Constants.CAN.PCM, PneumaticsModuleType.CTREPCM, Constants.IDs.ampChannel);
+  public Amp(XboxController controller) {
+    this.controller = controller;
+
+    ampPneumatic = new Solenoid(Constants.CAN.PCM, PneumaticsModuleType.CTREPCM, Constants.IDs.ampPNMChannel);
     ampLimit = new DigitalInput(Constants.IDs.ampLimitSwitch);
     ampMotor = new WPI_TalonSRX(Constants.CAN.ampMotor);
     ampMotor.configFactoryDefault();
@@ -35,12 +37,12 @@ public class Amp extends SubsystemBase {
 
   // toggles the pneumatic to prop-up the amp arm
   public void toggleAmp() {
-    pneumatic.toggle();
+    ampPneumatic.toggle();
   }
 
   // toggles the pneumatic to tuck in the amp arm
   public void unPrimeAmp() {
-    pneumatic.set(false);
+    ampPneumatic.set(false);
   }
 
   // spins the motor to intake notes into the amp
@@ -58,11 +60,16 @@ public class Amp extends SubsystemBase {
     ampMotor.set(ControlMode.PercentOutput, 0);
   }
 
+  public void rumble(Timer timer) {
+    if(!timer.hasElapsed(1)){
+    controller.setRumble(GenericHID.RumbleType.kBothRumble, 1);}
+  }
+
   public boolean getLimitSwitch() {
-    return ampLimit.get();
+    return !ampLimit.get();
   }
   public boolean getPneumaticState() {
-    return pneumatic.get();
+    return ampPneumatic.get();
   }
 
   public double getIntakeAmpSpeed() {
@@ -78,6 +85,14 @@ public class Amp extends SubsystemBase {
 
   @Override
   public void periodic() {
+    /*if(getLimitSwitch()){
+      timer.start();
+      controller.setRumble(GenericHID.RumbleType.kBothRumble, 1);
+      if (timer.hasElapsed(0.8)){
+        timer.reset();
+        controller.setRumble(GenericHID.RumbleType.kBothRumble, 0);
+      }
+    }*/
     // This method will be called once per scheduler run
   }
 

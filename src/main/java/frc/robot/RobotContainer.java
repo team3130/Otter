@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -18,6 +17,9 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.Amp.AmpIntake;
+import frc.robot.commands.Amp.AmpOuttake;
+import frc.robot.commands.Amp.RumbleAmp;
 import frc.robot.commands.Amp.ToggleAmp;
 import frc.robot.commands.Autos;
 import frc.robot.commands.Chassis.FlipDriveOrientation;
@@ -31,6 +33,7 @@ import frc.robot.subsystems.Amp;
 import frc.robot.subsystems.Chassis;
 import frc.robot.subsystems.ExampleSubsystem;
 
+import java.text.RuleBasedCollator;
 import java.util.function.BooleanSupplier;
 
 /**
@@ -55,7 +58,7 @@ public class RobotContainer {
   public RobotContainer() {
     chassis = new Chassis();
     intake = new Intake();
-    amp = new Amp();
+    amp = new Amp(operatorController);
 
     // Named commands must be registered before the creation of any PathPlanner Autos or Paths
     // Do this in RobotContainer, after subsystem initialization, but before the creation of any other commands.
@@ -82,6 +85,10 @@ public class RobotContainer {
     return new PathPlannerAuto("Pull out");
   }
 
+  public Command rumbley() {
+    return new RumbleAmp(amp, operatorController);
+  }
+
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -99,9 +106,7 @@ public class RobotContainer {
 
 
   public void periodic() {
-    if (amp.getLimitSwitch()) {
-      operatorController.setRumble(GenericHID.RumbleType.kBothRumble, 0.5);
-    }
+      operatorController.setRumble(GenericHID.RumbleType.kBothRumble, 1);
   }
 
   public void resetOdo() {
@@ -150,18 +155,24 @@ public class RobotContainer {
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_A).whileTrue(new ZeroWheels(chassis));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_Y).whileTrue(new FlipDriveOrientation(chassis));
     new POVButton(driverController, Constants.Buttons.LST_POV_N).whileTrue(new ZeroEverything(chassis));
+    //new JoystickButton(operatorController, Constants.Buttons.LST_BTN_X).whileTrue(new SequentialCommandGroup(new AmpIntake(amp), new RumbleAmp(amp, operatorController)));
 
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new ToggleAmp(amp));
+    //new JoystickButton(operatorController, Constants.Buttons.LST_POV_S).whileTrue(new RumbleAmp(amp, operatorController));
 
-  /*   new JoystickButton(driverController, Constants.Buttons.LST_BTN_A).whileTrue(new AmpIntake(amp));
+    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_RBUMPER).whileTrue(new ToggleAmp(amp));
+    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_LBUMPER).whileTrue(new ToggleIntake(intake));
+    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_Y).whileTrue(new Spintake(intake));
+    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_B).whileTrue(new AmpIntake(amp));
+    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_A).whileTrue(new AmpOuttake(amp));
+
+  /*
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new AmpOuttake(amp));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new ToggleAmp(amp)); */
 
     //new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new OnlyIndex(indexer));
 
-    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_RBUMPER).whileTrue(new Spintake(intake));
+   // new JoystickButton(operatorController, Constants.Buttons.LST_BTN_RBUMPER).whileTrue(new Spintake(intake));
     //new JoystickButton(operatorController, Constants.Buttons.LST_BTN_A).whileTrue(new SmartSpintake(new Intake()));
-    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_B).whileTrue(new ToggleIntake(intake));
-    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_RBUMPER).whileTrue(new SequentialCommandGroup(new SmartSpintake(intake), new SmartIndex(intake)));
+    //new JoystickButton(operatorController, Constants.Buttons.LST_BTN_RBUMPER).whileTrue(new SequentialCommandGroup(new SmartSpintake(intake), new SmartIndex(intake)));
   }
 }

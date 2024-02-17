@@ -48,7 +48,6 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
-    robotContainer.periodic();
 
     // reset chassis pose every kResetTime seconds
     if (timer.hasElapsed(0.75)) {
@@ -94,12 +93,16 @@ public class Robot extends TimedRobot {
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
     }
+    //robotContainer.periodic();
     CommandScheduler.getInstance().schedule(robotContainer.resetEverything());
+  //  CommandScheduler.getInstance().schedule(robotContainer.rumbley());
+
   }
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+  }
 
   @Override
   public void testInit() {

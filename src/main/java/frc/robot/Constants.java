@@ -69,7 +69,7 @@ public final class Constants {
 
     public final static int shooterBreakBeam = 2; // unreal
 
-    public final static int ampChannel = 0;
+    public final static int ampPNMChannel = 4;
     public final static int ampLimitSwitch = 0; // real
   }
 
