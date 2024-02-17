@@ -161,6 +161,7 @@ public class RobotContainer {
     new JoystickButton(operatorController, Constants.Buttons.LST_BTN_RBUMPER).whileTrue(new AmpIntake(amp));
     new JoystickButton(operatorController, Constants.Buttons.LST_BTN_A).whileTrue(new AlwaysAmpIntake(amp));
     new JoystickButton(operatorController, Constants.Buttons.LST_BTN_X).whileTrue(new AmpOuttake(amp));
+    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_B).whileTrue(new SequentialCommandGroup(new AmpIntake(amp), new TimedAmpIntake(amp)));
 
     //new JoystickButton(operatorController, Constants.Buttons.LST_BTN_Y).whileTrue(new Spintake(intake));
     //new JoystickButton(operatorController, Constants.Buttons.LST_BTN_B).whileTrue(new ToggleIntake(intake));
