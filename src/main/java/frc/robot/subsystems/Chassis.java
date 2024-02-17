@@ -62,7 +62,7 @@ public class Chassis extends SubsystemBase {
     private Translation2d originToAprilTagVector;
     private double theta = 0.0;
     private boolean isFaceTargetting;
-    private Translation2d aprilTagPosition = new Translation2d(0, 2);
+    private Translation2d aprilTagPosition = new Translation2d(1, 1);
     private final CameraSubsystem cameraSubsystem = new CameraSubsystem();
 
     /**
@@ -406,7 +406,8 @@ public class Chassis extends SubsystemBase {
 
     public double getAngleToFaceTarget2() {
         Translation2d currentPosition = new Translation2d(getX(), getY());
-        return Math.PI - Math.atan2((aprilTagPosition.getY() - currentPosition.getY()), (aprilTagPosition.getX() - currentPosition.getX()));
+        theta = Math.atan2((aprilTagPosition.getY() - currentPosition.getY()), (aprilTagPosition.getX() - currentPosition.getX())) + (Math.PI / 2);
+        return theta;
     }
 
     public double getTheta() {
