@@ -17,10 +17,8 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.Amp.AmpIntake;
-import frc.robot.commands.Amp.AmpOuttake;
-import frc.robot.commands.Amp.RumbleAmp;
-import frc.robot.commands.Amp.ToggleAmp;
+
+import frc.robot.commands.Amp.*;
 import frc.robot.commands.Autos;
 import frc.robot.commands.Chassis.FlipDriveOrientation;
 import frc.robot.commands.Chassis.TeleopDrive;
@@ -152,18 +150,20 @@ public class RobotContainer {
     new Trigger(m_exampleSubsystem::exampleCondition)
             .onTrue(new ExampleCommand(m_exampleSubsystem));
 
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_A).whileTrue(new ZeroWheels(chassis));
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_Y).whileTrue(new FlipDriveOrientation(chassis));
+    //new JoystickButton(driverController, Constants.Buttons.LST_BTN_A).whileTrue(new ZeroWheels(chassis));
+    //new JoystickButton(driverController, Constants.Buttons.LST_BTN_Y).whileTrue(new FlipDriveOrientation(chassis));
     new POVButton(driverController, Constants.Buttons.LST_POV_N).whileTrue(new ZeroEverything(chassis));
     //new JoystickButton(operatorController, Constants.Buttons.LST_BTN_X).whileTrue(new SequentialCommandGroup(new AmpIntake(amp), new RumbleAmp(amp, operatorController)));
 
     //new JoystickButton(operatorController, Constants.Buttons.LST_POV_S).whileTrue(new RumbleAmp(amp, operatorController));
 
-    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_RBUMPER).whileTrue(new ToggleAmp(amp));
-    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_LBUMPER).whileTrue(new ToggleIntake(intake));
-    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_Y).whileTrue(new Spintake(intake));
-    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_B).whileTrue(new AmpIntake(amp));
-    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_A).whileTrue(new AmpOuttake(amp));
+    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_LBUMPER).whileTrue(new ToggleAmp(amp));
+    // new JoystickButton(operatorController, Constants.Buttons.LST_BTN_LBUMPER).whileTrue(new ToggleIntake(intake));
+    //new JoystickButton(operatorController, Constants.Buttons.LST_BTN_Y).whileTrue(new Spintake(intake));
+    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_RBUMPER).whileTrue(new AmpIntake(amp));
+    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_A).whileTrue(new AlwaysAmpIntake(amp));
+
+    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_X).whileTrue(new AmpOuttake(amp));
 
   /*
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new AmpOuttake(amp));

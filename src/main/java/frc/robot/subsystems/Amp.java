@@ -31,7 +31,7 @@ public class Amp extends SubsystemBase {
     ampLimit = new DigitalInput(Constants.IDs.ampLimitSwitch);
     ampMotor = new WPI_TalonSRX(Constants.CAN.ampMotor);
     ampMotor.configFactoryDefault();
-    ampMotor.configVoltageCompSaturation(3);
+    ampMotor.configVoltageCompSaturation(4);
     ampMotor.setInverted(false);
   }
 
