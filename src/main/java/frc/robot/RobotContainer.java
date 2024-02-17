@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.*;
 import frc.robot.commands.Shooter.*;
 import frc.robot.commands.ShooterShifter.*;
@@ -89,15 +90,15 @@ public class RobotContainer {
     new Trigger(m_exampleSubsystem::exampleCondition)
             .onTrue(new ExampleCommand(m_exampleSubsystem));
 
-    new JoystickButton(driverController, Constants.Buttons.LST_POV_S).whileTrue(new DoubleRetract(shooterShifter));
-    new JoystickButton(driverController, Constants.Buttons.LST_POV_E).whileTrue(new DoubleExtend(shooterShifter));
-    new JoystickButton(driverController, Constants.Buttons.LST_POV_W).whileTrue(new ShifterOneExtend(shooterShifter));
-    new JoystickButton(driverController, Constants.Buttons.LST_POV_W).whileTrue(new ShifterTwoExtend(shooterShifter));
+    new POVButton(operatorController, Constants.Buttons.LST_POV_S).whileTrue(new DoubleRetract(shooterShifter));
+    new POVButton(operatorController, Constants.Buttons.LST_POV_E).whileTrue(new DoubleExtend(shooterShifter));
+    new POVButton(operatorController, Constants.Buttons.LST_POV_W).whileTrue(new ShifterOneExtend(shooterShifter));
+    new POVButton(operatorController, Constants.Buttons.LST_POV_N).whileTrue(new ShifterTwoExtend(shooterShifter));
 
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new OnlyIndex(shooter));
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_A).whileTrue(new OnlyShoot(shooter));
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new Shoot(shooter));
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(visionShifterVelocityShoot());
+    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_B).whileTrue(new OnlyIndex(shooter));
+    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_A).whileTrue(new OnlyShoot(shooter));
+    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_X).whileTrue(new Shoot(shooter));
+    //new JoystickButton(operatorController, Constants.Buttons.LST_BTN_X).whileTrue(visionShifterVelocityShoot());
     //new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new VelocityShoot(shooter));
   }
 }

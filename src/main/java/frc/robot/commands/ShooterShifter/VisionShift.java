@@ -24,6 +24,7 @@ public class VisionShift extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    /*
     if (CameraSubsystem.getDistance())  {
       if (distance == firstGoalDistance) {
         shooterShifter.extendShifterOne(); // TODO
@@ -33,6 +34,7 @@ public class VisionShift extends Command {
         isShifted = true;
       }
     }
+     */
   }
 
   // Called once the command ends or is interrupted.

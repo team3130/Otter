@@ -43,15 +43,9 @@ public final class Constants {
     public static final int[] spinningID = new int[] {leftFrontDrive, leftBackDrive, rightFrontDrive, rightBackDrive};
     public final static int[] CANCoders = new int[] {CANCoderTopLeft, CANCoderBottomLeft, CANCoderTopRight, CANCoderBottomRight};
 
-    public final static int CAN_hopperright = 16;
-    public final static int CAN_hopperleft = 17;
-    public final static int CAN_Solenoid1 = 18;
-    public final static int CAN_Solenoid2 = 19;
-
-    public final static int shifterOnePNM = 20;
-    public final static int shifterOneChannel = 0;
-    public final static int shifterTwoPNM = 21;
-    public final static int shifterTwoChannel = 1;
+    public final static int PNM = 1;
+    public final static int shifterOneChannel = 3;
+    public final static int shifterTwoChannel = 2;
   }
 
   public static class AprilTags {

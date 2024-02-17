@@ -32,9 +32,12 @@ public class VisionVelocityShoot extends Command {
     shooter.configureVelocitySlots();
     shooter.updateVelocityPID();
 
+    /*
     if (CameraSubsystem.hasTarget()) {
       shooter.setFlywheelVelocity();
     }
+
+     */
   }
 
 
