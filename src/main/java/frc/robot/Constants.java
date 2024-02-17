@@ -61,7 +61,6 @@ public final class Constants {
     public final static int shooterTopFlywheel = 20;
     public final static int shooterBottomFlywheel = 21;
     public final static int intakeIndexer = 22;
-    
   }
 
   public static class IDs {

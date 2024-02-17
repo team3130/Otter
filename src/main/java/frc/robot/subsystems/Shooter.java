@@ -19,6 +19,7 @@ import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class Shooter extends SubsystemBase {
     private final TalonFX topFlywheel; // we should probably change these names once we learn more
@@ -57,9 +58,9 @@ public class Shooter extends SubsystemBase {
 
 
     public Shooter() {
-        topFlywheel = new TalonFX(20);
-        bottomFlywheel = new TalonFX(21);
-        indexMotor = new TalonSRX(22);
+        topFlywheel = new TalonFX(Constants.CAN.shooterTopFlywheel);
+        bottomFlywheel = new TalonFX(Constants.CAN.shooterBottomFlywheel);
+        indexMotor = new TalonSRX(Constants.CAN.intakeIndexer);
         indexMotor.configFactoryDefault();
         indexMotor.setNeutralMode(NeutralMode.Brake);
         indexMotor.setInverted(true);
