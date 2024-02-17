@@ -16,6 +16,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
+import frc.robot.commands.*;
+import frc.robot.commands.Shooter.*;
+import frc.robot.commands.ShooterShifter.*;
+import frc.robot.subsystems.*;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import frc.robot.commands.Amp.*;
@@ -50,10 +55,14 @@ public class RobotContainer {
   private final Intake intake;
   private final XboxController driverController = new XboxController(0);
   private final XboxController operatorController = new XboxController(1);
+  private final Shooter shooter;
+  private final ShooterShifter shooterShifter;
 
 
   // container for the robot containing subsystems, OI devices, and commands
   public RobotContainer() {
+    shooter = new Shooter();
+    shooterShifter = new ShooterShifter();
     chassis = new Chassis();
     intake = new Intake();
     amp = new Amp(operatorController);
@@ -110,6 +119,9 @@ public class RobotContainer {
   public void resetOdo() {
     chassis.resetOdometry(new Pose2d(0, 0, new Rotation2d()));
   }
+  public Command visionShifterVelocityShoot() {
+    return new SequentialCommandGroup(new VisionShift(shooterShifter), new VisionVelocityShoot(shooter));
+  }
 
   public void updateChassisPose() {
     chassis.updateOdometryFromSwerve();
@@ -134,9 +146,8 @@ public class RobotContainer {
   public void exportShuffleBoardData() {
     if (Constants.debugMode) {
       ShuffleboardTab tab = Shuffleboard.getTab("Subsystems");
-      tab.add(chassis);
-      tab.add(amp);
-      chassis.exportSwerveModData(Shuffleboard.getTab("Swerve Modules"));
+      tab.add(shooter);
+      tab.add(intake);
     }
   }
 
@@ -150,11 +161,20 @@ public class RobotContainer {
     new Trigger(m_exampleSubsystem::exampleCondition)
             .onTrue(new ExampleCommand(m_exampleSubsystem));
 
+    new POVButton(operatorController, Constants.Buttons.LST_POV_S).whileTrue(new DoubleRetract(shooterShifter));
+    new POVButton(operatorController, Constants.Buttons.LST_POV_E).whileTrue(new DoubleExtend(shooterShifter));
+    new POVButton(operatorController, Constants.Buttons.LST_POV_W).whileTrue(new ShifterOneExtend(shooterShifter));
+    new POVButton(operatorController, Constants.Buttons.LST_POV_N).whileTrue(new ShifterTwoExtend(shooterShifter));
     //new JoystickButton(driverController, Constants.Buttons.LST_BTN_A).whileTrue(new ZeroWheels(chassis));
     //new JoystickButton(driverController, Constants.Buttons.LST_BTN_Y).whileTrue(new FlipDriveOrientation(chassis));
     new POVButton(driverController, Constants.Buttons.LST_POV_N).whileTrue(new ZeroEverything(chassis));
     //new JoystickButton(operatorController, Constants.Buttons.LST_BTN_X).whileTrue(new SequentialCommandGroup(new AmpIntake(amp), new RumbleAmp(amp, operatorController)));
 
+    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_B).whileTrue(new OnlyIndex(shooter));
+    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_A).whileTrue(new OnlyShoot(shooter));
+    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_X).whileTrue(new Shoot(shooter));
+    //new JoystickButton(operatorController, Constants.Buttons.LST_BTN_X).whileTrue(visionShifterVelocityShoot());
+    //new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new VelocityShoot(shooter));
     //new JoystickButton(operatorController, Constants.Buttons.LST_POV_S).whileTrue(new RumbleAmp(amp, operatorController));
 
     new JoystickButton(operatorController, Constants.Buttons.LST_BTN_LBUMPER).whileTrue(new ToggleAmp(amp));

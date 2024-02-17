@@ -61,6 +61,7 @@ public final class Constants {
     public final static int shooterTopFlywheel = 20;
     public final static int shooterBottomFlywheel = 21;
     public final static int intakeIndexer = 22;
+    
   }
 
   public static class IDs {
@@ -71,6 +72,9 @@ public final class Constants {
 
     public final static int ampPNMChannel = 4;
     public final static int ampLimitSwitch = 0; // real
+    
+    public final static int shifterOneChannel = 3;
+    public final static int shifterTwoChannel = 2;
   }
 
   public static class AprilTags {
