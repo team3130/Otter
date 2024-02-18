@@ -4,18 +4,23 @@
 
 package frc.robot.commands.Chassis;
 
-import edu.wpi.first.math.filter.SlewRateLimiter;
+import frc.robot.errlib.SlewRateLimiterSpeeds;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.Chassis;
 
 /** A default command to drive in teleop based off the joysticks*/
 public class TeleopDrive extends Command {
+  private final boolean isFieldRelative = true;
   private final Chassis chassis;
   private final XboxController xboxController;
+  private final GenericEntry n_fieldOrriented; // comp network table entry for whether field oriented drivetrain
 
-  private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
+  private final SlewRateLimiterSpeeds accelerationLimiter;
   public TeleopDrive(Chassis chassis, XboxController xboxController) {
     this.chassis = chassis;
     this.xboxController = xboxController;
@@ -23,9 +28,13 @@ public class TeleopDrive extends Command {
     // Use addRequirements() here to declare subsystem dependencies.
     m_requirements.add(chassis);
 
-    xLimiter = new SlewRateLimiter(Constants.Swerve.kMaxAccelerationDrive);
-    yLimiter = new SlewRateLimiter(Constants.Swerve.kMaxAccelerationDrive);
-    turningLimiter = new SlewRateLimiter(Constants.Swerve.kMaxAccelerationAngularDrive);
+    accelerationLimiter = new SlewRateLimiterSpeeds(
+      Constants.Swerve.kMaxAccelerationDrive,
+      Constants.Swerve.kMaxAccelerationAngularDrive,
+      new ChassisSpeeds()
+    );
+
+    n_fieldOrriented = Shuffleboard.getTab("Chassis").add("field orriented", false).getEntry();
   }
 
   /**
@@ -33,6 +42,7 @@ public class TeleopDrive extends Command {
    */
   @Override
   public void initialize() {
+    accelerationLimiter.reset(new ChassisSpeeds());
   }
 
   /**
@@ -46,32 +56,28 @@ public class TeleopDrive extends Command {
     double x = -xboxController.getRawAxis(Constants.Buttons.LST_AXS_LJOYSTICKY); // left stick x-axis
     double theta = -xboxController.getRawAxis(Constants.Buttons.LST_AXS_RJOYSTICKX); // right stick x-axis
 
-
+    // apply dead-band
+    if (Math.abs(x) < Constants.Swerve.kDeadband) x = 0;
+    if (Math.abs(y) < Constants.Swerve.kDeadband) y = 0;
+    if (Math.abs(theta) < Constants.Swerve.kDeadband) theta = 0;
     // square the inputs
     y = y * Math.abs(y);
     x = x * Math.abs(x);
+    theta = theta * Math.abs(theta);
 
-    // apply dead-band
-    if (Math.abs(x) < Constants.Swerve.kDeadband) {
-      x = 0;
+    // convert joystick offsets to chassis speeds and apply slew rate limiter
+    ChassisSpeeds newSpeeds = accelerationLimiter.calculate(new ChassisSpeeds(
+      x     * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond,
+      y     * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond,
+      theta * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond / (Constants.Swerve.trackWidth/2.0)
+    ));
+
+    if (isFieldRelative) {
+      newSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(newSpeeds, chassis.getRotation2d());
     }
-    if (Math.abs(y) < Constants.Swerve.kDeadband) {
-      y = 0;
-    }
-    theta = Math.abs(theta) > Constants.Swerve.kDeadband ? theta : 0.0;
+    chassis.drive(newSpeeds);
 
-
-    if (!chassis.getFieldRelative()) {
-      y = -y;
-      x = -x;
-    }
-
-    // apply slew rate limiter which also converts to m/s and rad.s
-    theta = turningLimiter.calculate(theta) * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond;
-    x = xLimiter.calculate(x * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
-    y = yLimiter.calculate(y * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
-
-    chassis.drive(x,y,theta);
+    n_fieldOrriented.setBoolean(isFieldRelative);
   }
 
   /**
@@ -81,7 +87,7 @@ public class TeleopDrive extends Command {
    */
   @Override
   public void end(boolean interrupted) {
-    chassis.stopModules();
+    chassis.drive(new ChassisSpeeds());;
   }
 
   /**

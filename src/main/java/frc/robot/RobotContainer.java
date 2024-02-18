@@ -16,22 +16,19 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 
-import frc.robot.commands.Amp.*;
-import frc.robot.commands.Autos;
-import frc.robot.commands.Chassis.FlipDriveOrientation;
 import frc.robot.commands.Chassis.TeleopDrive;
 import frc.robot.commands.Chassis.ZeroEverything;
-import frc.robot.commands.Chassis.ZeroWheels;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.commands.Intake.*;
-import frc.robot.subsystems.*;
+import frc.robot.commands.Amp.AlwaysAmpIntake;
+import frc.robot.commands.Amp.AmpIntake;
+import frc.robot.commands.Amp.AmpOuttake;
+import frc.robot.commands.Amp.RumbleAmp;
+import frc.robot.commands.Amp.TimedAmpIntake;
+import frc.robot.commands.Amp.ToggleAmp;
 import frc.robot.subsystems.Amp;
 import frc.robot.subsystems.Chassis;
-import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.Intake;
 
-import java.text.RuleBasedCollator;
 import java.util.function.BooleanSupplier;
 
 /**
@@ -44,7 +41,6 @@ import java.util.function.BooleanSupplier;
 // The robot's subsystems and commands are defined here...
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final Chassis chassis;
   private final Amp amp;
   private final Intake intake;
@@ -87,16 +83,6 @@ public class RobotContainer {
     return new RumbleAmp(amp, operatorController);
   }
 
-
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
-  public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    return Autos.exampleAuto(m_exampleSubsystem);
-  }
 
   public Command resetEverything() {
     return new ZeroEverything(chassis);
@@ -146,12 +132,6 @@ public class RobotContainer {
   // CommandPS4Controller subclass for PS4 Controller
   // CommandJoystick for flight joysticks
   private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    new Trigger(m_exampleSubsystem::exampleCondition)
-            .onTrue(new ExampleCommand(m_exampleSubsystem));
-
-    //new JoystickButton(driverController, Constants.Buttons.LST_BTN_A).whileTrue(new ZeroWheels(chassis));
-    //new JoystickButton(driverController, Constants.Buttons.LST_BTN_Y).whileTrue(new FlipDriveOrientation(chassis));
     new POVButton(driverController, Constants.Buttons.LST_POV_N).whileTrue(new ZeroEverything(chassis));
     //new JoystickButton(operatorController, Constants.Buttons.LST_BTN_X).whileTrue(new SequentialCommandGroup(new AmpIntake(amp), new RumbleAmp(amp, operatorController)));
 
