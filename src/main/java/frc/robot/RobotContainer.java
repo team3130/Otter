@@ -42,22 +42,13 @@ public class RobotContainer {
   private final Chassis chassis = new Chassis();
   private final XboxController driverController = new XboxController(0);
   private final XboxController operatorController = new XboxController(1);
-  private final Intake intake;
   private final TeleopDrive teleopDrive = new TeleopDrive(chassis,driverController,cameraSubsystem);
-  private final Indexer indexer;
-  private final Hopper hopper;
  // private final SendableChooser<Command> autoChooser;
 
   // container for the robot containing subsystems, OI devices, and commands
   public RobotContainer() {
-    indexer = new Indexer();
-    intake = new Intake();
-    hopper = new Hopper();
-
     // Named commands must be registered before the creation of any PathPlanner Autos or Paths
     // Do this in RobotContainer, after subsystem initialization, but before the creation of any other commands.
-    NamedCommands.registerCommand("spinHopper", hopper.spinHopperAuto());
-
     exportShuffleBoardData(); // export ShuffleBoardData
 
     configureBindings();
@@ -126,7 +117,6 @@ public class RobotContainer {
   public void exportShuffleBoardData() {
     if (Constants.debugMode) {
       ShuffleboardTab tab = Shuffleboard.getTab("Subsystems");
-      tab.add(intake);
       tab.add(chassis);
       tab.add(cameraSubsystem);
       chassis.exportSwerveModData(Shuffleboard.getTab("Swerve Modules"));
@@ -151,18 +141,5 @@ public class RobotContainer {
     //new JoystickButton(driverController, Constants.Buttons.LST_BTN_A).whileTrue(new TargetingPressed(cameraSubsystem));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new ToggleOdoFaceTarget(chassis));
   }
-
-    //new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new Shoot(shooter, indexer, intake));
-  /*
-  Sendable Commands
-   */
-  public Command dontTarget() {
-    return new DisableTargeting(chassis, cameraSubsystem);
-  }
-
-    //new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new OnlyIndex(indexer));
-    //new JoystickButton(driverController, Constants.Buttons.LST_BTN_A).whileTrue(new OnlyShoot(shooter));
-
-    //new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new VelocityShoot(shooter));
 
   }

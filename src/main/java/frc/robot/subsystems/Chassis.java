@@ -167,6 +167,18 @@ public class Chassis extends SubsystemBase {
         return odometry.getEstimatedPosition().getRotation();
     }
 
+    //Converts angle(radians) from [0, 2pi] to [-pi, pi]
+    public double normalizeAngleRadians(double angle) {
+        // Reduce the angle to be between 0 and 360 degrees
+        angle %= (2 * Math.PI);
+        // Force it to be the positive remainder, so that 0 <= angle < 360
+        angle = (angle + (2 * Math.PI)) % (2 * Math.PI);
+        // Force into the minimum absolute value residue class, so that -180 < angle <= 180
+        if (angle > Math.PI)
+            angle -= (2 * Math.PI);
+        return angle;
+    }
+
     // Resets odometry: resets relative encoders to what the absolute encoders are, hard reset of odometry object
     // parameter pose is the pose2d to reset the odometry to
     /**
@@ -406,7 +418,8 @@ public class Chassis extends SubsystemBase {
 
     public double getAngleToFaceTarget2() {
         Translation2d currentPosition = new Translation2d(getX(), getY());
-        theta = Math.atan2((aprilTagPosition.getY() - currentPosition.getY()), (aprilTagPosition.getX() - currentPosition.getX())) + (Math.PI / 2);
+        double pi = (aprilTagPosition.getY() - currentPosition.getY()) > 0 ? Math.PI : 2 * Math.PI;
+        theta = pi + Math.atan2((aprilTagPosition.getY() - currentPosition.getY()), (aprilTagPosition.getX() - currentPosition.getX()));
         return theta;
     }
 
