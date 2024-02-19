@@ -24,10 +24,11 @@ public class Intake extends SubsystemBase {
     private double outakeSpeed = -0.85;
     private double spintakeSpeed = 0.85;
     private double groundSpeed = 0.8;
-
     private double slowSpeed = .4; //S peed slower than dumbSpeed, in order to slow down the disk
 
     private boolean intakeHasNote;
+
+    private boolean trigger;
 
 
     public Intake() {
@@ -47,7 +48,15 @@ public class Intake extends SubsystemBase {
         intakeMotor.setInverted(true);
 
         intakeHasNote = false;
+
+        trigger = false;
     }
+
+    public void setTestTrigger(boolean trig) {
+        this.trigger = trig;
+    }
+
+    public boolean getTestTrigger(){ return this.trigger; }
 
     public void spintake() {
         intakeMotor.set(spintakeSpeed);
@@ -127,6 +136,8 @@ public class Intake extends SubsystemBase {
         builder.addDoubleProperty("Dumb spintake speed", this::getSpintakeSpeed, this::setSpintakeSpeed);
         builder.addDoubleProperty("Dumb outtake speed", this::getOutakeSpeed, this::setOutakeSpeed);
         builder.addDoubleProperty("slow speed", this::getSlowSpeed, this::setSlowSpeed);
+
+        builder.addBooleanProperty("test trigger", this::getTestTrigger, this::setTestTrigger);
     }
     @Override
     public void periodic() {
