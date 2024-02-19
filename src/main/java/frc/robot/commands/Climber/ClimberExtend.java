@@ -40,7 +40,7 @@ public class ClimberExtend extends Command {
             climber.setInvalidInput(false);
         }
 
-        if (!climber.brokeLimit()) {
+       /* if (!climber.brokeLimit()) {
             climber.setIsClimberReset(false);
         }
 
@@ -49,7 +49,7 @@ public class ClimberExtend extends Command {
             power = 0;
             //LEDS go green
         }
-
+*/
         //sets the speed of the motor
         climber.setClimberSpeed(power);
     }
