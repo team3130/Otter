@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -16,14 +17,17 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
+import frc.robot.commands.*;
+import frc.robot.commands.Shooter.*;
+import frc.robot.commands.ShooterShifter.*;
+import frc.robot.sensors.JoystickTrigger;
+import frc.robot.subsystems.*;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-
 import frc.robot.commands.Amp.*;
 import frc.robot.commands.Autos;
-import frc.robot.commands.Chassis.FlipDriveOrientation;
 import frc.robot.commands.Chassis.TeleopDrive;
 import frc.robot.commands.Chassis.ZeroEverything;
-import frc.robot.commands.Chassis.ZeroWheels;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.Intake.*;
 import frc.robot.subsystems.*;
@@ -43,24 +47,26 @@ import java.util.function.BooleanSupplier;
 
 // The robot's subsystems and commands are defined here...
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final Chassis chassis;
   private final Amp amp;
   private final Intake intake;
+  private final Shooter shooter;
+  private final ShooterShifter shooterShifter;
   private final XboxController driverController = new XboxController(0);
   private final XboxController operatorController = new XboxController(1);
 
 
   // container for the robot containing subsystems, OI devices, and commands
   public RobotContainer() {
+    shooter = new Shooter();
+    shooterShifter = new ShooterShifter();
     chassis = new Chassis();
     intake = new Intake();
     amp = new Amp(operatorController);
 
     // Named commands must be registered before the creation of any PathPlanner Autos or Paths
     // Do this in RobotContainer, after subsystem initialization, but before the creation of any other commands.
-    //NamedCommands.registerCommand("Turn90Deg", new TurnToAngle(chassis, 90));
+    //NamedCommands.registerCommand("Shoot", new Shoot(shooter, intake));
 
     configureBindings(); // configure button bindings
     exportShuffleBoardData(); // export ShuffleBoardData
@@ -78,13 +84,11 @@ public class RobotContainer {
   public Command pick() {
     return null;//autoChooser.getSelected();
   }
-
   public Command getPullOut() {
     return new PathPlannerAuto("Pull out");
   }
-
-  public Command rumbley() {
-    return new RumbleAmp(amp, operatorController);
+  public Command shootAuto() {
+    return new Shoot(shooter, intake);
   }
 
 
@@ -92,11 +96,12 @@ public class RobotContainer {
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
    * @return the command to run in autonomous
-   */
+
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
     return Autos.exampleAuto(m_exampleSubsystem);
   }
+  */
 
   public Command resetEverything() {
     return new ZeroEverything(chassis);
@@ -110,6 +115,11 @@ public class RobotContainer {
   public void resetOdo() {
     chassis.resetOdometry(new Pose2d(0, 0, new Rotation2d()));
   }
+  /*
+  public Command visionShifterVelocityShoot() {
+    return new SequentialCommandGroup(new VisionShift(shooterShifter), new VisionVelocityShoot(shooter));
+  }
+  */
 
   public void updateChassisPose() {
     chassis.updateOdometryFromSwerve();
@@ -134,9 +144,8 @@ public class RobotContainer {
   public void exportShuffleBoardData() {
     if (Constants.debugMode) {
       ShuffleboardTab tab = Shuffleboard.getTab("Subsystems");
-      tab.add(chassis);
-      tab.add(amp);
-      chassis.exportSwerveModData(Shuffleboard.getTab("Swerve Modules"));
+      tab.add(shooter);
+      tab.add(intake);
     }
   }
 
@@ -147,21 +156,21 @@ public class RobotContainer {
   // CommandJoystick for flight joysticks
   private void configureBindings() {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
+    /*
     new Trigger(m_exampleSubsystem::exampleCondition)
             .onTrue(new ExampleCommand(m_exampleSubsystem));
-
-    //new JoystickButton(driverController, Constants.Buttons.LST_BTN_A).whileTrue(new ZeroWheels(chassis));
-    //new JoystickButton(driverController, Constants.Buttons.LST_BTN_Y).whileTrue(new FlipDriveOrientation(chassis));
-    new POVButton(driverController, Constants.Buttons.LST_POV_N).whileTrue(new ZeroEverything(chassis));
+    */
     //new JoystickButton(operatorController, Constants.Buttons.LST_BTN_X).whileTrue(new SequentialCommandGroup(new AmpIntake(amp), new RumbleAmp(amp, operatorController)));
 
-    //new JoystickButton(operatorController, Constants.Buttons.LST_POV_S).whileTrue(new RumbleAmp(amp, operatorController));
+    //new JoystickButton(operatorController, Constants.Buttons.LST_BTN_).whileTrue(new OnlyIndex(shooter));
+    //new JoystickButton(operatorController, Constants.Buttons.LST_BTN_A).whileTrue(new OnlyShoot(shooter));
+    new JoystickTrigger(operatorController, Constants.Buttons.LST_BTN_B).whileTrue(new Shoot(shooter, intake));
 
-    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_LBUMPER).whileTrue(new ToggleAmp(amp));
-    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_RBUMPER).whileTrue(new AmpIntake(amp));
-    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_A).whileTrue(new AlwaysAmpIntake(amp));
-    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_X).whileTrue(new AmpOuttake(amp));
-    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_B).whileTrue(new SequentialCommandGroup(new AmpIntake(amp), new TimedAmpIntake(amp)));
+    new POVButton(operatorController, Constants.Buttons.LST_POV_S).whileTrue(new DoubleRetract(shooterShifter));
+    new POVButton(operatorController, Constants.Buttons.LST_POV_E).whileTrue(new DoubleExtend(shooterShifter));
+    new POVButton(operatorController, Constants.Buttons.LST_POV_W).whileTrue(new ShifterOneExtend(shooterShifter));
+    new POVButton(operatorController, Constants.Buttons.LST_POV_N).whileTrue(new ShifterTwoExtend(shooterShifter));
+    //new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new VelocityShoot(shooter));
 
     //new JoystickButton(operatorController, Constants.Buttons.LST_BTN_Y).whileTrue(new Spintake(intake));
     //new JoystickButton(operatorController, Constants.Buttons.LST_BTN_B).whileTrue(new ToggleIntake(intake));

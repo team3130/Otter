@@ -2,39 +2,58 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.Intake;
+
+package frc.robot.commands.Shooter;
+
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Shooter;
 
-public class Outtake extends Command {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final Intake intake;
-  private final Timer timer = new Timer();
+public class VelocityShoot extends Command {
+  private final Shooter shooter;
+  private Timer spinUpTime = new Timer();
 
-  public Outtake(Intake Intake) {
-    intake = Intake;
-    addRequirements(intake);
+  /**
+   * Creates a new ExampleCommand.
+   *
+   * @param shooter  The subsystem used by this command.
+   */
+  public VelocityShoot(Shooter shooter) {
+    this.shooter = shooter;
+    addRequirements(shooter);
   }
+
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    spinUpTime.reset();
+    spinUpTime.start();
 
+    shooter.configureVelocitySlots();
+    shooter.updateVelocityPID();
+
+    shooter.setFlywheelVelocity();
   }
+
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-      intake.outtake();
+    if (spinUpTime.hasElapsed(shooter.getFlywheelRampTime())){
+      shooter.runIndexers();
+    }
   }
+
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    intake.stoptake();
+    shooter.stopShooters();
+    shooter.stopIndexers();
   }
+
 
   // Returns true when the command should end.
   @Override
