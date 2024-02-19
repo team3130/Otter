@@ -5,6 +5,7 @@
 package frc.robot.commands.Chassis;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.wpilibj.PS5Controller;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
@@ -13,12 +14,12 @@ import frc.robot.subsystems.Chassis;
 /** A default command to drive in teleop based off the joysticks*/
 public class TeleopDrive extends Command {
   private final Chassis chassis;
-  private final XboxController xboxController;
+  private final PS5Controller controller;
 
   private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
-  public TeleopDrive(Chassis chassis, XboxController xboxController) {
+  public TeleopDrive(Chassis chassis, PS5Controller PS5controller) {
     this.chassis = chassis;
-    this.xboxController = xboxController;
+    this.controller = PS5controller;
 
     // Use addRequirements() here to declare subsystem dependencies.
     m_requirements.add(chassis);
@@ -42,9 +43,9 @@ public class TeleopDrive extends Command {
    */
   @Override
   public void execute() {
-    double y = -xboxController.getRawAxis(Constants.Buttons.LST_AXS_LJOYSTICKX); // left stick y-axis (y-axis is inverted)
-    double x = -xboxController.getRawAxis(Constants.Buttons.LST_AXS_LJOYSTICKY); // left stick x-axis
-    double theta = -xboxController.getRawAxis(Constants.Buttons.LST_AXS_RJOYSTICKX); // right stick x-axis
+    double y = -controller.getRawAxis(Constants.PS5.LST_AXS_LJOYSTICKX); // left stick y-axis (y-axis is inverted)
+    double x = -controller.getRawAxis(Constants.PS5.LST_AXS_LJOYSTICKY); // left stick x-axis
+    double theta = -controller.getRawAxis(Constants.PS5.LST_AXS_RJOYSTICKX); // right stick x-axis
 
 
     // square the inputs

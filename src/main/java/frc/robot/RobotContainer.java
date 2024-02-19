@@ -10,6 +10,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.PS5Controller;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -52,7 +53,7 @@ public class RobotContainer {
   private final Intake intake;
   private final Shooter shooter;
   private final ShooterShifter shooterShifter;
-  private final XboxController driverController = new XboxController(0);
+  private final PS5Controller driverController = new PS5Controller(0);
   private final XboxController operatorController = new XboxController(1);
 
 
