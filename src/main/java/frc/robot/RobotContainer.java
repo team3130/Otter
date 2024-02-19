@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -65,7 +66,7 @@ public class RobotContainer {
 
     // Named commands must be registered before the creation of any PathPlanner Autos or Paths
     // Do this in RobotContainer, after subsystem initialization, but before the creation of any other commands.
-    //NamedCommands.registerCommand("Turn90Deg", new TurnToAngle(chassis, 90));
+    //NamedCommands.registerCommand("Shoot", new Shoot(shooter, intake));
 
     configureBindings(); // configure button bindings
     exportShuffleBoardData(); // export ShuffleBoardData
@@ -86,8 +87,8 @@ public class RobotContainer {
   public Command getPullOut() {
     return new PathPlannerAuto("Pull out");
   }
-  public Command rumbley() {
-    return new RumbleAmp(amp, operatorController);
+  public Command shootAuto() {
+    return new Shoot(shooter, intake);
   }
 
 
