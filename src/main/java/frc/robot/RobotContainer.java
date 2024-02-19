@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.*;
 import frc.robot.commands.Shooter.*;
 import frc.robot.commands.ShooterShifter.*;
+import frc.robot.sensors.JoystickTrigger;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -169,7 +170,7 @@ public class RobotContainer {
 
     //new JoystickButton(operatorController, Constants.Buttons.LST_BTN_).whileTrue(new OnlyIndex(shooter));
     //new JoystickButton(operatorController, Constants.Buttons.LST_BTN_A).whileTrue(new OnlyShoot(shooter));
-    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_B).whileTrue(new Shoot(shooter));
+    new JoystickTrigger(operatorController, Constants.Buttons.LST_BTN_B).whileTrue(new Shoot(shooter));
 
     new POVButton(operatorController, Constants.Buttons.LST_POV_S).whileTrue(new DoubleRetract(shooterShifter));
     new POVButton(operatorController, Constants.Buttons.LST_POV_E).whileTrue(new DoubleExtend(shooterShifter));
