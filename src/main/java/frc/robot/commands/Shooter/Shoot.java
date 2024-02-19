@@ -6,18 +6,19 @@ package frc.robot.commands.Shooter;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 
 public class Shoot extends Command {
     private final Shooter shooter;
+    private final Intake intake;
     private Timer spinUpTime = new Timer();
     private Timer timer2 = new Timer();
     public Shoot(Shooter shooter, Intake intake) {
         this.shooter = shooter;
-        //m_intake = intake;
+        this.intake = intake;
         addRequirements(shooter);
     }
-
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {

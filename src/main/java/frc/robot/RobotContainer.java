@@ -96,11 +96,12 @@ public class RobotContainer {
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
    * @return the command to run in autonomous
-   */
+
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    //return Autos.exampleAuto(m_exampleSubsystem);
+    return Autos.exampleAuto(m_exampleSubsystem);
   }
+  */
 
   public Command resetEverything() {
     return new ZeroEverything(chassis);
@@ -171,7 +172,7 @@ public class RobotContainer {
 
     //new JoystickButton(operatorController, Constants.Buttons.LST_BTN_).whileTrue(new OnlyIndex(shooter));
     //new JoystickButton(operatorController, Constants.Buttons.LST_BTN_A).whileTrue(new OnlyShoot(shooter));
-    new JoystickTrigger(operatorController, Constants.Buttons.LST_BTN_B).whileTrue(new Shoot(shooter));
+    new JoystickTrigger(operatorController, Constants.Buttons.LST_BTN_B).whileTrue(new Shoot(shooter, intake));
 
     new POVButton(operatorController, Constants.Buttons.LST_POV_S).whileTrue(new DoubleRetract(shooterShifter));
     new POVButton(operatorController, Constants.Buttons.LST_POV_E).whileTrue(new DoubleExtend(shooterShifter));
