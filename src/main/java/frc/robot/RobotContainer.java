@@ -92,9 +92,6 @@ public class RobotContainer {
     return autoChooser.getSelected();
   }
 
-  public Command getPullOut() {
-    return new PathPlannerAuto("Pull out");
-  }
   public Command shootAuto() {
     return new Shoot(shooter, intake);
   }
