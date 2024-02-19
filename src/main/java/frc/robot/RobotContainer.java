@@ -7,6 +7,7 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -16,6 +17,8 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -66,7 +69,8 @@ public class RobotContainer {
     shooter = new Shooter();
     shooterShifter = new ShooterShifter();
     chassis = new Chassis();
-    hopper = new Hopper();
+    amp = new Amp();
+    intake = new Intake();
 
     // Named commands must be registered before the creation of any PathPlanner Autos or Paths
     // Do this in RobotContainer, after subsystem initialization, but before the creation of any other commands.
@@ -79,15 +83,15 @@ public class RobotContainer {
     chassis.setDefaultCommand(new TeleopDrive(chassis, driverController));
 
     // Build an auto chooser. This will use Commands.none() as the default option.
-    // autoChooser = AutoBuilder.buildAutoChooser();
-    //autoChooser = AutoBuilder.buildAutoChooser("up");
+    autoChooser = AutoBuilder.buildAutoChooser();
 
-    //SmartDashboard.putData("Auto Chooser", autoChooser);
+    SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
   public Command pick() {
-    return null;//autoChooser.getSelected();
+    return autoChooser.getSelected();
   }
+
   public Command getPullOut() {
     return new PathPlannerAuto("Pull out");
   }

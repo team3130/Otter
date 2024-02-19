@@ -71,7 +71,8 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     CommandScheduler.getInstance().cancelAll();
     //CommandScheduler.getInstance().schedule(robotContainer.resetEverything());
-    CommandScheduler.getInstance().schedule(robotContainer.shootAuto());
+    autonomousCommand = robotContainer.pick();
+    // CommandScheduler.getInstance().schedule(robotContainer.shootAuto());
 
   //  autonomousCommand = robotContainer.pick();
     // schedule the autonomous command (example)

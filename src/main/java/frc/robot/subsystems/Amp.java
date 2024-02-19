@@ -20,13 +20,9 @@ public class Amp extends SubsystemBase {
   private final WPI_TalonSRX ampMotor;
   private double intakeAmpSpeed = 0.8;
   private double outtakeAmpSpeed = -0.8;
-  private Timer timer = new Timer();
-  private final XboxController controller;
   // the amount of seconds it takes for the amp to prime (pnematic to go up)
 
-  public Amp(XboxController controller) {
-    this.controller = controller;
-
+  public Amp() {
     ampPneumatic = new Solenoid(Constants.CAN.PCM, PneumaticsModuleType.CTREPCM, Constants.IDs.ampPNMChannel);
     ampLimit = new DigitalInput(Constants.IDs.ampLimitSwitch);
     ampMotor = new WPI_TalonSRX(Constants.CAN.ampMotor);
@@ -58,11 +54,6 @@ public class Amp extends SubsystemBase {
   // stops the motor to prevent the note from getting destroyed in the amp
   public void ampMotorStop() {
     ampMotor.set(ControlMode.PercentOutput, 0);
-  }
-
-  public void rumble(Timer timer) {
-    if(!timer.hasElapsed(1)){
-    controller.setRumble(GenericHID.RumbleType.kBothRumble, 1);}
   }
 
   public boolean getLimitSwitch() {
