@@ -16,6 +16,8 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.sensors.Navx;
+import org.opencv.core.*;
+import org.opencv.imgproc.Imgproc;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonPipelineResult;
@@ -37,6 +39,29 @@ public class CameraSubsystem extends SubsystemBase {
   private double targetP = 10d;
   private double targetI = 0d;
   private double targetD = 0d;
+  private Mat source = new Mat(2, 1, CvType.CV_32FC2);
+  private Mat distance = new Mat(2, 1, CvType.CV_32FC2);
+
+
+  /**
+   * Input points in order
+   */
+  MatOfPoint2f in = new MatOfPoint2f(
+          new Point(x, y),
+          new Point(x, y),
+          new Point(x, y),
+          new Point(x, y)
+  );
+  /**
+   * Output points in order
+   */
+  MatOfPoint2f out = new MatOfPoint2f(
+          new Point(x, y),
+          new Point(x, y),
+          new Point(x, y),
+          new Point(x, y)
+  );
+  Mat targetTransform = Imgproc.getPerspectiveTransform(in, out);
 
   /**
    * Constructs a new Limelight object.
@@ -47,7 +72,6 @@ public class CameraSubsystem extends SubsystemBase {
     // Shuffleboard.getTab("Camerapls").add("target", target);
     tab.addBoolean("hasTarget", this::hasTarget);
     tab.addDouble("Target Yaw", this::getTargetYaw);
-    tab.addInteger("fiducial ID", this::getFiducialID);
 
 
     // SuppliedValueWidget<Double> targetYaw = tab.addDouble("Target Yaw", this::getTargetYaw);
@@ -126,6 +150,13 @@ public class CameraSubsystem extends SubsystemBase {
     }
   }
 
+  public Translation2d findTargetVector(Mat src, Mat dst) {
+    Core.perspectiveTransform(src, dst, targetTransform);
+    double x = dst.get(0, 0)[0];
+    double y = dst.get(1, 0)[0];
+    return new Translation2d(x, y);
+  }
+
   public void resetTargetController() {
     targetController.reset();
     targetController.setSetpoint(0d);
@@ -190,7 +221,6 @@ public class CameraSubsystem extends SubsystemBase {
     builder.setSmartDashboardType("Camera");
     builder.addBooleanProperty("hasTarget", this::hasTarget, null);
     builder.addDoubleProperty("targetYaw", this::getTargetDegrees, null);
-    builder.addIntegerProperty("fiducial", this::getFiducialID, null);
 
     builder.addDoubleProperty("target P", this::getTargetP, this::setTargetP);
     builder.addDoubleProperty("target I", this::getTargetI, this::setTargetI);
