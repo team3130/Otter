@@ -56,8 +56,8 @@ public class CameraSubsystem extends SubsystemBase {
   private  double targetI = 0d;
   private  double targetD = 0d;
 
-  private double XtargetV = 0.2;
-  private double YtargetF = 0.8;
+  private double XtargetV = 0d;
+  private double YtargetF = 0d;
 
 
   /**
@@ -249,7 +249,6 @@ public class CameraSubsystem extends SubsystemBase {
     builder.addDoubleProperty("target I", this::getTargetI, this::setTargetI);
     builder.addDoubleProperty("target D", this::getTargetD, this::setTargetD);
     builder.addBooleanProperty("is targeting", this::isTryingToTarget, null);
-    builder.addDoubleProperty("target F", this::getXTargetV, this::setXTargetV);
     builder.addDoubleProperty("target YF", this::getYTargetV, this::setYTargetV);
     builder.addDoubleProperty("target XF", this::getXTargetV, this::setXTargetV);
     builder.addDoubleProperty("target dist", this::getFakeTargetDist, null);
