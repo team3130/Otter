@@ -71,8 +71,9 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     CommandScheduler.getInstance().cancelAll();
     //CommandScheduler.getInstance().schedule(robotContainer.resetEverything());
+    CommandScheduler.getInstance().schedule(robotContainer.shootAuto());
 
-    autonomousCommand = robotContainer.pick();
+  //  autonomousCommand = robotContainer.pick();
     // schedule the autonomous command (example)
     if (autonomousCommand != null) {
       //CommandScheduler.getInstance().schedule(robotContainer.getAutonomousCommand());
@@ -93,12 +94,16 @@ public class Robot extends TimedRobot {
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
     }
+    //robotContainer.periodic();
     CommandScheduler.getInstance().schedule(robotContainer.resetEverything());
+  //  CommandScheduler.getInstance().schedule(robotContainer.rumbley());
+
   }
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+  }
 
   @Override
   public void testInit() {
