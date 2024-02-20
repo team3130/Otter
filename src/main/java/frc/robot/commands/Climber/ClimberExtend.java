@@ -32,7 +32,7 @@ public class ClimberExtend extends Command {
         power = power * Math.abs(power);
 
 
-        if (power < 0){
+        if (power < 0.075){
             climber.setInvalidInput(true);
             //leds go red
             power = 0;
