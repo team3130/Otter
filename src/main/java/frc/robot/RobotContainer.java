@@ -140,9 +140,8 @@ public class RobotContainer {
    */
   public void exportShuffleBoardData() {
     if (Constants.debugMode) {
-      ShuffleboardTab tab = Shuffleboard.getTab("Subsystems");
-      tab.add(shooter);
-      tab.add(intake);
+      ShuffleboardTab tab = Shuffleboard.getTab("Subsystem Test");
+
     }
   }
 

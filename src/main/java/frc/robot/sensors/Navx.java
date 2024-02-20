@@ -155,6 +155,5 @@ public class Navx {
         SmartDashboard.putNumber("NavX Yaw", getYaw());
         SmartDashboard.putNumber("NavX Pitch", getPitch());
         SmartDashboard.putNumber("NavX Roll", getRoll());
-        
     }
 }

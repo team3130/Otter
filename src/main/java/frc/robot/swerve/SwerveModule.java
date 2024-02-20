@@ -252,17 +252,19 @@ public class SwerveModule implements Sendable {
      */
     @Override
     public void initSendable(SendableBuilder builder) {
-        builder.setSmartDashboardType("Swerve Module " + (getRealSide()));
-        // builder.addDoubleProperty("Drive velocity", this::getDriveVelocity, null);
-        builder.addDoubleProperty("Steer position", this::getSteerRotations, null);
-        builder.addDoubleProperty("Drive position", this::getDrivePosition, null);
-        builder.addDoubleProperty("Absolute encoder position", this::getAbsoluteEncoderRads, null);
+        if (Constants.debugMode) {
+            builder.setSmartDashboardType("Swerve Module " + (getRealSide()));
+            // builder.addDoubleProperty("Drive velocity", this::getDriveVelocity, null);
+            builder.addDoubleProperty("Steer position", this::getSteerRotations, null);
+            builder.addDoubleProperty("Drive position", this::getDrivePosition, null);
+            builder.addDoubleProperty("Absolute encoder position", this::getAbsoluteEncoderRads, null);
 /*        builder.addDoubleProperty("Steer velocity", this::getTurningVelocity, null);
         builder.addDoubleProperty("Steer relative", this::getRelativePositionDegrees, null);
         */
-        builder.addDoubleProperty("Swerve P " + getRealSide(), this::getPValue, this::setPValue);
-        builder.addDoubleProperty("Swerve I " + getRealSide(), this::getIValue, this::setIValue);
-        builder.addDoubleProperty("Swerve D " + getRealSide(), this::getDValue, this::setDValue);
+            builder.addDoubleProperty("Swerve P " + getRealSide(), this::getPValue, this::setPValue);
+            builder.addDoubleProperty("Swerve I " + getRealSide(), this::getIValue, this::setIValue);
+            builder.addDoubleProperty("Swerve D " + getRealSide(), this::getDValue, this::setDValue);
+        }
     }
 
     public double getSteerPositionWrapped() {

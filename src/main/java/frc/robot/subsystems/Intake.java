@@ -127,17 +127,19 @@ public class Intake extends SubsystemBase {
     public void setSlowSpeed(double slow) { slowSpeed = slow; }
 
     public void initSendable(SendableBuilder builder) {
-        builder.setSmartDashboardType("Intake");
-        builder.addDoubleProperty("Intake Note Setpoint", this::getIntakeNoteSetpoint, this::setIntakeNoteSetpoint);
-        builder.addBooleanProperty("intake limit switch", this::getIntakeLimitSwitch, null);
+        if (Constants.debugMode) {
+            builder.setSmartDashboardType("Intake");
+            builder.addDoubleProperty("Intake Note Setpoint", this::getIntakeNoteSetpoint, this::setIntakeNoteSetpoint);
+            builder.addBooleanProperty("intake limit switch", this::getIntakeLimitSwitch, null);
 
-        builder.addDoubleProperty("Ground intake speed", this::getGroundSpeed, this::setGroundSpeed );
-        builder.addDoubleProperty("Drop time", this::getDropTime, this::setDropTime);
-        builder.addDoubleProperty("Dumb spintake speed", this::getSpintakeSpeed, this::setSpintakeSpeed);
-        builder.addDoubleProperty("Dumb outtake speed", this::getOutakeSpeed, this::setOutakeSpeed);
-        builder.addDoubleProperty("slow speed", this::getSlowSpeed, this::setSlowSpeed);
+            builder.addDoubleProperty("Ground intake speed", this::getGroundSpeed, this::setGroundSpeed );
+            builder.addDoubleProperty("Drop time", this::getDropTime, this::setDropTime);
+            builder.addDoubleProperty("Dumb spintake speed", this::getSpintakeSpeed, this::setSpintakeSpeed);
+            builder.addDoubleProperty("Dumb outtake speed", this::getOutakeSpeed, this::setOutakeSpeed);
+            builder.addDoubleProperty("slow speed", this::getSlowSpeed, this::setSlowSpeed);
 
-        builder.addBooleanProperty("test trigger", this::getTestTrigger, this::setTestTrigger);
+            builder.addBooleanProperty("test trigger", this::getTestTrigger, this::setTestTrigger);
+        }
     }
     @Override
     public void periodic() {

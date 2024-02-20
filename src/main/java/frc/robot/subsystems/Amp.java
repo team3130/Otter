@@ -105,11 +105,13 @@ public class Amp extends SubsystemBase {
    * exports data to Shuffleboard
    */
   public void initSendable(SendableBuilder builder) {
-    builder.setSmartDashboardType("Amp");
-    builder.addDoubleProperty("Intake Amp Speed", this::getIntakeAmpSpeed, this::setIntakeAmpSpeed);
-    builder.addDoubleProperty("Outtake Amp Speed", this::getOuttakeAmpSpeed, this::setOuttakeAmpSpeed);
-    builder.addBooleanProperty("Limit Switch", this::getLimitSwitch, null);
-    builder.addBooleanProperty("Pneumatic Status", this::getPneumaticState, null);
+    if (Constants.debugMode) {
+      builder.setSmartDashboardType("Amp");
+      builder.addDoubleProperty("Intake Amp Speed", this::getIntakeAmpSpeed, this::setIntakeAmpSpeed);
+      builder.addDoubleProperty("Outtake Amp Speed", this::getOuttakeAmpSpeed, this::setOuttakeAmpSpeed);
+      builder.addBooleanProperty("Limit Switch", this::getLimitSwitch, null);
+      builder.addBooleanProperty("Pneumatic Status", this::getPneumaticState, null);
+    }
   }
 
 }

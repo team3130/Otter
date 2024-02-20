@@ -71,10 +71,12 @@ public class ShooterShifter extends SubsystemBase {
 
   @Override
   public void initSendable(SendableBuilder builder) {
-    builder.setSmartDashboardType("Shooter Shifter");
-    builder.addBooleanProperty("speed", this::getIsParked, null);
-    builder.addBooleanProperty("speed", this::getIsFirstShootStage, null);
-    builder.addBooleanProperty("speed", this::getIsSecondShootStage, null);
-    builder.addBooleanProperty("speed", this::getIsThirdShootStage, null);
+    if (Constants.debugMode) {
+      builder.setSmartDashboardType("Shooter Shifter");
+      builder.addBooleanProperty("speed", this::getIsParked, null);
+      builder.addBooleanProperty("speed", this::getIsFirstShootStage, null);
+      builder.addBooleanProperty("speed", this::getIsSecondShootStage, null);
+      builder.addBooleanProperty("speed", this::getIsThirdShootStage, null);
+    }
   }
 }

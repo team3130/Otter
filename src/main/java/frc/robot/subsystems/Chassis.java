@@ -295,15 +295,17 @@ public class Chassis extends SubsystemBase {
      * @param builder sendable builder
      */
     public void initSendable(SendableBuilder builder) {
-        builder.setSmartDashboardType("Chassis");
+        if (Constants.debugMode) {
+            builder.setSmartDashboardType("Chassis");
 
-        builder.addBooleanProperty("fieldRelative", this::getFieldRelative, this::setWhetherFieldOriented);
-        builder.addDoubleProperty("Navx", this::getHeading, null);
-        builder.addDoubleProperty("X position", this::getX, null);
-        builder.addDoubleProperty("Y position", this::getY, null);
-        builder.addDoubleProperty("rotation", this::getYaw, null);
-        builder.addDoubleProperty("max speed read", this::getMaxSpeedRead, null);
-        builder.addStringProperty("odometry pose2d", this::getOdometry, null);
+            builder.addBooleanProperty("fieldRelative", this::getFieldRelative, this::setWhetherFieldOriented);
+            builder.addDoubleProperty("Navx", this::getHeading, null);
+            builder.addDoubleProperty("X position", this::getX, null);
+            builder.addDoubleProperty("Y position", this::getY, null);
+            builder.addDoubleProperty("rotation", this::getYaw, null);
+            builder.addDoubleProperty("max speed read", this::getMaxSpeedRead, null);
+            builder.addStringProperty("odometry pose2d", this::getOdometry, null);
+        }
     }
 
     /**
