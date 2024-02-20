@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.15,
-        "y": 5.7
+        "x": 0.6939426452992888,
+        "y": 6.388254389794664
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.25,
-        "y": 5.7
+        "x": 0.7939426452992892,
+        "y": 6.388254389794664
       },
       "isLocked": false,
       "linkedName": null
@@ -32,12 +32,28 @@
     },
     {
       "anchor": {
-        "x": 3.3232546654891655,
-        "y": 6.9920223351715975
+        "x": 3.32,
+        "y": 6.979196579796884
       },
       "prevControl": {
-        "x": 3.2292854034105747,
-        "y": 6.957820320839031
+        "x": 3.1447734179065914,
+        "y": 6.979196579796884
+      },
+      "nextControl": {
+        "x": 3.4952265820934083,
+        "y": 6.979196579796884
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 0.6939426452992888,
+        "y": 6.388254389794664
+      },
+      "prevControl": {
+        "x": 0.5939426452992889,
+        "y": 6.388254389794664
       },
       "nextControl": null,
       "isLocked": false,
@@ -75,6 +91,29 @@
               "type": "named",
               "data": {
                 "name": "AutoIntake"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 3.0,
+      "command": {
+        "type": "sequential",
+        "data": {
+          "commands": [
+            {
+              "type": "wait",
+              "data": {
+                "waitTime": 1.0
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "AutoShoot"
               }
             }
           ]
