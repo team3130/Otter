@@ -175,10 +175,10 @@ public class RobotContainer {
     new JoystickButton(operatorController, Constants.Buttons.LST_BTN_B).whileTrue(new OnlyIndex(shooter));
     new JoystickButton(operatorController, Constants.Buttons.LST_BTN_Y).whileTrue(new OnlyShoot(shooter));
 
-    new POVButton(operatorController, Constants.Buttons.LST_POV_S).whileTrue(new DoubleRetract(shooterShifter));
     new POVButton(operatorController, Constants.Buttons.LST_POV_N).whileTrue(new DoubleExtend(shooterShifter));
-    new POVButton(operatorController, Constants.Buttons.LST_POV_W).whileTrue(new ShifterOneExtend(shooterShifter));
+    new POVButton(operatorController, Constants.Buttons.LST_POV_S).whileTrue(new DoubleRetract(shooterShifter));
     new POVButton(operatorController, Constants.Buttons.LST_POV_E).whileTrue(new ShifterSmallExtend(shooterShifter));
+    new POVButton(operatorController, Constants.Buttons.LST_POV_W).whileTrue(new ShifterOneExtend(shooterShifter));
 
     //new JoystickTrigger(driverController, Constants.Buttons.LST_AXS_RTRIGGER).whileTrue(new TestTrigger(intake));
     //new JoystickTrigger(driverController, Constants.Buttons.LST_AXS_LTRIGGER).whileTrue(new TestTrigger(intake, driverController));
