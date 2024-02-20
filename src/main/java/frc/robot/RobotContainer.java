@@ -158,7 +158,7 @@ public class RobotContainer {
     new POVButton(driverController, Constants.Buttons.LST_POV_N).whileTrue(new ZeroEverything(chassis));
 
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new AmpOuttake(amp));
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_LBUMPER).whileTrue(new SmartSpintake(intake));
+    new JoystickButton(driverController, Constants.Buttons.LST_BTN_LBUMPER).whileTrue(new LimitSpintake(intake));
     new JoystickButton(operatorController, Constants.Buttons.LST_BTN_RBUMPER).whileTrue(new ToggleIntake(intake));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_A).whileTrue(new Outtake(intake));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new AlwaysSpintake(intake));

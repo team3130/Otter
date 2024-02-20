@@ -40,7 +40,7 @@ public class Intake extends SubsystemBase {
 
         intakeMotor.configFactoryDefault();
         intakeMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
-        intakeMotor.configVoltageCompSaturation(10);
+        intakeMotor.configVoltageCompSaturation(5);
         intakeMotor.enableVoltageCompensation(true);
 
         intakeMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
