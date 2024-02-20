@@ -21,12 +21,12 @@ public class Climber extends SubsystemBase {
 
     private boolean invalidInput = false;
 
-    public Climber(int CANID, int limitSwitchPort, int joystick) {
+    public Climber(int CANID, int limitSwitchPort, int joystick, boolean inverted) {
         climberMotor = new WPI_TalonSRX(CANID);
         this.limitSwitch = new DigitalInput(limitSwitchPort);
         climberMotor.configFactoryDefault();
         climberMotor.configVoltageCompSaturation(3);
-        climberMotor.setInverted(false);
+        climberMotor.setInverted(inverted);
         joystickUsed = joystick;
 
         isClimberReset = true;
