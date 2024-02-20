@@ -159,14 +159,16 @@ public class RobotContainer {
     */
     //new JoystickButton(driverController, Constants.Buttons.LST_BTN_A).whileTrue(new ZeroWheels(chassis));
     //new JoystickButton(driverController, Constants.Buttons.LST_BTN_Y).whileTrue(new FlipDriveOrientation(chassis));
-    new POVButton(operatorController, Constants.Buttons.LST_POV_N).whileTrue(new ZeroEverything(chassis));
 
+    // GAVIN DRIVER
+    new POVButton(driverController, Constants.Buttons.LST_POV_N).whileTrue(new ZeroEverything(chassis));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new AmpOuttake(amp));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_LBUMPER).whileTrue(new LimitSpintake(intake));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_RBUMPER).whileTrue(new ToggleIntake(intake));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_A).whileTrue(new Outtake(intake));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new AlwaysSpintake(intake));
 
+    // ANDREW OPERATOR
     new JoystickButton(operatorController, Constants.Buttons.LST_BTN_LBUMPER).whileTrue(new ToggleAmp(amp));
     new JoystickButton(operatorController, Constants.Buttons.LST_BTN_RBUMPER).whileTrue(new AmpIntake(amp));
     new JoystickButton(operatorController, Constants.Buttons.LST_BTN_A).whileTrue(new AlwaysAmpIntake(amp));
