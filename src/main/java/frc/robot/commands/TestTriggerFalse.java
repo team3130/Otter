@@ -2,24 +2,30 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.ShooterShifter;
+package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.ShooterShifter;
+import frc.robot.subsystems.Intake;
 
 /** An example command that uses an example subsystem. */
-public class ShifterTwoExtend extends Command {
-  private final ShooterShifter shooterShifter;
+public class TestTriggerFalse extends Command {
+  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
+  private final Intake intake;
 
-  public ShifterTwoExtend(ShooterShifter shifter) {
-    shooterShifter = shifter;
-    addRequirements(shifter);
+  /**
+   * Creates a new ExampleCommand.
+   *
+   * @param intake The subsystem used by this command.
+   */
+  public TestTriggerFalse(Intake intake) {
+    this.intake = intake;
+    addRequirements(intake);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    shooterShifter.extendShifterTwo();
+    intake.setTestTrigger(false);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

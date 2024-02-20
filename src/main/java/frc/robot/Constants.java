@@ -21,7 +21,7 @@ import edu.wpi.first.math.util.Units;
  */
 @SuppressWarnings("ALL")
 public final class Constants {
-  public static final boolean debugMode = true; //TODO: make false after testing
+  public static final boolean debugMode = true;
   public static final boolean kNavxReversed = false;
   public final static double kMaxVoltageHopper = 9d;
 
@@ -72,8 +72,8 @@ public final class Constants {
     public final static int ampPNMChannel = 4;
     public final static int ampLimitSwitch = 0; // real
     
-    public final static int shifterOneChannel = 3;
-    public final static int shifterTwoChannel = 2;
+    public final static int longShifterChannel = 3;
+    public final static int smallShifterChannel = 2;
   }
 
   public static class AprilTags {
@@ -186,7 +186,8 @@ public final class Constants {
       new PIDConstants(3, 0, 0), // Translation PID constants
       new PIDConstants(7, 0, 0), // Rotation PID constants
       3, // Max module speed, in m/s
-      0.35, // Drive base radius in meters. Distance from robot center to furthest module.
+      0.41295, // Drive base radius in meters. Distance from robot center to furthest module.
+               // sqrt(0.584^2 + 0.584^2)/2
       new ReplanningConfig() // Default path replanning config. See the API for the options here
     );
   }
