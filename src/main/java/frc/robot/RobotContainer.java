@@ -22,7 +22,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.*;
-import frc.robot.commands.Auton.Shoot;
+import frc.robot.commands.Auton.AutoIntake;
+import frc.robot.commands.Auton.AutoShoot;
 import frc.robot.commands.Shooter.*;
 import frc.robot.sensors.JoystickTrigger;
 import frc.robot.subsystems.*;
@@ -64,7 +65,8 @@ public class RobotContainer {
 
     // Named commands must be registered before the creation of any PathPlanner Autos or Paths
     // Do this in RobotContainer, after subsystem initialization, but before the creation of any other commands.
-    NamedCommands.registerCommand("Shoot", new Shoot(shooter, intake));
+    NamedCommands.registerCommand("Shoot", new AutoShoot(shooter, intake));
+    NamedCommands.registerCommand("Intake", new AutoIntake(intake));
 
     configureBindings(); // configure button bindings
     exportShuffleBoardData(); // export ShuffleBoardData
@@ -82,7 +84,7 @@ public class RobotContainer {
   }
 
   public Command shootAuto() {
-    return new Shoot(shooter, intake);
+    return new AutoShoot(shooter, intake);
   }
 
 

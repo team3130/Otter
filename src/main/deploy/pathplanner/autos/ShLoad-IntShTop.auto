@@ -12,21 +12,9 @@
     "data": {
       "commands": [
         {
-          "type": "named",
-          "data": {
-            "name": "AutoShoot"
-          }
-        },
-        {
           "type": "path",
           "data": {
-            "pathName": "P1_ShootLoaded-IntakeTop"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "AutoIntake"
+            "pathName": "P1_ShLoad-IntShTop"
           }
         }
       ]
