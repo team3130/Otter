@@ -261,8 +261,8 @@ public final class Constants {
     }
 
     public static class Climber {
-        public static final int kRLimitSwitch = 0; // TODO
-        public static final int kLLimitSwitch = 0; // TODO
+        public static final int kRLimitSwitch = 3; // TODO
+        public static final int kLLimitSwitch = 4; // TODO
 
         public static final int kRMotor = 15; // TODO
         public static final int kLMotor = 16; // TODO

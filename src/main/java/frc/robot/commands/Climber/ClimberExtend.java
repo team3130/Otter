@@ -28,7 +28,7 @@ public class ClimberExtend extends Command {
     @Override
     public void execute() {
         // reads joystick input as y
-        double power = -xboxController.getRawAxis(climber.getJoystick()); //TODO CHECK IF INVERTED
+        double power = -xboxController.getRawAxis(climber.getJoystick());
         power = power * Math.abs(power);
 
 

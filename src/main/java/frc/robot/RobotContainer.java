@@ -60,7 +60,7 @@ public class RobotContainer {
   public RobotContainer() {
 
 
-    leftClimber = new Climber(Constants.Climber.kLMotor, Constants.Climber.kLLimitSwitch, Constants.Buttons.LST_AXS_LJOYSTICKY, true);
+    leftClimber = new Climber(Constants.Climber.kLMotor, Constants.Climber.kLLimitSwitch, Constants.Buttons.LST_AXS_LJOYSTICKY, false);
     rightClimber = new Climber(Constants.Climber.kRMotor, Constants.Climber.kRLimitSwitch, Constants.Buttons.LST_AXS_RJOYSTICKY, false);
 
     shooter = new Shooter();
