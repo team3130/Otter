@@ -211,7 +211,7 @@ public final class Constants {
   public static class Conversions {
     public final static double kDriveGearRatio = 6.12; // Checked 2/2/24 //6.75  checked 1/19/23
     public final static double kSteerGearRatio = 21.4; // Checked 2/2/24 //150d/7d = 21.42857  checked 1/19
-    public static final double kWheelDiameter = Units.inchesToMeters(4);
+    public static final double kWheelDiameter = Units.inchesToMeters(4.1);
     public final static double DriveRotToMeters = kWheelDiameter * Math.PI * 1/(kDriveGearRatio); // multiply by
     public static final double SteerRotToRads = 1/(kSteerGearRatio) * Math.PI * 2; // multiply by position
     public static final double DriveRotToMetersPerSecond = DriveRotToMeters * 10; // multiply by velocity
