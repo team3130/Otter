@@ -64,12 +64,44 @@
     },
     {
       "anchor": {
-        "x": 7.783346907144586,
-        "y": 7.3620736565316545
+        "x": 7.744394136475106,
+        "y": 7.469193775872724
       },
       "prevControl": {
-        "x": 7.6833469071445855,
-        "y": 7.3620736565316545
+        "x": 6.202245706820304,
+        "y": 7.469193775872724
+      },
+      "nextControl": {
+        "x": 9.286542566129906,
+        "y": 7.469193775872724
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 8.796118944551056,
+        "y": 7.469193775872724
+      },
+      "prevControl": {
+        "x": 8.421206761526376,
+        "y": 7.469193775872724
+      },
+      "nextControl": {
+        "x": 9.171031127575736,
+        "y": 7.469193775872724
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 0.8010627646403579,
+        "y": 6.427207160464143
+      },
+      "prevControl": {
+        "x": 0.7010627646403582,
+        "y": 6.427207160464143
       },
       "nextControl": null,
       "isLocked": false,
@@ -97,7 +129,7 @@
       }
     },
     {
-      "name": "New Event Marker",
+      "name": "IntakeTop1",
       "waypointRelativePos": 0.9,
       "command": {
         "type": "parallel",
@@ -114,7 +146,7 @@
       }
     },
     {
-      "name": "New Event Marker",
+      "name": "ShootTop1",
       "waypointRelativePos": 3.0,
       "command": {
         "type": "sequential",
@@ -137,7 +169,7 @@
       }
     },
     {
-      "name": "New Event Marker",
+      "name": "IntakeTop2",
       "waypointRelativePos": 4.0,
       "command": {
         "type": "parallel",
@@ -147,6 +179,23 @@
               "type": "named",
               "data": {
                 "name": "AutoIntake"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "ShootTop2",
+      "waypointRelativePos": 6.0,
+      "command": {
+        "type": "sequential",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "AutoShoot"
               }
             }
           ]
