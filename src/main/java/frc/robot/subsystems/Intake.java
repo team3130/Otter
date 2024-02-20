@@ -83,7 +83,7 @@ public class Intake extends SubsystemBase {
     }
 
     public boolean getIntakeLimitSwitch() {
-        return intakeLimitSwitch.get();
+        return !intakeLimitSwitch.get();
     }
 
     public boolean getShooterBreakBeam(){

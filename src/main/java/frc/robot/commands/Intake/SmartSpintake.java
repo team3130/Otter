@@ -12,14 +12,11 @@ import frc.robot.subsystems.Intake;
 public class SmartSpintake extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final Intake intake;
-  public static boolean intakeHasNote;
-  private boolean intakeIsDown = false;
   private Timer timer = new Timer();
 
   public SmartSpintake(Intake intake) {
     this.intake = intake;
     addRequirements(intake);
-    intake.setIntakeHasNote(false);
   }
 
   // intake down, running at groundIntake speed
@@ -28,7 +25,6 @@ public class SmartSpintake extends Command {
     timer.reset();
     intake.intakeDown();
     timer.start();
-    intakeIsDown = true;
   }
 
   // once the limit switch is hit and we did not have a note, reset encoders and intake up
