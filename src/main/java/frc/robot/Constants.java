@@ -72,8 +72,8 @@ public final class Constants {
     public final static int ampPNMChannel = 4;
     public final static int ampLimitSwitch = 0; // real
     
-    public final static int shifterOneChannel = 3;
-    public final static int shifterTwoChannel = 2;
+    public final static int longShifterChannel = 3;
+    public final static int smallShifterChannel = 2;
   }
 
   public static class AprilTags {

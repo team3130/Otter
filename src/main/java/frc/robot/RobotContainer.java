@@ -20,6 +20,10 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.*;
 import frc.robot.commands.Shooter.*;
+import frc.robot.commands.ShooterShifter.DoubleExtend;
+import frc.robot.commands.ShooterShifter.DoubleRetract;
+import frc.robot.commands.ShooterShifter.ShifterOneExtend;
+import frc.robot.commands.ShooterShifter.ShifterSmallExtend;
 import frc.robot.sensors.JoystickTrigger;
 import frc.robot.subsystems.*;
 import frc.robot.commands.Amp.*;
@@ -155,11 +159,11 @@ public class RobotContainer {
     */
     //new JoystickButton(driverController, Constants.Buttons.LST_BTN_A).whileTrue(new ZeroWheels(chassis));
     //new JoystickButton(driverController, Constants.Buttons.LST_BTN_Y).whileTrue(new FlipDriveOrientation(chassis));
-    new POVButton(driverController, Constants.Buttons.LST_POV_N).whileTrue(new ZeroEverything(chassis));
+    new POVButton(operatorController, Constants.Buttons.LST_POV_N).whileTrue(new ZeroEverything(chassis));
 
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new AmpOuttake(amp));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_LBUMPER).whileTrue(new LimitSpintake(intake));
-    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_RBUMPER).whileTrue(new ToggleIntake(intake));
+    new JoystickButton(driverController, Constants.Buttons.LST_BTN_RBUMPER).whileTrue(new ToggleIntake(intake));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_A).whileTrue(new Outtake(intake));
     new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new AlwaysSpintake(intake));
 
@@ -173,12 +177,10 @@ public class RobotContainer {
     //new JoystickButton(operatorController, Constants.Buttons.LST_BTN_X).whileTrue(new SequentialCommandGroup(new AmpIntake(amp), new RumbleAmp(amp, operatorController)));
     // new JoystickTrigger(operatorController, Constants.Buttons.LST_BTN_B).whileTrue(new Shoot(shooter, intake));
 
-    /*
-    new POVButton(operatorController, Constants.Buttons.LST_POV_S).whileTrue(new DoubleRetract(shooterShifter));
-    new POVButton(operatorController, Constants.Buttons.LST_POV_E).whileTrue(new DoubleExtend(shooterShifter));
-    new POVButton(operatorController, Constants.Buttons.LST_POV_W).whileTrue(new ShifterOneExtend(shooterShifter));
-    new POVButton(operatorController, Constants.Buttons.LST_POV_N).whileTrue(new ShifterTwoExtend(shooterShifter));
-    */
+    new POVButton(driverController, Constants.Buttons.LST_POV_S).whileTrue(new DoubleRetract(shooterShifter));
+    new POVButton(driverController, Constants.Buttons.LST_POV_E).whileTrue(new DoubleExtend(shooterShifter));
+    new POVButton(driverController, Constants.Buttons.LST_POV_W).whileTrue(new ShifterOneExtend(shooterShifter));
+    new POVButton(driverController, Constants.Buttons.LST_POV_N).whileTrue(new ShifterSmallExtend(shooterShifter));
 
     //new JoystickTrigger(driverController, Constants.Buttons.LST_AXS_RTRIGGER).whileTrue(new TestTrigger(intake));
 

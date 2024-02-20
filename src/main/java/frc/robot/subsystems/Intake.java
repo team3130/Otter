@@ -22,7 +22,7 @@ public class Intake extends SubsystemBase {
     public static double intakeNoteSetpoint = 300; // number of rotations from limit switch to when note should stop in intake
 
     private double outakeSpeed = -0.85;
-    private double spintakeSpeed = 0.85;
+    private double spintakeSpeed = 1;
     private double groundSpeed = 0.8;
     private double slowSpeed = .4; //S peed slower than dumbSpeed, in order to slow down the disk
 
@@ -40,7 +40,7 @@ public class Intake extends SubsystemBase {
 
         intakeMotor.configFactoryDefault();
         intakeMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
-        intakeMotor.configVoltageCompSaturation(5);
+        intakeMotor.configVoltageCompSaturation(7);
         intakeMotor.enableVoltageCompensation(true);
 
         intakeMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
