@@ -73,8 +73,7 @@ public class RobotContainer {
     chassis.setDefaultCommand(new TeleopDrive(chassis, driverController));
 
     // Build an auto chooser. This will use Commands.none() as the default option.
-    autoChooser = AutoBuilder.buildAutoChooser();
-
+    autoChooser = AutoBuilder.buildAutoChooser("ShootLoadedIntakeTop");
     SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
