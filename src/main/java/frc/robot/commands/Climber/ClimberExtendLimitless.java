@@ -9,12 +9,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Climber;
 
 /** An example command that uses an example subsystem. */
-public class ClimberExtend extends Command {
+public class ClimberExtendLimitless extends Command {
     private final Climber climber;
     private XboxController xboxController;
     private int joystickButton;
 
-    public ClimberExtend(Climber side, XboxController xboxController) {
+    public ClimberExtendLimitless(Climber side, XboxController xboxController) {
         climber = side;
         this.xboxController = xboxController;
         addRequirements(climber);
@@ -31,22 +31,13 @@ public class ClimberExtend extends Command {
         double power = -xboxController.getRawAxis(climber.getJoystick());
         power = power * Math.abs(power);
 
-        if (!climber.brokeLimit()) {
-            climber.setIsReset(false);
-        }
-
-        // checks if limit switch has been broken
-        if (climber.brokeLimit() && !climber.getIsClimberReset()) {
-            power = 0;
-            climber.setClimbDone(true);
-        }
 
         if (power < 0.075) {
             power = 0;
         }
+
             climber.setClimberSpeed(power);
         }
-
 
     // Called once the command ends or is interrupted.
     @Override

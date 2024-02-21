@@ -4,18 +4,16 @@
 
 package frc.robot.commands.Climber;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Climber;
-import edu.wpi.first.wpilibj.Timer;
 
 /** An example command that uses an example subsystem. */
-public class PitClimber extends Command {
+public class PitClimberForward extends Command {
     private final Climber climber;
-    private final Timer timer;
 
-    public PitClimber(Climber climber) {
+    public PitClimberForward(Climber climber) {
       this.climber = climber;
-      timer = new Timer();
       addRequirements(climber);
     }
 
@@ -23,9 +21,8 @@ public class PitClimber extends Command {
     @Override
     public void initialize() {
         // starts the motors and timer
-        climber.setMotorCheckingSpeed();
-        timer.reset();
-        timer.start();
+        climber.setClimberSpeed(0.5);
+
     }
 
     // Called every time the scheduler runs while the command is scheduled.
@@ -37,13 +34,11 @@ public class PitClimber extends Command {
     @Override
     public void end(boolean interrupted) {
         climber.stop();
-        timer.stop();
-        //TODO Flash LEDS
     }
 
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-      return climber.getMotorCurrent() >= climber.getCurrentMax();
+      return false;
     }
 }

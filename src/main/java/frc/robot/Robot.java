@@ -8,6 +8,9 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.Climber;
+
+import javax.sql.CommonDataSource;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -98,7 +101,11 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().schedule(robotContainer.resetEverything());
   //  CommandScheduler.getInstance().schedule(robotContainer.rumbley());
 
+    //This is so climber command can assume climbers are reset before a match
+    CommandScheduler.getInstance().schedule(robotContainer.setIsReset(robotContainer.getLeftClimber(), true));
+    CommandScheduler.getInstance().schedule(robotContainer.setIsReset(robotContainer.getRightClimber(), true));
   }
+
 
   /** This function is called periodically during operator control. */
   @Override
