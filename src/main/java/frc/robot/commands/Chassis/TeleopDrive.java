@@ -66,8 +66,10 @@ public class TeleopDrive extends Command {
 //      theta = turningLimiter.calculate(theta) * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond;
       // sets theta to odometry face target
       if (chassis.getFaceTargetting()) {
-        theta = camera.targetController.calculate(chassis.normalizeAngleRadians(chassis.getRotation2d().getRadians()), chassis.getAngleToFaceTarget2());
+        chassis.makeAngleToFaceTarget();
+        theta = -camera.targetController.calculate(chassis.getRotation2d().getRadians(), Math.toRadians(chassis.getTheta()));
       }
+
 
       // square the inputs
       y = y * Math.abs(y);

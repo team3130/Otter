@@ -28,7 +28,7 @@ public class ToggleOdoFaceTarget extends Command {
   @Override
   public void initialize() {
     chassis.setFaceTargetting(!chassis.getFaceTargetting());
-    chassis.prepareForFaceTarget();
+    chassis.makeAngleToFaceTarget();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

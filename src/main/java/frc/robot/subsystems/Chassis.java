@@ -55,14 +55,13 @@ public class Chassis extends SubsystemBase {
     private final GenericEntry n_fieldOrriented; // comp network table entry for whether field oriented drivetrain
     private double targetMaxVelo = Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond; //TODO real
     private double targetMaxAcc = Constants.Swerve.kMaxAccelerationDrive; //TODO real
-    private Pose2d initialPosition;
-    private double initialAprilTagDistance = 0d;
-    private double initialAprilTagAngle = 0d;
-    private Translation2d initialAprilTagVector;
+//    private Pose2d initialPosition;
+//    private double initialAprilTagDistance = 0d;
+//    private double initialAprilTagAngle = 0d;
+//    private Translation2d initialAprilTagVector;
     private Translation2d originToAprilTagVector;
-    private double theta = 0.0;
+    private Rotation2d theta = new Rotation2d(0);
     private boolean isFaceTargetting;
-    private Translation2d aprilTagPosition = new Translation2d(1, 1);
     private final CameraSubsystem cameraSubsystem = new CameraSubsystem();
 
     /**
@@ -169,11 +168,9 @@ public class Chassis extends SubsystemBase {
 
     //Converts angle(radians) from [0, 2pi] to [-pi, pi]
     public double normalizeAngleRadians(double angle) {
-        // Reduce the angle to be between 0 and 360 degrees
-        angle %= (2 * Math.PI);
-        // Force it to be the positive remainder, so that 0 <= angle < 360
+        // Force it to be the positive remainder, so that 0 <= angle < 2pi
         angle = (angle + (2 * Math.PI)) % (2 * Math.PI);
-        // Force into the minimum absolute value residue class, so that -180 < angle <= 180
+        // Force into the minimum absolute value residue class, so that -pi < angle <= pi
         if (angle > Math.PI)
             angle -= (2 * Math.PI);
         return angle;
@@ -353,7 +350,7 @@ public class Chassis extends SubsystemBase {
     /**
      * @return the yaw from odometry
      */
-    public double getInitialAprilTagDistance() { return initialAprilTagDistance; }
+//    public double getInitialAprilTagDistance() { return initialAprilTagDistance; }
     public Translation2d getOriginToAprilTagVector() {return originToAprilTagVector;}
     public void setFaceTargetting(boolean newIsFaceTargetting){
         isFaceTargetting = newIsFaceTargetting;
@@ -385,9 +382,10 @@ public class Chassis extends SubsystemBase {
         builder.addDoubleProperty("rotation", this::getYaw, null);
         builder.addDoubleProperty("max speed read", this::getMaxSpeedRead, null);
         builder.addStringProperty("odometry pose2d", this::getOdometry, null);
-        builder.addDoubleProperty("Target Distance", this::getInitialAprilTagDistance, null);
+        //builder.addDoubleProperty("Target Distance", this::getInitialAprilTagDistance, null);
         builder.addBooleanProperty("IsFaceTargetToggled", this::getFaceTargetting, null);
         builder.addDoubleProperty("angle to face target", this::getTheta, null);
+        builder.addDoubleProperty("rotation from odometry (degrees)", this::getRotationFromOdo, this::setTheta );
     }
 
     /**
@@ -407,24 +405,25 @@ public class Chassis extends SubsystemBase {
     /*This method generates the angle needed to turn to face a specific target without using a camera
        - needs to be paired with Giorgia's face target code or needs to start with the camera facing the target
      */
-    public double getAngleToFaceTarget(Translation2d originToAprilTagVector) {
+    public void makeAngleToFaceTarget() {
+        originToAprilTagVector = new Translation2d(3, 0);
         // the vector from the position that we are at currently to the april tag (target)
-        Translation2d currentPosition = new Translation2d(getX(), getY());
-        Translation2d currentPositionToAprilTagVector = currentPosition.minus(originToAprilTagVector);
-        // the angle that we need to turn to from our current holonomic at our current position to face target (setpoint)
-        theta = Math.atan2(currentPositionToAprilTagVector.getY(), currentPositionToAprilTagVector.getX()) - Math.PI;
-        return theta;
-    }
-
-    public double getAngleToFaceTarget2() {
-        Translation2d currentPosition = new Translation2d(getX(), getY());
-        double pi = (aprilTagPosition.getY() - currentPosition.getY()) > 0 ? Math.PI : 2 * Math.PI;
-        theta = pi + Math.atan2((aprilTagPosition.getY() - currentPosition.getY()), (aprilTagPosition.getX() - currentPosition.getX()));
-        return theta;
+        Translation2d currentPositionVector = new Translation2d(getX(), getY());
+        Translation2d currentPositionToAprilTagVector = originToAprilTagVector.minus(currentPositionVector);
+        // the angle that we need to turn to in order to face the target
+        theta = currentPositionToAprilTagVector.getAngle();
     }
 
     public double getTheta() {
-        return theta;
+        return theta.getDegrees();
+    }
+
+    public void setTheta(double newTheta) {
+        theta = Rotation2d.fromDegrees(newTheta);
+    }
+
+    public double getRotationFromOdo() {
+        return getRotation2d().getDegrees();
     }
 
     // getter for the initial position where we use Giorgia's face target
@@ -433,13 +432,12 @@ public class Chassis extends SubsystemBase {
     }
 
     // gets the information like distance to april tag and angle to make vectors (uses FaceTarget info)
-    public void prepareForFaceTarget(){
-        initialPosition = getInitialPosition();
-        //initialAprilTagDistance = cameraSubsystem.getTargetDistance();
-        initialAprilTagAngle = initialPosition.getRotation().getRadians(); // can maybe use yaw later
-        initialAprilTagVector = new Translation2d(initialAprilTagDistance * Math.sin(Math.PI - initialAprilTagAngle), initialAprilTagDistance * Math.cos(Math.PI - initialAprilTagAngle));
-        originToAprilTagVector = initialPosition.getTranslation().plus(initialAprilTagVector);
-    }
+//    public void prepareForFaceTarget(){
+//        initialPosition = getInitialPosition();
+//        initialAprilTagAngle = initialPosition.getRotation().getRadians(); // can maybe use yaw later
+//        initialAprilTagVector = new Translation2d(initialAprilTagDistance * Math.sin(Math.PI - initialAprilTagAngle), initialAprilTagDistance * Math.cos(Math.PI - initialAprilTagAngle));
+//        originToAprilTagVector = initialPosition.getTranslation().plus(initialAprilTagVector);
+//    }
     /**
      * The same as {@link #//drive(double, double, double)} except you pass in if you are field relative or not.
      * This method will drive the swerve modules based to x, y and theta vectors.
