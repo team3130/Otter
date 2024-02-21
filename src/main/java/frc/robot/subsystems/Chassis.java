@@ -60,7 +60,7 @@ public class Chassis extends SubsystemBase {
 //    private double initialAprilTagAngle = 0d;
 //    private Translation2d initialAprilTagVector;
     private Translation2d originToAprilTagVector;
-    private Rotation2d theta;
+    private Rotation2d theta = new Rotation2d(0);
     private boolean isFaceTargetting;
     private final CameraSubsystem cameraSubsystem = new CameraSubsystem();
 
@@ -384,8 +384,8 @@ public class Chassis extends SubsystemBase {
         builder.addStringProperty("odometry pose2d", this::getOdometry, null);
         //builder.addDoubleProperty("Target Distance", this::getInitialAprilTagDistance, null);
         builder.addBooleanProperty("IsFaceTargetToggled", this::getFaceTargetting, null);
-        builder.addDoubleProperty("angle to face target", this::getTheta, this::setTheta);
-        builder.addDoubleProperty("rotation from odometry (degrees)", this::getRotationFromOdo, null );
+        builder.addDoubleProperty("angle to face target", this::getTheta, null);
+        builder.addDoubleProperty("rotation from odometry (degrees)", this::getRotationFromOdo, this::setTheta );
     }
 
     /**
@@ -406,6 +406,7 @@ public class Chassis extends SubsystemBase {
        - needs to be paired with Giorgia's face target code or needs to start with the camera facing the target
      */
     public void makeAngleToFaceTarget() {
+        originToAprilTagVector = new Translation2d(3, 0);
         // the vector from the position that we are at currently to the april tag (target)
         Translation2d currentPositionVector = new Translation2d(getX(), getY());
         Translation2d currentPositionToAprilTagVector = originToAprilTagVector.minus(currentPositionVector);
@@ -428,11 +429,6 @@ public class Chassis extends SubsystemBase {
     // getter for the initial position where we use Giorgia's face target
     public Pose2d getInitialPosition() {
         return getPose2d();
-    }
-
-    public void prepareForFaceTarget() {
-        originToAprilTagVector = new Translation2d(1, 1);
-        makeAngleToFaceTarget();
     }
 
     // gets the information like distance to april tag and angle to make vectors (uses FaceTarget info)
