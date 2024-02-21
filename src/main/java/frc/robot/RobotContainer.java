@@ -161,12 +161,12 @@ public class RobotContainer {
     //new JoystickButton(driverController, Constants.Buttons.LST_BTN_Y).whileTrue(new FlipDriveOrientation(chassis));
 
     // GAVIN DRIVER
-    new POVButton(driverController, Constants.Buttons.LST_POV_N).whileTrue(new ZeroEverything(chassis));
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new AmpOuttake(amp));
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_LBUMPER).whileTrue(new LimitSpintake(intake));
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_RBUMPER).whileTrue(new ToggleIntake(intake));
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_A).whileTrue(new Outtake(intake));
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new AlwaysSpintake(intake));
+    new POVButton(driverController, Constants.PS5.LST_POV_N).whileTrue(new ZeroEverything(chassis));
+    new JoystickButton(driverController, Constants.PS5.square).whileTrue(new AmpOuttake(amp));
+    new JoystickButton(driverController, Constants.PS5.LST_BTN_LBUMPER).whileTrue(new LimitSpintake(intake));
+    new JoystickButton(driverController, Constants.PS5.LST_BTN_RBUMPER).whileTrue(new ToggleIntake(intake));
+    new JoystickButton(driverController, Constants.PS5.x).whileTrue(new Outtake(intake));
+    new JoystickButton(driverController, Constants.PS5.circle).whileTrue(new AlwaysSpintake(intake));
 
     // ANDREW OPERATOR
     new JoystickButton(operatorController, Constants.Buttons.LST_BTN_LBUMPER).whileTrue(new ToggleAmp(amp));
