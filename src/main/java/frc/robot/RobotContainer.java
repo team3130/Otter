@@ -25,6 +25,7 @@ import frc.robot.commands.*;
 import frc.robot.commands.Auton.AutoIntake;
 import frc.robot.commands.Auton.AutoShoot;
 import frc.robot.commands.Shooter.*;
+import frc.robot.commands.ShooterShifter.DoubleExtend;
 import frc.robot.sensors.JoystickTrigger;
 import frc.robot.subsystems.*;
 import frc.robot.commands.Amp.*;
@@ -67,6 +68,7 @@ public class RobotContainer {
     // Do this in RobotContainer, after subsystem initialization, but before the creation of any other commands.
     NamedCommands.registerCommand("Shoot", new AutoShoot(shooter, intake));
     NamedCommands.registerCommand("Intake", new AutoIntake(intake));
+    NamedCommands.registerCommand("ShiftDoubleExtend", new DoubleExtend(shooterShifter));
 
     configureBindings(); // configure button bindings
     exportShuffleBoardData(); // export ShuffleBoardData

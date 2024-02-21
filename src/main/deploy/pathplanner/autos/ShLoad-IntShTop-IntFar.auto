@@ -12,6 +12,12 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "ShiftDoubleExtend"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "P1_ShLoad-IntShTop-IntFar"
