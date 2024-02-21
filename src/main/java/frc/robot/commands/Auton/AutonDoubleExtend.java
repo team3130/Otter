@@ -4,12 +4,14 @@
 
 package frc.robot.commands.Auton;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.ShooterShifter;
 
 public class AutonDoubleExtend extends InstantCommand {
   private final ShooterShifter shooterShifter;
+  private final Timer timer = new Timer();
 
   public AutonDoubleExtend(ShooterShifter shifter) {
     shooterShifter = shifter;
@@ -20,6 +22,8 @@ public class AutonDoubleExtend extends InstantCommand {
   @Override
   public void initialize() {
     shooterShifter.doubleExtend();
+    timer.reset();
+    timer.start();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -33,6 +37,10 @@ public class AutonDoubleExtend extends InstantCommand {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    if (timer.hasElapsed(0.5)) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }

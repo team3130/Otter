@@ -5,11 +5,11 @@
 package frc.robot.commands.Auton;
 
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.Intake;
 
 /** An example command that uses an example subsystem. */
-public class AutoIntake extends Command {
+public class AutoIntake extends InstantCommand {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final Intake intake;
   private Timer timer = new Timer();
@@ -23,7 +23,7 @@ public class AutoIntake extends Command {
   @Override
   public void initialize() {
     intake.intakeDown();
-    intake.groundIntake();
+    intake.spintake();
     timer.reset();
     timer.start();
   }
@@ -31,11 +31,6 @@ public class AutoIntake extends Command {
   // once the limit switch is hit and we did not have a note, reset encoders and intake up
   @Override
   public void execute() {
-    /*
-    if (timer.hasElapsed(1)) {
-      intake.groundIntake();
-    }
-     */
   }
 
   // stop the note
@@ -48,9 +43,10 @@ public class AutoIntake extends Command {
   // end this command once the note is at its desired place to stop (via encoders)
   @Override
   public boolean isFinished() {
-    if (intake.getIntakeLimitSwitch()) {
+    if (timer.hasElapsed(3)) {
       return true;
+    } else {
+      return false;
     }
-    return false;
   }
 }

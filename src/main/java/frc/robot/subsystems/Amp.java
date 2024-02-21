@@ -21,7 +21,6 @@ public class Amp extends SubsystemBase {
   private double intakeAmpSpeed = 1;
   private double outtakeAmpSpeed = -1;
   private Timer timer = new Timer();
-  private final XboxController controller;
   // the amount of seconds it takes for the amp to prime (pnematic to go up)
 
   public Amp() {

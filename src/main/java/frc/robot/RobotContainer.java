@@ -7,7 +7,6 @@
 
 package frc.robot;
 
-import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -23,13 +22,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
-import frc.robot.commands.*;
-import frc.robot.commands.Auton.AutoIntake;
 import frc.robot.commands.Auton.AutoShoot;
 import frc.robot.commands.Auton.AutonDoubleExtend;
+import frc.robot.commands.Auton.AutoIntake;
 import frc.robot.commands.Shooter.*;
-import frc.robot.commands.ShooterShifter.DoubleExtend;
-import frc.robot.sensors.JoystickTrigger;
 import frc.robot.commands.ShooterShifter.DoubleExtend;
 import frc.robot.commands.ShooterShifter.DoubleRetract;
 import frc.robot.commands.ShooterShifter.ShortShifterExtend;

@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.67,
-      "y": 6.45
+      "x": 0.9,
+      "y": 6.43
     },
-    "rotation": 0
+    "rotation": -120.0
   },
   "command": {
     "type": "sequential",
@@ -14,25 +14,13 @@
         {
           "type": "named",
           "data": {
-            "name": "ShiftDoubleExtend"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "AutoShoot"
+            "name": "Shoot"
           }
         },
         {
           "type": "path",
           "data": {
             "pathName": "P1_ShootLoaded-IntakeTop"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "AutoIntake"
           }
         }
       ]
