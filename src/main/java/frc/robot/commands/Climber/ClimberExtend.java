@@ -24,9 +24,11 @@ public class ClimberExtend extends Command {
 
     // Called when the command is initially scheduled.
     @Override
-    public void initialize() {if (climber.brokeLimit()){
+    public void initialize() {
+        if (climber.brokeLimit()){
         climber.setIsClimberOnLimit(true);}
-    else{climber.setIsClimberOnLimit(false);
+         else{
+        climber.setIsClimberOnLimit(false);
     }
 
     }
