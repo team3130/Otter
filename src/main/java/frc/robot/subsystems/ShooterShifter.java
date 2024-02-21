@@ -11,42 +11,42 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class ShooterShifter extends SubsystemBase {
-  private final Solenoid longShifter; // shorter pneumatic
-  private final Solenoid smallShifter; // longer pneumatic
+  private final Solenoid shortShifter; // shorter pneumatic
+  private final Solenoid longShifter; // longer pneumatic
   private boolean doubleRetracted = true; // both pneumatics down
   private boolean shifterOneExtended = false; // pneumatic 1 up
   private boolean shifterTwoExtended = false; // pneumatic 2 up
   private boolean doubleExtended = false; // both pneumatics up
 
   public ShooterShifter() {
-    longShifter = new Solenoid(Constants.CAN.PCM, PneumaticsModuleType.CTREPCM , Constants.IDs.longShifterChannel);
-    smallShifter = new Solenoid(Constants.CAN.PCM, PneumaticsModuleType.CTREPCM , Constants.IDs.smallShifterChannel);
+    shortShifter = new Solenoid(Constants.CAN.PCM, PneumaticsModuleType.CTREPCM , Constants.IDs.longShifterChannel);
+    longShifter = new Solenoid(Constants.CAN.PCM, PneumaticsModuleType.CTREPCM , Constants.IDs.smallShifterChannel);
 
+    shortShifter.set(false);
     longShifter.set(false);
-    smallShifter.set(false);
   }
 
   public void doubleRetract() {
+    shortShifter.set(false);
     longShifter.set(false);
-    smallShifter.set(false);
     setDoubleRetract(true);
   }
 
-  public void extendShifterOne() {
+  public void extendShortShifter() {
+    shortShifter.set(true);
+    longShifter.set(false);
+    setShortShifter(true);
+  }
+
+  public void extendLongShifter() {
+    shortShifter.set(false);
     longShifter.set(true);
-    smallShifter.set(false);
     setLongShifter(true);
   }
 
-  public void extendSmallShifter() {
-    longShifter.set(false);
-    smallShifter.set(true);
-    setSmallShifter(true);
-  }
-
   public void doubleExtend() {
+    shortShifter.set(true);
     longShifter.set(true);
-    smallShifter.set(true);
     setDoubleExtended(true);
   }
 
@@ -55,8 +55,8 @@ public class ShooterShifter extends SubsystemBase {
   public boolean getIsSecondShootStage() { return shifterTwoExtended; }
   public boolean getIsThirdShootStage() { return doubleExtended; }
   public void setDoubleRetract(boolean newIsParked) { doubleRetracted = newIsParked; }
-  public void setLongShifter(boolean newIsFirstShootStage) { shifterOneExtended = newIsFirstShootStage; }
-  public void setSmallShifter(boolean newIsSecondShootStage) { shifterTwoExtended = newIsSecondShootStage; }
+  public void setShortShifter(boolean newIsFirstShootStage) { shifterOneExtended = newIsFirstShootStage; }
+  public void setLongShifter(boolean newIsSecondShootStage) { shifterTwoExtended = newIsSecondShootStage; }
   public void setDoubleExtended(boolean newIsThirdShootStage) { shifterTwoExtended = newIsThirdShootStage; }
 
   @Override

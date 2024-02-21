@@ -19,13 +19,10 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
-import frc.robot.commands.*;
 import frc.robot.commands.Shooter.*;
 import frc.robot.commands.ShooterShifter.DoubleExtend;
 import frc.robot.commands.ShooterShifter.DoubleRetract;
-import frc.robot.commands.ShooterShifter.ShifterOneExtend;
-import frc.robot.commands.ShooterShifter.ShifterSmallExtend;
-import frc.robot.sensors.JoystickTrigger;
+import frc.robot.commands.ShooterShifter.ShortShifterExtend;
 import frc.robot.subsystems.*;
 import frc.robot.commands.Amp.*;
 import frc.robot.commands.Chassis.TeleopDrive;
@@ -178,8 +175,7 @@ public class RobotContainer {
 
     new POVButton(operatorController, Constants.Buttons.LST_POV_N).whileTrue(new DoubleExtend(shooterShifter));
     new POVButton(operatorController, Constants.Buttons.LST_POV_S).whileTrue(new DoubleRetract(shooterShifter));
-    new POVButton(operatorController, Constants.Buttons.LST_POV_E).whileTrue(new ShifterSmallExtend(shooterShifter));
-    new POVButton(operatorController, Constants.Buttons.LST_POV_W).whileTrue(new ShifterOneExtend(shooterShifter));
+    new POVButton(operatorController, Constants.Buttons.LST_POV_W).whileTrue(new ShortShifterExtend(shooterShifter)); // correct
 
     //new JoystickTrigger(driverController, Constants.Buttons.LST_AXS_RTRIGGER).whileTrue(new TestTrigger(intake));
     //new JoystickTrigger(driverController, Constants.Buttons.LST_AXS_LTRIGGER).whileTrue(new TestTrigger(intake, driverController));

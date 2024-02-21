@@ -8,10 +8,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ShooterShifter;
 
 /** An example command that uses an example subsystem. */
-public class ShifterSmallExtend extends Command {
+public class UnusedLongShifterExtend extends Command {
   private final ShooterShifter shooterShifter;
 
-  public ShifterSmallExtend(ShooterShifter shifter) {
+  public UnusedLongShifterExtend(ShooterShifter shifter) {
     shooterShifter = shifter;
     addRequirements(shifter);
   }
@@ -19,7 +19,7 @@ public class ShifterSmallExtend extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    shooterShifter.extendSmallShifter();
+    shooterShifter.extendLongShifter();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

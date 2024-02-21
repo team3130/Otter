@@ -227,7 +227,7 @@ public final class Constants {
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
             kMaxAngularSpeedRadiansPerSecond, kMaxAngularAccelerationRadiansPerSecondSquared);
   }
-  public static class PS5{
+  public static class PS5 {
     public static final int square = 1;
     public static final int x = 2;
     public static final int circle = 3;
