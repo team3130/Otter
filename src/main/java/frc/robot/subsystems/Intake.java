@@ -22,7 +22,7 @@ public class Intake extends SubsystemBase {
     public static double intakeNoteSetpoint = 300; // number of rotations from limit switch to when note should stop in intake
 
     private double outakeSpeed = -0.85;
-    private double spintakeSpeed = 0.85;
+    private double spintakeSpeed = 1;
     private double groundSpeed = 0.8;
     private double slowSpeed = .4; //S peed slower than dumbSpeed, in order to slow down the disk
 
@@ -40,7 +40,7 @@ public class Intake extends SubsystemBase {
 
         intakeMotor.configFactoryDefault();
         intakeMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
-        intakeMotor.configVoltageCompSaturation(10);
+        intakeMotor.configVoltageCompSaturation(7);
         intakeMotor.enableVoltageCompensation(true);
 
         intakeMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
@@ -83,7 +83,7 @@ public class Intake extends SubsystemBase {
     }
 
     public boolean getIntakeLimitSwitch() {
-        return intakeLimitSwitch.get();
+        return !intakeLimitSwitch.get();
     }
 
     public boolean getShooterBreakBeam(){
@@ -127,17 +127,19 @@ public class Intake extends SubsystemBase {
     public void setSlowSpeed(double slow) { slowSpeed = slow; }
 
     public void initSendable(SendableBuilder builder) {
-        builder.setSmartDashboardType("Intake");
-        builder.addDoubleProperty("Intake Note Setpoint", this::getIntakeNoteSetpoint, this::setIntakeNoteSetpoint);
-        builder.addBooleanProperty("intake limit switch", this::getIntakeLimitSwitch, null);
+        if (Constants.debugMode) {
+            builder.setSmartDashboardType("Intake");
+            builder.addDoubleProperty("Intake Note Setpoint", this::getIntakeNoteSetpoint, this::setIntakeNoteSetpoint);
+            builder.addBooleanProperty("intake limit switch", this::getIntakeLimitSwitch, null);
 
-        builder.addDoubleProperty("Ground intake speed", this::getGroundSpeed, this::setGroundSpeed );
-        builder.addDoubleProperty("Drop time", this::getDropTime, this::setDropTime);
-        builder.addDoubleProperty("Dumb spintake speed", this::getSpintakeSpeed, this::setSpintakeSpeed);
-        builder.addDoubleProperty("Dumb outtake speed", this::getOutakeSpeed, this::setOutakeSpeed);
-        builder.addDoubleProperty("slow speed", this::getSlowSpeed, this::setSlowSpeed);
+            builder.addDoubleProperty("Ground intake speed", this::getGroundSpeed, this::setGroundSpeed );
+            builder.addDoubleProperty("Drop time", this::getDropTime, this::setDropTime);
+            builder.addDoubleProperty("Dumb spintake speed", this::getSpintakeSpeed, this::setSpintakeSpeed);
+            builder.addDoubleProperty("Dumb outtake speed", this::getOutakeSpeed, this::setOutakeSpeed);
+            builder.addDoubleProperty("slow speed", this::getSlowSpeed, this::setSlowSpeed);
 
-        builder.addBooleanProperty("test trigger", this::getTestTrigger, this::setTestTrigger);
+            builder.addBooleanProperty("test trigger", this::getTestTrigger, this::setTestTrigger);
+        }
     }
     @Override
     public void periodic() {

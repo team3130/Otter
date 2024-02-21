@@ -18,8 +18,10 @@ public class Amp extends SubsystemBase {
   private final Solenoid ampPneumatic;
   private final DigitalInput ampLimit;
   private final WPI_TalonSRX ampMotor;
-  private double intakeAmpSpeed = 0.8;
-  private double outtakeAmpSpeed = -0.8;
+  private double intakeAmpSpeed = 1;
+  private double outtakeAmpSpeed = -1;
+  private Timer timer = new Timer();
+  private final XboxController controller;
   // the amount of seconds it takes for the amp to prime (pnematic to go up)
 
   public Amp() {
@@ -27,7 +29,7 @@ public class Amp extends SubsystemBase {
     ampLimit = new DigitalInput(Constants.IDs.ampLimitSwitch);
     ampMotor = new WPI_TalonSRX(Constants.CAN.ampMotor);
     ampMotor.configFactoryDefault();
-    ampMotor.configVoltageCompSaturation(4);
+    ampMotor.configVoltageCompSaturation(8);
     ampMotor.setInverted(false);
   }
 
@@ -96,11 +98,13 @@ public class Amp extends SubsystemBase {
    * exports data to Shuffleboard
    */
   public void initSendable(SendableBuilder builder) {
-    builder.setSmartDashboardType("Amp");
-    builder.addDoubleProperty("Intake Amp Speed", this::getIntakeAmpSpeed, this::setIntakeAmpSpeed);
-    builder.addDoubleProperty("Outtake Amp Speed", this::getOuttakeAmpSpeed, this::setOuttakeAmpSpeed);
-    builder.addBooleanProperty("Limit Switch", this::getLimitSwitch, null);
-    builder.addBooleanProperty("Pneumatic Status", this::getPneumaticState, null);
+    if (Constants.debugMode) {
+      builder.setSmartDashboardType("Amp");
+      builder.addDoubleProperty("Intake Amp Speed", this::getIntakeAmpSpeed, this::setIntakeAmpSpeed);
+      builder.addDoubleProperty("Outtake Amp Speed", this::getOuttakeAmpSpeed, this::setOuttakeAmpSpeed);
+      builder.addBooleanProperty("Limit Switch", this::getLimitSwitch, null);
+      builder.addBooleanProperty("Pneumatic Status", this::getPneumaticState, null);
+    }
   }
 
 }

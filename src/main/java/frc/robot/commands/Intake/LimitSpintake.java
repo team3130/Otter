@@ -7,22 +7,21 @@ package frc.robot.commands.Intake;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Intake;
 
-/** An example command that uses an example subsystem. */
-public class SmartIndex extends Command {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
+public class LimitSpintake extends Command {
   private final Intake intake;
 
-  public SmartIndex(Intake intake) {
-    this.intake = intake;
+  public LimitSpintake(Intake Intake) {
+    intake = Intake;
     addRequirements(intake);
   }
 
+  // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    intake.slowTake();
+    intake.spintake();
   }
 
-  // intake slowly
+  // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
 
@@ -32,12 +31,15 @@ public class SmartIndex extends Command {
   @Override
   public void end(boolean interrupted) {
     intake.stoptake();
-    intake.setIntakeHasNote(false);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return intake.getShooterBreakBeam();
+    if (intake.getIntakeLimitSwitch()) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }

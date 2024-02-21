@@ -21,7 +21,7 @@ import edu.wpi.first.math.util.Units;
  */
 @SuppressWarnings("ALL")
 public final class Constants {
-  public static final boolean debugMode = true; //TODO: make false after testing
+  public static final boolean debugMode = true;
   public static final boolean kNavxReversed = false;
   public final static double kMaxVoltageHopper = 9d;
 
@@ -72,8 +72,8 @@ public final class Constants {
     public final static int ampPNMChannel = 4;
     public final static int ampLimitSwitch = 0; // real
     
-    public final static int shifterOneChannel = 3;
-    public final static int shifterTwoChannel = 2;
+    public final static int longShifterChannel = 3;
+    public final static int smallShifterChannel = 2;
   }
 
   public static class AprilTags {
@@ -226,6 +226,36 @@ public final class Constants {
     // spiny PID constraints
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(
             kMaxAngularSpeedRadiansPerSecond, kMaxAngularAccelerationRadiansPerSecondSquared);
+  }
+  public static class PS5 {
+    public static final int square = 1;
+    public static final int x = 2;
+    public static final int circle = 3;
+    public static final int triangle = 4;
+    public static final int LST_BTN_LBUMPER = 5;
+    public static final int LST_BTN_RBUMPER = 6;
+
+    public static final int LST_BTN_LJOYSTICKPRESS = 11;
+    public static final int LST_BTN_RJOYSTICKPRESS = 12;
+
+    // Gamepad POV List
+    public static final int LST_POV_UNPRESSED = -1;
+    public static final int LST_POV_N = 0;
+    public static final int LST_POV_NE = 45;
+    public static final int LST_POV_E = 90;
+    public static final int LST_POV_SE = 135;
+    public static final int LST_POV_S = 180;
+    public static final int LST_POV_SW = 225;
+    public static final int LST_POV_W = 270;
+    public static final int LST_POV_NW = 315;
+
+    // Gamepad Axis List
+    public static final int LST_AXS_LJOYSTICKX = 0;
+    public static final int LST_AXS_LJOYSTICKY = 1;
+    public static final int LST_AXS_LTRIGGER = 3;
+    public static final int LST_AXS_RTRIGGER = 4;
+    public static final int LST_AXS_RJOYSTICKX = 2;
+    public static final int LST_AXS_RJOYSTICKY = 5;
   }
 
   public static class Buttons {
