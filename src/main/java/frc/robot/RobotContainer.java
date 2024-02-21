@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.Shooter.*;
@@ -104,7 +105,8 @@ public class RobotContainer {
 
 
   public void periodic() {
-    operatorController.setRumble(GenericHID.RumbleType.kBothRumble, 1);
+    if (Constants.driverRumbling)
+    driverController.setRumble(GenericHID.RumbleType.kBothRumble, 1);
   }
 
   public void resetOdo() {
@@ -160,10 +162,12 @@ public class RobotContainer {
     // GAVIN DRIVER
     new POVButton(driverController, Constants.PS5.LST_POV_N).whileTrue(new ZeroEverything(chassis));
     new JoystickButton(driverController, Constants.PS5.square).whileTrue(new AmpOuttake(amp));
-    new JoystickButton(driverController, Constants.PS5.LST_BTN_LBUMPER).whileTrue(new LimitSpintake(intake));
+    new JoystickButton(driverController, Constants.PS5.LST_BTN_LBUMPER).whileTrue(new IntakeRumble(intake));
     new JoystickButton(driverController, Constants.PS5.LST_BTN_RBUMPER).whileTrue(new ToggleIntake(intake));
     new JoystickButton(driverController, Constants.PS5.x).whileTrue(new Outtake(intake));
     new JoystickButton(driverController, Constants.PS5.circle).whileTrue(new AlwaysSpintake(intake));
+    new JoystickButton(operatorController, Constants.PS5.triangle).whileTrue(new SequentialCommandGroup(new LimitSpintake(
+            intake), new IntakeRumble(intake)));
 
     // ANDREW OPERATOR
     new JoystickButton(operatorController, Constants.Buttons.LST_BTN_LBUMPER).whileTrue(new ToggleAmp(amp));
@@ -181,6 +185,6 @@ public class RobotContainer {
     //new JoystickTrigger(driverController, Constants.Buttons.LST_AXS_LTRIGGER).whileTrue(new TestTrigger(intake, driverController));
 
     //new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new VelocityShoot(shooter));
-    //new JoystickButton(operatorController, Constants.Buttons.LST_BTN_RBUMPER).whileTrue(new SequentialCommandGroup(new SmartSpintake(intake), new SmartIndex(intake)));
+
   }
 }

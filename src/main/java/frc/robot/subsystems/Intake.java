@@ -7,9 +7,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.util.sendable.SendableBuilder;
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -29,7 +27,6 @@ public class Intake extends SubsystemBase {
     private boolean intakeHasNote;
 
     private boolean trigger;
-
 
     public Intake() {
         intakeMotor = new WPI_TalonSRX(Constants.CAN.intakeIndexer);
@@ -125,6 +122,12 @@ public class Intake extends SubsystemBase {
     public double getOutakeSpeed() { return outakeSpeed; }
     public double getSlowSpeed() { return slowSpeed; }
     public void setSlowSpeed(double slow) { slowSpeed = slow; }
+    public void setDriverToRumble(){
+        Constants.driverRumbling = true;
+    }
+    public void stopDriverRumble(){
+        Constants.driverRumbling = false;
+    }
 
     public void initSendable(SendableBuilder builder) {
         if (Constants.debugMode) {

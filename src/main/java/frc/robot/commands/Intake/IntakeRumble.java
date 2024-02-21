@@ -4,16 +4,16 @@
 
 package frc.robot.commands.Intake;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj.Timer;
 import frc.robot.subsystems.Intake;
 
 
-public class LimitSpintake extends Command {
+public class IntakeRumble extends Command {
   private final Intake intake;
   private final Timer timer =new Timer();
 private boolean nevermind = false;
-  public LimitSpintake(Intake Intake) {
+  public IntakeRumble(Intake Intake) {
     intake = Intake;
     addRequirements(intake);
   }
@@ -21,7 +21,11 @@ private boolean nevermind = false;
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    intake.spintake();
+    if (intake.getIntakeLimitSwitch()) {
+      timer.reset();
+      timer.start();
+    }
+    else {nevermind = true;}
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -33,13 +37,14 @@ private boolean nevermind = false;
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-   intake.stoptake();
+   intake.stopDriverRumble();
+   timer.stop();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (intake.getIntakeLimitSwitch()) {
+    if (nevermind || timer.hasElapsed(1)) {
       return true;
     } else {
       return false;

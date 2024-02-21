@@ -65,6 +65,7 @@ public class TeleopDrive extends Command {
     if (!chassis.getFieldRelative()) {
       y = -y;
       x = -x;
+
     }
 
     // apply slew rate limiter which also converts to m/s and rad.s

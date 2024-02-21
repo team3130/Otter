@@ -21,6 +21,7 @@ import edu.wpi.first.math.util.Units;
  */
 @SuppressWarnings("ALL")
 public final class Constants {
+  public static boolean driverRumbling = false;
   public static final boolean debugMode = true;
   public static final boolean kNavxReversed = false;
   public final static double kMaxVoltageHopper = 9d;
