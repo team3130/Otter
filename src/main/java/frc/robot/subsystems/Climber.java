@@ -18,7 +18,7 @@ public class Climber extends SubsystemBase {
     private final DigitalInput limitSwitch;
     private final WPI_TalonSRX climberMotor;
     private int joystickUsed;
-    private boolean isClimberReset;
+    private boolean isStartingOnLimit;
     private boolean inverteds;
 
     private boolean invalidInput = false;
@@ -33,15 +33,15 @@ public class Climber extends SubsystemBase {
         climberMotor.setInverted(inverteds);
         joystickUsed = joystick;
 
-        isClimberReset = true;
+        isStartingOnLimit = false;
     }
 
     // returns the status of the left arm's limitswitch
     public boolean brokeLimit() {
         return !limitSwitch.get();
     }
-    public void setIsClimberReset(boolean bruh) { isClimberReset = bruh; }
-    public boolean getIsClimberReset() { return this.isClimberReset; }
+    public void setIsClimberOnLimit(boolean bruh) { isStartingOnLimit = bruh; }
+    public boolean getIsClimberOnLimit() { return this.isStartingOnLimit; }
     public boolean getInvalidInput() {
         return invalidInput;
     }
@@ -111,6 +111,6 @@ public class Climber extends SubsystemBase {
         builder.addDoubleProperty("currentMaxRight", this::getCurrentMax, this::setCurrentMax);
         builder.addDoubleProperty("timerAmount", this::getTimerAmount, this::setTimerAmount);
         builder.addDoubleProperty("checking speed", this::getPitCheckingSpeed, this::setPitCheckingSpeed);
-        builder.addBooleanProperty("Climber is reset", this::getIsClimberReset, null);
+        builder.addBooleanProperty("Climber is reset", this::getIsClimberOnLimit, null);
     }
 }

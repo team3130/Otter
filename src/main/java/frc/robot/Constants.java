@@ -261,6 +261,7 @@ public final class Constants {
     }
 
     public static class Climber {
+        public static boolean test= false;
         public static final int kRLimitSwitch = 3; // TODO
         public static final int kLLimitSwitch = 4; // TODO
 

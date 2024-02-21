@@ -7,7 +7,6 @@
 
 package frc.robot;
 
-import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -17,14 +16,13 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.*;
 import frc.robot.commands.Chassis.TeleopDrive;
 import frc.robot.commands.Chassis.ZeroEverything;
-import frc.robot.commands.Climber.PitClimber;
+import frc.robot.commands.Climber.PitClimberExtend;
+import frc.robot.commands.Climber.PitClimberRetract;
 import frc.robot.commands.Climber.ClimberExtend;
 import frc.robot.subsystems.Chassis;
 import frc.robot.subsystems.Climber;
@@ -177,8 +175,15 @@ public class RobotContainer {
 
     new JoystickButton(operatorController, Constants.Buttons.LST_BTN_B).whileTrue(new OnlyIndex(shooter));
     new JoystickButton(operatorController, Constants.Buttons.LST_BTN_Y).whileTrue(new OnlyShoot(shooter));
-    new JoystickButton(driverController, Constants.Buttons.LST_POV_E).whileTrue(new PitClimber(leftClimber));
-    new JoystickButton(driverController, Constants.Buttons.LST_POV_S).whileTrue(new PitClimber(rightClimber));
+    new JoystickButton(driverController, Constants.Buttons.LST_POV_E).whileTrue(new PitClimberRetract(leftClimber));
+    new JoystickButton(driverController, Constants.Buttons.LST_POV_S).whileTrue(new PitClimberRetract(rightClimber));
+
+    if (Constants.Climber.test){
+      new JoystickButton(driverController, Constants.Buttons.LST_POV_N).whileTrue(new PitClimberRetract(leftClimber));
+      new JoystickButton(driverController, Constants.Buttons.LST_POV_N).whileTrue(new PitClimberRetract(rightClimber));
+      new JoystickButton(driverController, Constants.Buttons.LST_POV_S).whileTrue(new PitClimberRetract(leftClimber));
+      new JoystickButton(driverController, Constants.Buttons.LST_POV_S).whileTrue(new PitClimberRetract(rightClimber));
+    }
 
     //new JoystickButton(operatorController, Constants.Buttons.LST_BTN_X).whileTrue(new SequentialCommandGroup(new AmpIntake(amp), new RumbleAmp(amp, operatorController)));
     // new JoystickTrigger(operatorController, Constants.Buttons.LST_BTN_B).whileTrue(new Shoot(shooter, intake));

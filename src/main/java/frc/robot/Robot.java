@@ -95,6 +95,7 @@ public class Robot extends TimedRobot {
       autonomousCommand.cancel();
     }
     //robotContainer.periodic();
+    Constants.Climber.test = false;
     CommandScheduler.getInstance().schedule(robotContainer.resetEverything());
   //  CommandScheduler.getInstance().schedule(robotContainer.rumbley());
 
@@ -109,6 +110,7 @@ public class Robot extends TimedRobot {
   public void testInit() {
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
+    Constants.Climber.test = false;
   }
 
   /** This function is called periodically during test mode. */

@@ -13,6 +13,8 @@ public class ClimberExtend extends Command {
     private final Climber climber;
     private XboxController xboxController;
     private int joystickButton;
+    private int limitsEncountered = 0;
+    private boolean hasLeftLimit = false;
 
     public ClimberExtend(Climber side, XboxController xboxController) {
         climber = side;
@@ -22,7 +24,12 @@ public class ClimberExtend extends Command {
 
     // Called when the command is initially scheduled.
     @Override
-    public void initialize() {}
+    public void initialize() {if (climber.brokeLimit()){
+        climber.setIsClimberOnLimit(true);}
+    else{climber.setIsClimberOnLimit(false);
+    }
+
+    }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
@@ -40,16 +47,21 @@ public class ClimberExtend extends Command {
             climber.setInvalidInput(false);
         }
 
-       /* if (!climber.brokeLimit()) {
-            climber.setIsClimberReset(false);
+       if (climber.getIsClimberOnLimit()) {
+           if (!climber.brokeLimit()){
+               hasLeftLimit = true;
+           }
+           if (climber.brokeLimit() && hasLeftLimit){
+               limitsEncountered++;
+           }
+            if (limitsEncountered >= 2){
+                power = 0;
+            }
         }
+       if (!climber.getIsClimberOnLimit() && climber.brokeLimit()){
+               power = 0;
+       }
 
-        // checks if limit switch has been broken or if theyre trying to move the climber down
-        if (climber.brokeLimit() && !climber.getIsClimberReset()) {
-            power = 0;
-            //LEDS go green
-        }
-*/
         //sets the speed of the motor
         climber.setClimberSpeed(power);
     }
