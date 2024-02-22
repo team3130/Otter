@@ -79,6 +79,7 @@ public class Chassis extends SubsystemBase {
      * the limelight object which is used for updating odometry
      */
     public Chassis(Pose2d startingPos, Rotation2d startingRotation) {
+        cameraSubsystem.targetController.enableContinuousInput(-Math.PI, Math.PI);
         kinematics = new SwerveDriveKinematics(Constants.Swerve.moduleTranslations);
         isFaceTargetting = false;
 
