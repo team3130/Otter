@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.Chassis.TeleopDrive;
+import frc.robot.subsystems.CameraSubsystem;
 import frc.robot.subsystems.Chassis;
 import frc.robot.subsystems.ExampleSubsystem;
 
@@ -13,14 +14,16 @@ import frc.robot.subsystems.ExampleSubsystem;
 public class ToggleOdoFaceTarget extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final Chassis chassis;
+  private final CameraSubsystem camera;
 
   /**
    * Creates a new ExampleCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public ToggleOdoFaceTarget(Chassis subsystem) {
+  public ToggleOdoFaceTarget(Chassis subsystem, CameraSubsystem cameraSubsystem) {
     chassis = subsystem;
+    camera = cameraSubsystem;
     m_requirements.add(chassis);
   }
 
@@ -29,6 +32,7 @@ public class ToggleOdoFaceTarget extends Command {
   public void initialize() {
     chassis.setFaceTargetting(!chassis.getFaceTargetting());
     chassis.makeAngleToFaceTarget();
+    camera.resetTargetController();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
