@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.Auton.AutoShoot;
 import frc.robot.commands.Auton.AutonDoubleExtend;
 import frc.robot.commands.Auton.AutoIntake;
+import frc.robot.commands.Auton.AutonDoubleRetract;
 import frc.robot.commands.Shooter.*;
 import frc.robot.commands.ShooterShifter.DoubleExtend;
 import frc.robot.commands.ShooterShifter.DoubleRetract;
@@ -71,6 +72,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("Shoot", new AutoShoot(shooter, intake));
     NamedCommands.registerCommand("Intake", new AutoIntake(intake));
     NamedCommands.registerCommand("ShiftDoubleExtend", new AutonDoubleExtend(shooterShifter));
+    NamedCommands.registerCommand("ShiftDoubleRetract", new AutonDoubleRetract(shooterShifter));
 
     configureBindings(); // configure button bindings
     exportShuffleBoardData(); // export ShuffleBoardData
