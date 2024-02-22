@@ -53,23 +53,18 @@ public class TeleopDrive extends Command {
     @Override
     public void execute() {
       double theta = 0.0;
-      double y = xboxController.getRawAxis(Constants.Buttons.LST_AXS_LJOYSTICKX); // left stick y-axis (y-axis is inverted)
+      double y = -xboxController.getRawAxis(Constants.Buttons.LST_AXS_LJOYSTICKX); // left stick y-axis (y-axis is inverted)
       double x = xboxController.getRawAxis(Constants.Buttons.LST_AXS_LJOYSTICKY); // left stick x-axis
 
-      // set theta to face target
-      //if (camera.getIsTryingToTarget()) {
-        //theta = camera.goToTargetPower();
-      //}
       // sets theta to controller output
-        // theta = -xboxController.getRawAxis(Constants.Buttons.LST_AXS_RJOYSTICKX); // right stick x-axis
-        // theta = Math.abs(theta) > Constants.Swerve.kDeadband ? theta : 0.0;
-        // theta = turningLimiter.calculate(theta) * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond;
-      // sets theta to odometry face target
-      if (chassis.getFaceTargetting()) {
-        chassis.makeAngleToFaceTarget();
-        theta = -camera.targetController.calculate(chassis.getRotation2d().getRadians(), Math.toRadians(chassis.getTheta()));
-      }
+      theta = -xboxController.getRawAxis(Constants.Buttons.LST_AXS_RJOYSTICKX); // right stick x-axis
+      theta = Math.abs(theta) > Constants.Swerve.kDeadband ? theta : 0.0;
+      theta = turningLimiter.calculate(theta) * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond;
 
+      // set theta to face target
+      if (camera.getIsTryingToTarget()) {
+        theta = camera.goToTargetPower();
+      }
 
       // square the inputs
       y = y * Math.abs(y);

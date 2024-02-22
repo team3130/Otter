@@ -55,10 +55,10 @@ public class Chassis extends SubsystemBase {
     private final GenericEntry n_fieldOrriented; // comp network table entry for whether field oriented drivetrain
     private double targetMaxVelo = Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond; //TODO real
     private double targetMaxAcc = Constants.Swerve.kMaxAccelerationDrive; //TODO real
-//    private Pose2d initialPosition;
-//    private double initialAprilTagDistance = 0d;
-//    private double initialAprilTagAngle = 0d;
-//    private Translation2d initialAprilTagVector;
+    private Pose2d initialPosition;
+    private double initialAprilTagDistance = 0d;
+    private double initialAprilTagAngle = 0d;
+    private Translation2d initialAprilTagVector;
     private Translation2d originToAprilTagVector;
     private Rotation2d theta = new Rotation2d(0);
     private boolean isFaceTargetting;
@@ -433,12 +433,12 @@ public class Chassis extends SubsystemBase {
     }
 
     // gets the information like distance to april tag and angle to make vectors (uses FaceTarget info)
-//    public void prepareForFaceTarget(){
-//        initialPosition = getInitialPosition();
-//        initialAprilTagAngle = initialPosition.getRotation().getRadians(); // can maybe use yaw later
-//        initialAprilTagVector = new Translation2d(initialAprilTagDistance * Math.sin(Math.PI - initialAprilTagAngle), initialAprilTagDistance * Math.cos(Math.PI - initialAprilTagAngle));
-//        originToAprilTagVector = initialPosition.getTranslation().plus(initialAprilTagVector);
-//    }
+    public void acquireTarget(){
+        initialPosition = getInitialPosition();
+        initialAprilTagAngle = initialPosition.getRotation().getRadians(); // can maybe use yaw later
+        initialAprilTagVector = new Translation2d(initialAprilTagDistance * Math.sin(Math.PI - initialAprilTagAngle), initialAprilTagDistance * Math.cos(Math.PI - initialAprilTagAngle));
+        originToAprilTagVector = initialPosition.getTranslation().plus(initialAprilTagVector);
+    }
     /**
      * The same as {@link #//drive(double, double, double)} except you pass in if you are field relative or not.
      * This method will drive the swerve modules based to x, y and theta vectors.
