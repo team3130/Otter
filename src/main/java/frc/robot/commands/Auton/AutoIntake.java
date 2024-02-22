@@ -43,7 +43,7 @@ public class AutoIntake extends InstantCommand {
   // end this command once the note is at its desired place to stop (via encoders)
   @Override
   public boolean isFinished() {
-    if (timer.hasElapsed(3)) {
+    if (timer.hasElapsed(3) || intake.getIntakeHasNote()) {
       return true;
     } else {
       return false;
