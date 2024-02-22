@@ -51,7 +51,6 @@ public class CameraSubsystem extends SubsystemBase {
     // SuppliedValueWidget<Double> targetYaw = tab.addDouble("Target Yaw", this::getTargetYaw);
     // tab.addDouble("Target Yaw", this::getTargetYaw).withPosition(2, 0).withSize(6, 4)
 
-
     // hasTargetQuestion = Shuffleboard.getTab("Camerapls").add("hasTarget", hasTargets).getEntry();
     // hasTargetQuestion = Shuffleboard.getTab("Camerapls").add("targetYaw", targetYaw).getEntry();
     if (DriverStation.getAlliance().equals(DriverStation.Alliance.Red)) {
@@ -62,9 +61,8 @@ public class CameraSubsystem extends SubsystemBase {
       speakerTargetFiducialID = Constants.AprilTags.speakerTargetBlueFiducialID;
       ampTargetFiducialID = Constants.AprilTags.ampTargetBlueFiducialID;
     }
+
     targetController = new PIDController(targetP, targetI, targetD);
-
-
   }
   public boolean targetControllerDone(){
     return targetController.atSetpoint();
@@ -142,7 +140,7 @@ public class CameraSubsystem extends SubsystemBase {
   public void resetTargetController() {
     targetController.reset();
     targetController.setSetpoint(0d);
-    targetController.enableContinuousInput(-2*Math.PI,2*Math.PI);
+    targetController.enableContinuousInput(-Math.PI, Math.PI);
     targetController.setTolerance(Math.toRadians(1.0));
     targetController.setPID(targetP, targetI, targetD);
   }
@@ -199,7 +197,6 @@ public class CameraSubsystem extends SubsystemBase {
     builder.addBooleanProperty("hasTarget", this::hasTarget, null);
     builder.addDoubleProperty("targetYaw", this::getTargetDegrees, null);
     builder.addIntegerProperty("fiducial", this::getFiducialID, null);
-
     builder.addDoubleProperty("target P", this::getTargetP, this::setTargetP);
     builder.addDoubleProperty("target I", this::getTargetI, this::setTargetI);
     builder.addDoubleProperty("target D", this::getTargetD, this::setTargetD);
