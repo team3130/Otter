@@ -45,7 +45,7 @@ public class Intake extends SubsystemBase {
 
         intakeMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
 
-        intakeMotor.setInverted(true);
+        intakeMotor.setInverted(false);
 
         intakeHasNote = false;
 
