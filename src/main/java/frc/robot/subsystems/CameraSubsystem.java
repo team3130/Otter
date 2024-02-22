@@ -47,9 +47,7 @@ public class CameraSubsystem extends SubsystemBase {
    * The limelight object will be full of null values if Constants.useAprilTags is false.
    */
   public CameraSubsystem() {
-    targetController.enableContinuousInput(-Math.PI, Math.PI);
-
-
+    
     // SuppliedValueWidget<Double> targetYaw = tab.addDouble("Target Yaw", this::getTargetYaw);
     // tab.addDouble("Target Yaw", this::getTargetYaw).withPosition(2, 0).withSize(6, 4)
 
