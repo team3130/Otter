@@ -26,18 +26,6 @@
         {
           "type": "path",
           "data": {
-            "pathName": "swn-N1"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Shoot"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
             "pathName": "swn-N4"
           }
         },
