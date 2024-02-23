@@ -17,7 +17,6 @@ public class Climber extends SubsystemBase {
     private double pitCheckingSpeed = -0.5;
     private final DigitalInput limitSwitch;
     private final WPI_TalonSRX climberMotor;
-    private boolean isReset;
     private int joystickUsed;
     private boolean isClimberReset;
     private boolean inverteds;
@@ -111,10 +110,9 @@ public class Climber extends SubsystemBase {
         builder.addDoubleProperty("timerAmount", this::getTimerAmount, this::setTimerAmount);
         builder.addDoubleProperty("checking speed", this::getPitCheckingSpeed, this::setPitCheckingSpeed);
         builder.addBooleanProperty("Climber is reset", this::getIsClimberReset, null);
+        builder.addBooleanProperty("climb done", this::getClimbDone, null);
     }
 
 
-    public void setIsReset(boolean reset) {
-        isReset = reset;
-    }
+
 }

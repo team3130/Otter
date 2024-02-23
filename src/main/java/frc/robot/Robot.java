@@ -102,8 +102,7 @@ public class Robot extends TimedRobot {
   //  CommandScheduler.getInstance().schedule(robotContainer.rumbley());
 
     //This is so climber command can assume climbers are reset before a match
-    CommandScheduler.getInstance().schedule(robotContainer.setIsReset(robotContainer.getLeftClimber(), true));
-    CommandScheduler.getInstance().schedule(robotContainer.setIsReset(robotContainer.getRightClimber(), true));
+    robotContainer.resetClimbers();
   }
 
 

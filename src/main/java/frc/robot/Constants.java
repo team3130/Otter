@@ -67,7 +67,7 @@ public final class Constants {
     public static final int intakePNMChannel = 1; // real
     public final static int intakeLimitSwitch = 1; // real
 
-    public final static int shooterBreakBeam = 2; // unreal
+    public final static int shooterBreakBeam = 7; // unreal
 
     public final static int ampPNMChannel = 4;
     public final static int ampLimitSwitch = 0; // real
@@ -262,7 +262,7 @@ public final class Constants {
 
     public static class Climber {
         public static final int kRLimitSwitch = 3; // TODO
-        public static final int kLLimitSwitch = 4; // TODO
+        public static final int kLLimitSwitch = 2; // TODO
 
         public static final int kRMotor = 15; // TODO
         public static final int kLMotor = 16; // TODO

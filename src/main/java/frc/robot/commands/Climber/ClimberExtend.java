@@ -32,7 +32,7 @@ public class ClimberExtend extends Command {
         power = power * Math.abs(power);
 
         if (!climber.brokeLimit()) {
-            climber.setIsReset(false);
+            climber.setIsClimberReset(false);
         }
 
         // checks if limit switch has been broken

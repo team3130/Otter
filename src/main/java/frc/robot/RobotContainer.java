@@ -87,6 +87,15 @@ public class RobotContainer {
     //SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
+  public void resetClimbers(){
+    leftClimber.setIsClimberReset(true);
+    rightClimber.setIsClimberReset(true);
+  }
+
+  public Command resetClimberCommand() {
+    return new ClimberReset(leftClimber, true);
+  }
+
   public Command pick() {
     return null;//autoChooser.getSelected();
   }
@@ -161,6 +170,7 @@ public class RobotContainer {
       ShuffleboardTab tab = Shuffleboard.getTab("Subsystems");
       tab.add(shooter);
       tab.add(intake);
+      tab.add(leftClimber);
     }
   }
 
@@ -184,8 +194,8 @@ public class RobotContainer {
 
     new JoystickButton(operatorController, Constants.Buttons.LST_BTN_B).whileTrue(new OnlyIndex(shooter));
     new JoystickButton(operatorController, Constants.Buttons.LST_BTN_Y).whileTrue(new OnlyShoot(shooter));
-    new JoystickButton(driverController, Constants.Buttons.LST_POV_E).whileTrue(new PitClimberBackwards(leftClimber));
-    new JoystickButton(driverController, Constants.Buttons.LST_POV_S).whileTrue(new PitClimberBackwards(rightClimber));
+ //   new JoystickButton(operatorController, Constants.Buttons.LST_POV_E).whileTrue(new PitClimberBackwards(leftClimber));
+//    new JoystickButton(operatorController, Constants.Buttons.LST_POV_S).whileTrue(new PitClimberBackwards(rightClimber));
 
     //new JoystickButton(operatorController, Constants.Buttons.LST_BTN_X).whileTrue(new SequentialCommandGroup(new AmpIntake(amp), new RumbleAmp(amp, operatorController)));
     // new JoystickTrigger(operatorController, Constants.Buttons.LST_BTN_B).whileTrue(new Shoot(shooter, intake));
