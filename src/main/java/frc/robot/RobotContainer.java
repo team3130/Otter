@@ -11,7 +11,6 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.PS5Controller;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -166,16 +165,16 @@ public class RobotContainer {
     new JoystickButton(driverController, Constants.PS5.circle).whileTrue(new AlwaysSpintake(intake));
 
     // ANDREW OPERATOR
-    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_Y).whileTrue(new ToggleAmp(amp));
-    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_B).whileTrue(new AmpIntake(amp));
-    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_A).whileTrue(new AlwaysAmpIntake(amp));
+    new JoystickButton(operatorController, Constants.XBox.LST_BTN_Y).whileTrue(new ToggleAmp(amp));
+    new JoystickButton(operatorController, Constants.XBox.LST_BTN_B).whileTrue(new AmpIntake(amp));
+    new JoystickButton(operatorController, Constants.XBox.LST_BTN_A).whileTrue(new AlwaysAmpIntake(amp));
 
-    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_RBUMPER).whileTrue(new OnlyShoot(shooter));
-    new JoystickTrigger(operatorController, Constants.Buttons.LST_AXS_RTRIGGER).whileTrue(new AlwaysSpintake(intake));
+    new JoystickButton(operatorController, Constants.XBox.LST_BTN_RBUMPER).whileTrue(new OnlyShoot(shooter));
+    new JoystickTrigger(operatorController, Constants.XBox.LST_AXS_RTRIGGER).whileTrue(new AlwaysSpintake(intake));
 
-    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_LBUMPER).whileTrue(new DoubleExtend(shooterShifter));
-    new POVButton(operatorController, Constants.Buttons.LST_POV_N).whileTrue(new DoubleRetract(shooterShifter));
-    new JoystickTrigger(operatorController, Constants.Buttons.LST_AXS_LTRIGGER).whileTrue(new ShortShifterExtend(shooterShifter)); // correct
+    new JoystickButton(operatorController, Constants.XBox.LST_BTN_LBUMPER).whileTrue(new DoubleExtend(shooterShifter));
+    new POVButton(operatorController, Constants.XBox.LST_POV_N).whileTrue(new DoubleRetract(shooterShifter));
+    new JoystickTrigger(operatorController, Constants.XBox.LST_AXS_LTRIGGER).whileTrue(new ShortShifterExtend(shooterShifter)); // correct
 
     //new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new VelocityShoot(shooter));
     //new JoystickButton(operatorController, Constants.Buttons.LST_BTN_RBUMPER).whileTrue(new SequentialCommandGroup(new SmartSpintake(intake), new SmartIndex(intake)));

@@ -28,7 +28,7 @@ public class Intake extends SubsystemBase {
         intakeMotor = new WPI_TalonSRX(Constants.CAN.intakeIndexer);
         intakePNMOne = new Solenoid(Constants.CAN.PCM, PneumaticsModuleType.CTREPCM, Constants.IDs.intakePNMChannel);
 
-        intakeLimitSwitch = new DigitalInput(Constants.IDs.intakeLimitSwitch);
+        intakeLimitSwitch = new DigitalInput(Constants.IDs.intakeLimitDIO);
 
         intakeMotor.configFactoryDefault();
         intakeMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);

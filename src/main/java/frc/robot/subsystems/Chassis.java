@@ -61,10 +61,10 @@ public class Chassis extends SubsystemBase {
         kinematics = new SwerveDriveKinematics(Constants.Swerve.moduleTranslations);
 
         modules = new SwerveModule[4];
-        modules[Constants.Modules.one] = new SwerveModule(Constants.Modules.one);
-        modules[Constants.Modules.two] = new SwerveModule(Constants.Modules.two);
-        modules[Constants.Modules.three] = new SwerveModule(Constants.Modules.three);
-        modules[Constants.Modules.four] = new SwerveModule(Constants.Modules.four);
+        modules[Constants.SwerveModules.one] = new SwerveModule(Constants.SwerveModules.one);
+        modules[Constants.SwerveModules.two] = new SwerveModule(Constants.SwerveModules.two);
+        modules[Constants.SwerveModules.three] = new SwerveModule(Constants.SwerveModules.three);
+        modules[Constants.SwerveModules.four] = new SwerveModule(Constants.SwerveModules.four);
 
         // odometry wrapper class that has functionality for cameras that report position with latency
         odometry = new SwerveDrivePoseEstimator(kinematics, startingRotation, generatePoses(), startingPos);
@@ -98,10 +98,10 @@ public class Chassis extends SubsystemBase {
         return AutoBuilder.isConfigured();
     }
     public boolean turnToAnglePIDIsDone() {
-        return modules[Constants.Modules.one].PIDisDone() &&
-                modules[Constants.Modules.two].PIDisDone() &&
-                modules[Constants.Modules.three].PIDisDone() &&
-                modules[Constants.Modules.four].PIDisDone();
+        return modules[Constants.SwerveModules.one].PIDisDone() &&
+                modules[Constants.SwerveModules.two].PIDisDone() &&
+                modules[Constants.SwerveModules.three].PIDisDone() &&
+                modules[Constants.SwerveModules.four].PIDisDone();
     }
 
     /**
@@ -164,10 +164,10 @@ public class Chassis extends SubsystemBase {
 
     // If the PID controllers of the Swerve Modules are done, returning whether the wheels are zeroed/PID controllers finished
     public boolean turnToAnglePIDIsFinished() {
-        return modules[Constants.Modules.one].PIDisDone() &&
-                modules[Constants.Modules.two].PIDisDone() &&
-                modules[Constants.Modules.three].PIDisDone() &&
-                modules[Constants.Modules.four].PIDisDone();
+        return modules[Constants.SwerveModules.one].PIDisDone() &&
+                modules[Constants.SwerveModules.two].PIDisDone() &&
+                modules[Constants.SwerveModules.three].PIDisDone() &&
+                modules[Constants.SwerveModules.four].PIDisDone();
     }
 
     // Generates the position of the swerve modules, retuning the position
@@ -199,10 +199,10 @@ public class Chassis extends SubsystemBase {
     public void setModuleStates(SwerveModuleState[] desiredStates) {
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
 
-        modules[Constants.Modules.one].setDesiredState(desiredStates[Constants.Modules.one]);
-        modules[Constants.Modules.two].setDesiredState(desiredStates[Constants.Modules.two]);
-        modules[Constants.Modules.three].setDesiredState(desiredStates[Constants.Modules.three]);
-        modules[Constants.Modules.four].setDesiredState(desiredStates[Constants.Modules.four]);
+        modules[Constants.SwerveModules.one].setDesiredState(desiredStates[Constants.SwerveModules.one]);
+        modules[Constants.SwerveModules.two].setDesiredState(desiredStates[Constants.SwerveModules.two]);
+        modules[Constants.SwerveModules.three].setDesiredState(desiredStates[Constants.SwerveModules.three]);
+        modules[Constants.SwerveModules.four].setDesiredState(desiredStates[Constants.SwerveModules.four]);
     }
 
 

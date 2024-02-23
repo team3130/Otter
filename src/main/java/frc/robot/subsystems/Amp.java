@@ -28,7 +28,7 @@ public class Amp extends SubsystemBase {
     this.controller = controller;
 
     ampPneumatic = new Solenoid(Constants.CAN.PCM, PneumaticsModuleType.CTREPCM, Constants.IDs.ampPNMChannel);
-    ampLimit = new DigitalInput(Constants.IDs.ampLimitSwitch);
+    ampLimit = new DigitalInput(Constants.IDs.ampLimitDIO);
     ampMotor = new WPI_TalonSRX(Constants.CAN.ampMotor);
     ampMotor.configFactoryDefault();
     ampMotor.configVoltageCompSaturation(8);
