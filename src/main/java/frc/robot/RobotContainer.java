@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.Shooter.*;
@@ -104,7 +105,7 @@ public class RobotContainer {
   }
 
   public Command resetPneumatics() {
-    return new ParallelCommandGroup(new DoubleRetract(shooterShifter), new IntakeIn(intake), new AmpDown(amp));
+    return new SequentialCommandGroup(new DoubleRetract(shooterShifter), new IntakeIn(intake), new AmpDown(amp));
   }
 
   public void resetOdo() {
