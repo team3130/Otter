@@ -26,7 +26,7 @@ public class Shooter extends SubsystemBase {
     private final TalonFX bottomFlywheel; // we should probably change these names once we learn more
     // double proportionVolt = 1.05;
     private final TalonSRX indexMotor;
-    private double shooterIndexSpeed = 0.50;
+    private double shooterIndexSpeed = 1;
     private double flywheelRampTime = 0;
 
 

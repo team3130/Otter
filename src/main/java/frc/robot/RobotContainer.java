@@ -23,6 +23,7 @@ import frc.robot.commands.Shooter.*;
 import frc.robot.commands.ShooterShifter.DoubleExtend;
 import frc.robot.commands.ShooterShifter.DoubleRetract;
 import frc.robot.commands.ShooterShifter.ShortShifterExtend;
+import frc.robot.sensors.JoystickTrigger;
 import frc.robot.subsystems.*;
 import frc.robot.commands.Amp.*;
 import frc.robot.commands.Chassis.TeleopDrive;
@@ -160,23 +161,23 @@ public class RobotContainer {
 
     // GAVIN DRIVER
     new POVButton(driverController, Constants.PS5.LST_POV_N).whileTrue(new ZeroEverything(chassis));
-    new JoystickButton(driverController, Constants.PS5.square).whileTrue(new AmpOuttake(amp));
-    new JoystickButton(driverController, Constants.PS5.LST_BTN_LBUMPER).whileTrue(new LimitSpintake(intake));
+    new JoystickTrigger(driverController, Constants.PS5.LST_AXS_LTRIGGER).whileTrue(new AmpOuttake(amp));
+    new JoystickTrigger(driverController, Constants.PS5.LST_AXS_RTRIGGER).whileTrue(new LimitSpintake(intake));
     new JoystickButton(driverController, Constants.PS5.LST_BTN_RBUMPER).whileTrue(new ToggleIntake(intake));
     new JoystickButton(driverController, Constants.PS5.x).whileTrue(new Outtake(intake));
     new JoystickButton(driverController, Constants.PS5.circle).whileTrue(new AlwaysSpintake(intake));
 
     // ANDREW OPERATOR
-    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_LBUMPER).whileTrue(new ToggleAmp(amp));
-    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_RBUMPER).whileTrue(new AmpIntake(amp));
+    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_Y).whileTrue(new ToggleAmp(amp));
+    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_B).whileTrue(new AmpIntake(amp));
     new JoystickButton(operatorController, Constants.Buttons.LST_BTN_A).whileTrue(new AlwaysAmpIntake(amp));
 
-    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_B).whileTrue(new OnlyIndex(shooter));
-    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_Y).whileTrue(new OnlyShoot(shooter));
+    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_RBUMPER).whileTrue(new OnlyShoot(shooter));
+    new JoystickTrigger(operatorController, Constants.Buttons.LST_AXS_RTRIGGER).whileTrue(new AlwaysSpintake(intake));
 
-    new POVButton(operatorController, Constants.Buttons.LST_POV_N).whileTrue(new DoubleExtend(shooterShifter));
-    new POVButton(operatorController, Constants.Buttons.LST_POV_S).whileTrue(new DoubleRetract(shooterShifter));
-    new POVButton(operatorController, Constants.Buttons.LST_POV_W).whileTrue(new ShortShifterExtend(shooterShifter)); // correct
+    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_LBUMPER).whileTrue(new DoubleExtend(shooterShifter));
+    new POVButton(operatorController, Constants.Buttons.LST_POV_N).whileTrue(new DoubleRetract(shooterShifter));
+    new JoystickTrigger(operatorController, Constants.Buttons.LST_AXS_LTRIGGER).whileTrue(new ShortShifterExtend(shooterShifter)); // correct
 
     //new JoystickTrigger(driverController, Constants.Buttons.LST_AXS_RTRIGGER).whileTrue(new TestTrigger(intake));
     //new JoystickTrigger(driverController, Constants.Buttons.LST_AXS_LTRIGGER).whileTrue(new TestTrigger(intake, driverController));
