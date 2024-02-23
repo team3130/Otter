@@ -35,6 +35,7 @@ import frc.robot.commands.Autos;
 import frc.robot.RobotContainer;
 import frc.robot.sensors.Navx;
 import frc.robot.swerve.SwerveModule;
+import org.photonvision.targeting.PhotonTrackedTarget;
 import org.w3c.dom.ls.LSOutput;
 
 
@@ -60,7 +61,7 @@ public class Chassis extends SubsystemBase {
     private double initialAprilTagDistance = 0d;
     private double initialAprilTagAngle = 0d;
     private Translation2d initialAprilTagVector;
-    private Translation2d originToAprilTagVector;
+    private Translation2d originToAprilTagVector = new Translation2d(0, 0);
     private Rotation2d theta = new Rotation2d(0);
     private boolean isFaceTargetting;
     private final CameraSubsystem cameraSubsystem = new CameraSubsystem();
@@ -404,11 +405,13 @@ public class Chassis extends SubsystemBase {
         odometry.resetPosition(Navx.getRotation(), generatePoses(), newPose);
     }
 
-    /*This method generates the angle needed to turn to face a specific target without using a camera
-       - needs to be paired with Giorgia's face target code or needs to start with the camera facing the target
-     */
-    public void makeAngleToFaceTarget() {
-        originToAprilTagVector = new Translation2d(3, 0);
+//    public void setOriginToAprilTagVector(PhotonTrackedTarget target) {
+//        originToAprilTagVector = new Translation2d(target distance * Math.cos(angle), target distance * Math.sin(angle))
+//    }
+
+    //This method generates the angle needed to turn to face a specific target without using a camera
+    //- needs to be paired with Giorgia's face target code or needs to start with the camera facing the target
+    public void makeAngleToFaceTarget() {;
         // the vector from the position that we are at currently to the april tag (target)
         Translation2d currentPositionVector = new Translation2d(getX(), getY());
         Translation2d currentPositionToAprilTagVector = originToAprilTagVector.minus(currentPositionVector);
@@ -440,6 +443,7 @@ public class Chassis extends SubsystemBase {
         initialAprilTagVector = new Translation2d(initialAprilTagDistance * Math.sin(Math.PI - initialAprilTagAngle), initialAprilTagDistance * Math.cos(Math.PI - initialAprilTagAngle));
         originToAprilTagVector = initialPosition.getTranslation().plus(initialAprilTagVector);
     }
+
     /**
      * The same as {@link #//drive(double, double, double)} except you pass in if you are field relative or not.
      * This method will drive the swerve modules based to x, y and theta vectors.
@@ -450,7 +454,6 @@ public class Chassis extends SubsystemBase {
      * @param //fieldRelative whether to use
      * @return
      */
-
 
     // passes the x y omega ChassisSpeeds supplied by PathPlanner to driveAuton()
     public void driveRobotRelative(ChassisSpeeds speeds){

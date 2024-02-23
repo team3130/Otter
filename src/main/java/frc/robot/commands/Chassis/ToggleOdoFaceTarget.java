@@ -21,7 +21,7 @@ public class ToggleOdoFaceTarget extends Command {
   private final Chassis chassis;
   private final XboxController xboxController;
   private final CameraSubsystem camera;
-  private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
+  private final SlewRateLimiter xLimiter, yLimiter;
   public ToggleOdoFaceTarget(Chassis chassis, XboxController xboxController, CameraSubsystem camera) {
     this.chassis = chassis;
     this.camera = camera;
@@ -34,16 +34,13 @@ public class ToggleOdoFaceTarget extends Command {
 
     xLimiter = new SlewRateLimiter(Constants.Swerve.kMaxAccelerationDrive);
     yLimiter = new SlewRateLimiter(Constants.Swerve.kMaxAccelerationDrive);
-    turningLimiter = new SlewRateLimiter(Constants.Swerve.kMaxAccelerationAngularDrive);
   }
-
 
   /**
    * Called when the scheduler first schedules the command
    */
   @Override
   public void initialize() {}
-
 
   /**
    * Called periodically while the default command is being ran and is not actively interrupted.
@@ -53,36 +50,30 @@ public class ToggleOdoFaceTarget extends Command {
   @Override
   public void execute() {
     double theta = 0.0;
-    double y = -xboxController.getRawAxis(Constants.Buttons.LST_AXS_LJOYSTICKX); // left stick y-axis (y-axis is inverted)
-    double x = xboxController.getRawAxis(Constants.Buttons.LST_AXS_LJOYSTICKY); // left stick x-axis
+    double y = -xboxController.getRawAxis(Constants.Buttons.LST_AXS_LJOYSTICKX); // left stick y-axis
+    double x = -xboxController.getRawAxis(Constants.Buttons.LST_AXS_LJOYSTICKY); // left stick x-axis
 
-    if (chassis.getFaceTargetting()) {
-      chassis.makeAngleToFaceTarget();
-      theta = -camera.targetController.calculate(chassis.getRotation2d().getRadians(), Math.toRadians(chassis.getTheta()));
-    }
+    chassis.makeAngleToFaceTarget();
+    theta = camera.targetController.calculate(chassis.getRotation2d().getRadians(), Math.toRadians(chassis.getTheta()));
 
     // square the inputs
     y = y * Math.abs(y);
     x = x * Math.abs(x);
 
-
     // apply dead-band
     if (Math.abs(x) < Constants.Swerve.kDeadband) {
       x = 0;
     }
+
     if (Math.abs(y) < Constants.Swerve.kDeadband) {
       y = 0;
     }
-
 
     // apply slew rate limiter which also converts to m/s and rad.s
     x = xLimiter.calculate(x * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
     y = yLimiter.calculate(y * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
 
-
     chassis.drive(x, y, theta, chassis.getFieldRelative());
-
-
   }
 
 

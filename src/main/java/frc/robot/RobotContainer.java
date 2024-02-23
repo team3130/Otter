@@ -140,7 +140,7 @@ public class RobotContainer {
     new POVButton(driverController, Constants.Buttons.LST_POV_W).whileTrue(new ZeroWheels(chassis));
     //new JoystickButton(driverController, Constants.Buttons.LST_BTN_Y).onTrue(new EnableTargeting(cameraSubsystem));
     //new JoystickButton(driverController, Constants.Buttons.LST_BTN_A).whileTrue(new TargetingPressed(cameraSubsystem));
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new ToggleOdoFaceTarget(chassis, driverController, cameraSubsystem));
+    new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).toggleOnTrue(new ToggleOdoFaceTarget(chassis, driverController, cameraSubsystem));
   }
 
   }
