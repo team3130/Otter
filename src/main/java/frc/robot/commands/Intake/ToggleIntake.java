@@ -19,7 +19,7 @@ public class ToggleIntake extends Command {
 
   @Override
   public void initialize() {
-    intake.SolenoidToggle();
+    intake.toggleIntake();
   }
 
   @Override

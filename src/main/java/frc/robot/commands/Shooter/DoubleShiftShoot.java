@@ -8,18 +8,21 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.ShooterShifter;
 
-public class OnlyShoot extends Command {
+public class DoubleShiftShoot extends Command {
   private final Shooter shooter;
+  private final ShooterShifter shooterShifter;
 
-  public OnlyShoot(Shooter shooter) {
+  public DoubleShiftShoot(Shooter shooter, ShooterShifter shooterShifter) {
     this.shooter = shooter;
-    addRequirements(shooter);
+    this.shooterShifter = shooterShifter;
+    addRequirements(shooter, shooterShifter);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     shooter.runShooters();
+    shooterShifter.doubleExtend();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

@@ -67,8 +67,6 @@ public final class Constants {
     public static final int intakePNMChannel = 1; // real
     public final static int intakeLimitSwitch = 1; // real
 
-    public final static int shooterBreakBeam = 2; // unreal
-
     public final static int ampPNMChannel = 4;
     public final static int ampLimitSwitch = 0; // real
     
