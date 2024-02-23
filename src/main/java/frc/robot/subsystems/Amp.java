@@ -41,7 +41,7 @@ public class Amp extends SubsystemBase {
   }
 
   // toggles the pneumatic to tuck in the amp arm
-  public void unPrimeAmp() {
+  public void setAmpDown() {
     ampPneumatic.set(false);
   }
 

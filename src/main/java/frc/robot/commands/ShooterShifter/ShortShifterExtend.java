@@ -5,10 +5,11 @@
 package frc.robot.commands.ShooterShifter;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.ShooterShifter;
 
 /** An example command that uses an example subsystem. */
-public class ShortShifterExtend extends Command {
+public class ShortShifterExtend extends InstantCommand {
   private final ShooterShifter shooterShifter;
 
   public ShortShifterExtend(ShooterShifter shifter) {

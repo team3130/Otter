@@ -68,6 +68,10 @@ public class Intake extends SubsystemBase {
         intakePNMOne.toggle();
     }
 
+    public void toggleIntakeIn() {
+        intakePNMOne.set(true);
+    }
+
     public double getDropTime() { return dropTime; }
     public void setDropTime(double dropTime) { this.dropTime = dropTime; }
     public void setSpintakeSpeed(double newSpeed) { spintakeSpeed = newSpeed; }
