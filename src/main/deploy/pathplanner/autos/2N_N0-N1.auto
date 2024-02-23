@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.9,
-      "y": 6.43
+      "x": 0.75,
+      "y": 6.64
     },
     "rotation": -120.0
   },
@@ -27,6 +27,12 @@
           "type": "path",
           "data": {
             "pathName": "swn-N1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
           }
         },
         {

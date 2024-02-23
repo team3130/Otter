@@ -45,7 +45,7 @@ public class Intake extends SubsystemBase {
 
         intakeMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
 
-        intakeMotor.setInverted(true);
+        intakeMotor.setInverted(false);
 
         intakeHasNote = false;
 
@@ -85,15 +85,6 @@ public class Intake extends SubsystemBase {
     public boolean getIntakeLimitSwitch() {
         return !intakeLimitSwitch.get();
     }
-
-    public boolean getShooterBreakBeam(){
-        return breakbeam.get();
-    }
-
-    public double getEncoderPosition() {
-        return intakeMotor.getSelectedSensorPosition();
-    }
-
     public void SolenoidToggle() {
         intakePNMOne.toggle();
     }
@@ -104,15 +95,6 @@ public class Intake extends SubsystemBase {
     public void intakeUp() {
         intakePNMOne.set(false);
     }
-
-    public boolean getIntakeHasNote() {
-        return intakeHasNote;
-    }
-
-    public void setIntakeHasNote(boolean setNote) {
-        intakeHasNote = setNote;
-    }
-
     public double getDropTime() { return dropTime; }
     public void setDropTime(double dropTime) { this.dropTime = dropTime; }
     public double getIntakeNoteSetpoint() {return intakeNoteSetpoint;}
