@@ -19,7 +19,7 @@ public class IntakeIn extends InstantCommand {
 
   @Override
   public void initialize() {
-    intake.toggleIntakeIn();
+    intake.intakeUp();
   }
 
   @Override

@@ -27,8 +27,8 @@ public final class Constants {
   public static class CAN {
     public final static int PCM = 1;
     public final static int ampMotor = 14;
-    public final static int climberLeft = 15;
-    public final static int climberRight = 16;
+    public final static int climberRight = 15;
+    public final static int climberLeft = 16;
     public final static int shooterTopFlywheel = 20;
     public final static int shooterBottomFlywheel = 21;
     public final static int intakeIndexer = 22;
@@ -43,6 +43,9 @@ public final class Constants {
     
     public final static int longShifterChannel = 3;
     public final static int smallShifterChannel = 2;
+
+    public static final int kRLimitSwitch = 3; // TODO
+    public static final int kLLimitSwitch = 2; // TODO
   }
 
   public static class AprilTags {
@@ -255,15 +258,5 @@ public final class Constants {
         public static final int LST_AXS_RTRIGGER = 3;
         public static final int LST_AXS_RJOYSTICKX = 4;
         public static final int LST_AXS_RJOYSTICKY = 5;
-    }
-
-    public static class Climber {
-        public static final int kRLimitSwitch = 3; // TODO
-        public static final int kLLimitSwitch = 2; // TODO
-
-        public static final int kRMotor = 15; // TODO
-        public static final int kLMotor = 16; // TODO
-
-        public static final double currentMax = 0.0; // TODO
     }
 }

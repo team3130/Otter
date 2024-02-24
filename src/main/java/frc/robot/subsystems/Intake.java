@@ -68,8 +68,11 @@ public class Intake extends SubsystemBase {
         intakePNMOne.toggle();
     }
 
-    public void toggleIntakeIn() {
+    public void intakeUp() {
         intakePNMOne.set(false);
+    }
+    public void intakeDown(){
+        intakePNMOne.set(true);
     }
 
     public double getDropTime() { return dropTime; }
