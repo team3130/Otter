@@ -9,16 +9,21 @@ import edu.wpi.first.wpilibj.PS5Controller;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
+import frc.robot.subsystems.CameraSubsystem;
 import frc.robot.subsystems.Chassis;
 
 /** A default command to drive in teleop based off the joysticks*/
 public class TeleopDrive extends Command {
   private final Chassis chassis;
   private final PS5Controller controller;
+  private CameraSubsystem cam;
+  double theta = 0d;
+
 
   private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
-  public TeleopDrive(Chassis chassis, PS5Controller PS5controller) {
+  public TeleopDrive(Chassis chassis, PS5Controller PS5controller, CameraSubsystem camera) {
     this.chassis = chassis;
+    this.cam = camera;
     this.controller = PS5controller;
 
     // Use addRequirements() here to declare subsystem dependencies.
@@ -45,9 +50,16 @@ public class TeleopDrive extends Command {
   public void execute() {
     double y = -controller.getRawAxis(Constants.PS5.LST_AXS_LJOYSTICKX); // left stick y-axis (y-axis is inverted)
     double x = -controller.getRawAxis(Constants.PS5.LST_AXS_LJOYSTICKY); // left stick x-axis
-    double theta = -controller.getRawAxis(Constants.PS5.LST_AXS_RJOYSTICKX); // right stick x-axis
+    double thetaJoystick = -controller.getRawAxis(Constants.PS5.LST_AXS_RJOYSTICKX); // right stick x-axis
+    thetaJoystick = Math.abs(thetaJoystick) > Constants.Swerve.kDeadband ? thetaJoystick : 0.0;
 
-
+    if (cam.isTryingToTarget() && (thetaJoystick != 0d)){
+      theta = (x * cam.getXTargetV()) + (cam.goToTargetPower()) + (-y * cam.getYTargetV());
+    } else {
+      theta = thetaJoystick;
+      theta = Math.abs(theta) > Constants.Swerve.kDeadband ? theta : 0.0;
+      theta = turningLimiter.calculate(theta) * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond;
+    }
     // square the inputs
     y = y * Math.abs(y);
     x = x * Math.abs(x);
@@ -59,16 +71,9 @@ public class TeleopDrive extends Command {
     if (Math.abs(y) < Constants.Swerve.kDeadband) {
       y = 0;
     }
-    theta = Math.abs(theta) > Constants.Swerve.kDeadband ? theta : 0.0;
 
-
-    if (!chassis.getFieldRelative()) {
-      y = -y;
-      x = -x;
-    }
 
     // apply slew rate limiter which also converts to m/s and rad.s
-    theta = turningLimiter.calculate(theta) * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond;
     x = xLimiter.calculate(x * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
     y = yLimiter.calculate(y * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
 

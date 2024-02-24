@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.*;
+import frc.robot.commands.Chassis.EnableTargeting;
 import frc.robot.commands.Chassis.TeleopDrive;
 import frc.robot.commands.Climber.ClimberReset;
 import frc.robot.commands.Climber.PitClimberBackwards;
@@ -67,6 +68,8 @@ public class RobotContainer {
   private final PS5Controller driverController = new PS5Controller(0);
   private final XboxController operatorController = new XboxController(1);
   private final SendableChooser<Command> autoChooser;
+  private final CameraSubsystem cameraSubsystem;
+
 
 
   // container for the robot containing subsystems, OI devices, and commands
@@ -79,6 +82,7 @@ public class RobotContainer {
     chassis = new Chassis();
     amp = new Amp();
     intake = new Intake();
+    cameraSubsystem = new CameraSubsystem(chassis);
 
     // Named commands must be registered before the creation of any PathPlanner Autos or Paths
     // Do this in RobotContainer, after subsystem initialization, but before the creation of any other commands.
@@ -93,7 +97,7 @@ public class RobotContainer {
     exportShuffleBoardData(); // export ShuffleBoardData
 
     // Default commands running in the background when other commands not scheduled
-    chassis.setDefaultCommand(new TeleopDrive(chassis, driverController));
+    chassis.setDefaultCommand(new TeleopDrive(chassis, driverController, cameraSubsystem));
     leftClimber.setDefaultCommand(new ClimberExtend(leftClimber, operatorController));
     rightClimber.setDefaultCommand(new ClimberExtend(rightClimber, operatorController));
 
@@ -206,6 +210,8 @@ public class RobotContainer {
     new JoystickButton(driverController, Constants.PS5.LST_BTN_RBUMPER).whileTrue(new ToggleIntakeIn(intake));
     new JoystickButton(driverController, Constants.PS5.x).whileTrue(new Outtake(intake));
     new JoystickButton(driverController, Constants.PS5.circle).whileTrue(new AlwaysSpintake(intake));
+    new JoystickButton(driverController, Constants.PS5.LST_BTN_RJOYSTICKPRESS).onTrue(new EnableTargeting(cameraSubsystem));
+
 
     // ANDREW OPERATOR
     new JoystickButton(operatorController, Constants.XBox.LST_BTN_Y).whileTrue(new ToggleAmp(amp));
