@@ -18,20 +18,17 @@ public class Amp extends SubsystemBase {
   private final Solenoid ampPneumatic;
   private final DigitalInput ampLimit;
   private final WPI_TalonSRX ampMotor;
-  private double intakeAmpSpeed = 0.8;
-  private double outtakeAmpSpeed = -0.8;
+  private double intakeAmpSpeed = 1;
+  private double outtakeAmpSpeed = -1;
   private Timer timer = new Timer();
-  private final XboxController controller;
   // the amount of seconds it takes for the amp to prime (pnematic to go up)
 
-  public Amp(XboxController controller) {
-    this.controller = controller;
-
+  public Amp() {
     ampPneumatic = new Solenoid(Constants.CAN.PCM, PneumaticsModuleType.CTREPCM, Constants.IDs.ampPNMChannel);
-    ampLimit = new DigitalInput(Constants.IDs.ampLimitSwitch);
+    ampLimit = new DigitalInput(Constants.IDs.ampLimitDIO);
     ampMotor = new WPI_TalonSRX(Constants.CAN.ampMotor);
     ampMotor.configFactoryDefault();
-    ampMotor.configVoltageCompSaturation(4);
+    ampMotor.configVoltageCompSaturation(8);
     ampMotor.setInverted(false);
   }
 
@@ -41,7 +38,7 @@ public class Amp extends SubsystemBase {
   }
 
   // toggles the pneumatic to tuck in the amp arm
-  public void unPrimeAmp() {
+  public void setAmpDown() {
     ampPneumatic.set(false);
   }
 
@@ -58,11 +55,6 @@ public class Amp extends SubsystemBase {
   // stops the motor to prevent the note from getting destroyed in the amp
   public void ampMotorStop() {
     ampMotor.set(ControlMode.PercentOutput, 0);
-  }
-
-  public void rumble(Timer timer) {
-    if(!timer.hasElapsed(1)){
-    controller.setRumble(GenericHID.RumbleType.kBothRumble, 1);}
   }
 
   public boolean getLimitSwitch() {
@@ -105,11 +97,13 @@ public class Amp extends SubsystemBase {
    * exports data to Shuffleboard
    */
   public void initSendable(SendableBuilder builder) {
-    builder.setSmartDashboardType("Amp");
-    builder.addDoubleProperty("Intake Amp Speed", this::getIntakeAmpSpeed, this::setIntakeAmpSpeed);
-    builder.addDoubleProperty("Outtake Amp Speed", this::getOuttakeAmpSpeed, this::setOuttakeAmpSpeed);
-    builder.addBooleanProperty("Limit Switch", this::getLimitSwitch, null);
-    builder.addBooleanProperty("Pneumatic Status", this::getPneumaticState, null);
+    if (Constants.debugMode) {
+      builder.setSmartDashboardType("Amp");
+      builder.addDoubleProperty("Intake Amp Speed", this::getIntakeAmpSpeed, this::setIntakeAmpSpeed);
+      builder.addDoubleProperty("Outtake Amp Speed", this::getOuttakeAmpSpeed, this::setOuttakeAmpSpeed);
+      builder.addBooleanProperty("Limit Switch", this::getLimitSwitch, null);
+      builder.addBooleanProperty("Pneumatic Status", this::getPneumaticState, null);
+    }
   }
 
 }

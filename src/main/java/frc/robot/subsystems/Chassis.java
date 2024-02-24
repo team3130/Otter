@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -42,6 +43,10 @@ public class Chassis extends SubsystemBase {
     private final GenericEntry n_fieldOrriented; // comp network table entry for whether field oriented drivetrain
     private double targetMaxVelo = Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond; //TODO real
     private double targetMaxAcc = Constants.Swerve.kMaxAccelerationDrive; //TODO real
+    private PIDController robotAngleController;
+    private double targetP = 10d;
+    private double targetI = 0d;
+    private double targetD = 0d;
 
     /**
      * Makes a chassis that starts at 0, 0, 0
@@ -61,14 +66,17 @@ public class Chassis extends SubsystemBase {
         kinematics = new SwerveDriveKinematics(Constants.Swerve.moduleTranslations);
 
         modules = new SwerveModule[4];
-        modules[Constants.Modules.one] = new SwerveModule(Constants.Modules.one);
-        modules[Constants.Modules.two] = new SwerveModule(Constants.Modules.two);
-        modules[Constants.Modules.three] = new SwerveModule(Constants.Modules.three);
-        modules[Constants.Modules.four] = new SwerveModule(Constants.Modules.four);
+        modules[Constants.SwerveModules.one] = new SwerveModule(Constants.SwerveModules.one);
+        modules[Constants.SwerveModules.two] = new SwerveModule(Constants.SwerveModules.two);
+        modules[Constants.SwerveModules.three] = new SwerveModule(Constants.SwerveModules.three);
+        modules[Constants.SwerveModules.four] = new SwerveModule(Constants.SwerveModules.four);
 
         // odometry wrapper class that has functionality for cameras that report position with latency
         odometry = new SwerveDrivePoseEstimator(kinematics, startingRotation, generatePoses(), startingPos);
 
+        robotAngleController = new PIDController(targetP, targetI, targetD);
+        robotAngleController.enableContinuousInput(-Math.PI, Math.PI); // wrap for circles
+        robotAngleController.setTolerance(0.0025, 0.05); // at position tolerance
 
         field = new Field2d();
         SmartDashboard.putData("Field", field);
@@ -98,10 +106,10 @@ public class Chassis extends SubsystemBase {
         return AutoBuilder.isConfigured();
     }
     public boolean turnToAnglePIDIsDone() {
-        return modules[Constants.Modules.one].PIDisDone() &&
-                modules[Constants.Modules.two].PIDisDone() &&
-                modules[Constants.Modules.three].PIDisDone() &&
-                modules[Constants.Modules.four].PIDisDone();
+        return modules[Constants.SwerveModules.one].PIDisDone() &&
+                modules[Constants.SwerveModules.two].PIDisDone() &&
+                modules[Constants.SwerveModules.three].PIDisDone() &&
+                modules[Constants.SwerveModules.four].PIDisDone();
     }
 
     /**
@@ -164,10 +172,10 @@ public class Chassis extends SubsystemBase {
 
     // If the PID controllers of the Swerve Modules are done, returning whether the wheels are zeroed/PID controllers finished
     public boolean turnToAnglePIDIsFinished() {
-        return modules[Constants.Modules.one].PIDisDone() &&
-                modules[Constants.Modules.two].PIDisDone() &&
-                modules[Constants.Modules.three].PIDisDone() &&
-                modules[Constants.Modules.four].PIDisDone();
+        return modules[Constants.SwerveModules.one].PIDisDone() &&
+                modules[Constants.SwerveModules.two].PIDisDone() &&
+                modules[Constants.SwerveModules.three].PIDisDone() &&
+                modules[Constants.SwerveModules.four].PIDisDone();
     }
 
     // Generates the position of the swerve modules, retuning the position
@@ -177,6 +185,18 @@ public class Chassis extends SubsystemBase {
             positions[i] = modules[i].getPosition();
         }
         return positions;
+    }
+
+    public void goToAnglePower(double angleSetpoint) {
+        robotAngleController.calculate(getHeading(), angleSetpoint);
+    }
+
+    public boolean goToAnglePIDIsFinished() {
+        return robotAngleController.atSetpoint();
+    }
+
+    public void shuffleboardUpdatePID() {
+        robotAngleController.setPID(targetP, targetI, targetD);
     }
 
     /**
@@ -199,10 +219,10 @@ public class Chassis extends SubsystemBase {
     public void setModuleStates(SwerveModuleState[] desiredStates) {
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
 
-        modules[Constants.Modules.one].setDesiredState(desiredStates[Constants.Modules.one]);
-        modules[Constants.Modules.two].setDesiredState(desiredStates[Constants.Modules.two]);
-        modules[Constants.Modules.three].setDesiredState(desiredStates[Constants.Modules.three]);
-        modules[Constants.Modules.four].setDesiredState(desiredStates[Constants.Modules.four]);
+        modules[Constants.SwerveModules.one].setDesiredState(desiredStates[Constants.SwerveModules.one]);
+        modules[Constants.SwerveModules.two].setDesiredState(desiredStates[Constants.SwerveModules.two]);
+        modules[Constants.SwerveModules.three].setDesiredState(desiredStates[Constants.SwerveModules.three]);
+        modules[Constants.SwerveModules.four].setDesiredState(desiredStates[Constants.SwerveModules.four]);
     }
 
 
@@ -270,10 +290,18 @@ public class Chassis extends SubsystemBase {
         return modules[0].getDValue();
     }
 
-    // returns the heading the NavX is reading, returning the rotation of the robot in degrees
+    // returns the heading the NavX is reading, returning the rotation of the robot in radians
     public double getHeading() {
-        return Math.IEEEremainder(Navx.getAngle(), 360);
+        return Math.toRadians(Math.IEEEremainder(Navx.getAngle(), 360));
     }
+
+    public double getTargetP() { return targetP; }
+    public double getTargetI() { return targetI; }
+    public double getTargetD() { return targetD; }
+    public void setTargetP(double p) { targetP = p; }
+    public void setTargetI(double i) { targetI = i; }
+    public void setTargetD(double d) { targetD = d; }
+
 
     // return the x position from odometry
     private double getX() { return odometry.getEstimatedPosition().getX(); }
@@ -295,15 +323,17 @@ public class Chassis extends SubsystemBase {
      * @param builder sendable builder
      */
     public void initSendable(SendableBuilder builder) {
-        builder.setSmartDashboardType("Chassis");
+        if (Constants.debugMode) {
+            builder.setSmartDashboardType("Chassis");
 
-        builder.addBooleanProperty("fieldRelative", this::getFieldRelative, this::setWhetherFieldOriented);
-        builder.addDoubleProperty("Navx", this::getHeading, null);
-        builder.addDoubleProperty("X position", this::getX, null);
-        builder.addDoubleProperty("Y position", this::getY, null);
-        builder.addDoubleProperty("rotation", this::getYaw, null);
-        builder.addDoubleProperty("max speed read", this::getMaxSpeedRead, null);
-        builder.addStringProperty("odometry pose2d", this::getOdometry, null);
+            builder.addBooleanProperty("fieldRelative", this::getFieldRelative, this::setWhetherFieldOriented);
+            builder.addDoubleProperty("Navx", this::getHeading, null);
+            builder.addDoubleProperty("X position", this::getX, null);
+            builder.addDoubleProperty("Y position", this::getY, null);
+            builder.addDoubleProperty("rotation", this::getYaw, null);
+            builder.addDoubleProperty("max speed read", this::getMaxSpeedRead, null);
+            builder.addStringProperty("odometry pose2d", this::getOdometry, null);
+        }
     }
 
     /**

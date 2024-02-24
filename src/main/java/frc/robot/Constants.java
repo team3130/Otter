@@ -21,11 +21,62 @@ import edu.wpi.first.math.util.Units;
  */
 @SuppressWarnings("ALL")
 public final class Constants {
-  public static final boolean debugMode = true; //TODO: make false after testing
-  public static final boolean kNavxReversed = false;
-  public final static double kMaxVoltageHopper = 9d;
+  public static final boolean debugMode = true;
+  public static final boolean navxReversed = false;
 
   public static class CAN {
+    public final static int PCM = 1;
+    public final static int ampMotor = 14;
+    public final static int climberLeft = 15;
+    public final static int climberRight = 16;
+    public final static int shooterTopFlywheel = 20;
+    public final static int shooterBottomFlywheel = 21;
+    public final static int intakeIndexer = 22;
+  }
+
+  public static class IDs {
+    public static final int intakePNMChannel = 1;
+    public final static int intakeLimitDIO = 1;
+
+    public final static int ampPNMChannel = 4;
+    public final static int ampLimitDIO = 0;
+    
+    public final static int longShifterChannel = 3;
+    public final static int smallShifterChannel = 2;
+  }
+
+  public static class AprilTags {
+    public static final double TARGET_HEIGHT_METERS = Units.feetToMeters(0);
+      // Constants such as camera and target height stored. Change per robot and goal!
+    public static final double  CAMERA_HEIGHT_METERS = Units.inchesToMeters(0);
+    // Angle between horizontal and the camera.
+    public static final double CAMERA_PITCH_RADIANS = Units.degreesToRadians(0);
+    public static double kTargetPitch = Units.inchesToMeters(0);
+    // How far from the target we want to be
+    final double GOAL_RANGE_METERS = Units.feetToMeters(3);
+
+    public static final int speakerTargetRedFiducialID = 4;
+    public static final int speakerTargetBlueFiducialID = 7;
+    public static final int ampTargetRedFiducialID = 5;
+    public static final int ampTargetBlueFiducialID = 6;
+  }
+
+  /**
+   * For swerve drive
+   * translations for the distance to each wheel from the center of the bot.
+   * Remember that forward (0 radians) is positive X
+   * Check:
+   *  right half the bot up half the bot      (0.5, 0.5)
+   *  right half the bot down half the bot    (-0.5, 0.5)
+   *  left half the bot up half the bot       (0.5, -0.5)
+   *  left half the bot down half the bot     (-0.5, -0.5)
+   * These look like coordinates to each wheel with the order being:
+   *  top right,
+   *  bottom right,
+   *  top left,
+   *  bottom left,
+   */
+  public static class Swerve {
     // SWERVE CAN NUMBERED LIKE CARTESIAN COORDIANTE QUADRANTS
     // front left
     public final static int MOD_ONE_STEER = 2;
@@ -52,88 +103,6 @@ public final class Constants {
     public static final int[] spinningID = new int[] {MOD_ONE_DRIVE, MOD_TWO_DRIVE, MOD_THREE_DRIVE, MOD_FOUR_DRIVE};
     public final static int[] CANCoders = new int[] {MOD_ONE_CANCODER, MOD_TWO_CANCODER, MOD_THREE_CANCODER, MOD_FOUR_CANCODER};
 
-    public final static int PCM = 1;
-
-    public final static int ampMotor = 14;
-    public final static int climberLeft = 15;
-    public final static int climberRight = 16;
-
-    public final static int shooterTopFlywheel = 20;
-    public final static int shooterBottomFlywheel = 21;
-    public final static int intakeIndexer = 22;
-  }
-
-  public static class IDs {
-    public static final int intakePNMChannel = 1; // real
-    public final static int intakeLimitSwitch = 1; // real
-
-    public final static int shooterBreakBeam = 7; // unreal
-
-    public final static int ampPNMChannel = 4;
-    public final static int ampLimitSwitch = 0; // real
-    
-    public final static int shifterOneChannel = 3;
-    public final static int shifterTwoChannel = 2;
-  }
-
-  public static class AprilTags {
-    public static final double TARGET_HEIGHT_METERS = Units.feetToMeters(0);
-      // TEST TODO: change vaues obviously
-      // Constants such as camera and target height stored. Change per robot and goal!
-      public static final double  CAMERA_HEIGHT_METERS = Units.inchesToMeters(0);
-      // Angle between horizontal and the camera.
-      public static final double CAMERA_PITCH_RADIANS = Units.degreesToRadians(0);
-      // TODO: below is wrong
-      public static double kTargetPitch = Units.inchesToMeters(0);
-
-      // How far from the target we want to be
-      final double GOAL_RANGE_METERS = Units.feetToMeters(3);
-
-
-      public static final boolean useAprilTags = false;
-
-    // The position and orientation of the camera in meters
-    public static final double xPos = Units.inchesToMeters(0);
-    public static final double yPos = Units.inchesToMeters(-4);
-    public static final double zPos = Units.inchesToMeters(-38);
-
-        // TODO: Find these values
-        public static final double pitch = Math.toRadians(-15);
-        public static final double yaw = Math.toRadians(0);
-        public static final double roll = Math.toRadians(0);
-
-        public static double confidenceN1 = 0; // I'm guessing x component confidence
-        public static double confidenceN2 = 0; // I'm guessing y component confidence
-        public static double confidenceN3 = 0; // I'm guessing theta component confidence
-
-        public final static int kMedianFilterWindowSize = 9; // median filter size
-
-    public static double kCameraFOV = 0; // TODO: Find real value
-    public static final double AprilTagTrustDistance = 5;
-    public static final int speakerTargetRedFiducialID = 4;
-    public static final int speakerTargetBlueFiducialID = 7;
-    public static final int ampTargetRedFiducialID = 5;
-    public static final int ampTargetBlueFiducialID = 6;
-  }
-
-  /**
-   * For swerve drive
-   * translations for the distance to each wheel from the center of the bot.
-   * Remember that forward (0 radians) is positive X
-   * Check:
-   *  right half the bot up half the bot      (0.5, 0.5)
-   *  right half the bot down half the bot    (-0.5, 0.5)
-   *  left half the bot up half the bot       (0.5, -0.5)
-   *  left half the bot down half the bot     (-0.5, -0.5)
-   * These look like coordinates to each wheel with the order being:
-   *  top right,
-   *  bottom right,
-   *  top left,
-   *  bottom left,
-   */
-    public static class Swerve {
-        // TODO: fix all of these values
-
     /* Length and width as measured as distances between center of wheels */
     // the left-to-right distance between the drivetrain wheels, should be measured from center to center
     public static final double trackWidth = 0.584;
@@ -147,17 +116,13 @@ public final class Constants {
             new Translation2d(wheelBase / 2.0, trackWidth / 2.0) // 4, pos pos
     };
 
-    public static final boolean kNavxReversed = true; //TODO huh
     public final static double kPhysicalMaxSpeedMetersPerSecond = 4.60; // 3.54 with 8 volts of voltage compensation and 4.19 with 10 volts
     public final static double kMaxSteerVoltage = 5d;
     public final static double kMaxDriveVoltage = 10d;
-
-        public final static double kDeadband = 0.075;
-
+    public final static double kDeadband = 0.075;
     public final static double kMaxAccelerationDrive = 7.5;
     public final static double kMaxAccelerationAngularDrive = 4.0*Math.PI;
 
-    //TODO TUNE SWERVE
     public final static double kP_FrontRight = 1.35;
     public final static double kI_FrontRight = 0.05;
     public final static double kD_FrontRight = 0;
@@ -184,21 +149,22 @@ public final class Constants {
 
     public static final HolonomicPathFollowerConfig holonomicPathFollowerConfig = new HolonomicPathFollowerConfig(
       new PIDConstants(3, 0, 0), // Translation PID constants
-      new PIDConstants(7, 0, 0), // Rotation PID constants
+      new PIDConstants(7, 0, 0.01), // Rotation PID constants
       3, // Max module speed, in m/s
-      0.35, // Drive base radius in meters. Distance from robot center to furthest module.
+      0.41295, // Drive base radius in meters. Distance from robot center to furthest module.
+               // sqrt(0.584^2 + 0.584^2)/2
       new ReplanningConfig() // Default path replanning config. See the API for the options here
     );
   }
 
-  public static class Modules {
+  public static class SwerveModules {
     public static final int one = 0;
     public static final int two = 1;
     public static final int three = 2;
     public static final int four = 3;
   }
   
-  public static class EncoderOffsets {
+  public static class SwerveEncoderOffsets {
     public static final double MOD_ONE_OFFSET = -2.856; // 1.498607; //
     public static final double MOD_TWO_OFFSET = 2.1107; // 1.71; //
     public static final double MOD_THREE_OFFSET = 1.7855; //-0.8436; //
@@ -207,10 +173,10 @@ public final class Constants {
   }
 
   // gear ratios and/or ticks per rev, etc.
-  public static class Conversions {
+  public static class SwerveConversions {
     public final static double kDriveGearRatio = 6.12; // Checked 2/2/24 //6.75  checked 1/19/23
     public final static double kSteerGearRatio = 21.4; // Checked 2/2/24 //150d/7d = 21.42857  checked 1/19
-    public static final double kWheelDiameter = Units.inchesToMeters(4);
+    public static final double kWheelDiameter = Units.inchesToMeters(3.9);
     public final static double DriveRotToMeters = kWheelDiameter * Math.PI * 1/(kDriveGearRatio); // multiply by
     public static final double SteerRotToRads = 1/(kSteerGearRatio) * Math.PI * 2; // multiply by position
     public static final double DriveRotToMetersPerSecond = DriveRotToMeters * 10; // multiply by velocity
@@ -227,7 +193,38 @@ public final class Constants {
             kMaxAngularSpeedRadiansPerSecond, kMaxAngularAccelerationRadiansPerSecondSquared);
   }
 
-  public static class Buttons {
+  public static class PS5 {
+    public static final int square = 1;
+    public static final int x = 2;
+    public static final int circle = 3;
+    public static final int triangle = 4;
+    public static final int LST_BTN_LBUMPER = 5;
+    public static final int LST_BTN_RBUMPER = 6;
+
+    public static final int LST_BTN_LJOYSTICKPRESS = 11;
+    public static final int LST_BTN_RJOYSTICKPRESS = 12;
+
+    // Gamepad POV List
+    public static final int LST_POV_UNPRESSED = -1;
+    public static final int LST_POV_N = 0;
+    public static final int LST_POV_NE = 45;
+    public static final int LST_POV_E = 90;
+    public static final int LST_POV_SE = 135;
+    public static final int LST_POV_S = 180;
+    public static final int LST_POV_SW = 225;
+    public static final int LST_POV_W = 270;
+    public static final int LST_POV_NW = 315;
+
+    // Gamepad Axis List
+    public static final int LST_AXS_LJOYSTICKX = 0;
+    public static final int LST_AXS_LJOYSTICKY = 1;
+    public static final int LST_AXS_LTRIGGER = 3;
+    public static final int LST_AXS_RTRIGGER = 4;
+    public static final int LST_AXS_RJOYSTICKX = 2;
+    public static final int LST_AXS_RJOYSTICKY = 5;
+  }
+
+  public static class XBox {
     // Gamepad Button List
     public static final int LST_BTN_A = 1;
     public static final int LST_BTN_B = 2;

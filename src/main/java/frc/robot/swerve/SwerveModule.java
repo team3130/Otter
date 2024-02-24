@@ -32,10 +32,10 @@ public class SwerveModule implements Sendable {
      * @param side is reflective in {@link Constants}
      */
     public SwerveModule(int side) {
-        steerMotor = new TalonFX(Constants.CAN.turningID[side]);
-        driveMotor = new TalonFX(Constants.CAN.spinningID[side]);
+        steerMotor = new TalonFX(Constants.Swerve.turningID[side]);
+        driveMotor = new TalonFX(Constants.Swerve.spinningID[side]);
 
-        absoluteEncoder = new CANcoder(Constants.CAN.CANCoders[side]);
+        absoluteEncoder = new CANcoder(Constants.Swerve.CANCoders[side]);
         turningPidController = new PIDController(Constants.Swerve.kP_Swerve[side], Constants.Swerve.kI_Swerve[side], Constants.Swerve.kD_Swerve[side]);
 
         steerMotor.getConfigurator().apply(new TalonFXConfiguration()); // config factory default
@@ -49,7 +49,7 @@ public class SwerveModule implements Sendable {
         turningPidController.enableContinuousInput(-Math.PI, Math.PI); // wrap for circles
         turningPidController.setTolerance(0.0025, 0.05); // at position tolerance
 
-        absoluteEncoderOffset = Constants.EncoderOffsets.kCANCoderOffsets[side];
+        absoluteEncoderOffset = Constants.SwerveEncoderOffsets.kCANCoderOffsets[side];
         this.side =side;
 
 
@@ -64,28 +64,28 @@ public class SwerveModule implements Sendable {
     // returns the amount of distance the drive motor has travelled in meters
     public double getDrivePosition() {
         //return driveMotor.getPosition().getValue() * Constants.Conversions.DriveRotToMeters;
-        return driveMotor.getPosition().getValue() * Constants.Conversions.DriveRotToMeters;
+        return driveMotor.getPosition().getValue() * Constants.SwerveConversions.DriveRotToMeters;
     }
 
     // returns the position of the steering motor radians
     public Rotation2d getTurningPosition() {
         // return steerMotor.getPosition().getValue() * Constants.Conversions.SteerRotToRads;
 
-        return new Rotation2d(steerMotor.getPosition().getValue() * Constants.Conversions.SteerRotToRads);
+        return new Rotation2d(steerMotor.getPosition().getValue() * Constants.SwerveConversions.SteerRotToRads);
     }
 
     public double getTurningPositionRadians() {
-        return steerMotor.getPosition().getValue() * Constants.Conversions.SteerRotToRads;
+        return steerMotor.getPosition().getValue() * Constants.SwerveConversions.SteerRotToRads;
     }
 
     // gets the velocity of the drive motor in m/s
     public double getDriveVelocity() {
-        return driveMotor.getVelocity().getValue() * Constants.Conversions.DriveRotToMeters;
+        return driveMotor.getVelocity().getValue() * Constants.SwerveConversions.DriveRotToMeters;
     }
 
     // gets the speed at which the steering motor turns in radians per second
     public double getTurningVelocity() {
-        return steerMotor.getVelocity().getValue() * Constants.Conversions.SteerRotToRads;
+        return steerMotor.getVelocity().getValue() * Constants.SwerveConversions.SteerRotToRads;
     }
 
     // gets the position of the steering wheel according to the absolute encoders
@@ -114,7 +114,7 @@ public class SwerveModule implements Sendable {
      * Resets the relative encoders according the absolute encoder involving the offset
      */
     public void resetEncoders() {
-        steerMotor.setPosition((getAbsoluteEncoderRads() - absoluteEncoderOffset) / Constants.Conversions.SteerRotToRads);
+        steerMotor.setPosition((getAbsoluteEncoderRads() - absoluteEncoderOffset) / Constants.SwerveConversions.SteerRotToRads);
         //steerMotor.setPosition((getAbsoluteEncoderRad() - absoluteEncoderOffset) / Constants.Conversions.SteerRotToRads);
     }
 
@@ -252,17 +252,19 @@ public class SwerveModule implements Sendable {
      */
     @Override
     public void initSendable(SendableBuilder builder) {
-        builder.setSmartDashboardType("Swerve Module " + (getRealSide()));
-        // builder.addDoubleProperty("Drive velocity", this::getDriveVelocity, null);
-        builder.addDoubleProperty("Steer position", this::getSteerRotations, null);
-        builder.addDoubleProperty("Drive position", this::getDrivePosition, null);
-        builder.addDoubleProperty("Absolute encoder position", this::getAbsoluteEncoderRads, null);
+        if (Constants.debugMode) {
+            builder.setSmartDashboardType("Swerve Module " + (getRealSide()));
+            // builder.addDoubleProperty("Drive velocity", this::getDriveVelocity, null);
+            builder.addDoubleProperty("Steer position", this::getSteerRotations, null);
+            builder.addDoubleProperty("Drive position", this::getDrivePosition, null);
+            builder.addDoubleProperty("Absolute encoder position", this::getAbsoluteEncoderRads, null);
 /*        builder.addDoubleProperty("Steer velocity", this::getTurningVelocity, null);
         builder.addDoubleProperty("Steer relative", this::getRelativePositionDegrees, null);
         */
-        builder.addDoubleProperty("Swerve P " + getRealSide(), this::getPValue, this::setPValue);
-        builder.addDoubleProperty("Swerve I " + getRealSide(), this::getIValue, this::setIValue);
-        builder.addDoubleProperty("Swerve D " + getRealSide(), this::getDValue, this::setDValue);
+            builder.addDoubleProperty("Swerve P " + getRealSide(), this::getPValue, this::setPValue);
+            builder.addDoubleProperty("Swerve I " + getRealSide(), this::getIValue, this::setIValue);
+            builder.addDoubleProperty("Swerve D " + getRealSide(), this::getDValue, this::setDValue);
+        }
     }
 
     public double getSteerPositionWrapped() {

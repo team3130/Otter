@@ -2,52 +2,47 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.Shooter;
+package frc.robot.commands.Auton;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 
-public class Shoot extends Command {
-    private final Shooter shooter;
+public class AutoIndexer extends Command {
     private final Intake intake;
+    private final Shooter shooter;
     private Timer spinUpTime = new Timer();
-    private Timer timer2 = new Timer();
-    public Shoot(Shooter shooter, Intake intake) {
-        this.shooter = shooter;
+    public AutoIndexer(Intake intake, Shooter shooter) {
         this.intake = intake;
+        this.shooter = shooter;
         addRequirements(shooter);
     }
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        timer2.reset();
-        timer2.start();
         spinUpTime.reset();
         spinUpTime.start();
+        intake.spintake();
         shooter.runShooters();
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        if (spinUpTime.hasElapsed(1)){
-            intake.spintake();
-        }
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
+        intake.stoptake();
         shooter.stopShooters();
-        shooter.stopIndexers();
     }
 
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        if (timer2.hasElapsed(3)) {
+        if (spinUpTime.hasElapsed(1.25)) {
             return true;
         } else {
             return false;

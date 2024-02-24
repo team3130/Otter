@@ -7,30 +7,39 @@ package frc.robot.commands.Intake;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Intake;
 
-/** An example command that uses an example subsystem. */
-public class ToggleIntake extends Command {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
+public class LimitSpintake extends Command {
   private final Intake intake;
 
-  public ToggleIntake(Intake intake) {
-    this.intake = intake;
+  public LimitSpintake(Intake Intake) {
+    intake = Intake;
     addRequirements(intake);
   }
 
+  // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    intake.SolenoidToggle();
+    intake.spintake();
   }
 
+  // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
 
+  }
+
+  // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    intake.stoptake();
   }
 
+  // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    if (intake.getIntakeLimitSwitch()) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }

@@ -45,7 +45,7 @@ public class Navx {
      */
     public static double getAngle() {
         if (navXPresent) {
-            return Math.IEEEremainder((navX.getAngle() + 360) * (Constants.kNavxReversed ? -1.0 : 1.0), 720); // converts navx heading angle infinite values to -360 to 360 even tho thats stupid
+            return Math.IEEEremainder((navX.getAngle() + 360) * (Constants.navxReversed ? -1.0 : 1.0), 720); // converts navx heading angle infinite values to -360 to 360 even tho thats stupid
         }
         return -1;
     }
@@ -128,7 +128,7 @@ public class Navx {
      * @return the rate of change of the heading of the robot in degrees per second.
      */
     public static double getRate() {
-        if (navXPresent) return navX.getRate() * (Constants.kNavxReversed ? -1.0 : 1.0);
+        if (navXPresent) return navX.getRate() * (Constants.navxReversed ? -1.0 : 1.0);
         return -1;
     }
 
@@ -155,6 +155,5 @@ public class Navx {
         SmartDashboard.putNumber("NavX Yaw", getYaw());
         SmartDashboard.putNumber("NavX Pitch", getPitch());
         SmartDashboard.putNumber("NavX Roll", getRoll());
-        
     }
 }

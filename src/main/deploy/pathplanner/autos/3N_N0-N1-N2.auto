@@ -1,0 +1,61 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.75,
+      "y": 6.64
+    },
+    "rotation": -120.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "ShiftDoubleExtend"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "swn-N1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ShootIndex"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "swn-N2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ShootIndex"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ShiftDoubleRetract"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}
