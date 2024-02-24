@@ -28,8 +28,8 @@ public class CameraSubsystem extends SubsystemBase {
   private  double targetI = 0d;
   private  double targetD = 0d;
 
-  private double XtargetV = 0.2;
-  private double YtargetF = 0.8;
+  private double XtargetV = 0;
+  private double YtargetF = 0;
   private Chassis chassis;
 
 
@@ -63,6 +63,11 @@ public class CameraSubsystem extends SubsystemBase {
   public void setTryingToTargetFalse(){
     isTryingToTarget=false;
   }
+
+  public void toggleIsTryingToTarget() {
+    isTryingToTarget = !isTryingToTarget;
+  }
+
   public void setXTargetV(double newXF){
     XtargetV = newXF ;
   }

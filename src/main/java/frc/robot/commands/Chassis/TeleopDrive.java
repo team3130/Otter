@@ -53,8 +53,8 @@ public class TeleopDrive extends Command {
     double thetaJoystick = -controller.getRawAxis(Constants.PS5.LST_AXS_RJOYSTICKX); // right stick x-axis
     thetaJoystick = Math.abs(thetaJoystick) > Constants.Swerve.kDeadband ? thetaJoystick : 0.0;
 
-    if (cam.isTryingToTarget() && (thetaJoystick != 0d)){
-      theta = (x * cam.getXTargetV()) + (cam.goToTargetPower()) + (-y * cam.getYTargetV());
+    if (cam.isTryingToTarget() && Math.abs(thetaJoystick)<=0.2 ){
+      theta = cam.goToTargetPower();
     } else {
       theta = thetaJoystick;
       theta = Math.abs(theta) > Constants.Swerve.kDeadband ? theta : 0.0;

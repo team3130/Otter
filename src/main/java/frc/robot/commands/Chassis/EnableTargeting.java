@@ -5,10 +5,11 @@
 package frc.robot.commands.Chassis;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.CameraSubsystem;
 
 /** An example command that uses an example subsystem. */
-public class EnableTargeting extends Command {
+public class EnableTargeting extends InstantCommand {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final CameraSubsystem cam;
 
@@ -31,7 +32,8 @@ public class EnableTargeting extends Command {
     }
     else{
      cam.setTryingToTargetTrue();
-     cam.resetTargetController();}
+     cam.resetTargetController();
+    }
   }
 
   // Called every time the scheduler runs while the command is scheduled.

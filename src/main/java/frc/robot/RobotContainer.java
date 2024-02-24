@@ -185,9 +185,11 @@ public class RobotContainer {
   public void exportShuffleBoardData() {
     if (Constants.debugMode) {
       ShuffleboardTab tab = Shuffleboard.getTab("Subsystem Test");
+      tab.add(chassis);
       tab.add(shooter);
       tab.add(intake);
       tab.add(leftClimber);
+      tab.add(cameraSubsystem);
     }
   }
 
@@ -210,7 +212,9 @@ public class RobotContainer {
     new JoystickButton(driverController, Constants.PS5.LST_BTN_RBUMPER).whileTrue(new ToggleIntakeIn(intake));
     new JoystickButton(driverController, Constants.PS5.x).whileTrue(new Outtake(intake));
     new JoystickButton(driverController, Constants.PS5.circle).whileTrue(new AlwaysSpintake(intake));
-    new JoystickButton(driverController, Constants.PS5.LST_BTN_RJOYSTICKPRESS).onTrue(new EnableTargeting(cameraSubsystem));
+
+
+    new JoystickButton(driverController, Constants.PS5.triangle).onTrue(new EnableTargeting(cameraSubsystem));
 
 
     // ANDREW OPERATOR
