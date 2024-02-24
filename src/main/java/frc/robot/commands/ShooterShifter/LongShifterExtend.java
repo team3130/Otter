@@ -4,13 +4,14 @@
 
 package frc.robot.commands.ShooterShifter;
 
-import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.ShooterShifter;
 
-public class UnusedLongShifterExtend extends Command {
+/** An example command that uses an example subsystem. */
+public class LongShifterExtend extends InstantCommand {
   private final ShooterShifter shooterShifter;
 
-  public UnusedLongShifterExtend(ShooterShifter shifter) {
+  public LongShifterExtend(ShooterShifter shifter) {
     shooterShifter = shifter;
     addRequirements(shifter);
   }
@@ -18,7 +19,7 @@ public class UnusedLongShifterExtend extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    shooterShifter.extendLongyShifter();
+    shooterShifter.extendLongShifter();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

@@ -5,11 +5,9 @@
 package frc.robot.commands.ShooterShifter;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.ShooterShifter;
 
-/** An example command that uses an example subsystem. */
-public class ShortShifterExtend extends InstantCommand {
+public class ShortShifterExtend extends Command {
   private final ShooterShifter shooterShifter;
 
   public ShortShifterExtend(ShooterShifter shifter) {
@@ -20,7 +18,7 @@ public class ShortShifterExtend extends InstantCommand {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    shooterShifter.extendShortShifter();
+    shooterShifter.extendShawtyShifter();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
