@@ -5,6 +5,9 @@
 package frc.robot.subsystems;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -88,7 +91,15 @@ public class Chassis extends SubsystemBase {
                 this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
                 this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
                 this::driveRobotRelative,
-                Constants.Swerve.holonomicPathFollowerConfig,
+                new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
+                        // TODO: change constants below
+                        new PIDConstants(3, 0, 0), // Translation PID constants
+                        new PIDConstants(7, 0, 0.01), // Rotation PID constants
+                        3, // Max module speed, in m/s
+                        0.41295, // Drive base radius in meters. Distance from robot center to furthest module.
+                        // sqrt(0.584^2 + 0.584^2)/2
+                        new ReplanningConfig() // Default path replanning config. See the API for the options here
+                ),
                 () -> {
                     var alliance = DriverStation.getAlliance();
                     if (alliance.isPresent()) {

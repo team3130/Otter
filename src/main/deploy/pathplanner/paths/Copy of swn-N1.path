@@ -1,0 +1,130 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 15.72,
+        "y": 6.6706619771435225
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 15.82,
+        "y": 6.6706619771435225
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 15.369398995025751,
+        "y": 8.072961721249658
+      },
+      "prevControl": {
+        "x": 15.468726545560461,
+        "y": 8.0613842558632
+      },
+      "nextControl": {
+        "x": 15.270071444491041,
+        "y": 8.084539186636116
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 13.246472993534239,
+        "y": 6.98228414249936
+      },
+      "prevControl": {
+        "x": 13.146472993534239,
+        "y": 6.982284142499362
+      },
+      "nextControl": {
+        "x": 13.346472993534238,
+        "y": 6.982284142499362
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 15.72,
+        "y": 6.6706619771435225
+      },
+      "prevControl": {
+        "x": 15.620000000000001,
+        "y": 6.6706619771435225
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.8,
+      "rotationDegrees": 180.0,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 2.05,
+      "rotationDegrees": 180.0,
+      "rotateFast": false
+    }
+  ],
+  "constraintZones": [],
+  "eventMarkers": [
+    {
+      "name": "Intake",
+      "waypointRelativePos": 0.0,
+      "command": {
+        "type": "sequential",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Intake"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Flywheel",
+      "waypointRelativePos": 2.55,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Flywheel"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 2.5,
+    "maxAcceleration": 2.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 140.0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": null,
+  "previewStartingState": {
+    "rotation": -18.838316148161248,
+    "velocity": 0
+  },
+  "useDefaultConstraints": false
+}

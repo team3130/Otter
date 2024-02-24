@@ -19,8 +19,6 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
@@ -41,7 +39,6 @@ import frc.robot.commands.Chassis.ResetOdometry;
 import frc.robot.commands.Intake.*;
 import frc.robot.subsystems.Amp;
 
-import javax.naming.Name;
 import java.util.Optional;
 import java.util.function.BooleanSupplier;
 
@@ -64,9 +61,8 @@ public class RobotContainer {
   private final PS5Controller driverController = new PS5Controller(0);
   private final XboxController operatorController = new XboxController(1);
   private final SendableChooser<Command> autoChooser;
-  private final SendableChooser<Command> isFieldMirrored;
-
-  private final Optional<DriverStation.Alliance> ally;
+  //private static SendableChooser<BooleanSupplier> isFieldMirrored = new SendableChooser<>();
+  //private static Optional<DriverStation.Alliance> alliance = DriverStation.getAlliance();
 
 
   // container for the robot containing subsystems, OI devices, and commands
@@ -97,35 +93,48 @@ public class RobotContainer {
     leftClimber.setDefaultCommand(new ClimberExtend(leftClimber, operatorController));
     rightClimber.setDefaultCommand(new ClimberExtend(rightClimber, operatorController));
 
-    this.isFieldMirrored = new SendableChooser<>();
-    ally = DriverStation.getAlliance();
-    populateChooser();
+    //this.isFieldMirrored = new SendableChooser<>();
+    //ally = DriverStation.getAlliance();
+    //populateChooser();
 
     // Build an auto chooser. This will use Commands.none() as the default option.
     autoChooser = AutoBuilder.buildAutoChooser("ShootLoadedIntakeTop");
     SmartDashboard.putData("Auto Chooser", autoChooser);
   }
+  /*
 
-  public Command pickAlliance() {
+  public static void getAlliancePeriodic() {
+    if (DriverStation.isFMSAttached()) {
+      alliance = DriverStation.getAlliance();
+    }
+  }
+
+  public Optional<DriverStation.Alliance> returnAlliance() {
+    return alliance;
+  }
+
+  public
+
+  public static BooleanSupplier pickAlliance() {
     return isFieldMirrored.getSelected();
   }
 
-  private void populateChooser() {
-    isFieldMirrored.setDefaultOption("blue", chooseBlue());
-    isFieldMirrored.addOption("red", ());
-  }
-
-  public boolean chooseBlue() {
-    return
-  }
-
-() -> {
+  public static BooleanSupplier checkDSUpdate() {
     var alliance = DriverStation.getAlliance();
     if (alliance.isPresent()) {
-      return alliance.get() == DriverStation.Alliance.Red;
+      return () -> alliance.get() == DriverStation.Alliance.Red;
     }
-    return false;
-  },
+    return () -> false;
+  }
+
+  private void populateChooser() {
+    isFieldMirrored.setDefaultOption("blue", () -> false);
+    isFieldMirrored.addOption("red", () -> true);
+    SmartDashboard.putData("Alliance", isFieldMirrored);
+  }
+  */
+
+
   public void resetClimbers(){
     leftClimber.setIsClimberReset(true);
     rightClimber.setIsClimberReset(true);

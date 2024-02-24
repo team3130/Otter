@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -11,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.Climber;
 
 import javax.sql.CommonDataSource;
+import java.util.Optional;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -60,6 +62,8 @@ public class Robot extends TimedRobot {
     } else {
       robotContainer.updateChassisPose();
     }
+
+    //RobotContainer.getAlliancePeriodic();
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -83,6 +87,7 @@ public class Robot extends TimedRobot {
       //CommandScheduler.getInstance().schedule(robotContainer.getAutonomousCommand());
       autonomousCommand.schedule();
     }
+    //robotContainer.checkDSUpdate();
   }
 
   /** This function is called periodically during autonomous. */

@@ -5,6 +5,7 @@
 package frc.robot.commands.Chassis;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PS5Controller;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -17,6 +18,9 @@ public class TeleopDrive extends Command {
   private final PS5Controller controller;
 
   private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
+  private double y;
+  private double x;
+  private double theta;
   public TeleopDrive(Chassis chassis, PS5Controller PS5controller) {
     this.chassis = chassis;
     this.controller = PS5controller;
@@ -43,10 +47,15 @@ public class TeleopDrive extends Command {
    */
   @Override
   public void execute() {
-    double y = -controller.getRawAxis(Constants.PS5.LST_AXS_LJOYSTICKX); // left stick y-axis (y-axis is inverted)
-    double x = -controller.getRawAxis(Constants.PS5.LST_AXS_LJOYSTICKY); // left stick x-axis
-    double theta = -controller.getRawAxis(Constants.PS5.LST_AXS_RJOYSTICKX); // right stick x-axis
-
+    if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red && DriverStation.getAlliance().isPresent()) {
+      y = controller.getRawAxis(Constants.PS5.LST_AXS_LJOYSTICKX);
+      x = controller.getRawAxis(Constants.PS5.LST_AXS_LJOYSTICKY);
+      theta = -controller.getRawAxis(Constants.PS5.LST_AXS_RJOYSTICKX);
+    } else {
+      y = -controller.getRawAxis(Constants.PS5.LST_AXS_LJOYSTICKX); // left stick y-axis (y-axis is inverted)
+      x = -controller.getRawAxis(Constants.PS5.LST_AXS_LJOYSTICKY); // left stick x-axis
+      theta = -controller.getRawAxis(Constants.PS5.LST_AXS_RJOYSTICKX); // right stick x-axis
+    }
 
     // square the inputs
     y = y * Math.abs(y);
