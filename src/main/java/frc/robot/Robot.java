@@ -97,6 +97,7 @@ public class Robot extends TimedRobot {
     }
     //robotContainer.periodic();
     //CommandScheduler.getInstance().schedule(robotContainer.resetEverything());
+    //CommandScheduler.getInstance().schedule(robotContainer.resetPneumatics());
   //  CommandScheduler.getInstance().schedule(robotContainer.rumbley());
 
   }
