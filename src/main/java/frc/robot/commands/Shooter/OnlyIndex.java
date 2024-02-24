@@ -5,19 +5,20 @@
 package frc.robot.commands.Shooter;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 
 public class OnlyIndex extends Command {
-  private final Shooter shooter;
+  private final Intake intake;
 
-  public OnlyIndex(Shooter index) {
-    shooter = index;
-    addRequirements( index);
+  public OnlyIndex(Intake index) {
+    intake = index;
+    addRequirements(index);
   }
 
   @Override
   public void initialize() {
-    shooter.runIndexers();
+    intake.spintake();
   }
 
   @Override
@@ -26,7 +27,7 @@ public class OnlyIndex extends Command {
 
   @Override
   public void end(boolean interrupted) {
-    shooter.stopIndexers();
+    intake.stoptake();
   }
 
   @Override

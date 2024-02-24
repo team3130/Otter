@@ -23,7 +23,6 @@ public class AutoIntake extends InstantCommand {
   @Override
   public void initialize() {
     intake.intakeDown();
-    intake.spintake();
     timer.reset();
     timer.start();
   }
@@ -31,6 +30,9 @@ public class AutoIntake extends InstantCommand {
   // once the limit switch is hit and we did not have a note, reset encoders and intake up
   @Override
   public void execute() {
+    if (timer.hasElapsed(1)) {
+      intake.spintake();
+    }
   }
 
   // stop the note
@@ -43,7 +45,7 @@ public class AutoIntake extends InstantCommand {
   // end this command once the note is at its desired place to stop (via encoders)
   @Override
   public boolean isFinished() {
-    if (intake.getIntakeLimitSwitch()) {
+    if (intake.getIntakeLimitSwitch() || timer.hasElapsed(3)) {
       return true;
     } else {
       return false;

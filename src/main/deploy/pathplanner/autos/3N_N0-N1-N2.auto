@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.8984446913140571,
-      "y": 6.427207160464143
+      "x": 0.75,
+      "y": 6.64
     },
     "rotation": -120.0
   },
@@ -32,7 +32,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Shoot"
+            "name": "ShootIndex"
           }
         },
         {
@@ -44,7 +44,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Shoot"
+            "name": "ShootIndex"
           }
         },
         {

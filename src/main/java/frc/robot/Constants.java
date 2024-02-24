@@ -184,7 +184,7 @@ public final class Constants {
 
     public static final HolonomicPathFollowerConfig holonomicPathFollowerConfig = new HolonomicPathFollowerConfig(
       new PIDConstants(3, 0, 0), // Translation PID constants
-      new PIDConstants(7, 0, 0), // Rotation PID constants
+      new PIDConstants(7, 0, 0.01), // Rotation PID constants
       3, // Max module speed, in m/s
       0.41295, // Drive base radius in meters. Distance from robot center to furthest module.
                // sqrt(0.584^2 + 0.584^2)/2

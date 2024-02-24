@@ -17,15 +17,15 @@
     {
       "anchor": {
         "x": 6.858218603744444,
-        "y": 7.41
+        "y": 7.42
       },
       "prevControl": {
         "x": 6.566008150365395,
-        "y": 7.41
+        "y": 7.42
       },
       "nextControl": {
         "x": 7.150429057123492,
-        "y": 7.41
+        "y": 7.42
       },
       "isLocked": false,
       "linkedName": null
@@ -33,15 +33,15 @@
     {
       "anchor": {
         "x": 8.0,
-        "y": 7.41
+        "y": 7.42
       },
       "prevControl": {
         "x": 7.825418497701026,
-        "y": 7.41
+        "y": 7.42
       },
       "nextControl": {
         "x": 8.174581502298974,
-        "y": 7.41
+        "y": 7.42
       },
       "isLocked": false,
       "linkedName": null
@@ -62,14 +62,14 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.6000000000000001,
-      "rotationDegrees": 180.0,
-      "rotateFast": false
-    },
-    {
-      "waypointRelativePos": 2.0999999999999996,
+      "waypointRelativePos": 2.05,
       "rotationDegrees": 180.0,
       "rotateFast": true
+    },
+    {
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": 180.0,
+      "rotateFast": false
     }
   ],
   "constraintZones": [],
@@ -90,11 +90,28 @@
           ]
         }
       }
+    },
+    {
+      "name": "Shoot",
+      "waypointRelativePos": 2.3000000000000003,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Flywheel"
+              }
+            }
+          ]
+        }
+      }
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 2.0,
-    "maxAcceleration": 2.0,
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
@@ -109,5 +126,5 @@
     "rotation": 0,
     "velocity": 0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

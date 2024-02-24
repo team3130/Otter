@@ -22,10 +22,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
-import frc.robot.commands.Auton.AutoShoot;
-import frc.robot.commands.Auton.AutonDoubleExtend;
-import frc.robot.commands.Auton.AutoIntake;
-import frc.robot.commands.Auton.AutonDoubleRetract;
+import frc.robot.commands.Auton.*;
 import frc.robot.commands.Shooter.*;
 import frc.robot.commands.ShooterShifter.DoubleExtend;
 import frc.robot.commands.ShooterShifter.DoubleRetract;
@@ -38,6 +35,7 @@ import frc.robot.commands.Intake.*;
 import frc.robot.subsystems.Amp;
 import frc.robot.subsystems.Chassis;
 
+import javax.naming.Name;
 import java.util.function.BooleanSupplier;
 
 /**
@@ -73,6 +71,8 @@ public class RobotContainer {
     NamedCommands.registerCommand("Intake", new AutoIntake(intake));
     NamedCommands.registerCommand("ShiftDoubleExtend", new AutonDoubleExtend(shooterShifter));
     NamedCommands.registerCommand("ShiftDoubleRetract", new AutonDoubleRetract(shooterShifter));
+    NamedCommands.registerCommand("Flywheel", new AutoFlywheel(shooter));
+    NamedCommands.registerCommand("ShootIndex", new AutoIndexer(intake, shooter));
 
     configureBindings(); // configure button bindings
     exportShuffleBoardData(); // export ShuffleBoardData
@@ -177,7 +177,7 @@ public class RobotContainer {
     new JoystickButton(operatorController, Constants.Buttons.LST_BTN_RBUMPER).whileTrue(new AmpIntake(amp));
     new JoystickButton(operatorController, Constants.Buttons.LST_BTN_A).whileTrue(new AlwaysAmpIntake(amp));
 
-    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_B).whileTrue(new OnlyIndex(shooter));
+    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_B).whileTrue(new OnlyIndex(intake));
     new JoystickButton(operatorController, Constants.Buttons.LST_BTN_Y).whileTrue(new OnlyShoot(shooter));
 
     new POVButton(operatorController, Constants.Buttons.LST_POV_N).whileTrue(new DoubleExtend(shooterShifter));
