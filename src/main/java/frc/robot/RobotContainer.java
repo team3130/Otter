@@ -87,7 +87,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("ShiftDoubleExtend", new AutonDoubleExtend(shooterShifter));
     NamedCommands.registerCommand("ShiftDoubleRetract", new AutonDoubleRetract(shooterShifter));
     NamedCommands.registerCommand("Flywheel", new AutoFlywheel(shooter));
-    NamedCommands.registerCommand("ShootIndex", new AutoIndexer(intake, shooter));
+    NamedCommands.registerCommand("ShootIndex", new AutoIndexer(intake));
 
     configureBindings(); // configure button bindings
     exportShuffleBoardData(); // export ShuffleBoardData

@@ -24,8 +24,6 @@ import frc.robot.Constants;
 public class Shooter extends SubsystemBase {
     private final TalonFX topFlywheel; // we should probably change these names once we learn more
     private final TalonFX bottomFlywheel; // we should probably change these names once we learn more
-    // double proportionVolt = 1.05;
-
 
     final VoltageOut topVoltReq = new VoltageOut(0);
     final VoltageOut bottomVoltReq = new VoltageOut(0);
@@ -33,7 +31,7 @@ public class Shooter extends SubsystemBase {
     final VelocityVoltage bottomVelocityRequest = new VelocityVoltage(0).withSlot(0); // class instance
     double topVelocitySetpoint = 8;
     double bottomVelocitySetpoint = 8;
-    private double flywheelVolts = 3;
+    private double flywheelVolts = 5;
 
     Slot0Configs slot0Configs; // gains for top flywheel slot
     private double slot0_kS = 0; // DONT USE KS
