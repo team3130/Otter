@@ -80,14 +80,14 @@ public class Intake extends SubsystemBase {
     public double getOutakeSpeed() { return outakeSpeed; }
 
     public void initSendable(SendableBuilder builder) {
-            builder.setSmartDashboardType("Intake");
-            builder.addBooleanProperty("intake limit switch", this::getIntakeLimitSwitch, null);
+        builder.setSmartDashboardType("Intake");
+        builder.addBooleanProperty("intake limit switch", this::getIntakeLimitSwitch, null);
 
-            builder.addDoubleProperty("Drop time", this::getDropTime, this::setDropTime);
-            builder.addDoubleProperty("Dumb spintake speed", this::getSpintakeSpeed, this::setSpintakeSpeed);
-            builder.addDoubleProperty("Dumb outtake speed", this::getOutakeSpeed, this::setOutakeSpeed);
+        builder.addDoubleProperty("Drop time", this::getDropTime, this::setDropTime);
+        builder.addDoubleProperty("Dumb spintake speed", this::getSpintakeSpeed, this::setSpintakeSpeed);
+        builder.addDoubleProperty("Dumb outtake speed", this::getOutakeSpeed, this::setOutakeSpeed);
 
-            builder.addBooleanProperty("test trigger", this::getTestTrigger, this::setTestTrigger);
+        builder.addBooleanProperty("test trigger", this::getTestTrigger, this::setTestTrigger);
 
     }
     @Override
