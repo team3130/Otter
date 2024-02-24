@@ -217,7 +217,7 @@ public class RobotContainer {
 
     new JoystickButton(operatorController, Constants.XBox.LST_BTN_LBUMPER).whileTrue(new DoubleExtend(shooterShifter));
     new POVButton(operatorController, Constants.XBox.LST_POV_N).whileTrue(new DoubleRetract(shooterShifter));
-    new JoystickTrigger(operatorController, Constants.XBox.LST_AXS_LTRIGGER).whileTrue(new ShortShifterExtend(shooterShifter)); // correct
+    //new JoystickTrigger(operatorController, Constants.XBox.LST_AXS_LTRIGGER).whileTrue(new ShortShifterExtend(shooterShifter)); // correct
 
     //new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new VelocityShoot(shooter));
     //new JoystickButton(operatorController, Constants.Buttons.LST_BTN_RBUMPER).whileTrue(new SequentialCommandGroup(new SmartSpintake(intake), new SmartIndex(intake)));
