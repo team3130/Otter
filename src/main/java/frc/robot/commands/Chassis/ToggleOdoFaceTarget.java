@@ -53,8 +53,10 @@ public class ToggleOdoFaceTarget extends Command {
     double y = -xboxController.getRawAxis(Constants.Buttons.LST_AXS_LJOYSTICKX); // left stick y-axis
     double x = -xboxController.getRawAxis(Constants.Buttons.LST_AXS_LJOYSTICKY); // left stick x-axis
 
-    chassis.makeAngleToFaceTarget();
-    theta = camera.targetController.calculate(chassis.getRotation2d().getRadians(), Math.toRadians(chassis.getTheta()));
+    if (camera.hasTarget()) {
+      chassis.setOriginToAprilTagVector(camera.getTargetDistance(), camera.getTargetYaw()); // distance and yaw aren't real, so these are just placeholders for distance and yaw after shooter curves
+    }
+    theta = camera.targetController.calculate(chassis.getRotation2d().getRadians(), chassis.getAngleToFaceTarget());
 
     // square the inputs
     y = y * Math.abs(y);

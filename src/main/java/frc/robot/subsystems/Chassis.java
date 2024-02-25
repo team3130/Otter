@@ -57,10 +57,9 @@ public class Chassis extends SubsystemBase {
     private final GenericEntry n_fieldOrriented; // comp network table entry for whether field oriented drivetrain
     private double targetMaxVelo = Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond; //TODO real
     private double targetMaxAcc = Constants.Swerve.kMaxAccelerationDrive; //TODO real
-    private Pose2d initialPosition;
-    private double initialAprilTagDistance = 0d;
-    private double initialAprilTagAngle = 0d;
-    private Translation2d initialAprilTagVector;
+    private Translation2d originToRobotVector = new Translation2d(0, 0);
+    private Translation2d robotToAprilTagVector = new Translation2d(0, 0);
+
     private Translation2d originToAprilTagVector = new Translation2d(0, 0);
     private Rotation2d theta = new Rotation2d(0);
     private boolean isFaceTargetting;
@@ -350,11 +349,6 @@ public class Chassis extends SubsystemBase {
     // return the y position from odometry
     private double getY() { return odometry.getEstimatedPosition().getY(); }
 
-    /**
-     * @return the yaw from odometry
-     */
-//    public double getInitialAprilTagDistance() { return initialAprilTagDistance; }
-    public Translation2d getOriginToAprilTagVector() {return originToAprilTagVector;}
     public void setFaceTargetting(boolean newIsFaceTargetting){
         isFaceTargetting = newIsFaceTargetting;
     }
@@ -369,6 +363,84 @@ public class Chassis extends SubsystemBase {
     public double getMaxSpeedRead() { return maxSpeedRead; }
 
     public String getOdometry() { return odometry.getEstimatedPosition().toString(); }
+
+    /**
+     * AUTONOMOUS PATHPLANNER METHODS
+     */
+
+    // returns the current position of the bot from odometry as a Pose2D
+    public Pose2d getPose2d() {
+        return odometry.getEstimatedPosition();
+    }
+
+    // method to reset the robot's odometry to the supplied pose
+    public void resetPose(Pose2d newPose) {
+        odometry.resetPosition(Navx.getRotation(), generatePoses(), newPose);
+    }
+
+    // sets the coordinates of the current april tag-- works only if robot odometry is working and april tag is being looked at
+    public void setOriginToAprilTagVector(double aprilTagDistance, double aprilTagYaw) {
+        robotToAprilTagVector = new Translation2d(aprilTagDistance * Math.sin(Math.PI - aprilTagYaw), aprilTagDistance * Math.cos(Math.PI - aprilTagDistance));
+        originToAprilTagVector = robotToAprilTagVector.plus(originToRobotVector);
+    }
+
+    // returns the "correct" position of the robot. If the robot gets hit and odometry is messed up, we can use previous odometry data and april tag data to correct our coordinates (robot relative)
+    public Translation2d getOriginToRobotVector() {
+        return originToAprilTagVector.minus(robotToAprilTagVector);
+    }
+
+    // returns the position of the april tag relative to the robot
+    public Translation2d getRobotToAprilTagVector() {
+        return originToAprilTagVector.minus(originToRobotVector);
+    }
+
+    // returns the position of the last april tag seen
+    public Translation2d getOriginToAprilTagVector() {
+        return originToAprilTagVector;
+    }
+
+    // This method generates the angle needed to turn to face a specific target without using a camera
+    // - needs to be paired with Giorgia's face target code or needs to start with the camera facing the target
+    public double getAngleToFaceTarget() {
+        // the vector from the position that we are at currently to the april tag (target)
+        originToRobotVector = new Translation2d(getX(), getY());
+        robotToAprilTagVector = getRobotToAprilTagVector();
+        // the angle that we need to turn to in order to face the target
+        theta = robotToAprilTagVector.getAngle();
+        return theta.getRadians();
+    }
+
+    // shuffleboard setter - turns robot chassis to specified setpoint in degrees
+    public void setThetaDegrees(double newTheta) {
+        theta = Rotation2d.fromDegrees(newTheta);
+    }
+
+    // shuffleboard getter - returns the robot's desired rotation towards a target in degrees
+    public double getThetaDegrees() {
+        return theta.getRadians();
+    }
+
+    //shuffleboard getter - returns the robot's rotation (holonomic) from odometry in degrees
+    public double getRotationDegrees() {
+        return getRotation2d().getDegrees();
+    }
+
+    public void correctOdometry() {
+        originToRobotVector = getOriginToRobotVector();
+    }
+
+//    // getter for the initial position where we use Giorgia's face target
+//    public Pose2d getInitialPosition() {
+//        return getPose2d();
+//    }
+//
+//    // gets the information like distance to april tag and angle to make vectors (uses FaceTarget info)
+//    public void acquireTarget0(){
+//        initialPosition = getInitialPosition();
+//        initialAprilTagAngle = initialPosition.getRotation().getRadians(); // can maybe use yaw later
+//        initialAprilTagVector = new Translation2d(initialAprilTagDistance * Math.sin(Math.PI - initialAprilTagAngle), initialAprilTagDistance * Math.cos(Math.PI - initialAprilTagAngle));
+//        originToAprilTagVector = initialPosition.getTranslation().plus(initialAprilTagVector);
+//    }
 
     /**
      * Initializes the data we send on shuffleboard
@@ -387,61 +459,8 @@ public class Chassis extends SubsystemBase {
         builder.addStringProperty("odometry pose2d", this::getOdometry, null);
         //builder.addDoubleProperty("Target Distance", this::getInitialAprilTagDistance, null);
         builder.addBooleanProperty("IsFaceTargetToggled", this::getFaceTargetting, null);
-        builder.addDoubleProperty("angle to face target", this::getTheta, null);
-        builder.addDoubleProperty("rotation from odometry (degrees)", this::getRotationFromOdo, this::setTheta );
-    }
-
-    /**
-     * AUTONOMOUS PATHPLANNER METHODS
-     */
-
-    // returns the current position of the bot from odometry as a Pose2D
-    public Pose2d getPose2d() {
-        return odometry.getEstimatedPosition();
-    }
-
-    // method to reset the robot's odometry to the supplied pose
-    public void resetPose(Pose2d newPose) {
-        odometry.resetPosition(Navx.getRotation(), generatePoses(), newPose);
-    }
-
-//    public void setOriginToAprilTagVector(PhotonTrackedTarget target) {
-//        originToAprilTagVector = new Translation2d(target distance * Math.cos(angle), target distance * Math.sin(angle))
-//    }
-
-    //This method generates the angle needed to turn to face a specific target without using a camera
-    //- needs to be paired with Giorgia's face target code or needs to start with the camera facing the target
-    public void makeAngleToFaceTarget() {;
-        // the vector from the position that we are at currently to the april tag (target)
-        Translation2d currentPositionVector = new Translation2d(getX(), getY());
-        Translation2d currentPositionToAprilTagVector = originToAprilTagVector.minus(currentPositionVector);
-        // the angle that we need to turn to in order to face the target
-        theta = currentPositionToAprilTagVector.getAngle();
-    }
-
-    public double getTheta() {
-        return theta.getDegrees();
-    }
-
-    public void setTheta(double newTheta) {
-        theta = Rotation2d.fromDegrees(newTheta);
-    }
-
-    public double getRotationFromOdo() {
-        return getRotation2d().getDegrees();
-    }
-
-    // getter for the initial position where we use Giorgia's face target
-    public Pose2d getInitialPosition() {
-        return getPose2d();
-    }
-
-    // gets the information like distance to april tag and angle to make vectors (uses FaceTarget info)
-    public void acquireTarget(){
-        initialPosition = getInitialPosition();
-        initialAprilTagAngle = initialPosition.getRotation().getRadians(); // can maybe use yaw later
-        initialAprilTagVector = new Translation2d(initialAprilTagDistance * Math.sin(Math.PI - initialAprilTagAngle), initialAprilTagDistance * Math.cos(Math.PI - initialAprilTagAngle));
-        originToAprilTagVector = initialPosition.getTranslation().plus(initialAprilTagVector);
+        builder.addDoubleProperty("angle to face target (degrees)", this::getThetaDegrees, null);
+        builder.addDoubleProperty("rotation from odometry (degrees)", this::getRotationDegrees, this::setThetaDegrees );
     }
 
     /**
