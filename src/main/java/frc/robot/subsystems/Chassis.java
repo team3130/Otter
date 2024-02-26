@@ -20,6 +20,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -52,7 +53,8 @@ public class Chassis extends SubsystemBase {
     private double targetP = 10d;
     private double targetI = 0d;
     private double targetD = 0d;
-    private boolean isTryingToTarget = false;
+    private boolean isTryingToTargetAmp = false;
+    private boolean isTryingToTargetSpeaker = false;
     private int fiducialID = 0;
     private PIDController targetController;
     private double XtargetV = 0;
@@ -111,19 +113,7 @@ public class Chassis extends SubsystemBase {
         public boolean targetControllerDone(){
             return targetController.atSetpoint();
         }
-        public boolean isTryingToTarget(){
-            return isTryingToTarget;
-        }
-        public void setTryingToTargetTrue(){
-            isTryingToTarget=true;
-        }
-        public void setTryingToTargetFalse(){
-            isTryingToTarget=false;
-        }
 
-        public void toggleIsTryingToTarget() {
-            isTryingToTarget = !isTryingToTarget;
-        }
 
         public void setXTargetV(double newXF){
             XtargetV = newXF ;
@@ -140,21 +130,26 @@ public class Chassis extends SubsystemBase {
             return YtargetF;
         }
 
-         public double getTargetToSpin2() {
-        return targetToSpinTo;
-    }
-        public void setTargetToSpinToSpeaker(){
-        targetToSpinTo = 0;
+
+        public boolean tryingToTargetSpeaker(double omega){
+            if (omega<0.1){
+               isTryingToTargetSpeaker = true;
+                return true;
+            }
+            else {
+                isTryingToTargetSpeaker = false;
+                return false;
+            }
         }
-        public void setTargetToSpinToAmp(){
-           targetToSpinTo = 1;
-         }
-        public boolean tryingToTargetSpeaker(){
-            return targetToSpinTo == 0;
+        public boolean tryingToTargetAmp(double omega) {
+            if (omega > 0.1) {
+                isTryingToTargetAmp = true;
+                return true;
+            } else {
+                isTryingToTargetAmp = false;
+                return false;
+            }
         }
-        public boolean tryingToTargetAmp(){
-            return targetToSpinTo == 1;
-         }
 
         public double goToTargetPower() {
             return targetController.calculate(getRotation2d().getRadians());
@@ -167,10 +162,10 @@ public class Chassis extends SubsystemBase {
             targetController.setTolerance(Math.toRadians(1.0));
             targetController.setPID(targetP, targetI, targetD);
 
-            if (tryingToTargetAmp()) {
+            if (isTryingToTargetAmp) {
                 targetController.setSetpoint(Math.toRadians(90));
             }
-            if (tryingToTargetSpeaker()) {
+            if (isTryingToTargetSpeaker) {
                 if (DriverStation.getAlliance().equals(DriverStation.Alliance.Blue)) {
                     targetController.setSetpoint(Math.toRadians(180));
                 } else if (DriverStation.getAlliance().equals(DriverStation.Alliance.Red)) {
@@ -423,7 +418,8 @@ public class Chassis extends SubsystemBase {
             builder.addDoubleProperty("target P", this::getTargetP, this::setTargetP);
             builder.addDoubleProperty("target I", this::getTargetI, this::setTargetI);
             builder.addDoubleProperty("target D", this::getTargetD, this::setTargetD);
-            builder.addBooleanProperty("is targeting", this::isTryingToTarget, null);
+            builder.addBooleanProperty("is targeting speaker", this::tryingToTargetSpeaker, null);
+            builder.addBooleanProperty("is targeting amp", this::tryingToTargetAmp, null);
             builder.addDoubleProperty("target F", this::getXTargetV, this::setXTargetV);
             builder.addDoubleProperty("target YF", this::getYTargetV, this::setYTargetV);
             builder.addDoubleProperty("target XF", this::getXTargetV, this::setXTargetV);

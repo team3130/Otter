@@ -5,24 +5,24 @@
 package frc.robot.commands.Chassis;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PS5Controller;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
-import frc.robot.subsystems.CameraSubsystem;
 import frc.robot.subsystems.Chassis;
 
 /** A default command to drive in teleop based off the joysticks*/
 public class TeleopDrive extends Command {
   private final Chassis chassis;
   private final PS5Controller controller;
-  private CameraSubsystem cam;
-  double theta = 0d;
-
+  private double theta = 0d;
+  private double x = 0d;
+  private double y = 0d;
+  private double omega = 0d;
 
   private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
-  public TeleopDrive(Chassis chassis, PS5Controller PS5controller, CameraSubsystem camera) {
+  public TeleopDrive(Chassis chassis, PS5Controller PS5controller) {
     this.chassis = chassis;
-    this.cam = camera;
     this.controller = PS5controller;
 
     // Use addRequirements() here to declare subsystem dependencies.
@@ -50,34 +50,48 @@ public class TeleopDrive extends Command {
     if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red && DriverStation.getAlliance().isPresent()) {
       y = controller.getRawAxis(Constants.PS5.LST_AXS_LJOYSTICKX);
       x = controller.getRawAxis(Constants.PS5.LST_AXS_LJOYSTICKY);
+    }
+    else{ //blue alliance
+      y = -controller.getRawAxis(Constants.PS5.LST_AXS_LJOYSTICKX);
+      x = -controller.getRawAxis(Constants.PS5.LST_AXS_LJOYSTICKY);
+    }
+      //theta doesnt need to be inverted depending on alliance
       theta = -controller.getRawAxis(Constants.PS5.LST_AXS_RJOYSTICKX);
-    if (chassis.isTryingToTarget() && Math.abs(thetaJoystick)<=0.2 ){
+      //silly name but its just used to target
+      omega = controller.getRawAxis(Constants.PS5.LST_AXS_LJOYSTICKY);
 
-      theta = chassis.goToTargetPower();
-    } else {
-      theta = thetaJoystick;
-      theta = Math.abs(theta) > Constants.Swerve.kDeadband ? theta : 0.0;
-      theta = turningLimiter.calculate(theta) * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond;
+      if (chassis.tryingToTargetAmp(omega)) { //checks if the right joystick is pushed up & sets boolean of if we targeting amp
+        chassis.resetTargetController(); //if we targeting amp sets setpoint 90 (and other shit)
+        theta = chassis.goToTargetPower(); //calculate using odo.rotation as proccess var
+      }
+      else if (chassis.tryingToTargetSpeaker(omega)) { //checks if right joystick is pushed down & sets boolean of if we targeting speaker
+        chassis.resetTargetController(); //if we targeting speaker sets setpoint to 180 or zero based on alliance
+        theta = chassis.goToTargetPower(); //calculate using odo.rotation as proccess var
+      }
+      else { //normal driving
+        theta = Math.abs(theta) > Constants.Swerve.kDeadband ? theta : 0.0;
+        theta = turningLimiter.calculate(theta) * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond;
+      }
+      // square the inputs
+      y = y * Math.abs(y);
+      x = x * Math.abs(x);
+
+      // apply dead-band
+      if (Math.abs(x) < Constants.Swerve.kDeadband) {
+        x = 0;
+      }
+      if (Math.abs(y) < Constants.Swerve.kDeadband) {
+        y = 0;
+      }
+
+
+      // apply slew rate limiter which also converts to m/s and rad.s
+      x = xLimiter.calculate(x * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
+      y = yLimiter.calculate(y * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
+
+      chassis.drive(x, y, theta); //uses either driving or targeting inputs for theta
     }
-    // square the inputs
-    y = y * Math.abs(y);
-    x = x * Math.abs(x);
 
-    // apply dead-band
-    if (Math.abs(x) < Constants.Swerve.kDeadband) {
-      x = 0;
-    }
-    if (Math.abs(y) < Constants.Swerve.kDeadband) {
-      y = 0;
-    }
-
-
-    // apply slew rate limiter which also converts to m/s and rad.s
-    x = xLimiter.calculate(x * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
-    y = yLimiter.calculate(y * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
-
-    chassis.drive(x,y,theta);
-  }
 
   /**
    * Called when the command is over.

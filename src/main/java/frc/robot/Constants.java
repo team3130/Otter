@@ -122,7 +122,7 @@ public final class Constants {
     public final static double kPhysicalMaxSpeedMetersPerSecond = 4.60; // 3.54 with 8 volts of voltage compensation and 4.19 with 10 volts
     public final static double kMaxSteerVoltage = 5d;
     public final static double kMaxDriveVoltage = 10d;
-    public final static double kDeadband = 0.075;
+    public final static double kDeadband = 0.055;
     public final static double kMaxAccelerationDrive = 7.5;
     public final static double kMaxAccelerationAngularDrive = 4.0*Math.PI;
 

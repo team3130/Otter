@@ -7,7 +7,6 @@
 
 package frc.robot;
 
-import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -20,15 +19,11 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
-import frc.robot.commands.*;
-import frc.robot.commands.Chassis.EnableTargeting;
 import frc.robot.commands.Chassis.TeleopDrive;
 import frc.robot.commands.Climber.ClimberReset;
-import frc.robot.commands.Climber.PitClimberBackwards;
 import frc.robot.commands.Climber.ClimberExtend;
 import frc.robot.subsystems.Chassis;
 import frc.robot.subsystems.Climber;
@@ -36,17 +31,13 @@ import frc.robot.commands.Auton.*;
 import frc.robot.commands.Shooter.*;
 import frc.robot.commands.ShooterShifter.DoubleExtend;
 import frc.robot.commands.ShooterShifter.DoubleRetract;
-import frc.robot.commands.ShooterShifter.ShortShifterExtend;
 import frc.robot.sensors.JoystickTrigger;
 import frc.robot.subsystems.*;
 import frc.robot.commands.Amp.*;
-import frc.robot.commands.Chassis.TeleopDrive;
 import frc.robot.commands.Chassis.ResetOdometry;
 import frc.robot.commands.Intake.*;
 import frc.robot.subsystems.Amp;
-import frc.robot.subsystems.Chassis;
 
-import javax.naming.Name;
 import java.util.function.BooleanSupplier;
 
 /**
@@ -68,7 +59,6 @@ public class RobotContainer {
   private final PS5Controller driverController = new PS5Controller(0);
   private final XboxController operatorController = new XboxController(1);
   private final SendableChooser<Command> autoChooser;
-  private final CameraSubsystem cameraSubsystem;
 
 
 
@@ -82,7 +72,6 @@ public class RobotContainer {
     chassis = new Chassis();
     amp = new Amp();
     intake = new Intake();
-    cameraSubsystem = new CameraSubsystem(chassis);
 
     // Named commands must be registered before the creation of any PathPlanner Autos or Paths
     // Do this in RobotContainer, after subsystem initialization, but before the creation of any other commands.
@@ -97,7 +86,7 @@ public class RobotContainer {
     exportShuffleBoardData(); // export ShuffleBoardData
 
     // Default commands running in the background when other commands not scheduled
-    chassis.setDefaultCommand(new TeleopDrive(chassis, driverController, cameraSubsystem));
+    chassis.setDefaultCommand(new TeleopDrive(chassis, driverController));
     leftClimber.setDefaultCommand(new ClimberExtend(leftClimber, operatorController));
     rightClimber.setDefaultCommand(new ClimberExtend(rightClimber, operatorController));
 
@@ -189,7 +178,6 @@ public class RobotContainer {
       tab.add(shooter);
       tab.add(intake);
       tab.add(leftClimber);
-      tab.add(cameraSubsystem);
     }
   }
 
@@ -213,8 +201,6 @@ public class RobotContainer {
     new JoystickButton(driverController, Constants.PS5.x).whileTrue(new Outtake(intake));
     new JoystickButton(driverController, Constants.PS5.circle).whileTrue(new AlwaysSpintake(intake));
 
-
-    new JoystickButton(driverController, Constants.PS5.triangle).onTrue(new EnableTargeting(chassis));
 
 
     // ANDREW OPERATOR
