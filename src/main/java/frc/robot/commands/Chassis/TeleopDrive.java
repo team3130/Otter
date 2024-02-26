@@ -64,10 +64,10 @@ public class TeleopDrive extends Command {
 
     if (chassis.tryingToTargetAmp(omega)) { //checks if the right joystick is pushed up & sets boolean of if we targeting amp
       chassis.resetTargetController(); //if we targeting amp sets setpoint 90 (and other shit)
-      theta = chassis.goToTargetPower(); //calculate using odo.rotation as proccess var
+      theta = chassis.goToTargetPower(); //calculate using odo.rotation as process var
     } else if (chassis.tryingToTargetSpeaker(omega)) { //checks if right joystick is pushed down & sets boolean of if we targeting speaker
       chassis.resetTargetController(); //if we targeting speaker sets setpoint to 180 or zero based on alliance
-      theta = chassis.goToTargetPower(); //calculate using odo.rotation as proccess var
+      theta = chassis.goToTargetPower(); //calculate using odo.rotation as process var
     } else { //normal driving
       theta = Math.abs(theta) > Constants.Swerve.kDeadband ? theta : 0.0;
       theta = turningLimiter.calculate(theta) * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond;
