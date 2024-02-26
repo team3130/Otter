@@ -23,6 +23,8 @@ public class Robot extends TimedRobot {
   private RobotContainer robotContainer;
   private Timer timer;
 
+  private RobotContainer m_robotContainer;
+
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -61,6 +63,7 @@ public class Robot extends TimedRobot {
       robotContainer.updateChassisPose();
     }
   }
+
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
