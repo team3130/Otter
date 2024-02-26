@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.Chassis;
 
 /** An example command that uses an example subsystem. */
-public class EnableTargeting extends InstantCommand {
+public class SetTargetSpeaker extends InstantCommand {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final Chassis chassis;
 
@@ -17,7 +17,7 @@ public class EnableTargeting extends InstantCommand {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public EnableTargeting(Chassis subsystem) {
+  public SetTargetSpeaker(Chassis subsystem) {
     chassis = subsystem;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(chassis);
@@ -26,13 +26,7 @@ public class EnableTargeting extends InstantCommand {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if(chassis.isTryingToTarget()){
-      chassis.setTryingToTargetFalse();
-    }
-    else{
-     chassis.setTryingToTargetTrue();
-     chassis.resetTargetController();
-    }
+    chassis.setTargetToSpinToSpeaker();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

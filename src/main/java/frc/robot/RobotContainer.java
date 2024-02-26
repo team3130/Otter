@@ -214,7 +214,7 @@ public class RobotContainer {
     new JoystickButton(driverController, Constants.PS5.circle).whileTrue(new AlwaysSpintake(intake));
 
 
-    new JoystickButton(driverController, Constants.PS5.triangle).onTrue(new EnableTargeting(cameraSubsystem));
+    new JoystickButton(driverController, Constants.PS5.triangle).onTrue(new EnableTargeting(chassis));
 
 
     // ANDREW OPERATOR

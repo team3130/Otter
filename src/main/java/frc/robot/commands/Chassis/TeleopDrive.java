@@ -6,7 +6,6 @@ package frc.robot.commands.Chassis;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.PS5Controller;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.CameraSubsystem;
@@ -48,13 +47,13 @@ public class TeleopDrive extends Command {
    */
   @Override
   public void execute() {
-    double y = -controller.getRawAxis(Constants.PS5.LST_AXS_LJOYSTICKX); // left stick y-axis (y-axis is inverted)
-    double x = -controller.getRawAxis(Constants.PS5.LST_AXS_LJOYSTICKY); // left stick x-axis
-    double thetaJoystick = -controller.getRawAxis(Constants.PS5.LST_AXS_RJOYSTICKX); // right stick x-axis
-    thetaJoystick = Math.abs(thetaJoystick) > Constants.Swerve.kDeadband ? thetaJoystick : 0.0;
+    if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red && DriverStation.getAlliance().isPresent()) {
+      y = controller.getRawAxis(Constants.PS5.LST_AXS_LJOYSTICKX);
+      x = controller.getRawAxis(Constants.PS5.LST_AXS_LJOYSTICKY);
+      theta = -controller.getRawAxis(Constants.PS5.LST_AXS_RJOYSTICKX);
+    if (chassis.isTryingToTarget() && Math.abs(thetaJoystick)<=0.2 ){
 
-    if (cam.isTryingToTarget() && Math.abs(thetaJoystick)<=0.2 ){
-      theta = cam.goToTargetPower();
+      theta = chassis.goToTargetPower();
     } else {
       theta = thetaJoystick;
       theta = Math.abs(theta) > Constants.Swerve.kDeadband ? theta : 0.0;

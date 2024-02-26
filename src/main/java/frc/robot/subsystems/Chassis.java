@@ -5,10 +5,15 @@
 package frc.robot.subsystems;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -47,6 +52,13 @@ public class Chassis extends SubsystemBase {
     private double targetP = 10d;
     private double targetI = 0d;
     private double targetD = 0d;
+    private boolean isTryingToTarget = false;
+    private int fiducialID = 0;
+    private PIDController targetController;
+    private double XtargetV = 0;
+    private double YtargetF = 0;
+
+    private int targetToSpinTo = 0; //0 is speaker and 1 is amp
 
     /**
      * Makes a chassis that starts at 0, 0, 0
@@ -81,6 +93,8 @@ public class Chassis extends SubsystemBase {
         field = new Field2d();
         SmartDashboard.putData("Field", field);
         n_fieldOrriented = Shuffleboard.getTab("Chassis").add("field orriented", false).getEntry();
+        targetController = new PIDController(targetP, targetI, targetD);
+
 
         AutoBuilder.configureHolonomic(
                 this::getPose2d, // Robot pose supplier
@@ -92,6 +106,79 @@ public class Chassis extends SubsystemBase {
                 this // Reference to this subsystem to set requirements
         );
     }
+
+
+        public boolean targetControllerDone(){
+            return targetController.atSetpoint();
+        }
+        public boolean isTryingToTarget(){
+            return isTryingToTarget;
+        }
+        public void setTryingToTargetTrue(){
+            isTryingToTarget=true;
+        }
+        public void setTryingToTargetFalse(){
+            isTryingToTarget=false;
+        }
+
+        public void toggleIsTryingToTarget() {
+            isTryingToTarget = !isTryingToTarget;
+        }
+
+        public void setXTargetV(double newXF){
+            XtargetV = newXF ;
+        }
+        public void setYTargetV(double newYF){
+            YtargetF = newYF ;
+        }
+
+
+        public double getXTargetV() {
+            return XtargetV;
+        }
+        public double getYTargetV() {
+            return YtargetF;
+        }
+
+         public double getTargetToSpin2() {
+        return targetToSpinTo;
+    }
+        public void setTargetToSpinToSpeaker(){
+        targetToSpinTo = 0;
+        }
+        public void setTargetToSpinToAmp(){
+           targetToSpinTo = 1;
+         }
+        public boolean tryingToTargetSpeaker(){
+            return targetToSpinTo == 0;
+        }
+        public boolean tryingToTargetAmp(){
+            return targetToSpinTo == 1;
+         }
+
+        public double goToTargetPower() {
+            return targetController.calculate(getRotation2d().getRadians());
+        }
+
+
+        public void resetTargetController() {
+            targetController.reset();
+            targetController.enableContinuousInput(-Math.PI, Math.PI);
+            targetController.setTolerance(Math.toRadians(1.0));
+            targetController.setPID(targetP, targetI, targetD);
+
+            if (tryingToTargetAmp()) {
+                targetController.setSetpoint(Math.toRadians(90));
+            }
+            if (tryingToTargetSpeaker()) {
+                if (DriverStation.getAlliance().equals(DriverStation.Alliance.Blue)) {
+                    targetController.setSetpoint(Math.toRadians(180));
+                } else if (DriverStation.getAlliance().equals(DriverStation.Alliance.Red)) {
+                    targetController.setSetpoint(Math.toRadians(0));
+                }
+            }
+        }
+
 
 
 
@@ -333,6 +420,13 @@ public class Chassis extends SubsystemBase {
             builder.addDoubleProperty("rotation", this::getYaw, null);
             builder.addDoubleProperty("max speed read", this::getMaxSpeedRead, null);
             builder.addStringProperty("odometry pose2d", this::getOdometry, null);
+            builder.addDoubleProperty("target P", this::getTargetP, this::setTargetP);
+            builder.addDoubleProperty("target I", this::getTargetI, this::setTargetI);
+            builder.addDoubleProperty("target D", this::getTargetD, this::setTargetD);
+            builder.addBooleanProperty("is targeting", this::isTryingToTarget, null);
+            builder.addDoubleProperty("target F", this::getXTargetV, this::setXTargetV);
+            builder.addDoubleProperty("target YF", this::getYTargetV, this::setYTargetV);
+            builder.addDoubleProperty("target XF", this::getXTargetV, this::setXTargetV);
         }
     }
 
