@@ -137,22 +137,22 @@ public class Chassis extends SubsystemBase {
     }
 
 
-        public boolean tryingToTargetSpeaker(double omega){
-            if (omega<0.1){
+        public boolean tryingToTargetSpeaker(double omega, double theta){
+            if (omega < 0.1 && Math.abs(theta) < 0.2){
                isTryingToTargetSpeaker = true;
-                return true;
-            }
-            else {
+               return true;
+            } else {
                 isTryingToTargetSpeaker = false;
                 return false;
             }
         }
-        public boolean tryingToTargetAmp(double omega) {
-            if (omega > 0.1) {
+
+        // if the right joystick is pushed up, trying to target = true
+        public boolean tryingToTargetAmp(double omega, double theta) {
+            if (omega > 0.1 && Math.abs(theta) < 0.2) {
                 isTryingToTargetAmp = true;
                 return true;
             } else {
-                isTryingToTargetAmp = false;
                 return false;
             }
         }
@@ -171,6 +171,7 @@ public class Chassis extends SubsystemBase {
             if (isTryingToTargetAmp) {
                 targetController.setSetpoint(Math.toRadians(90));
             }
+            
             if (isTryingToTargetSpeaker) {
                 if (DriverStation.getAlliance().equals(DriverStation.Alliance.Blue)) {
                     targetController.setSetpoint(Math.toRadians(180));
