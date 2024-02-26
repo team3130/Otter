@@ -173,9 +173,9 @@ public class Chassis extends SubsystemBase {
             }
 
             if (isTryingToTargetSpeaker) {
-                if (DriverStation.getAlliance().equals(DriverStation.Alliance.Blue)) {
+                if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
                     targetController.setSetpoint(Math.toRadians(180));
-                } else if (DriverStation.getAlliance().equals(DriverStation.Alliance.Red)) {
+                } else {
                     targetController.setSetpoint(Math.toRadians(0));
                 }
             }
