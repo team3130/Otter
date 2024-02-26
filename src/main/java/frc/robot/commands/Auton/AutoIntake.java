@@ -6,17 +6,20 @@ package frc.robot.commands.Auton;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
 
 /** An example command that uses an example subsystem. */
 public class AutoIntake extends InstantCommand {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final Intake intake;
+  private final Indexer indexer;
   private Timer timer = new Timer();
 
-  public AutoIntake(Intake intake) {
+  public AutoIntake(Intake intake, Indexer indexer) {
     this.intake = intake;
-    addRequirements(intake);
+    this.indexer = indexer;
+    addRequirements(intake, indexer);
   }
 
   // intake down, running at groundIntake speed
@@ -31,14 +34,14 @@ public class AutoIntake extends InstantCommand {
   @Override
   public void execute() {
     if (timer.hasElapsed(1)) {
-      intake.spintake();
+      indexer.spintake();
     }
   }
 
   // stop the note
   @Override
   public void end(boolean interrupted) {
-    intake.stoptake();
+    indexer.stoptake();
     intake.intakeUp();
   }
 
