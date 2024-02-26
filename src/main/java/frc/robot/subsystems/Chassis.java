@@ -129,6 +129,12 @@ public class Chassis extends SubsystemBase {
         public double getYTargetV() {
             return YtargetF;
         }
+        public boolean getIsTryingToTargetAmp(){
+        return isTryingToTargetAmp;
+        }
+    public boolean getIsTryingToTargetSpeaker(){
+        return isTryingToTargetSpeaker;
+    }
 
 
         public boolean tryingToTargetSpeaker(double omega){
@@ -418,8 +424,8 @@ public class Chassis extends SubsystemBase {
             builder.addDoubleProperty("target P", this::getTargetP, this::setTargetP);
             builder.addDoubleProperty("target I", this::getTargetI, this::setTargetI);
             builder.addDoubleProperty("target D", this::getTargetD, this::setTargetD);
-            builder.addBooleanProperty("is targeting speaker", this::tryingToTargetSpeaker, null);
-            builder.addBooleanProperty("is targeting amp", this::tryingToTargetAmp, null);
+            builder.addBooleanProperty("is targeting speaker", this::getIsTryingToTargetSpeaker, null);
+            builder.addBooleanProperty("is targeting amp", this::getIsTryingToTargetAmp, null);
             builder.addDoubleProperty("target F", this::getXTargetV, this::setXTargetV);
             builder.addDoubleProperty("target YF", this::getYTargetV, this::setYTargetV);
             builder.addDoubleProperty("target XF", this::getXTargetV, this::setXTargetV);
