@@ -171,7 +171,7 @@ public class Chassis extends SubsystemBase {
             if (isTryingToTargetAmp) {
                 targetController.setSetpoint(Math.toRadians(90));
             }
-            
+
             if (isTryingToTargetSpeaker) {
                 if (DriverStation.getAlliance().equals(DriverStation.Alliance.Blue)) {
                     targetController.setSetpoint(Math.toRadians(180));
