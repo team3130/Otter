@@ -15,10 +15,6 @@ import frc.robot.subsystems.Chassis;
 public class TeleopDrive extends Command {
   private final Chassis chassis;
   private final PS5Controller controller;
-  private double theta = 0d;
-  private double x = 0d;
-  private double y = 0d;
-  private double omega = 0d;
 
   private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
   public TeleopDrive(Chassis chassis, PS5Controller PS5controller) {
@@ -47,7 +43,13 @@ public class TeleopDrive extends Command {
    */
   @Override
   public void execute() {
-    if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red && DriverStation.getAlliance().isPresent()) {
+     double theta = 0d;
+     double x = 0d;
+     double y = 0d;
+     double omega = 0d;
+    //now theyre in the stack and easier to access (idk man)
+
+    if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
       y = controller.getRawAxis(Constants.PS5.LST_AXS_LJOYSTICKX);
       x = controller.getRawAxis(Constants.PS5.LST_AXS_LJOYSTICKY);
     } else { //blue alliance
