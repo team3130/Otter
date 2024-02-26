@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.75,
-      "y": 6.64
+      "x": 0.72,
+      "y": 6.65
     },
     "rotation": -120.0
   },
@@ -15,6 +15,12 @@
           "type": "named",
           "data": {
             "name": "ShiftDoubleExtend"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Flush-Turn"
           }
         },
         {
@@ -32,7 +38,7 @@
         {
           "type": "named",
           "data": {
-            "name": "ShootIndex"
+            "name": "Shoot"
           }
         },
         {
@@ -44,7 +50,7 @@
         {
           "type": "named",
           "data": {
-            "name": "ShootIndex"
+            "name": "Shoot"
           }
         },
         {

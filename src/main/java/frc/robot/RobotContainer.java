@@ -19,6 +19,8 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
@@ -87,7 +89,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("ShiftDoubleExtend", new AutonDoubleExtend(shooterShifter));
     NamedCommands.registerCommand("ShiftDoubleRetract", new AutonDoubleRetract(shooterShifter));
     NamedCommands.registerCommand("Flywheel", new AutoFlywheel(shooter));
-    NamedCommands.registerCommand("ShootIndex", new AutoIndexer(indexer));
+    NamedCommands.registerCommand("Index", new AutoIndexer(indexer));
 
     configureBindings(); // configure button bindings
     exportShuffleBoardData(); // export ShuffleBoardData
@@ -119,8 +121,16 @@ public class RobotContainer {
     return new ResetOdometry(chassis);
   }
 
-  public Command resetPneumatics() {
-    return new SequentialCommandGroup(new DoubleRetract(shooterShifter), new IntakeIn(intake), new AmpDown(amp));
+  public InstantCommand resetShooterShifter() {
+    return new DoubleRetract(shooterShifter);
+  }
+
+  public InstantCommand resetIntake() {
+    return new IntakeIn(intake);
+  }
+
+  public InstantCommand resetAmp() {
+    return new AmpDown(amp);
   }
   
   public void resetOdo() {

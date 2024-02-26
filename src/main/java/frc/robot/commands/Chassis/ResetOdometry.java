@@ -6,7 +6,9 @@ package frc.robot.commands.Chassis;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.Constants;
 import frc.robot.subsystems.Chassis;
 
 /**
@@ -23,6 +25,10 @@ public class ResetOdometry extends InstantCommand {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_chassis.resetOdometry(new Pose2d(0, 0, new Rotation2d()));
+    if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red && DriverStation.getAlliance().isPresent()) {
+      m_chassis.resetOdometry(new Pose2d(0, 0, new Rotation2d(Math.toRadians(180))));
+    } else {
+      m_chassis.resetOdometry(new Pose2d(0, 0, new Rotation2d()));
+    }
   }
 }

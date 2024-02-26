@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.73,
-      "y": 6.68
+      "x": 0.72,
+      "y": 6.65
     },
     "rotation": -120.0
   },
@@ -15,6 +15,12 @@
           "type": "named",
           "data": {
             "name": "ShiftDoubleExtend"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Flush-Turn"
           }
         },
         {

@@ -3,73 +3,57 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.73,
-        "y": 6.63
+        "x": 1.0,
+        "y": 6.6
       },
       "prevControl": null,
       "nextControl": {
-        "x": 0.8299999999999994,
-        "y": 6.63
+        "x": 1.0999999999999994,
+        "y": 6.6
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 0.95,
-        "y": 6.69
+        "x": 2.28,
+        "y": 7.08
       },
       "prevControl": {
-        "x": 0.85,
-        "y": 6.69
+        "x": 1.9877895466209514,
+        "y": 7.08
       },
       "nextControl": {
-        "x": 1.05,
-        "y": 6.69
+        "x": 2.572210453379048,
+        "y": 7.08
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.281268050080585,
-        "y": 7.079666069177927
+        "x": 3.35,
+        "y": 7.08
       },
       "prevControl": {
-        "x": 1.9890575967015365,
-        "y": 7.079666069177927
+        "x": 3.1754184977010267,
+        "y": 7.080000000000003
       },
       "nextControl": {
-        "x": 2.5734785034596332,
-        "y": 7.079666069177927
+        "x": 3.5245815022989735,
+        "y": 7.080000000000003
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.4985421335018243,
-        "y": 7.079666069177927
+        "x": 1.02,
+        "y": 6.6
       },
       "prevControl": {
-        "x": 3.323960631202851,
-        "y": 7.07966606917793
-      },
-      "nextControl": {
-        "x": 3.6731236358007977,
-        "y": 7.07966606917793
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 0.95,
-        "y": 6.69
-      },
-      "prevControl": {
-        "x": 0.8500000000000003,
-        "y": 6.69
+        "x": 0.9200000000000004,
+        "y": 6.6
       },
       "nextControl": null,
       "isLocked": false,
@@ -78,18 +62,13 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 1.5,
+      "waypointRelativePos": 0.75,
       "rotationDegrees": 180.0,
       "rotateFast": false
     },
     {
-      "waypointRelativePos": 3.05,
+      "waypointRelativePos": 2.05,
       "rotationDegrees": 180.0,
-      "rotateFast": false
-    },
-    {
-      "waypointRelativePos": 1.0,
-      "rotationDegrees": -140.0,
       "rotateFast": false
     }
   ],
@@ -114,7 +93,7 @@
     },
     {
       "name": "Flywheel",
-      "waypointRelativePos": 3.55,
+      "waypointRelativePos": 2.55,
       "command": {
         "type": "parallel",
         "data": {
