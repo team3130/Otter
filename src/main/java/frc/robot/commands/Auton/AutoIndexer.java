@@ -37,7 +37,7 @@ public class AutoIndexer extends Command {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        if (spinUpTime.hasElapsed(1.25)) {
+        if (spinUpTime.hasElapsed(.75)) {
             return true;
         } else {
             return false;

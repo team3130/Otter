@@ -32,15 +32,15 @@
     },
     {
       "anchor": {
-        "x": 3.35,
+        "x": 2.540491687094027,
         "y": 7.08
       },
       "prevControl": {
-        "x": 3.1754184977010267,
+        "x": 2.3659101847950534,
         "y": 7.080000000000003
       },
       "nextControl": {
-        "x": 3.5245815022989735,
+        "x": 2.7150731893930002,
         "y": 7.080000000000003
       },
       "isLocked": false,
@@ -85,23 +85,6 @@
               "type": "named",
               "data": {
                 "name": "Intake"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "name": "Flywheel",
-      "waypointRelativePos": 2.55,
-      "command": {
-        "type": "parallel",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "Flywheel"
               }
             }
           ]

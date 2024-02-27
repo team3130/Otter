@@ -38,10 +38,6 @@ public class AutoFlywheel extends Command {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        if (spinUpTime.hasElapsed(3)) {
-            return true;
-        } else {
-            return false;
-        }
+        return false;
     }
 }

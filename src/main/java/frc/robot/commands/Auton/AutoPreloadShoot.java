@@ -7,15 +7,14 @@ package frc.robot.commands.Auton;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Indexer;
-import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 
-public class AutoShoot extends Command {
+public class AutoPreloadShoot extends Command {
     private final Shooter shooter;
     private final Indexer indexer;
     private Timer spinUpTime = new Timer();
     private Timer timer2 = new Timer();
-    public AutoShoot(Shooter shooter, Indexer indexer) {
+    public AutoPreloadShoot(Shooter shooter, Indexer indexer) {
         this.shooter = shooter;
         this.indexer = indexer;
         addRequirements(shooter);
@@ -33,7 +32,7 @@ public class AutoShoot extends Command {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        if (spinUpTime.hasElapsed(1)){
+        if (spinUpTime.hasElapsed(0.5)){
             indexer.spintake();
         }
     }
@@ -48,7 +47,7 @@ public class AutoShoot extends Command {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        if (timer2.hasElapsed(1.5)) {
+        if (timer2.hasElapsed(1)) {
             return true;
         } else {
             return false;
