@@ -7,26 +7,38 @@ package frc.robot.subsystems;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.commands.Intake.SmartSpintake;
 
 public class LEDSubsystem extends SubsystemBase {
-  private final int ledLength = 61;
-  AddressableLED led;
-  AddressableLEDBuffer ledBuffer;
+  AddressableLED ampLEDs;
+  AddressableLED shooterLEDs;
+  AddressableLED leftClimberLEDs;
+  AddressableLED rightClimberLEDs;
+  AddressableLEDBuffer ampBuffer;
+  AddressableLEDBuffer shooterBuffer;
+  AddressableLEDBuffer leftClimberBuffer;
+  AddressableLEDBuffer rightClimberBuffer;
+
+  private final int ampLength = 20;
+  private final int shooterLength = 23;
+  private final int climberLength = 5;
   private int testShuff = 0;
 
   public LEDSubsystem() {
-    led = new AddressableLED(0); // PWM Port
+    ampLEDs = new AddressableLED(0); // PWM Port
+    shooterLEDs = new AddressableLED(1); // PWM Port
+    leftClimberLEDs = new AddressableLED(2); // PWM Port
+    rightClimberLEDs = new AddressableLED(3); // PWM Port
 
-    ledBuffer = new AddressableLEDBuffer(ledLength); // set length once
-    led.setLength(ledBuffer.getLength());
+    ampBuffer = new AddressableLEDBuffer(ampLength); // set length once
+    ampLEDs.setLength(ampBuffer.getLength());
+
+
 
     // Set the data
-    led.setData(ledBuffer);
-    led.start();
+    ampLEDs.setData(ampBuffer);
+    ampLEDs.start();
   }
 
   /* HSV: h == set the value, s == saturation, v == brightness value
@@ -39,75 +51,75 @@ public class LEDSubsystem extends SubsystemBase {
   */
 
   public void testShuffleboard() {
-    for (var i = 0; i < ledBuffer.getLength(); i++) {
-      ledBuffer.setHSV(i, testShuff, 255, 128);
+    for (var i = 0; i < ampBuffer.getLength(); i++) {
+      ampBuffer.setHSV(i, testShuff, 255, 128);
     }
-    led.setData(ledBuffer);
+    led.setData(ampBuffer);
   }
 
   public void defaultYellow() {
-    for (var i = 0; i < ledBuffer.getLength(); i++) {
-      ledBuffer.setHSV(i, 80, 255, 128);
+    for (var i = 0; i < ampBuffer.getLength(); i++) {
+      ampBuffer.setHSV(i, 80, 255, 128);
     }
-    led.setData(ledBuffer);
+    led.setData(ampBuffer);
   }
 
   public void red() {
-    for (var i = 0; i < ledBuffer.getLength(); i++) {
-      ledBuffer.setHSV(i, 0, 255, 128);
+    for (var i = 0; i < ampBuffer.getLength(); i++) {
+      ampBuffer.setHSV(i, 0, 255, 128);
     }
-    led.setData(ledBuffer);
+    led.setData(ampBuffer);
   }
 
   public void greenRobot() {
-    for (var i = 0; i < ledBuffer.getLength(); i++) {
-      ledBuffer.setHSV(i, 150, 255, 128);
+    for (var i = 0; i < ampBuffer.getLength(); i++) {
+      ampBuffer.setHSV(i, 150, 255, 128);
     }
-    led.setData(ledBuffer);
+    led.setData(ampBuffer);
   }
 
   public void greenShooter() {
     for (var i = 5; i < 15; i++) {
-      ledBuffer.setHSV(i, 150, 255, 128);
+      ampBuffer.setHSV(i, 150, 255, 128);
     }
-    led.setData(ledBuffer);
+    led.setData(ampBuffer);
   }
 
   public void blue() {
-    for (var i = 0; i < ledBuffer.getLength(); i++) {
-      ledBuffer.setHSV(i, 260, 255, 128);
+    for (var i = 0; i < ampBuffer.getLength(); i++) {
+      ampBuffer.setHSV(i, 260, 255, 128);
     }
-    led.setData(ledBuffer);
+    led.setData(ampBuffer);
   }
 
   public void selectGreen() {
     for (var i = 20; i < 40; i++) {
-      ledBuffer.setHSV(i, 150, 255, 128);
+      ampBuffer.setHSV(i, 150, 255, 128);
     }
-    led.setData(ledBuffer);
+    led.setData(ampBuffer);
   }
 
   public void reset() {
-    for (var i = 0; i < ledBuffer.getLength(); i++) {
-      ledBuffer.setHSV(i, 0, 255, 0);
+    for (var i = 0; i < ampBuffer.getLength(); i++) {
+      ampBuffer.setHSV(i, 0, 255, 0);
     }
-    led.setData(ledBuffer);
+    led.setData(ampBuffer);
   }
 
   public void rainbow() {
     int rainbowFirstPixelHue = 20;
     // For every pixel
-    for (var i = 0; i < ledBuffer.getLength(); i++) {
+    for (var i = 0; i < ampBuffer.getLength(); i++) {
       // Calculate the hue - hue is easier for rainbows because the color
       // shape is a circle so only one value needs to precess
-      final var hue = (rainbowFirstPixelHue + (i * 180 / ledBuffer.getLength())) % 180;
-      ledBuffer.setHSV(i, hue, 255, 128);
+      final var hue = (rainbowFirstPixelHue + (i * 180 / ampBuffer.getLength())) % 180;
+      ampBuffer.setHSV(i, hue, 255, 128);
     }
     // Increase by to make the rainbow "move"
     rainbowFirstPixelHue += 3;
     // Check bounds
     rainbowFirstPixelHue %= 180;
-    led.setData(ledBuffer);
+    led.setData(ampBuffer);
   }
 
   public int getTestShuff() { return testShuff; }

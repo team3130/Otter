@@ -57,13 +57,8 @@ public class Amp extends SubsystemBase {
     ampMotor.set(ControlMode.PercentOutput, 0);
   }
 
-<<<<<<< HEAD
-  public boolean getAmpLimitSwitch() {
-    return ampLimit.get();
-=======
   public boolean getLimitSwitch() {
     return !ampLimit.get();
->>>>>>> 1af8010127b1104b20d41f5928736c28b70f6912
   }
   public boolean getPneumaticState() {
     return ampPneumatic.get();
@@ -102,13 +97,6 @@ public class Amp extends SubsystemBase {
    * exports data to Shuffleboard
    */
   public void initSendable(SendableBuilder builder) {
-<<<<<<< HEAD
-    builder.setSmartDashboardType("Amp");
-    builder.addDoubleProperty("Intake Amp Speed", this::getIntakeAmpSpeed, this::setIntakeAmpSpeed);
-    builder.addDoubleProperty("Outtake Amp Speed", this::getOuttakeAmpSpeed, this::setOuttakeAmpSpeed);
-    builder.addBooleanProperty("Limit Switch", this::getAmpLimitSwitch, null);
-    builder.addBooleanProperty("Pneumatic Status", this::getPneumaticState, null);
-=======
     if (Constants.debugMode) {
       builder.setSmartDashboardType("Amp");
       builder.addDoubleProperty("Intake Amp Speed", this::getIntakeAmpSpeed, this::setIntakeAmpSpeed);
@@ -116,7 +104,5 @@ public class Amp extends SubsystemBase {
       builder.addBooleanProperty("Limit Switch", this::getLimitSwitch, null);
       builder.addBooleanProperty("Pneumatic Status", this::getPneumaticState, null);
     }
->>>>>>> 1af8010127b1104b20d41f5928736c28b70f6912
   }
-
 }

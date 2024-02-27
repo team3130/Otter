@@ -37,7 +37,8 @@ public class Robot extends TimedRobot {
     timer = new Timer();
     timer.reset();
     timer.start();
-    robotContainer.LEDDefaultYellow();
+
+    CommandScheduler.getInstance().schedule(robotContainer.LEDDefaultYellow());
   }
 
   /**

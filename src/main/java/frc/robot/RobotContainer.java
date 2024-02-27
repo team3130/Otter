@@ -19,7 +19,6 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -30,6 +29,7 @@ import frc.robot.commands.Climber.ClimberExtend;
 import frc.robot.commands.Indexer.AlwaysIndex;
 import frc.robot.commands.Intake.LimitSpintake;
 import frc.robot.commands.Indexer.Outtake;
+import frc.robot.commands.LEDs.DefaultYellow;
 import frc.robot.commands.ShooterShifter.ShortShifterExtend;
 import frc.robot.subsystems.Chassis;
 import frc.robot.subsystems.Climber;
@@ -82,6 +82,8 @@ public class RobotContainer {
     amp = new Amp();
     intake = new Intake();
     indexer = new Indexer();
+
+    led = new LEDSubsystem();
 
     // Named commands must be registered before the creation of any PathPlanner Autos or Paths
     // Do this in RobotContainer, after subsystem initialization, but before the creation of any other commands.
@@ -137,31 +139,20 @@ public class RobotContainer {
   }
 
   public void LEDPeriodic() {
-    if (intake.getIntakeHasNote() || amp.getAmpLimitSwitch() || leftClimber.brokeLimit()) {
+    if (intake.getIntakeLimitSwitch() || amp.getLimitSwitch() || leftClimber.getClimbDone()) {
       led.greenRobot();
-    } else if (intake.getNoteReadyToShoot()) {
-      led.greenShooter();
     } else {
       led.defaultYellow();
     }
-
-    if (leftClimber.getInvalidInput() || rightClimber.getInvalidInput()) {
-      led.red();
-    } else {
-      led.defaultYellow();
-    }
-  }
-  
-
-  public void LEDDefaultYellow() {
     led.defaultYellow();
+  }
+
+  public Command LEDDefaultYellow() {
+    return new DefaultYellow(led);
   }
 
   public void resetOdo() {
     chassis.resetOdometry(new Pose2d(0, 0, new Rotation2d()));
-  }
-  public Command visionShifterVelocityShoot() {
-    return new SequentialCommandGroup(new VisionShift(shooterShifter), new VisionVelocityShoot(shooter));
   }
 
   /*
