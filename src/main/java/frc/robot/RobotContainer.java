@@ -1,36 +1,48 @@
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
 
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.PS5Controller;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.Chassis.TeleopDrive;
-import frc.robot.commands.Chassis.ZeroEverything;
-import frc.robot.commands.Climber.PitClimber;
+import frc.robot.commands.Climber.ClimberReset;
 import frc.robot.commands.Climber.ClimberExtend;
+import frc.robot.commands.Indexer.AlwaysIndex;
+import frc.robot.commands.Intake.LimitSpintake;
+import frc.robot.commands.Indexer.Outtake;
+import frc.robot.commands.ShooterShifter.ShortShifterExtend;
 import frc.robot.subsystems.Chassis;
 import frc.robot.subsystems.Climber;
-import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.commands.Auton.*;
 import frc.robot.commands.Shooter.*;
-import frc.robot.commands.ShooterShifter.*;
-import frc.robot.commands.Autos;
-import frc.robot.commands.Intake.*;
-import frc.robot.commands.Shooter.OnlyShoot;
-import frc.robot.commands.Shooter.Shoot;
+import frc.robot.commands.ShooterShifter.DoubleExtend;
+import frc.robot.commands.ShooterShifter.DoubleRetract;
+import frc.robot.sensors.JoystickTrigger;
 import frc.robot.subsystems.*;
+import frc.robot.commands.Amp.*;
+import frc.robot.commands.Chassis.ResetOdometry;
+import frc.robot.commands.Intake.*;
+import frc.robot.subsystems.Amp;
 
 import java.util.function.BooleanSupplier;
 
@@ -43,36 +55,44 @@ import java.util.function.BooleanSupplier;
 
 // The robot's subsystems and commands are defined here...
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
-  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   private final Chassis chassis;
+  private final Amp amp;
+  private final Intake intake;
+  private final Shooter shooter;
+  private final Indexer indexer;
+  private final ShooterShifter shooterShifter;
   private final Climber leftClimber;
   private final Climber rightClimber;
-  private final Amp amp;
-  private final Shooter shooter;
-  private final Intake intake;
-  private final LEDSubsystem led;
-  private final XboxController driverController = new XboxController(0);
+  private final PS5Controller driverController = new PS5Controller(0);
   private final XboxController operatorController = new XboxController(1);
+  private final LEDSubsystem led;
   private final SendableChooser<Command> autoChooser;
-  private final ShooterShifter shooterShifter;
+  //private static SendableChooser<BooleanSupplier> isFieldMirrored = new SendableChooser<>();
+  //private static Optional<DriverStation.Alliance> alliance = DriverStation.getAlliance();
+
 
   // container for the robot containing subsystems, OI devices, and commands
   public RobotContainer() {
+    leftClimber = new Climber(Constants.CAN.climberLeft, Constants.IDs.kLLimitSwitch, Constants.XBox.LST_AXS_RJOYSTICKY, false);
+    rightClimber = new Climber(Constants.CAN.climberRight, Constants.IDs.kRLimitSwitch, Constants.XBox.LST_AXS_LJOYSTICKY, false);
 
-    leftClimber = new Climber(Constants.Climber.kLMotor, Constants.Climber.kLLimitSwitch, Constants.Buttons.LST_AXS_LJOYSTICKY);
-    rightClimber = new Climber(Constants.Climber.kRMotor, Constants.Climber.kRLimitSwitch, Constants.Buttons.LST_AXS_RJOYSTICKY);
-
-    led = new LEDSubsystem();
     shooter = new Shooter();
-    intake = new Intake();
+    shooterShifter = new ShooterShifter();
     chassis = new Chassis();
     amp = new Amp();
-    shooterShifter = new ShooterShifter();
+    intake = new Intake();
+    indexer = new Indexer();
 
     // Named commands must be registered before the creation of any PathPlanner Autos or Paths
     // Do this in RobotContainer, after subsystem initialization, but before the creation of any other commands.
-      // NamedCommands.registerCommand("spinHopper", hopper.spinHopperAuto());
+    NamedCommands.registerCommand("Shoot", new AutoShoot(shooter, indexer));
+    NamedCommands.registerCommand("PreloadShoot", new AutoPreloadShoot(shooter, indexer));
+    NamedCommands.registerCommand("Intake", new AutoIntake(intake, indexer));
+    NamedCommands.registerCommand("ShiftDoubleExtend", new AutonDoubleExtend(shooterShifter));
+    NamedCommands.registerCommand("ShiftDoubleRetract", new AutonDoubleRetract(shooterShifter));
+    NamedCommands.registerCommand("ShiftShortExtend", new AutonMidShifter(shooterShifter));
+    NamedCommands.registerCommand("Flywheel", new AutoFlywheel(shooter));
+    NamedCommands.registerCommand("Index", new AutoIndexer(indexer));
 
     configureBindings(); // configure button bindings
     exportShuffleBoardData(); // export ShuffleBoardData
@@ -82,36 +102,39 @@ public class RobotContainer {
     leftClimber.setDefaultCommand(new ClimberExtend(leftClimber, operatorController));
     rightClimber.setDefaultCommand(new ClimberExtend(rightClimber, operatorController));
 
+    //this.isFieldMirrored = new SendableChooser<>();
+    //ally = DriverStation.getAlliance();
+    //populateChooser();
 
     // Build an auto chooser. This will use Commands.none() as the default option.
-    // autoChooser = AutoBuilder.buildAutoChooser();
-    autoChooser = AutoBuilder.buildAutoChooser("up");
+    autoChooser = AutoBuilder.buildAutoChooser("ShootLoadedIntakeTop");
     SmartDashboard.putData("Auto Chooser", autoChooser);
+  }
+
+  public void resetClimbers(){
+    leftClimber.setIsClimberReset(true);
+    rightClimber.setIsClimberReset(true);
   }
 
   public Command pick() {
     return autoChooser.getSelected();
   }
 
-  public Command getPullOut() {
-    return new PathPlannerAuto("Pull out");
+  public Command resetOdometry() {
+    return new ResetOdometry(chassis);
   }
 
-
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
-  public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    return Autos.exampleAuto(m_exampleSubsystem);
+  public InstantCommand resetShooterShifter() {
+    return new DoubleRetract(shooterShifter);
   }
 
-  public Command resetEverything() {
-    return new ZeroEverything(chassis);
+  public InstantCommand resetIntake() {
+    return new IntakeIn(intake);
   }
 
+  public InstantCommand resetAmp() {
+    return new AmpDown(amp);
+  }
 
   public void LEDPeriodic() {
     if (intake.getIntakeHasNote() || amp.getAmpLimitSwitch() || leftClimber.brokeLimit()) {
@@ -128,6 +151,7 @@ public class RobotContainer {
       led.defaultYellow();
     }
   }
+  
 
   public void LEDDefaultYellow() {
     led.defaultYellow();
@@ -140,21 +164,14 @@ public class RobotContainer {
     return new SequentialCommandGroup(new VisionShift(shooterShifter), new VisionVelocityShoot(shooter));
   }
 
+  /*
+  public Command visionShifterVelocityShoot() {
+    return new SequentialCommandGroup(new VisionShift(shooterShifter), new VisionVelocityShoot(shooter));
+  }
+  */
+
   public void updateChassisPose() {
     chassis.updateOdometryFromSwerve();
-  }
-
-  /*
-  Boolean supplier that controls when the path will be mirrored for the red alliance
-  This will flip the path being followed to the red side of the field.
-  THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-   */
-  public static BooleanSupplier isFieldMirrored() {
-    var alliance = DriverStation.getAlliance();
-    if (alliance.isPresent()) {
-      return () -> (alliance.get() == DriverStation.Alliance.Red);
-    }
-    return () -> false;
   }
 
   /**
@@ -162,14 +179,24 @@ public class RobotContainer {
    */
   public void exportShuffleBoardData() {
     if (Constants.debugMode) {
-      ShuffleboardTab tab = Shuffleboard.getTab("Subsystems");
+      ShuffleboardTab tab = Shuffleboard.getTab("Subsystem Test");
+      tab.add(chassis);
       tab.add(shooter);
       tab.add(intake);
-      tab.add(chassis);
-      tab.add(amp);
-      chassis.exportSwerveModData(Shuffleboard.getTab("Swerve Modules"));
+      tab.add(leftClimber);
     }
   }
+
+  /**
+   * Use this to pass the autonomous command to the main {@link Robot} class.
+   *
+   * @return the command to run in autonomous
+
+  public Command getAutonomousCommand() {
+  // An example command will be run in autonomous
+  return Autos.exampleAuto(m_exampleSubsystem);
+  }
+   */
 
   // This method defines trigger -> command mappings
   // Triggers created via the Trigger constructor
@@ -177,15 +204,33 @@ public class RobotContainer {
   // CommandPS4Controller subclass for PS4 Controller
   // CommandJoystick for flight joysticks
   private void configureBindings() {
-    new JoystickButton(driverController, Constants.Buttons.LST_POV_E).whileTrue(new PitClimber(leftClimber));
-    new JoystickButton(driverController, Constants.Buttons.LST_POV_S).whileTrue(new PitClimber(rightClimber));
+    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
+    /*
+    new Trigger(m_exampleSubsystem::exampleCondition)
+            .onTrue(new ExampleCommand(m_exampleSubsystem));
+    */
 
+    // GAVIN DRIVER
+    new POVButton(driverController, Constants.PS5.LST_POV_N).whileTrue(new ResetOdometry(chassis));
+    new JoystickTrigger(driverController, Constants.PS5.LST_AXS_LTRIGGER).whileTrue(new AmpOuttake(amp));
+    new JoystickTrigger(driverController, Constants.PS5.LST_AXS_RTRIGGER).whileTrue(new LimitSpintake(intake, indexer));
+    new JoystickButton(driverController, Constants.PS5.LST_BTN_RBUMPER).whileTrue(new ToggleIntakeIn(intake));
+    new JoystickButton(driverController, Constants.PS5.x).whileTrue(new Outtake(indexer));
+    new JoystickButton(driverController, Constants.PS5.circle).whileTrue(new AlwaysIndex(indexer));
 
-    //new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new OnlyIndex(indexer));
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_A).whileTrue(new OnlyShoot(shooter));
-    new JoystickButton(operatorController, Constants.Buttons.LST_BTN_RBUMPER).whileTrue(new SequentialCommandGroup(new SmartSpintake(intake), new SmartIndex(intake)));
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(new Shoot(shooter));
+    // ANDREW OPERATOR
+    new JoystickButton(operatorController, Constants.XBox.LST_BTN_Y).whileTrue(new ToggleAmp(amp));
+    new JoystickButton(operatorController, Constants.XBox.LST_BTN_B).whileTrue(new AmpIntake(amp));
+    new JoystickButton(operatorController, Constants.XBox.LST_BTN_A).whileTrue(new AlwaysAmpIntake(amp));
+
+    new JoystickButton(operatorController, Constants.XBox.LST_BTN_RBUMPER).whileTrue(new OnlyShoot(shooter));
+    new JoystickTrigger(operatorController, Constants.XBox.LST_AXS_RTRIGGER).whileTrue(new AlwaysIndex(indexer));
+
+    new JoystickButton(operatorController, Constants.XBox.LST_BTN_LBUMPER).whileTrue(new DoubleExtend(shooterShifter));
+    new POVButton(operatorController, Constants.XBox.LST_POV_N).whileTrue(new DoubleRetract(shooterShifter));
+    new JoystickTrigger(operatorController, Constants.XBox.LST_AXS_LTRIGGER).whileTrue(new ShortShifterExtend(shooterShifter)); // correct
+
     //new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new VelocityShoot(shooter));
-    new JoystickButton(driverController, Constants.Buttons.LST_BTN_X).whileTrue(visionShifterVelocityShoot());
+    //new JoystickButton(operatorController, Constants.Buttons.LST_BTN_RBUMPER).whileTrue(new SequentialCommandGroup(new SmartSpintake(intake), new SmartIndex(intake)));
   }
 }

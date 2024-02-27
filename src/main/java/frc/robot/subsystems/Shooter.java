@@ -19,14 +19,11 @@ import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class Shooter extends SubsystemBase {
     private final TalonFX topFlywheel; // we should probably change these names once we learn more
     private final TalonFX bottomFlywheel; // we should probably change these names once we learn more
-    // double proportionVolt = 1.05;
-    private final TalonSRX indexMotor;
-    private double shooterIndexSpeed = 0.50;
-    private double flywheelRampTime = 0;
 
     final VoltageOut topVoltReq = new VoltageOut(0);
     final VoltageOut bottomVoltReq = new VoltageOut(0);
@@ -34,7 +31,7 @@ public class Shooter extends SubsystemBase {
     final VelocityVoltage bottomVelocityRequest = new VelocityVoltage(0).withSlot(0); // class instance
     double topVelocitySetpoint = 8;
     double bottomVelocitySetpoint = 8;
-    private double flywheelVolts = 3;
+    private double flywheelVolts = 5;
 
     Slot0Configs slot0Configs; // gains for top flywheel slot
     private double slot0_kS = 0; // DONT USE KS
@@ -56,13 +53,8 @@ public class Shooter extends SubsystemBase {
 
 
     public Shooter() {
-        topFlywheel = new TalonFX(8);
-        bottomFlywheel = new TalonFX(9);
-        indexMotor = new TalonSRX(10);
-
-        indexMotor.configFactoryDefault();
-        indexMotor.setNeutralMode(NeutralMode.Brake);
-        indexMotor.setInverted(true);
+        topFlywheel = new TalonFX(Constants.CAN.shooterTopFlywheel);
+        bottomFlywheel = new TalonFX(Constants.CAN.shooterBottomFlywheel);
 
         topFlywheel.getConfigurator().apply(new TalonFXConfiguration()); // config factory default
         bottomFlywheel.getConfigurator().apply(new TalonFXConfiguration()); // config factory default
@@ -93,11 +85,13 @@ public class Shooter extends SubsystemBase {
         slot1Configs.kI = slot1_kI; // 1/rot - output per unit of integrated error in velocity (output/rotation)
         slot1Configs.kD = slot1_kD; // output per unit of error derivative in velocity (output/ (rps/s))         indexMotor.configVoltageCompSaturation(4);
 
-        ShuffleboardTab tab = Shuffleboard.getTab("Shooter Velocity");
-        tab.addDouble("Top Velocity Graph", this::getTopFlyVelocityRPS).withWidget("Graph").withPosition(0, 0).withSize(4, 3);
-        tab.addDouble("Bottom Velocity Graph", this::getBottomFlyVelocityRPS).withWidget("Graph").withPosition(0, 3).withSize(4, 3);
-        tab.addDouble("Top Flywheel Velocity", this::getTopFlyVelocityRPS).withPosition(4, 0).withSize(1, 1);
-        tab.addDouble("Bottom Flywheel Velocity", this::getBottomFlyVelocityRPM).withPosition(4, 3).withSize(1, 1);
+        if (Constants.debugMode) {
+            ShuffleboardTab tab = Shuffleboard.getTab("Shooter Velocity");
+            tab.addDouble("Top Velocity Graph", this::getTopFlyVelocityRPS).withWidget("Graph").withPosition(0, 0).withSize(4, 3);
+            tab.addDouble("Bottom Velocity Graph", this::getBottomFlyVelocityRPS).withWidget("Graph").withPosition(0, 3).withSize(4, 3);
+            tab.addDouble("Top Flywheel Velocity", this::getTopFlyVelocityRPS).withPosition(4, 0).withSize(1, 1);
+            tab.addDouble("Bottom Flywheel Velocity", this::getBottomFlyVelocityRPM).withPosition(4, 3).withSize(1, 1);
+        }
     }
 
     public void runShooters() {
@@ -108,14 +102,6 @@ public class Shooter extends SubsystemBase {
     public void stopShooters() {
         topFlywheel.setControl(topVoltReq.withOutput(0));
         bottomFlywheel.setControl(bottomVoltReq.withOutput(0));
-    }
-
-    public void runIndexers() {
-        indexMotor.set(ControlMode.PercentOutput, shooterIndexSpeed);
-    }
-
-    public void stopIndexers() {
-        indexMotor.set(ControlMode.PercentOutput, 0);
     }
 
     public void updateVelocityPID() {
@@ -146,7 +132,6 @@ public class Shooter extends SubsystemBase {
 
     @Override
     public void periodic() {
-
     }
 
     /*
@@ -158,9 +143,6 @@ public class Shooter extends SubsystemBase {
         proportionVolt = newProp;
     }
      */
-
-    public double getShooterIndexSpeed() {return shooterIndexSpeed;}
-    public void setShooterIndexSpeed(double speedy){ shooterIndexSpeed = speedy;}
 
     public double getTopFlyVelocityRPS() { return topFlywheel.getVelocity().getValue(); }
     public double getBottomFlyVelocityRPS() { return bottomFlywheel.getVelocity().getValue();}
@@ -174,9 +156,6 @@ public class Shooter extends SubsystemBase {
     public double getBottomCurrent() {return bottomFlywheel.getSupplyCurrent().getValue();}
 
     public double getFlywheelRampTime() { return this.getFlywheelVolts();}
-    public void setFlywheelRampTime(double newTime) { this.flywheelRampTime = newTime;}
-
-
     public double getFlywheelVolts(){ return flywheelVolts;}
     public void setFlywheelVolts(double volt){flywheelVolts = volt;}
 
@@ -211,7 +190,6 @@ public class Shooter extends SubsystemBase {
     public void initSendable(SendableBuilder builder) {
         builder.setSmartDashboardType("Shooter");
         //builder.addDoubleProperty("proportion speed", this::getProportionVolt, this::setProportionVolt);
-        builder.addDoubleProperty("Flywheel Ramp Time", this::getFlywheelRampTime, this::setFlywheelRampTime);
         builder.addDoubleProperty("shooter volts", this::getFlywheelVolts, this::setFlywheelVolts);
 
         builder.addDoubleProperty("Top Flywheel Velocity (RPS)", this::getTopFlyVelocityRPS, null);
@@ -238,8 +216,6 @@ public class Shooter extends SubsystemBase {
         builder.addDoubleProperty("slot 1 kI", this::getSlot1_kI, this::setSlot1_kI);
         builder.addDoubleProperty("slot 1 kD", this::getSlot1_kD, this::setSlot1_kD);
 
-        builder.setSmartDashboardType("Indexer");
-        builder.addDoubleProperty("speed", this::getShooterIndexSpeed, this::setShooterIndexSpeed);
     }
 
     @Override

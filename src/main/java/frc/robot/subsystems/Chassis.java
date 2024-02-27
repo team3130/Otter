@@ -8,6 +8,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -21,11 +22,11 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.sensors.Navx;
 import frc.robot.swerve.SwerveModule;
 
 import java.util.Arrays;
-import java.util.function.Consumer;
 
 /**
  * Chassis is the drivetrain subsystem of our bot. Our physical chassis is a swerve drive, 
@@ -40,6 +41,12 @@ public class Chassis extends SubsystemBase {
     private double maxSpeedRead = 0; // updated periodically with the maximum speed that has been read on any of the swerve modules
     private final Field2d field; // sendable that gets put on shuffleboard with the auton trajectory and the robots current position
     private final GenericEntry n_fieldOrriented; // comp network table entry for whether field oriented drivetrain
+    private double targetMaxVelo = Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond; //TODO real
+    private double targetMaxAcc = Constants.Swerve.kMaxAccelerationDrive; //TODO real
+    private PIDController robotAngleController;
+    private double targetP = 10d;
+    private double targetI = 0d;
+    private double targetD = 0d;
 
     Rotation2d angleSetpoint = null;
 
@@ -56,13 +63,17 @@ public class Chassis extends SubsystemBase {
         kinematics = new SwerveDriveKinematics(Constants.Swerve.moduleTranslations);
 
         modules = new SwerveModule[4];
-        modules[Constants.Modules.leftFront] = new SwerveModule(Constants.Modules.leftFront);
-        modules[Constants.Modules.leftBack] = new SwerveModule(Constants.Modules.leftBack);
-        modules[Constants.Modules.rightFront] = new SwerveModule(Constants.Modules.rightFront);
-        modules[Constants.Modules.rightBack] = new SwerveModule(Constants.Modules.rightBack);
+        modules[Constants.SwerveModules.one] = new SwerveModule(Constants.SwerveModules.one);
+        modules[Constants.SwerveModules.two] = new SwerveModule(Constants.SwerveModules.two);
+        modules[Constants.SwerveModules.three] = new SwerveModule(Constants.SwerveModules.three);
+        modules[Constants.SwerveModules.four] = new SwerveModule(Constants.SwerveModules.four);
 
         // odometry wrapper class that has functionality for cameras that report position with latency
         odometry = new SwerveDrivePoseEstimator(kinematics, startingRotation, generatePoses(), startingPos);
+
+        robotAngleController = new PIDController(targetP, targetI, targetD);
+        robotAngleController.enableContinuousInput(-Math.PI, Math.PI); // wrap for circles
+        robotAngleController.setTolerance(0.0025, 0.05); // at position tolerance
 
         field = new Field2d();
         Shuffleboard.getTab("Comp").add("field", field);
@@ -73,21 +84,14 @@ public class Chassis extends SubsystemBase {
                 this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
                 this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
                 this::driveRobotRelative,
-                // drivey(getRobotRelativeSpeeds().vxMetersPerSecond, getRobotRelativeSpeeds().vyMetersPerSecond, getRobotRelativeSpeeds().omegaRadiansPerSecond, false), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
-                //(speeds) -> drive(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond, false),
                 new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-                        // TODO: change constants below
                         new PIDConstants(3, 0, 0), // Translation PID constants
-                        new PIDConstants(7, 0, 0), // Rotation PID constants
+                        new PIDConstants(8, 0.15, 0.5), // Rotation PID constants
                         3, // Max module speed, in m/s
-                        0.35, // Drive base radius in meters. Distance from robot center to furthest module.
+                        0.41295, // Drive base radius in meters. Distance from robot center to the furthest module: sqrt(0.584^2 + 0.584^2)/2
                         new ReplanningConfig() // Default path replanning config. See the API for the options here
                 ),
                 () -> {
-                    // Boolean supplier that controls when the path will be mirrored for the red alliance
-                    // This will flip the path being followed to the red side of the field.
-                    // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-
                     var alliance = DriverStation.getAlliance();
                     if (alliance.isPresent()) {
                         return alliance.get() == DriverStation.Alliance.Red;
@@ -98,33 +102,37 @@ public class Chassis extends SubsystemBase {
         );
     }
 
-    // method to reset the robot's odometry to the given pose
-    public void resetPose(Pose2d newPose) {
-        // odometry.resetPosition(new Rotation2d(), generatePoses(), new Pose2d());
 
-        // chassis.resetOdometry(new Pose2d(0, 0, new Rotation2d()));
-        odometry.resetPosition(Navx.getRotation(), generatePoses(), newPose);
 
-        /*odometry.resetPosition(Rotation2d.fromDegrees(Navx.getAngle()),
-                new SwerveModulePosition[]{
-                        modules[Constants.Modules.leftFront].getPosition(),
-                        modules[Constants.Modules.leftBack].getPosition(),
-                        modules[Constants.Modules.rightFront].getPosition(),
-                        modules[Constants.Modules.rightBack].getPosition()
-                },
-                newPose);
-
-         */
+    /**
+     * If the PID controllers of the {@link SwerveModule}'s are all done
+     * @return whether the wheels are zereod/PID controllers are done
+     */
+    public void drive(double x, double y, double theta) {
+        drive(x, y, theta, getFieldRelative());
+    }
+    public boolean getAutoConfig() {
+        return AutoBuilder.isConfigured();
+    }
+    public boolean turnToAnglePIDIsDone() {
+        return modules[Constants.SwerveModules.one].PIDisDone() &&
+                modules[Constants.SwerveModules.two].PIDisDone() &&
+                modules[Constants.SwerveModules.three].PIDisDone() &&
+                modules[Constants.SwerveModules.four].PIDisDone();
     }
 
-    public void driveRobotRelative(ChassisSpeeds speeds){
-        driveAuton(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond);
-    }
+    /**
+     * Our main method to drive using three variables. Locked to field relative or robot oriented based off of fieldRelative
+     * x is the velocity in the x dimension m/s
+     * y is the velocity in the y dimension m/s
+     * theta is the angular (holonomic) speed of the bot
+     */
 
-    public void driveAuton(double x, double y, double theta) {
-        setModuleStates(kinematics.toSwerveModuleStates(new ChassisSpeeds(x, y, theta)));
-    }
 
+    /**
+     * drive(x, y, theta) with additional parameter for if robot is field relative or not
+     * This method will drive the swerve modules based to x, y and theta vectors.
+     */
     public void drive(double x, double y, double theta, boolean fieldRelative) {
         if (fieldRelative) {
             setModuleStates(kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(x, y, theta, getRotation2d())));
@@ -133,105 +141,110 @@ public class Chassis extends SubsystemBase {
         }
     }
 
-
-    /**
-     * Our main method to drive using three variables. Locked to field relative or robot oriented based off of {@link #fieldRelative}.
-     * @param x the velocity in the x dimension m/s
-     * @param y the velocity in the y dimension m/s
-     * @param theta the angular (holonomic) speed of the bot
-     */
-    public void drive(double x, double y, double theta) {
-        drive(x, y, theta, getFieldRelative());
+    // Flip-flops between field relative and bot relative swerve drive
+    public void flipFieldRelative() {
+        fieldRelative = !fieldRelative;
     }
 
-    public boolean getAutoConfig() {
-        return AutoBuilder.isConfigured();
+    // Getter for if swerve drive is field relative or not, bool if field relative
+    public boolean getFieldRelative() {
+        return fieldRelative;
     }
 
-    /**
-    * If the PID controllers of the {@link SwerveModule}'s are all done
-    * @return whether the wheels are zereod/PID controllers are done
-    */
-    public boolean turnToAnglePIDIsDone() {
-        return modules[Constants.Modules.leftFront].PIDisDone() &&
-        modules[Constants.Modules.leftBack].PIDisDone() &&
-        modules[Constants.Modules.rightFront].PIDisDone() &&
-        modules[Constants.Modules.rightBack].PIDisDone();
+    // Zeros the Navx's heading
+    public void zeroHeading(){
+        Navx.resetNavX();
+    }
+    
+    // sets field oriented (field or robot oriented) to the provided boolean
+    public void setWhetherFieldOriented(boolean fieldOriented) {
+        fieldRelative = fieldOriented;
     }
 
-    /**
-    * Resets odometry
-    * <p>Resets navx</p>
-    * <p>Resets relative encoders to be what the absolute encoders are</p>
-    * <p>Hard reset of the odometry object</p>
-     * @param pose the position to reset odometry to
-    */
+
+    public Rotation2d getRotation2d(){
+        return odometry.getEstimatedPosition().getRotation();
+    }
+
+    // periodic call to update odometry from encoders
+    public void updateOdometryFromSwerve() {
+        odometry.updateWithTime(Timer.getFPGATimestamp(), Navx.getRotation(), generatePoses());
+    }
+
+    // Resets odometry: resets relative encoders to what the absolute encoders are, hard reset of odometry object
+    // parameter pose is the pose2d to reset the odometry to
     public void resetOdometry(Pose2d pose) {
         resetEncoders();
         odometry.resetPosition(Navx.getRotation(), generatePoses(), pose);
     }
 
-    /**
-     * Flip-flops between field relative and bot relative swerve drive
-     */
-    public void flipFieldRelative() {
-      fieldRelative = !fieldRelative;
+    // If the PID controllers of the Swerve Modules are done, returning whether the wheels are zeroed/PID controllers finished
+    public boolean turnToAnglePIDIsFinished() {
+        return modules[Constants.SwerveModules.one].PIDisDone() &&
+                modules[Constants.SwerveModules.two].PIDisDone() &&
+                modules[Constants.SwerveModules.three].PIDisDone() &&
+                modules[Constants.SwerveModules.four].PIDisDone();
     }
 
-    /**
-     * Getter for if swerve drive is field relative or not
-     * @return bool if field relative
-     */
-    public boolean getFieldRelative() {
-      return fieldRelative;
-    }
-
-    // Zeros the Navx's heading
-    public void zeroHeading(){
-      Navx.resetNavX();
-    }
-
-    /**
-     * Returns the heading that navx reads
-     * @return the rotation of the bot in degrees
-     */
-    public double getHeading() {
-      return Math.IEEEremainder(Navx.getAngle(), 360);
-    }
-
-    /**
-     * Returns the bots rotation according to Navx as a {@link Rotation2d}
-     * @return the bot rotation
-     */
-    public Rotation2d getRotation2d(){
-      return odometry.getEstimatedPosition().getRotation();
-    }
-
-
-    /**
-     * Generates the positions of the swerve modules
-     * @return the poses of each module
-     */
+    // Generates the position of the swerve modules, retuning the position
     public SwerveModulePosition[] generatePoses() {
-        return new SwerveModulePosition[] {
-                modules[Constants.Modules.leftFront].getPosition(),
-                modules[Constants.Modules.leftBack].getPosition(),
-                modules[Constants.Modules.rightFront].getPosition(),
-                modules[Constants.Modules.rightBack].getPosition()
-        };
+        SwerveModulePosition[] positions = new SwerveModulePosition[4];
+        for (int i = 0; i < 4; i++) {
+            positions[i] = modules[i].getPosition();
+        }
+        return positions;
+    }
+
+    public void goToAnglePower(double angleSetpoint) {
+        robotAngleController.calculate(getHeading(), angleSetpoint);
+    }
+
+    public boolean goToAnglePIDIsFinished() {
+        return robotAngleController.atSetpoint();
+    }
+
+    public void shuffleboardUpdatePID() {
+        robotAngleController.setPID(targetP, targetI, targetD);
     }
 
     /**
-     * periodic call to update odometry from encoders
-     * Also provides a timestamp that the update occurred
+     * Getter for geometry
+     * @return the geometry of the swerve modules
      */
-    public void updateOdometryFromSwerve() {
-      odometry.updateWithTime(Timer.getFPGATimestamp(), Navx.getRotation(), generatePoses());
+    public SwerveDriveKinematics getKinematics() {
+        return kinematics;
     }
 
-    // Update odometry with swerve drive
-    public void updateOdometery() {
-        updateOdometryFromSwerve();
+    // set module states to desired states
+    public void setModuleStates(SwerveModuleState[] desiredStates) {
+        SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
+
+        modules[Constants.SwerveModules.one].setDesiredState(desiredStates[Constants.SwerveModules.one]);
+        modules[Constants.SwerveModules.two].setDesiredState(desiredStates[Constants.SwerveModules.two]);
+        modules[Constants.SwerveModules.three].setDesiredState(desiredStates[Constants.SwerveModules.three]);
+        modules[Constants.SwerveModules.four].setDesiredState(desiredStates[Constants.SwerveModules.four]);
+    }
+
+
+    // Spins the wheels to an angle
+    public void turnToAngle(double setpoint) {
+        for (SwerveModule module : modules) {
+            module.turnToAngle(setpoint);
+        }
+    }
+
+    // Stops the devices connected to this subsystem
+    public void stopModules(){
+        for (SwerveModule module : modules) {
+            module.stop();
+        }
+    }
+
+    // Command to reset the encoders
+    public void resetEncoders() {
+        for (SwerveModule module : modules) {
+            module.resetEncoders();
+        }
     }
 
     /**
@@ -245,147 +258,6 @@ public class Chassis extends SubsystemBase {
         field.setRobotPose(odometry.getEstimatedPosition());
     }
 
-  // Stops the devices connected to this subsystem
-    public void stopModules(){
-      modules[Constants.Modules.leftFront].stop();
-      modules[Constants.Modules.leftBack].stop();
-      modules[Constants.Modules.rightFront].stop();
-      modules[Constants.Modules.rightBack].stop();
-    }
-
-    /**
-     * Getter for geometry
-     * @return the geometry of the swerve modules
-     */
-    public SwerveDriveKinematics getKinematics() {
-      return kinematics;
-    }
-
-    public ChassisSpeeds getRobotRelativeSpeeds() {
-        return kinematics.toChassisSpeeds(getModuleStates());
-    }
-
-    private SwerveModuleState[] getModuleStates() {
-        SwerveModuleState[] states = new SwerveModuleState[4];
-        states[0] = modules[Constants.Modules.leftFront].getState();
-        states[1] = modules[Constants.Modules.leftBack].getState();
-        states[2] = modules[Constants.Modules.rightFront].getState();
-        states[3] = modules[Constants.Modules.rightBack].getState();
-        return states;
-    }
-
-    /**
-     * Sets the module states to desired states
-     * @param desiredStates the states to set the modules to
-     */
-    public void setModuleStates(SwerveModuleState[] desiredStates) {
-      SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
-
-      modules[Constants.Modules.leftFront].setDesiredState(desiredStates[Constants.Modules.leftFront]);
-      modules[Constants.Modules.leftBack].setDesiredState(desiredStates[Constants.Modules.leftBack]);
-      modules[Constants.Modules.rightFront].setDesiredState(desiredStates[Constants.Modules.rightFront]);
-      modules[Constants.Modules.rightBack].setDesiredState(desiredStates[Constants.Modules.rightBack]);
-    }
-
-    /**
-     * Spins the wheels to an angle
-     * @param setpoint angle to spin the motors to
-     */
-    public void turnToAngle(double setpoint) {
-      for (SwerveModule module : modules) {
-          module.turnToAngle(setpoint);
-      }
-    }
-
-    /**
-     * The simulation periodic call
-     */
-    @Override
-    public void simulationPeriodic() {
-        // This method will be called once per scheduler run during simulation
-    }
-
-    /**
-     * Returns the current position of the bot as a {@link Pose2d}
-     * @return position according to odometry
-     */
-    public Pose2d getPose2d() {
-        return odometry.getEstimatedPosition();
-    }
-
-    public String getOdometry() {
-        return odometry.getEstimatedPosition().toString();
-    }
-
-    /**
-     * Command to reset the encoders
-     */
-    public void resetEncoders() {
-        for (SwerveModule module : modules) {
-            module.resetEncoders();
-        }
-    }
-
-    /**
-     * Sets field oriented to the provided boolean
-     * @param fieldOriented to drive in field or robot orriented
-     */
-    public void setWhetherFieldOriented(boolean fieldOriented) {
-        fieldRelative = fieldOriented;
-    }
-
-    /**
-     * update the P values for the swerve module
-     * @param pValue the new P value
-     */
-    public void updatePValuesFromSwerveModule(double pValue) {
-        Arrays.stream(modules).forEach((SwerveModule modules) -> modules.updatePValue(pValue));
-    }
-
-    /**
-     * update the D values for the swerve module
-     * @param dValue the new D value
-     */
-    public void updateDValuesFromSwerveModule(double dValue) {
-        Arrays.stream(modules).forEach((SwerveModule modules) -> modules.updateDValue(dValue));
-    }
-
-    /**
-     * gets the kP values for each module
-     * @return gets the kP value from the modules
-     */
-    public double getPValuesForSwerveModules() {
-        return modules[0].getPValue();
-    }
-
-    /**
-     * gets the kD values for each module
-     * @return gets the kD value from the modules
-     */
-    public double getDValuesForSwerveModules() {
-        return modules[0].getDValue();
-    }
-
-    /**
-     * @return the x position from odometry
-     */
-    private double getX() {
-        return odometry.getEstimatedPosition().getX();
-    }
-
-    /**
-     * @return the y position from odometry
-     */
-    private double getY() {
-        return odometry.getEstimatedPosition().getY();
-    }
-
-    /**
-     * @return the yaw from odometry
-     */
-    private double getYaw() {
-        return odometry.getEstimatedPosition().getRotation().getDegrees();
-    }
 
     /**
      * A vomit onto shuffleboard of the {@link SwerveModule} objects in Chassis
@@ -398,62 +270,98 @@ public class Chassis extends SubsystemBase {
         tab.add(modules[3]);
     }
 
+    // update the P values for the swerve module
+    public void updatePValuesFromSwerveModule(double pValue) {
+        Arrays.stream(modules).forEach((SwerveModule modules) -> modules.updatePValue(pValue));
+    }
+
+    // update the D values for the swerve module
+    public void updateDValuesFromSwerveModule(double dValue) {
+        Arrays.stream(modules).forEach((SwerveModule modules) -> modules.updateDValue(dValue));
+    }
+
+    // gets the kP values for each module
+    public double getPValuesForSwerveModules() {
+        return modules[0].getPValue();
+    }
+
+    // gets the kD values for each module
+    public double getDValuesForSwerveModules() {
+        return modules[0].getDValue();
+    }
+
+    // returns the heading the NavX is reading, returning the rotation of the robot in radians
+    public double getHeading() {
+        return Math.toRadians(Math.IEEEremainder(Navx.getAngle(), 360));
+    }
+
+    public double getTargetP() { return targetP; }
+    public double getTargetI() { return targetI; }
+    public double getTargetD() { return targetD; }
+    public void setTargetP(double p) { targetP = p; }
+    public void setTargetI(double i) { targetI = i; }
+    public void setTargetD(double d) { targetD = d; }
+
+
+    // return the x position from odometry
+    private double getX() { return odometry.getEstimatedPosition().getX(); }
+
+    // return the y position from odometry
+    private double getY() { return odometry.getEstimatedPosition().getY(); }
+
+    // the yaw from odometry
+    private double getYaw() { return odometry.getEstimatedPosition().getRotation().getDegrees(); }
+
+    // Gets the max speed field that we read thus far on this vm instance of rio
+    public double getMaxSpeedRead() { return maxSpeedRead; }
+
+    public String getOdometry() { return odometry.getEstimatedPosition().toString(); }
+
     /**
      * Initializes the data we send on shuffleboard
      * Calls the default init sendable for Subsystem Bases
      * @param builder sendable builder
      */
     public void initSendable(SendableBuilder builder) {
-        builder.setSmartDashboardType("Chassis");
+        if (Constants.debugMode) {
+            builder.setSmartDashboardType("Chassis");
 
-        // add field relative
-        builder.addBooleanProperty("fieldRelative", this::getFieldRelative, this::setWhetherFieldOriented);
-        builder.addDoubleProperty("Navx", this::getHeading, null);
-        builder.addDoubleProperty("X position", this::getX, null);
-        builder.addDoubleProperty("Y position", this::getY, null);
-        builder.addDoubleProperty("rotation", this::getYaw, null);
-        builder.addDoubleProperty("max speed read", this::getMaxSpeedRead, null);
-        builder.addStringProperty("odometry pose2d", this::getOdometry, null);
-        builder.addBooleanProperty("autobuilder confiured", this::getAutoConfig, null);
-    }
-
-    /**
-     * A listener to calculate what the max speed we read was
-     */
-    public void listener() {
-        for (SwerveModule module : modules) {
-            if (maxSpeedRead < module.getDriveVelocity()) {
-                maxSpeedRead = module.getDriveVelocity();
-            }
+            builder.addBooleanProperty("fieldRelative", this::getFieldRelative, this::setWhetherFieldOriented);
+            builder.addDoubleProperty("Navx", this::getHeading, null);
+            builder.addDoubleProperty("X position", this::getX, null);
+            builder.addDoubleProperty("Y position", this::getY, null);
+            builder.addDoubleProperty("rotation", this::getYaw, null);
+            builder.addDoubleProperty("max speed read", this::getMaxSpeedRead, null);
+            builder.addStringProperty("odometry pose2d", this::getOdometry, null);
         }
     }
 
     /**
-     * Gets the max speed field
-     * @return the max speed that we read thus far on this vm instance of rio
-     */
-    public double getMaxSpeedRead() {
-        return maxSpeedRead;
-    }
-
-    /**
-     * The same as {@link #drive(double, double, double)} except you pass in if you are field relative or not.
-     * This method will drive the swerve modules based to x, y and theta vectors.
-     *
-     * @param x             velocity in the x dimension m/s
-     * @param y             velocity in the y dimension m/s
-     * @param theta         the angular (holonomic) speed to drive the swerve modules at
-     * @param fieldRelative whether to use
-     * @return
+     * AUTONOMOUS PATHPLANNER METHODS
      */
 
-    public Consumer<ChassisSpeeds> drivey(double x, double y, double theta, boolean fieldRelative) {
-        if (fieldRelative) {
-            setModuleStates(kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(x, y, theta, getRotation2d())));
-        } else {
-            setModuleStates(kinematics.toSwerveModuleStates(getRobotRelativeSpeeds()));
-        }
-        return null;
+    // returns the current position of the bot from odometry as a Pose2D
+    public Pose2d getPose2d() {
+        return odometry.getEstimatedPosition();
     }
 
+    // method to reset the robot's odometry to the supplied pose
+    public void resetPose(Pose2d newPose) {
+        odometry.resetPosition(Navx.getRotation(), generatePoses(), newPose);
+    }
+
+    // ChassisSpeeds supplier in robot relative
+    public ChassisSpeeds getRobotRelativeSpeeds() {
+        return kinematics.toChassisSpeeds(getModuleStates());
+    }
+
+    // passes the x y omega ChassisSpeeds supplied by PathPlanner to driveAuton()
+    public void driveRobotRelative(ChassisSpeeds speeds){
+        driveAuton(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond);
+    }
+
+    // uses supplied ChassisSpeeds to drive autonomously in RobotRelative mode
+    public void driveAuton(double x, double y, double theta) {
+        setModuleStates(kinematics.toSwerveModuleStates(new ChassisSpeeds(x, y, theta)));
+    }
 }

@@ -5,9 +5,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.util.sendable.SendableBuilder;
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
@@ -17,30 +15,31 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 
 
 public class Amp extends SubsystemBase {
-  private final Solenoid pneumatic;
+  private final Solenoid ampPneumatic;
   private final DigitalInput ampLimit;
   private final WPI_TalonSRX ampMotor;
-  private double intakeAmpSpeed = 0.1;
-  private double outtakeAmpSpeed = -0.1;
+  private double intakeAmpSpeed = 1;
+  private double outtakeAmpSpeed = -1;
+  private Timer timer = new Timer();
   // the amount of seconds it takes for the amp to prime (pnematic to go up)
 
   public Amp() {
-    pneumatic = new Solenoid(Constants.CAN.ampPCM, PneumaticsModuleType.CTREPCM, Constants.CAN.ampChannel);
-    ampLimit = new DigitalInput(Constants.CAN.ampLimitSwitch);
+    ampPneumatic = new Solenoid(Constants.CAN.PCM, PneumaticsModuleType.CTREPCM, Constants.IDs.ampPNMChannel);
+    ampLimit = new DigitalInput(Constants.IDs.ampLimitDIO);
     ampMotor = new WPI_TalonSRX(Constants.CAN.ampMotor);
     ampMotor.configFactoryDefault();
-    ampMotor.configVoltageCompSaturation(3);
+    ampMotor.configVoltageCompSaturation(8);
     ampMotor.setInverted(false);
   }
 
   // toggles the pneumatic to prop-up the amp arm
   public void toggleAmp() {
-    pneumatic.toggle();
+    ampPneumatic.toggle();
   }
 
   // toggles the pneumatic to tuck in the amp arm
-  public void unPrimeAmp() {
-    pneumatic.set(false);
+  public void setAmpDown() {
+    ampPneumatic.set(false);
   }
 
   // spins the motor to intake notes into the amp
@@ -58,11 +57,16 @@ public class Amp extends SubsystemBase {
     ampMotor.set(ControlMode.PercentOutput, 0);
   }
 
+<<<<<<< HEAD
   public boolean getAmpLimitSwitch() {
     return ampLimit.get();
+=======
+  public boolean getLimitSwitch() {
+    return !ampLimit.get();
+>>>>>>> 1af8010127b1104b20d41f5928736c28b70f6912
   }
   public boolean getPneumaticState() {
-    return pneumatic.get();
+    return ampPneumatic.get();
   }
 
   public double getIntakeAmpSpeed() {
@@ -78,6 +82,14 @@ public class Amp extends SubsystemBase {
 
   @Override
   public void periodic() {
+    /*if(getLimitSwitch()){
+      timer.start();
+      controller.setRumble(GenericHID.RumbleType.kBothRumble, 1);
+      if (timer.hasElapsed(0.8)){
+        timer.reset();
+        controller.setRumble(GenericHID.RumbleType.kBothRumble, 0);
+      }
+    }*/
     // This method will be called once per scheduler run
   }
 
@@ -90,11 +102,21 @@ public class Amp extends SubsystemBase {
    * exports data to Shuffleboard
    */
   public void initSendable(SendableBuilder builder) {
+<<<<<<< HEAD
     builder.setSmartDashboardType("Amp");
     builder.addDoubleProperty("Intake Amp Speed", this::getIntakeAmpSpeed, this::setIntakeAmpSpeed);
     builder.addDoubleProperty("Outtake Amp Speed", this::getOuttakeAmpSpeed, this::setOuttakeAmpSpeed);
     builder.addBooleanProperty("Limit Switch", this::getAmpLimitSwitch, null);
     builder.addBooleanProperty("Pneumatic Status", this::getPneumaticState, null);
+=======
+    if (Constants.debugMode) {
+      builder.setSmartDashboardType("Amp");
+      builder.addDoubleProperty("Intake Amp Speed", this::getIntakeAmpSpeed, this::setIntakeAmpSpeed);
+      builder.addDoubleProperty("Outtake Amp Speed", this::getOuttakeAmpSpeed, this::setOuttakeAmpSpeed);
+      builder.addBooleanProperty("Limit Switch", this::getLimitSwitch, null);
+      builder.addBooleanProperty("Pneumatic Status", this::getPneumaticState, null);
+    }
+>>>>>>> 1af8010127b1104b20d41f5928736c28b70f6912
   }
 
 }

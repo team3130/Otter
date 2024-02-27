@@ -5,6 +5,8 @@
 package frc.robot.commands.Chassis;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.PS5Controller;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
@@ -13,19 +15,19 @@ import frc.robot.subsystems.Chassis;
 /** A default command to drive in teleop based off the joysticks*/
 public class TeleopDrive extends Command {
   private final Chassis chassis;
-  private final XboxController xboxController;
+  private final PS5Controller controller;
 
-  // acceleration limiters for the x dimension, y dimension, and the holonomic rotation.
-  // These values are in m/s and rad/s respectively
   private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
-
-  public TeleopDrive(Chassis chassis, XboxController xboxController) {
+  private double y;
+  private double x;
+  private double theta;
+  public TeleopDrive(Chassis chassis, PS5Controller PS5controller) {
     this.chassis = chassis;
-    this.xboxController = xboxController;
+    this.controller = PS5controller;
+
     // Use addRequirements() here to declare subsystem dependencies.
     m_requirements.add(chassis);
 
-    // Initializes slew rate limiters to limit acceleration
     xLimiter = new SlewRateLimiter(Constants.Swerve.kMaxAccelerationDrive);
     yLimiter = new SlewRateLimiter(Constants.Swerve.kMaxAccelerationDrive);
     turningLimiter = new SlewRateLimiter(Constants.Swerve.kMaxAccelerationAngularDrive);
@@ -36,7 +38,6 @@ public class TeleopDrive extends Command {
    */
   @Override
   public void initialize() {
-
   }
 
   /**
@@ -46,9 +47,15 @@ public class TeleopDrive extends Command {
    */
   @Override
   public void execute() {
-    double y = xboxController.getRawAxis(Constants.Buttons.LST_AXS_LJOYSTICKX); // left stick y-axis (y-axis is inverted)
-    double x = xboxController.getRawAxis(Constants.Buttons.LST_AXS_LJOYSTICKY); // left stick x-axis
-    double theta = -xboxController.getRawAxis(Constants.Buttons.LST_AXS_RJOYSTICKX); // right stick x-axis
+    if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red && DriverStation.getAlliance().isPresent()) {
+      y = controller.getRawAxis(Constants.PS5.LST_AXS_LJOYSTICKX);
+      x = controller.getRawAxis(Constants.PS5.LST_AXS_LJOYSTICKY);
+      theta = -controller.getRawAxis(Constants.PS5.LST_AXS_RJOYSTICKX);
+    } else {
+      y = -controller.getRawAxis(Constants.PS5.LST_AXS_LJOYSTICKX); // left stick y-axis (y-axis is inverted)
+      x = -controller.getRawAxis(Constants.PS5.LST_AXS_LJOYSTICKY); // left stick x-axis
+      theta = -controller.getRawAxis(Constants.PS5.LST_AXS_RJOYSTICKX); // right stick x-axis
+    }
 
     // square the inputs
     y = y * Math.abs(y);
@@ -63,17 +70,18 @@ public class TeleopDrive extends Command {
     }
     theta = Math.abs(theta) > Constants.Swerve.kDeadband ? theta : 0.0;
 
+
+    if (!chassis.getFieldRelative()) {
+      y = -y;
+      x = -x;
+    }
+
     // apply slew rate limiter which also converts to m/s and rad.s
+    theta = turningLimiter.calculate(theta) * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond;
     x = xLimiter.calculate(x * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
     y = yLimiter.calculate(y * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
-    //TODO: why doesn't theta get scaled as well??
-    theta = turningLimiter.calculate(theta) * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond;
 
     chassis.drive(x,y,theta);
-
-    if (Constants.debugMode) {
-      chassis.listener();
-    }
   }
 
   /**

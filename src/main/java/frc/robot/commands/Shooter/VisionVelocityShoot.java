@@ -32,18 +32,18 @@ public class VisionVelocityShoot extends Command {
     shooter.configureVelocitySlots();
     shooter.updateVelocityPID();
 
+    /*
     if (CameraSubsystem.hasTarget()) {
       shooter.setFlywheelVelocity();
     }
+
+     */
   }
 
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (spinUpTime.hasElapsed(shooter.getFlywheelRampTime())){
-      shooter.runIndexers();
-    }
   }
 
 
@@ -51,7 +51,6 @@ public class VisionVelocityShoot extends Command {
   @Override
   public void end(boolean interrupted) {
     shooter.stopShooters();
-    shooter.stopIndexers();
   }
 
 

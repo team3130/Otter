@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -13,32 +14,39 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 public class Climber extends SubsystemBase {
     private double currentMax = 0.0;
     private double timerAmount = 0.1;
-    private double pitCheckingSpeed = 0.1;
+    private double pitCheckingSpeed = -0.5;
     private final DigitalInput limitSwitch;
     private final WPI_TalonSRX climberMotor;
     private int joystickUsed;
+    private boolean isClimberReset;
+    private boolean inverteds;
 
-    private boolean invalidInput = false;
+    private boolean climbDone = false;
 
-    public Climber(int CANID, int limitSwitchPort, int joystick) {
+    public Climber(int CANID, int limitSwitchPort, int joystick, boolean inverted) {
+        inverteds = inverted;
         climberMotor = new WPI_TalonSRX(CANID);
+        climberMotor.setNeutralMode(NeutralMode.Coast);
         this.limitSwitch = new DigitalInput(limitSwitchPort);
         climberMotor.configFactoryDefault();
-        climberMotor.configVoltageCompSaturation(3);
-        climberMotor.setInverted(false);
+        climberMotor.configVoltageCompSaturation(6);
+        climberMotor.setInverted(inverteds);
         joystickUsed = joystick;
+
+        isClimberReset = true;
     }
 
     // returns the status of the left arm's limitswitch
     public boolean brokeLimit() {
         return !limitSwitch.get();
     }
-
-    public boolean getInvalidInput() {
-        return invalidInput;
+    public void setIsClimberReset(boolean bruh) { isClimberReset = bruh; }
+    public boolean getIsClimberReset() { return this.isClimberReset; }
+    public boolean getClimbDone() {
+        return climbDone;
     }
-    public void setInvalidInput(boolean valid){
-        invalidInput = valid;
+    public void setClimbDone(boolean valid){
+        climbDone = valid;
     }
 
     // sets speed of right arm
@@ -63,6 +71,7 @@ public class Climber extends SubsystemBase {
     public double getCurrentMax() {
         return currentMax;
     }
+
     public void setCurrentMax(double current) {
         currentMax = current;
     }
@@ -84,10 +93,7 @@ public class Climber extends SubsystemBase {
 
     @Override
     public void periodic() {
-        if (brokeLimit()){
-            //TODO LEDS GREEN
-        }
-        if (getInvalidInput()){
+        if (getClimbDone()){
             //TODO LEDS RED
         }
     }
@@ -102,6 +108,10 @@ public class Climber extends SubsystemBase {
         builder.addDoubleProperty("currentMaxRight", this::getCurrentMax, this::setCurrentMax);
         builder.addDoubleProperty("timerAmount", this::getTimerAmount, this::setTimerAmount);
         builder.addDoubleProperty("checking speed", this::getPitCheckingSpeed, this::setPitCheckingSpeed);
-
+        builder.addBooleanProperty("Climber is reset", this::getIsClimberReset, null);
+        builder.addBooleanProperty("climb done", this::getClimbDone, null);
     }
+
+
+
 }
