@@ -4,27 +4,39 @@
 
 package frc.robot.subsystems.LEDs;
 
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.shuffleboard.ComplexWidget;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.commands.LEDs.WhiteLEDs;
 
-public class ShooterLEDs extends SubsystemBase {
+public class LEDs extends SubsystemBase {
   AddressableLED shooterLEDs;
   private final int shooterLength = 23;
 
   private int rainbowFirstPixelHue = 20;
 
   AddressableLEDBuffer shooterBuffer;
+  private ComplexWidget whiteLEDs;
 
   // 65 == teal
   // 55 == green
-  public ShooterLEDs(int pwmPort, int length) {
+  public LEDs(int pwmPort, int length) {
     shooterLEDs = new AddressableLED(pwmPort); // PWM Port
     shooterBuffer = new AddressableLEDBuffer(length);
     shooterLEDs.setLength(shooterBuffer.getLength());
     shooterLEDs.setData(shooterBuffer);
     shooterLEDs.start();
+
+
+    //whiteLEDs = Shuffleboard.getTab("LEDs").add("White LEDs", new WhiteLEDs(this));
+
+    ShuffleboardTab tab = Shuffleboard.getTab("LED");
+    tab.add(new WhiteLEDs(this, 3.0));
   }
 
   public void shooterYellow() {

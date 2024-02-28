@@ -182,7 +182,12 @@ public class Chassis extends SubsystemBase {
             targetController.setPID(targetP, targetI, targetD);
 
             if (isTryingToTargetAmp) {
-                targetController.setSetpoint(Math.toRadians(90));
+                if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+                    targetController.setSetpoint(Math.toRadians(180));
+                } else {
+                    targetController.setSetpoint(Math.toRadians(0));
+                }
+                //targetController.setSetpoint(Math.toRadians(90));
             } /*else if (isTryingToTargetSpeaker) {
                 targetController.setSetpoint(Math.toRadians(180));
 

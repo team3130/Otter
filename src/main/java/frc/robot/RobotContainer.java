@@ -18,16 +18,15 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.Chassis.TeleopDrive;
-import frc.robot.commands.Climber.ClimberReset;
 import frc.robot.commands.Climber.ClimberExtend;
 import frc.robot.commands.Indexer.AlwaysIndex;
 import frc.robot.commands.Intake.LimitSpintake;
 import frc.robot.commands.Indexer.Outtake;
+import frc.robot.commands.LEDs.WhiteLEDs;
 import frc.robot.commands.ShooterShifter.ShortShifterExtend;
 import frc.robot.subsystems.Chassis;
 import frc.robot.subsystems.Climber;
@@ -41,10 +40,7 @@ import frc.robot.commands.Amp.*;
 import frc.robot.commands.Chassis.ResetOdometry;
 import frc.robot.commands.Intake.*;
 import frc.robot.subsystems.Amp;
-import frc.robot.subsystems.LEDs.ShooterLEDs;
-
-import javax.naming.Name;
-import java.util.function.BooleanSupplier;
+import frc.robot.subsystems.LEDs.LEDs;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -66,7 +62,7 @@ public class RobotContainer {
   private final PS5Controller driverController = new PS5Controller(0);
   private final XboxController operatorController = new XboxController(1);
   //private final AmpLEDs ampLEDs;
-  private final ShooterLEDs ampLEDs;
+  private final LEDs robotLEDs;
   private final SendableChooser<Command> autoChooser;
   //private static SendableChooser<BooleanSupplier> isFieldMirrored = new SendableChooser<>();
   //private static Optional<DriverStation.Alliance> alliance = DriverStation.getAlliance();
@@ -86,7 +82,7 @@ public class RobotContainer {
     indexer = new Indexer();
 
     //ampLEDs = new AmpLEDs();
-    ampLEDs = new ShooterLEDs(0, 23);
+    robotLEDs = new LEDs(0, 23);
 
     // Named commands must be registered before the creation of any PathPlanner Autos or Paths
     // Do this in RobotContainer, after subsystem initialization, but before the creation of any other commands.
@@ -143,11 +139,11 @@ public class RobotContainer {
 
   public void LEDPeriodic() {
     if (intake.getIntakeLimitSwitch() || amp.getLimitSwitch()) {
-      ampLEDs.purpleRobot();
+      robotLEDs.purpleRobot();
     } else if (leftClimber.getClimbDone() && rightClimber.getClimbDone()) {
-      ampLEDs.movingRainbow();
+      robotLEDs.movingRainbow();
     } else {
-      ampLEDs.shooterYellow();
+      robotLEDs.shooterYellow();
     }
   }
 
