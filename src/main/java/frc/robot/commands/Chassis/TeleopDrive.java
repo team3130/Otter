@@ -46,55 +46,56 @@ public class TeleopDrive extends Command {
    */
   @Override
   public void execute() {
-    // stack time (local var) > heap (instance var)
-    double theta = 0d;
-    double x = 0d;
-    double y = 0d;
-    double omega = 0d;
+      // stack time (local var) > heap (instance var)
+      double theta = 0d;
+      double x = 0d;
+      double y = 0d;
+      double omega = 0d;
 
-    if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
-      y = controller.getRawAxis(Constants.PS5.LST_AXS_LJOYSTICKX);
-      x = controller.getRawAxis(Constants.PS5.LST_AXS_LJOYSTICKY);
-    } else { // blue alliance
-      y = -controller.getRawAxis(Constants.PS5.LST_AXS_LJOYSTICKX);
-      x = -controller.getRawAxis(Constants.PS5.LST_AXS_LJOYSTICKY);
-    }
+      if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
+          y = controller.getRawAxis(Constants.PS5.LST_AXS_LJOYSTICKX);
+          x = controller.getRawAxis(Constants.PS5.LST_AXS_LJOYSTICKY);
+      } else { // blue alliance
+          y = -controller.getRawAxis(Constants.PS5.LST_AXS_LJOYSTICKX);
+          x = -controller.getRawAxis(Constants.PS5.LST_AXS_LJOYSTICKY);
+      }
 
-    // theta the same for both alliances
-    theta = -controller.getRawAxis(Constants.PS5.LST_AXS_RJOYSTICKX);
+      // theta the same for both alliances
+      theta = -controller.getRawAxis(Constants.PS5.LST_AXS_RJOYSTICKX);
 
-    // angle used for targeting
-    omega = controller.getRawAxis(Constants.PS5.LST_AXS_LJOYSTICKY);
+      // angle used for targeting
+      omega = -controller.getRawAxis(Constants.PS5.LST_AXS_RJOYSTICKY);
 
-    if (chassis.tryingToTargetAmp(omega, theta)) { // if the right joystick is pushed up
-      chassis.resetTargetController(); // setpoint 90
-      theta = chassis.goToTargetPower(); // calculate using odo.rotation as process var
-    } else if (chassis.tryingToTargetSpeaker(omega, theta)) { // checks if right joystick is pushed down & sets boolean of if we targeting speaker
-      chassis.resetTargetController(); // sets setpoint 180 or zero based on alliance
-      theta = chassis.goToTargetPower(); // calculate using odo.rotation as process var
-    } else { // normal driving
-      theta = Math.abs(theta) > Constants.Swerve.kDeadband ? theta : 0.0;
-      theta = turningLimiter.calculate(theta) * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond;
-    }
+      if (chassis.tryingToTargetAmp(omega, theta)) { // if the right joystick is pushed up
+          chassis.resetTargetController(); // setpoint 90
+          theta = chassis.goToTargetPower(); // calculate using odo.rotation as process var
+      } else if (chassis.tryingToTargetSpeaker(omega, theta)) { // checks if right joystick is pushed down & sets boolean of if we targeting speaker
+        chassis.resetTargetController(); // sets setpoint 180 or zero based on alliance
+        theta = chassis.goToTargetPower(); // calculate using odo.rotation as process var
+      }else{ // normal driving
+              theta = Math.abs(theta) > Constants.Swerve.kDeadband ? theta : 0.0;
+              theta = turningLimiter.calculate(theta) * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond;
+          }
 
-    // square the inputs
-    y = y * Math.abs(y);
-    x = x * Math.abs(x);
+          // square the inputs
+          y = y * Math.abs(y);
+          x = x * Math.abs(x);
 
-    // apply dead-band
-    if (Math.abs(x) < Constants.Swerve.kDeadband) {
-      x = 0;
-    }
-    if (Math.abs(y) < Constants.Swerve.kDeadband) {
-      y = 0;
-    }
+          // apply dead-band
+          if (Math.abs(x) < Constants.Swerve.kDeadband) {
+              x = 0;
+          }
+          if (Math.abs(y) < Constants.Swerve.kDeadband) {
+              y = 0;
+          }
 
-    // apply slew rate limiter which also converts to m/s and rad.s
-    x = xLimiter.calculate(x * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
-    y = yLimiter.calculate(y * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
+          // apply slew rate limiter which also converts to m/s and rad.s
+          x = xLimiter.calculate(x * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
+          y = yLimiter.calculate(y * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
 
-    chassis.drive(x, y, theta); //uses either driving or targeting inputs for theta
-  }
+          chassis.drive(x, y, theta); //uses either driving or targeting inputs for theta
+      }
+
 
 
   /**

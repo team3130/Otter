@@ -50,7 +50,7 @@ public class Chassis extends SubsystemBase {
     private double targetMaxVelo = Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond; //TODO real
     private double targetMaxAcc = Constants.Swerve.kMaxAccelerationDrive; //TODO real
     private PIDController robotAngleController;
-    private double targetP = 10d;
+    private double targetP = 4d;
     private double targetI = 0d;
     private double targetD = 0d;
     private boolean isTryingToTargetAmp = false;
@@ -150,7 +150,7 @@ public class Chassis extends SubsystemBase {
 
 
         public boolean tryingToTargetSpeaker(double omega, double theta){
-            if (omega < 0.1 && Math.abs(theta) < 0.2){
+            if (omega < 0.5 && Math.abs(theta) < 0.2){
                isTryingToTargetSpeaker = true;
                return true;
             } else {
