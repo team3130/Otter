@@ -5,20 +5,23 @@
 package frc.robot.commands.Intake;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
 
 public class LimitSpintake extends Command {
+  private final Indexer indexer;
   private final Intake intake;
 
-  public LimitSpintake(Intake Intake) {
-    intake = Intake;
-    addRequirements(intake);
+  public LimitSpintake(Intake intake, Indexer indexer) {
+    this.indexer = indexer;
+    this.intake = intake;
+    addRequirements(intake, indexer);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    intake.spintake();
+    indexer.spintake();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -30,7 +33,7 @@ public class LimitSpintake extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    intake.stoptake();
+    indexer.stoptake();
   }
 
   // Returns true when the command should end.

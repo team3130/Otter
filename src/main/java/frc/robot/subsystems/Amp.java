@@ -105,5 +105,4 @@ public class Amp extends SubsystemBase {
       builder.addBooleanProperty("Pneumatic Status", this::getPneumaticState, null);
     }
   }
-
 }

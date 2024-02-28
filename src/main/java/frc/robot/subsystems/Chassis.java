@@ -103,8 +103,20 @@ public class Chassis extends SubsystemBase {
                 this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
                 this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
                 this::driveRobotRelative,
-                Constants.Swerve.holonomicPathFollowerConfig,
-                RobotContainer.isFieldMirrored(),
+                new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
+                        new PIDConstants(3, 0, 0), // Translation PID constants
+                        new PIDConstants(8, 0.15, 0.5), // Rotation PID constants
+                        3, // Max module speed, in m/s
+                        0.41295, // Drive base radius in meters. Distance from robot center to the furthest module: sqrt(0.584^2 + 0.584^2)/2
+                        new ReplanningConfig() // Default path replanning config. See the API for the options here
+                ),
+                () -> {
+                    var alliance = DriverStation.getAlliance();
+                    if (alliance.isPresent()) {
+                        return alliance.get() == DriverStation.Alliance.Red;
+                    }
+                    return false;
+                },
                 this // Reference to this subsystem to set requirements
         );
     }
@@ -235,7 +247,7 @@ public class Chassis extends SubsystemBase {
     public void zeroHeading(){
         Navx.resetNavX();
     }
-    
+
     // sets field oriented (field or robot oriented) to the provided boolean
     public void setWhetherFieldOriented(boolean fieldOriented) {
         fieldRelative = fieldOriented;
@@ -295,7 +307,7 @@ public class Chassis extends SubsystemBase {
     public SwerveDriveKinematics getKinematics() {
         return kinematics;
     }
-    
+
     private SwerveModuleState[] getModuleStates() {
         SwerveModuleState[] states = new SwerveModuleState[4];
         for (int i = 0; i < 4; i++) {

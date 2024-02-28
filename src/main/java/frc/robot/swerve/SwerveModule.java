@@ -80,12 +80,12 @@ public class SwerveModule implements Sendable {
 
     // gets the velocity of the drive motor in m/s
     public double getDriveVelocity() {
-        return driveMotor.getVelocity().getValue() * Constants.SwerveConversions.DriveRotToMeters;
+        return driveMotor.getVelocity().getValue() * Constants.SwerveConversions.DriveRotToMeters * 10d;
     }
 
     // gets the speed at which the steering motor turns in radians per second
     public double getTurningVelocity() {
-        return steerMotor.getVelocity().getValue() * Constants.SwerveConversions.SteerRotToRads;
+        return steerMotor.getVelocity().getValue() * Constants.SwerveConversions.SteerRotToRads * 10d;
     }
 
     // gets the position of the steering wheel according to the absolute encoders

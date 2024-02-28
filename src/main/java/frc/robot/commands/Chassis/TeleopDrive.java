@@ -17,6 +17,9 @@ public class TeleopDrive extends Command {
   private final PS5Controller controller;
 
   private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
+  private double y;
+  private double x;
+  private double theta;
   public TeleopDrive(Chassis chassis, PS5Controller PS5controller) {
     this.chassis = chassis;
     this.controller = PS5controller;

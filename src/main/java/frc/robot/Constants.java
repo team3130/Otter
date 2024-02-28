@@ -44,8 +44,8 @@ public final class Constants {
     public final static int longShifterChannel = 3;
     public final static int smallShifterChannel = 2;
 
-    public static final int kRLimitSwitch = 3; // TODO
-    public static final int kLLimitSwitch = 2; // TODO
+    public static final int kRLimitSwitch = 3;
+    public static final int kLLimitSwitch = 2;
   }
 
   public static class AprilTags {
@@ -136,9 +136,9 @@ public final class Constants {
         public final static double kD_FrontLeft = 0.015;
         public final static double kF_FrontLeft = 0;
 
-        public final static double kP_BackLeft = 1.6;
-        public final static double kI_BackLeft = 0.01;
-        public final static double kD_BackLeft = 0.015;
+        public final static double kP_BackLeft = 1.0;
+        public final static double kI_BackLeft = 0;
+        public final static double kD_BackLeft = 0;
         public final static double kF_BackLeft = 0;
 
     public final static double kP_BackRight = 1.2;

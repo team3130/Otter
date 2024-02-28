@@ -3,9 +3,9 @@
   "startingPose": {
     "position": {
       "x": 0.72,
-      "y": 6.65
+      "y": 4.41
     },
-    "rotation": -120.0
+    "rotation": 120.0
   },
   "command": {
     "type": "sequential",
@@ -34,7 +34,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "swn-FlushTurn"
+                        "pathName": "sws-FlushTurn"
                       }
                     },
                     {
@@ -46,13 +46,31 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "swn-N1"
+                        "pathName": "sws-N3"
                       }
                     },
                     {
                       "type": "named",
                       "data": {
                         "name": "Index"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "sws-N2"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Index"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "sws-N8"
                       }
                     }
                   ]

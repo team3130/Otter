@@ -49,7 +49,6 @@ public class Climber extends SubsystemBase {
         climbDone = valid;
     }
 
-
     // sets speed of right arm
     public void setMotorCheckingSpeed() {
         climberMotor.set(ControlMode.PercentOutput, pitCheckingSpeed);
