@@ -11,7 +11,6 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PS5Controller;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -20,16 +19,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.Chassis.TeleopDrive;
-import frc.robot.commands.Climber.ClimberReset;
 import frc.robot.commands.Climber.ClimberExtend;
 import frc.robot.commands.Indexer.AlwaysIndex;
 import frc.robot.commands.Intake.LimitSpintake;
 import frc.robot.commands.Indexer.Outtake;
-import frc.robot.commands.LEDs.DefaultYellow;
 import frc.robot.commands.ShooterShifter.ShortShifterExtend;
 import frc.robot.subsystems.Chassis;
 import frc.robot.subsystems.Climber;
@@ -43,8 +39,7 @@ import frc.robot.commands.Amp.*;
 import frc.robot.commands.Chassis.ResetOdometry;
 import frc.robot.commands.Intake.*;
 import frc.robot.subsystems.Amp;
-
-import java.util.function.BooleanSupplier;
+import frc.robot.subsystems.LEDs.ShooterLEDs;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -65,7 +60,8 @@ public class RobotContainer {
   private final Climber rightClimber;
   private final PS5Controller driverController = new PS5Controller(0);
   private final XboxController operatorController = new XboxController(1);
-  private final LEDSubsystem led;
+  //private final AmpLEDs ampLEDs;
+  private final ShooterLEDs ampLEDs;
   private final SendableChooser<Command> autoChooser;
   //private static SendableChooser<BooleanSupplier> isFieldMirrored = new SendableChooser<>();
   //private static Optional<DriverStation.Alliance> alliance = DriverStation.getAlliance();
@@ -83,7 +79,8 @@ public class RobotContainer {
     intake = new Intake();
     indexer = new Indexer();
 
-    led = new LEDSubsystem();
+    //ampLEDs = new AmpLEDs();
+    ampLEDs = new ShooterLEDs(0, 23);
 
     // Named commands must be registered before the creation of any PathPlanner Autos or Paths
     // Do this in RobotContainer, after subsystem initialization, but before the creation of any other commands.
@@ -139,17 +136,15 @@ public class RobotContainer {
   }
 
   public void LEDPeriodic() {
-    if (intake.getIntakeLimitSwitch() || amp.getLimitSwitch() || leftClimber.getClimbDone()) {
-      led.greenRobot();
+    if (intake.getIntakeLimitSwitch() || amp.getLimitSwitch()) {
+      ampLEDs.purpleRobot();
+    } else if (leftClimber.getClimbDone()) {
+      ampLEDs.movingRainbow();
     } else {
-      led.defaultYellow();
+      ampLEDs.shooterYellow();
     }
-    led.defaultYellow();
   }
 
-  public Command LEDDefaultYellow() {
-    return new DefaultYellow(led);
-  }
 
   public void resetOdo() {
     chassis.resetOdometry(new Pose2d(0, 0, new Rotation2d()));

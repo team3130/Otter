@@ -5,14 +5,13 @@
 package frc.robot.commands.LEDs;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.ExampleSubsystem;
-import frc.robot.subsystems.LEDSubsystem;
+import frc.robot.subsystems.LEDs.AmpLEDs;
 
 /** An example command that uses an example subsystem. */
 public class DefaultYellow extends Command {
-  private final LEDSubsystem ledSubsystem;
+  private final AmpLEDs ledSubsystem;
 
-  public DefaultYellow(LEDSubsystem ledSubsystem) {
+  public DefaultYellow(AmpLEDs ledSubsystem) {
     this.ledSubsystem = ledSubsystem;
     addRequirements(ledSubsystem);
   }

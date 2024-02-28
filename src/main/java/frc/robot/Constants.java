@@ -44,8 +44,8 @@ public final class Constants {
     public final static int longShifterChannel = 3;
     public final static int smallShifterChannel = 2;
 
-    public static final int kRLimitSwitch = 3; // TODO
-    public static final int kLLimitSwitch = 2; // TODO
+    public static final int kRLimitSwitch = 3;
+    public static final int kLLimitSwitch = 2;
   }
 
   public static class AprilTags {

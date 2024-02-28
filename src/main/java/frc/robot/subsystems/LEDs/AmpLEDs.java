@@ -2,15 +2,14 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.subsystems;
+package frc.robot.subsystems.LEDs;
 
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.commands.Intake.SmartSpintake;
 
-public class LEDSubsystem extends SubsystemBase {
+public class AmpLEDs extends SubsystemBase {
   AddressableLED ampLEDs;
   AddressableLED shooterLEDs;
   AddressableLED leftClimberLEDs;
@@ -25,85 +24,134 @@ public class LEDSubsystem extends SubsystemBase {
   private final int climberLength = 5;
   private int testShuff = 0;
 
-  public LEDSubsystem() {
+  public AmpLEDs() {
+    /*
     ampLEDs = new AddressableLED(0); // PWM Port
-    shooterLEDs = new AddressableLED(1); // PWM Port
-    leftClimberLEDs = new AddressableLED(2); // PWM Port
-    rightClimberLEDs = new AddressableLED(3); // PWM Port
-
     ampBuffer = new AddressableLEDBuffer(ampLength); // set length once
     ampLEDs.setLength(ampBuffer.getLength());
+    ampLEDs.setData(ampBuffer); // set data
+    ampLEDs.start();
+
+    //leftClimberLEDs = new AddressableLED(1); // PWM Port
+    /*
+    rightClimberLEDs = new AddressableLED(2); // PWM Port
+
+     */
 
 
+    /*
+
+    leftClimberBuffer = new AddressableLEDBuffer(climberLength);
+    leftClimberLEDs.setLength(leftClimberBuffer.getLength());
+
+    rightClimberBuffer = new AddressableLEDBuffer(climberLength);
+    rightClimberLEDs.setLength(rightClimberBuffer.getLength());
+
+     */
 
     // Set the data
-    ampLEDs.setData(ampBuffer);
-    ampLEDs.start();
+
+    /*
+
+    leftClimberLEDs.setData(leftClimberBuffer);
+    leftClimberLEDs.start();
+
+    rightClimberLEDs.setData(rightClimberBuffer);
+    rightClimberLEDs.start();
+
+     */
   }
 
   /* HSV: h == set the value, s == saturation, v == brightness value
-    Red: 0 - 60
-    Yellow: 61 - 120
-    Green: 121 - 180
-    Cyan: 181 - 240
-    Blue: 241 - 300
-    Magenta: 301 and 360 degrees.
+    100 - blue
+    15 - yellow
+    25 - green
   */
 
   public void testShuffleboard() {
     for (var i = 0; i < ampBuffer.getLength(); i++) {
       ampBuffer.setHSV(i, testShuff, 255, 128);
     }
-    led.setData(ampBuffer);
+    ampLEDs.setData(ampBuffer);
   }
 
   public void defaultYellow() {
     for (var i = 0; i < ampBuffer.getLength(); i++) {
-      ampBuffer.setHSV(i, 80, 255, 128);
+      ampBuffer.setHSV(i, 10, 255, 255);
     }
-    led.setData(ampBuffer);
+
+    /*
+    for (var i = 0; i < shooterBuffer.getLength(); i++) {
+      shooterBuffer.setHSV(i, 10, 255, 128);
+    }
+    for (var i = 0; i < rightClimberBuffer.getLength(); i++) {
+      rightClimberBuffer.setHSV(i, 80, 255, 128);
+    }
+
+     */
+
+    ampLEDs.setData(ampBuffer);
+    /*
+
+    shooterLEDs.setData(shooterBuffer);
+    rightClimberLEDs.setData(rightClimberBuffer);
+
+     */
   }
 
+  /*
   public void red() {
     for (var i = 0; i < ampBuffer.getLength(); i++) {
       ampBuffer.setHSV(i, 0, 255, 128);
     }
-    led.setData(ampBuffer);
+    for (var i = 0; i < shooterBuffer.getLength(); i++) {
+      shooterBuffer.setHSV(i, 0, 255, 128);
+    }
+    for (var i = 0; i < leftClimberBuffer.getLength(); i++) {
+      leftClimberBuffer.setHSV(i, 0, 255, 128);
+    }
+    for (var i = 0; i < rightClimberBuffer.getLength(); i++) {
+      rightClimberBuffer.setHSV(i, 0, 255, 128);
+    }
+
+    ampLEDs.setData(ampBuffer);
+    shooterLEDs.setData(shooterBuffer);
+    leftClimberLEDs.setData(leftClimberBuffer);
+    rightClimberLEDs.setData(rightClimberBuffer);
   }
 
   public void greenRobot() {
     for (var i = 0; i < ampBuffer.getLength(); i++) {
       ampBuffer.setHSV(i, 150, 255, 128);
     }
-    led.setData(ampBuffer);
+    for (var i = 0; i < shooterBuffer.getLength(); i++) {
+      shooterBuffer.setHSV(i, 150, 255, 128);
+    }
+    for (var i = 0; i < leftClimberBuffer.getLength(); i++) {
+      leftClimberBuffer.setHSV(i, 150, 255, 128);
+    }
+    for (var i = 0; i < rightClimberBuffer.getLength(); i++) {
+      rightClimberBuffer.setHSV(i, 150, 255, 128);
+    }
+
+    ampLEDs.setData(ampBuffer);
+    shooterLEDs.setData(shooterBuffer);
+    leftClimberLEDs.setData(leftClimberBuffer);
+    rightClimberLEDs.setData(rightClimberBuffer);
   }
 
   public void greenShooter() {
-    for (var i = 5; i < 15; i++) {
-      ampBuffer.setHSV(i, 150, 255, 128);
+    for (var i = 0; i < shooterBuffer.getLength(); i++) {
+      shooterBuffer.setHSV(i, 150, 255, 128);
     }
-    led.setData(ampBuffer);
-  }
-
-  public void blue() {
-    for (var i = 0; i < ampBuffer.getLength(); i++) {
-      ampBuffer.setHSV(i, 260, 255, 128);
-    }
-    led.setData(ampBuffer);
-  }
-
-  public void selectGreen() {
-    for (var i = 20; i < 40; i++) {
-      ampBuffer.setHSV(i, 150, 255, 128);
-    }
-    led.setData(ampBuffer);
+    shooterLEDs.setData(shooterBuffer);
   }
 
   public void reset() {
     for (var i = 0; i < ampBuffer.getLength(); i++) {
       ampBuffer.setHSV(i, 0, 255, 0);
     }
-    led.setData(ampBuffer);
+    ampLEDs.setData(ampBuffer);
   }
 
   public void rainbow() {
@@ -119,8 +167,10 @@ public class LEDSubsystem extends SubsystemBase {
     rainbowFirstPixelHue += 3;
     // Check bounds
     rainbowFirstPixelHue %= 180;
-    led.setData(ampBuffer);
+    ampLEDs.setData(ampBuffer);
   }
+
+   */
 
   public int getTestShuff() { return testShuff; }
   public void setTestShuff(long lol) { testShuff = (int) lol; }

@@ -12,7 +12,10 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.*;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -20,6 +23,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
@@ -29,7 +33,7 @@ import frc.robot.swerve.SwerveModule;
 import java.util.Arrays;
 
 /**
- * Chassis is the drivetrain subsystem of our bot. Our physical chassis is a swerve drive, 
+ * Chassis is the drivetrain subsystem of our bot. Our physical chassis is a swerve drive,
  * so we use wpilib SwerveDriveKinematics and SwerveDrivePoseEstimator as opposed to Differential Drive objects
  */
 public class Chassis extends SubsystemBase {
@@ -48,16 +52,19 @@ public class Chassis extends SubsystemBase {
     private double targetI = 0d;
     private double targetD = 0d;
 
-    Rotation2d angleSetpoint = null;
-
+    /**
+     * Makes a chassis that starts at 0, 0, 0
+     * the limelight object that we can use for updating odometry
+     */
     public Chassis(){
-      this (new Pose2d(), new Rotation2d());
+        this (new Pose2d(), new Rotation2d());
     }
 
     /**
      * Makes a chassis with a starting position
      * @param startingPos the initial position to say that the robot is at
      * @param startingRotation the initial rotation of the bot
+     * the limelight object which is used for updating odometry
      */
     public Chassis(Pose2d startingPos, Rotation2d startingRotation) {
         kinematics = new SwerveDriveKinematics(Constants.Swerve.moduleTranslations);
@@ -76,8 +83,8 @@ public class Chassis extends SubsystemBase {
         robotAngleController.setTolerance(0.0025, 0.05); // at position tolerance
 
         field = new Field2d();
-        Shuffleboard.getTab("Comp").add("field", field);
-        n_fieldOrriented = Shuffleboard.getTab("Comp").add("field orriented", false).getEntry();
+        SmartDashboard.putData("Field", field);
+        n_fieldOrriented = Shuffleboard.getTab("Chassis").add("field orriented", false).getEntry();
 
         AutoBuilder.configureHolonomic(
                 this::getPose2d, // Robot pose supplier
@@ -155,7 +162,7 @@ public class Chassis extends SubsystemBase {
     public void zeroHeading(){
         Navx.resetNavX();
     }
-    
+
     // sets field oriented (field or robot oriented) to the provided boolean
     public void setWhetherFieldOriented(boolean fieldOriented) {
         fieldRelative = fieldOriented;
@@ -175,6 +182,7 @@ public class Chassis extends SubsystemBase {
     // parameter pose is the pose2d to reset the odometry to
     public void resetOdometry(Pose2d pose) {
         resetEncoders();
+        Navx.resetNavX();
         odometry.resetPosition(Navx.getRotation(), generatePoses(), pose);
     }
 
@@ -213,6 +221,14 @@ public class Chassis extends SubsystemBase {
      */
     public SwerveDriveKinematics getKinematics() {
         return kinematics;
+    }
+
+    private SwerveModuleState[] getModuleStates() {
+        SwerveModuleState[] states = new SwerveModuleState[4];
+        for (int i = 0; i < 4; i++) {
+            states[i] = modules[i].getState();
+        }
+        return states;
     }
 
     // set module states to desired states
