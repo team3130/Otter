@@ -8,12 +8,10 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
-import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -28,7 +26,6 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.RobotContainer;
 import frc.robot.sensors.Navx;
 import frc.robot.swerve.SwerveModule;
 
@@ -50,11 +47,12 @@ public class Chassis extends SubsystemBase {
     private double targetMaxVelo = Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond; //TODO real
     private double targetMaxAcc = Constants.Swerve.kMaxAccelerationDrive; //TODO real
     private PIDController robotAngleController;
-    private double targetP = 6d;
-    private double targetI = 0.1;
-    private double targetD = 0.3;
-    private boolean isTryingToTargetAmp = false;
-    private boolean isTryingToTargetSpeaker = false;
+    private double targetP = 10d;
+    private double targetI = 0.2;
+    private double targetD = 0.8;
+    private boolean isTryingToTargetSpeakerWorking = false;
+    private boolean isTryingAmpTest = false;
+    private boolean isTargetingPodium = false;
     private int fiducialID = 0;
     private PIDController targetController;
     private double XtargetV = 0;
@@ -122,91 +120,93 @@ public class Chassis extends SubsystemBase {
     }
 
 
-        public boolean targetControllerDone(){
-            return targetController.atSetpoint();
-        }
-
-
-        public void setXTargetV(double newXF){
-            XtargetV = newXF ;
-        }
-        public void setYTargetV(double newYF){
-            YtargetF = newYF ;
-        }
-
-
-        public double getXTargetV() {
-            return XtargetV;
-        }
-        public double getYTargetV() {
-            return YtargetF;
-        }
-        public boolean getIsTryingToTargetAmp(){
-        return isTryingToTargetAmp;
-        }
-    public boolean getIsTryingToTargetSpeaker(){
-        return isTryingToTargetSpeaker;
+    public boolean targetControllerDone(){
+        return targetController.atSetpoint();
     }
 
 
-        public boolean tryingToTargetSpeaker(double omega, double theta){
-            if (omega < 0.5 && Math.abs(theta) < 0.2){
-               isTryingToTargetSpeaker = true;
-               return true;
-            } else {
-                isTryingToTargetSpeaker = false;
-                return false;
-            }
+    public void setXTargetV(double newXF){
+        XtargetV = newXF ;
+    }
+    public void setYTargetV(double newYF){
+        YtargetF = newYF ;
+    }
+
+
+    public double getXTargetV() {
+        return XtargetV;
+    }
+    public double getYTargetV() {
+        return YtargetF;
+    }
+    public boolean getIsTryingToTargetSpeaker(){
+    return isTryingToTargetSpeakerWorking;
+    }
+
+
+    public boolean tryingToTargetAmpTest(double omega, double theta){
+        if (omega > 0.5 && Math.abs(theta) < 0.5){
+           isTryingAmpTest = true;
+           return true;
+        } else {
+            isTryingAmpTest = false;
+            return false;
         }
+    }
 
-        // if the right joystick is pushed up, trying to target = true
-        public boolean tryingToTargetAmp(double omega, double theta) {
-            if (omega > 0.1 && Math.abs(theta) < 0.2) {
-                isTryingToTargetAmp = true;
-                return true;
-            } else {
-                isTryingToTargetAmp = false;
-                return false;
-            }
+    // if the right joystick is pushed up, trying to target = true
+    public boolean tryingToTargetSpeakerWorking(double omega, double theta) {
+        if (omega < -0.5 && Math.abs(theta) < 0.5) {
+            isTryingToTargetSpeakerWorking = true;
+            return true;
+        } else {
+            isTryingToTargetSpeakerWorking = false;
+            return false;
         }
+    }
 
-        public double goToTargetPower() {
-            return targetController.calculate(getRotation2d().getRadians());
-        }
+    public double goToTargetPower() {
+        return targetController.calculate(getRotation2d().getRadians());
+    }
 
 
-        public void resetTargetController() {
-            targetController.reset();
-            targetController.enableContinuousInput(-Math.PI, Math.PI);
-            targetController.setTolerance(Math.toRadians(1.0));
-            targetController.setPID(targetP, targetI, targetD);
+    public void resetTargetSpeakerController() {
+        targetController.reset();
+        targetController.enableContinuousInput(-Math.PI, Math.PI);
+        targetController.setTolerance(Math.toRadians(1.0));
+        targetController.setPID(targetP, targetI, targetD);
 
-            if (isTryingToTargetAmp) {
-                if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
-                    targetController.setSetpoint(Math.toRadians(180));
-                } else {
-                    targetController.setSetpoint(Math.toRadians(0));
-                }
-                //targetController.setSetpoint(Math.toRadians(90));
-            } /*else if (isTryingToTargetSpeaker) {
+        if (isTryingToTargetSpeakerWorking) {
+            if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
                 targetController.setSetpoint(Math.toRadians(180));
-
-
-                if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
-                    targetController.setSetpoint(Math.toRadians(180));
-                } else {
-                    targetController.setSetpoint(Math.toRadians(0));
-                }
-
-                 */
-
-
-
-
+            } else {
+                targetController.setSetpoint(Math.toRadians(0));
+            }
         }
+    }
 
+    public void resetTargetAmpController() {
+        targetController.reset();
+        targetController.enableContinuousInput(-Math.PI, Math.PI);
+        targetController.setTolerance(Math.toRadians(1.0));
+        targetController.setPID(targetP, targetI, targetD);
+        if (isTryingAmpTest) {
+            targetController.setSetpoint(Math.toRadians(90));
+        }
+    }
 
+    public void resetTargetPodiumController() {
+        targetController.reset();
+        targetController.enableContinuousInput(-Math.PI, Math.PI);
+        targetController.setTolerance(Math.toRadians(1.0));
+        targetController.setPID(targetP, targetI, targetD);
 
+            if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+                targetController.setSetpoint(Math.toRadians(30));
+            } else {
+                targetController.setSetpoint(Math.toRadians(150));
+            }
+    }
 
     /**
      * If the PID controllers of the {@link SwerveModule}'s are all done
@@ -450,7 +450,7 @@ public class Chassis extends SubsystemBase {
             builder.addDoubleProperty("target I", this::getTargetI, this::setTargetI);
             builder.addDoubleProperty("target D", this::getTargetD, this::setTargetD);
             builder.addBooleanProperty("is targeting speaker", this::getIsTryingToTargetSpeaker, null);
-            builder.addBooleanProperty("is targeting amp", this::getIsTryingToTargetAmp, null);
+            builder.addBooleanProperty("is targeting amp", this::getIsTryingToTargetSpeaker, null);
             builder.addDoubleProperty("target F", this::getXTargetV, this::setXTargetV);
             builder.addDoubleProperty("target YF", this::getYTargetV, this::setYTargetV);
             builder.addDoubleProperty("target XF", this::getXTargetV, this::setXTargetV);

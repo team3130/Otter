@@ -67,31 +67,31 @@ public class TeleopDrive extends Command {
       omega = -controller.getRawAxis(Constants.PS5.LST_AXS_RJOYSTICKY);
 
 
-      if (chassis.tryingToTargetAmp(omega, theta)) { // if the right joystick is pushed up
-          chassis.resetTargetController(); // setpoint 90
+      if (chassis.tryingToTargetSpeakerWorking(omega, theta)) { // if the right joystick is pushed up
+          chassis.resetTargetSpeakerController(); // setpoint 90
           theta = chassis.goToTargetPower(); // calculate using odo.rotation as process var
-      } /*else if (chassis.tryingToTargetSpeaker(omega, theta)) { // checks if right joystick is pushed down & sets boolean of if we targeting speaker
-        chassis.resetTargetController(); // sets setpoint 180 or zero based on alliance
-        theta = chassis.goToTargetPower(); // calculate using odo.rotation as process var
-
+      } else if (chassis.tryingToTargetAmpTest(omega, theta)) {
+          chassis.resetTargetAmpController();
+          theta = chassis.goToTargetPower();
+      } else if (controller.getRawButton(Constants.PS5.LST_BTN_RJOYSTICKPRESS)) {
+          chassis.resetTargetPodiumController();
+          theta = chassis.goToTargetPower();
+      } else { // normal driving
+          theta = Math.abs(theta) > Constants.Swerve.kDeadband ? theta : 0.0;
+          theta = turningLimiter.calculate(theta) * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond;
       }
-      */
-      else{ // normal driving
-              theta = Math.abs(theta) > Constants.Swerve.kDeadband ? theta : 0.0;
-              theta = turningLimiter.calculate(theta) * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond;
-          }
 
-          // square the inputs
-          y = y * Math.abs(y);
-          x = x * Math.abs(x);
+      // square the inputs
+      y = y * Math.abs(y);
+      x = x * Math.abs(x);
 
-          // apply dead-band
-          if (Math.abs(x) < Constants.Swerve.kDeadband) {
-              x = 0;
-          }
-          if (Math.abs(y) < Constants.Swerve.kDeadband) {
-              y = 0;
-          }
+      // apply dead-band
+      if (Math.abs(x) < Constants.Swerve.kDeadband) {
+          x = 0;
+      }
+      if (Math.abs(y) < Constants.Swerve.kDeadband) {
+          y = 0;
+      }
 
           // apply slew rate limiter which also converts to m/s and rad.s
           x = xLimiter.calculate(x * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);

@@ -13,46 +13,36 @@ import frc.robot.subsystems.LEDs.LEDs;
 public class WhiteLEDs extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final LEDs leds;
-  private double timeout;
-  private Timer timer = new Timer();
-
 
   /**
    * Creates a new ExampleCommand.
    *
    * @param leds The subsystem used by this command.
    */
-  public WhiteLEDs(LEDs leds, double timeout) {
+  public WhiteLEDs(LEDs leds) {
     this.leds = leds;
-    this.timeout = timeout;
     addRequirements(leds);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    timer.reset();
-    timer.start();
+    leds.setWhiteLED(true);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
-    leds.greenRobot();
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (timer.hasElapsed(timeout)) {
-      return true;
-    } else {
-      return false;
-    }
+    return false;
   }
 }

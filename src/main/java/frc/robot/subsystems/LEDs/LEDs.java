@@ -4,19 +4,17 @@
 
 package frc.robot.subsystems.LEDs;
 
-import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.shuffleboard.ComplexWidget;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.commands.LEDs.WhiteLEDs;
 
 public class LEDs extends SubsystemBase {
   AddressableLED shooterLEDs;
   private final int shooterLength = 23;
+
+  private boolean whiteLED = false;
 
   private int rainbowFirstPixelHue = 20;
 
@@ -34,9 +32,6 @@ public class LEDs extends SubsystemBase {
 
 
     //whiteLEDs = Shuffleboard.getTab("LEDs").add("White LEDs", new WhiteLEDs(this));
-
-    ShuffleboardTab tab = Shuffleboard.getTab("LED");
-    tab.add(new WhiteLEDs(this, 3.0));
   }
 
   public void shooterYellow() {
@@ -90,8 +85,17 @@ public class LEDs extends SubsystemBase {
     shooterLEDs.setData(shooterBuffer);
   }
 
+  public boolean getWhiteLED() {
+    return whiteLED;
+  }
+
+  public void setWhiteLED(boolean lol) {
+    lol = whiteLED;
+  }
+
+  @Override
   public void initSendable(SendableBuilder builder) {
-    builder.setSmartDashboardType("LED");
+    builder.addBooleanProperty("white", this::getWhiteLED, this::setWhiteLED);
   }
 
   @Override

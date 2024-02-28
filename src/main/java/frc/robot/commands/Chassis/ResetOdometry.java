@@ -25,10 +25,11 @@ public class ResetOdometry extends InstantCommand {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    /*
     if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red && DriverStation.getAlliance().isPresent()) {
       m_chassis.resetOdometry(new Pose2d(0, 0, new Rotation2d(Math.toRadians(180))));
-    } else {
+    } else { */
       m_chassis.resetOdometry(new Pose2d(0, 0, new Rotation2d()));
-    }
+
   }
 }

@@ -145,6 +145,10 @@ public class RobotContainer {
     } else {
       robotLEDs.shooterYellow();
     }
+
+    if (robotLEDs.getWhiteLED()) {
+      robotLEDs.greenRobot();
+    }
   }
 
 
@@ -172,6 +176,7 @@ public class RobotContainer {
       tab.add(shooter);
       tab.add(intake);
       tab.add(leftClimber);
+      tab.add(robotLEDs);
     }
   }
 
@@ -205,8 +210,7 @@ public class RobotContainer {
     new JoystickButton(driverController, Constants.PS5.LST_BTN_RBUMPER).whileTrue(new ToggleIntakeIn(intake));
     new JoystickButton(driverController, Constants.PS5.x).whileTrue(new Outtake(indexer));
     new JoystickButton(driverController, Constants.PS5.circle).whileTrue(new AlwaysIndex(indexer));
-
-
+    //new POVButton(driverController, Constants.PS5.LST_POV_S).whileTrue(new WhiteLEDs(robotLEDs));
 
     // ANDREW OPERATOR
     new JoystickButton(operatorController, Constants.XBox.LST_BTN_Y).whileTrue(new ToggleAmp(amp));
