@@ -50,9 +50,9 @@ public class Chassis extends SubsystemBase {
     private double targetMaxVelo = Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond; //TODO real
     private double targetMaxAcc = Constants.Swerve.kMaxAccelerationDrive; //TODO real
     private PIDController robotAngleController;
-    private double targetP = 4d;
-    private double targetI = 0d;
-    private double targetD = 0d;
+    private double targetP = 6d;
+    private double targetI = 0.1;
+    private double targetD = 0.3;
     private boolean isTryingToTargetAmp = false;
     private boolean isTryingToTargetSpeaker = false;
     private int fiducialID = 0;
@@ -165,6 +165,7 @@ public class Chassis extends SubsystemBase {
                 isTryingToTargetAmp = true;
                 return true;
             } else {
+                isTryingToTargetAmp = false;
                 return false;
             }
         }
@@ -182,15 +183,21 @@ public class Chassis extends SubsystemBase {
 
             if (isTryingToTargetAmp) {
                 targetController.setSetpoint(Math.toRadians(90));
-            }
+            } /*else if (isTryingToTargetSpeaker) {
+                targetController.setSetpoint(Math.toRadians(180));
 
-            if (isTryingToTargetSpeaker) {
+
                 if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
                     targetController.setSetpoint(Math.toRadians(180));
                 } else {
                     targetController.setSetpoint(Math.toRadians(0));
                 }
-            }
+
+                 */
+
+
+
+
         }
 
 

@@ -66,13 +66,17 @@ public class TeleopDrive extends Command {
       // angle used for targeting
       omega = -controller.getRawAxis(Constants.PS5.LST_AXS_RJOYSTICKY);
 
+
       if (chassis.tryingToTargetAmp(omega, theta)) { // if the right joystick is pushed up
           chassis.resetTargetController(); // setpoint 90
           theta = chassis.goToTargetPower(); // calculate using odo.rotation as process var
-      } else if (chassis.tryingToTargetSpeaker(omega, theta)) { // checks if right joystick is pushed down & sets boolean of if we targeting speaker
+      } /*else if (chassis.tryingToTargetSpeaker(omega, theta)) { // checks if right joystick is pushed down & sets boolean of if we targeting speaker
         chassis.resetTargetController(); // sets setpoint 180 or zero based on alliance
         theta = chassis.goToTargetPower(); // calculate using odo.rotation as process var
-      }else{ // normal driving
+
+      }
+      */
+      else{ // normal driving
               theta = Math.abs(theta) > Constants.Swerve.kDeadband ? theta : 0.0;
               theta = turningLimiter.calculate(theta) * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond;
           }
