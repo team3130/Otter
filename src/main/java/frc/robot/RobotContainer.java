@@ -144,7 +144,7 @@ public class RobotContainer {
   public void LEDPeriodic() {
     if (intake.getIntakeLimitSwitch() || amp.getLimitSwitch()) {
       ampLEDs.purpleRobot();
-    } else if (leftClimber.getClimbDone()) {
+    } else if (leftClimber.getClimbDone() && rightClimber.getClimbDone()) {
       ampLEDs.movingRainbow();
     } else {
       ampLEDs.shooterYellow();

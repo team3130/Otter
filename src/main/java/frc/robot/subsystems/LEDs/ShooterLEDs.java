@@ -29,21 +29,21 @@ public class ShooterLEDs extends SubsystemBase {
 
   public void shooterYellow() {
     for (var i = 0; i < shooterBuffer.getLength(); i++) {
-      shooterBuffer.setHSV(i, 10, 255, 255);
+      shooterBuffer.setHSV(i, 10, 255, 200);
     }
     shooterLEDs.setData(shooterBuffer);
   }
 
   public void purpleRobot() {
     for (var i = 0; i < shooterBuffer.getLength(); i++) {
-      shooterBuffer.setHSV(i, 150, 255, 128);
+      shooterBuffer.setHSV(i, 150, 255, 200);
     }
     shooterLEDs.setData(shooterBuffer);
   }
 
   public void greenRobot() {
     for (var i = 0; i < shooterBuffer.getLength(); i++) {
-      shooterBuffer.setHSV(i, 65, 255, 128);
+      shooterBuffer.setHSV(i, 65, 255, 200);
     }
     shooterLEDs.setData(shooterBuffer);
   }
@@ -69,7 +69,7 @@ public class ShooterLEDs extends SubsystemBase {
       // Calculate the hue - hue is easier for rainbows because the color
       // shape is a circle so only one value needs to precess
       final var hue = (rainbowFirstPixelHue + (i * 180 / shooterBuffer.getLength())) % 180;
-      shooterBuffer.setHSV(i, hue, 255, 128);
+      shooterBuffer.setHSV(i, hue, 255, 200);
     }
     // Increase by to make the rainbow "move"
     rainbowFirstPixelHue += 3;
