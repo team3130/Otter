@@ -56,12 +56,14 @@ public class Amp extends SubsystemBase {
   public void ampMotorStop() {
     ampMotor.set(ControlMode.PercentOutput, 0);
   }
-
   public boolean getLimitSwitch() {
     return !ampLimit.get();
   }
   public boolean getPneumaticState() {
     return ampPneumatic.get();
+  }
+  public boolean getAmpIsDown() {
+    return !ampPneumatic.get(); // returns true if amp is down
   }
 
   public double getIntakeAmpSpeed() {

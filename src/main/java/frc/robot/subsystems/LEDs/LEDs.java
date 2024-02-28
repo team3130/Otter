@@ -23,6 +23,12 @@ public class LEDs extends SubsystemBase {
 
   // 65 == teal
   // 55 == green
+  // 0 == red
+  // 90 == pink
+  // 240 == green
+  // 40 ==
+  // 80 ==
+
   public LEDs(int pwmPort, int length) {
     shooterLEDs = new AddressableLED(pwmPort); // PWM Port
     shooterBuffer = new AddressableLEDBuffer(length);
@@ -48,7 +54,21 @@ public class LEDs extends SubsystemBase {
     shooterLEDs.setData(shooterBuffer);
   }
 
-  public void greenRobot() {
+  public void tealRobot() {
+    for (var i = 0; i < shooterBuffer.getLength(); i++) {
+      shooterBuffer.setHSV(i, 65, 255, 200);
+    }
+    shooterLEDs.setData(shooterBuffer);
+  }
+
+  public void redRobot() {
+    for (var i = 0; i < shooterBuffer.getLength(); i++) {
+      shooterBuffer.setHSV(i, 0, 255, 200);
+    }
+    shooterLEDs.setData(shooterBuffer);
+  }
+
+  public void whiteRobot() {
     for (var i = 0; i < shooterBuffer.getLength(); i++) {
       shooterBuffer.setHSV(i, 65, 255, 200);
     }

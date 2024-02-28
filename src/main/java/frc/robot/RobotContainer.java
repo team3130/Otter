@@ -26,7 +26,6 @@ import frc.robot.commands.Climber.ClimberExtend;
 import frc.robot.commands.Indexer.AlwaysIndex;
 import frc.robot.commands.Intake.LimitSpintake;
 import frc.robot.commands.Indexer.Outtake;
-import frc.robot.commands.LEDs.WhiteLEDs;
 import frc.robot.commands.ShooterShifter.ShortShifterExtend;
 import frc.robot.subsystems.Chassis;
 import frc.robot.subsystems.Climber;
@@ -138,16 +137,14 @@ public class RobotContainer {
   }
 
   public void LEDPeriodic() {
-    if (intake.getIntakeLimitSwitch() || amp.getLimitSwitch()) {
+    if (!shooterShifter.getIsDoubleRetracted()) {
+      robotLEDs.redRobot();
+    } else if (intake.getIntakeLimitSwitch() || amp.getLimitSwitch()) {
       robotLEDs.purpleRobot();
     } else if (leftClimber.getClimbDone() && rightClimber.getClimbDone()) {
       robotLEDs.movingRainbow();
     } else {
       robotLEDs.shooterYellow();
-    }
-
-    if (robotLEDs.getWhiteLED()) {
-      robotLEDs.greenRobot();
     }
   }
 

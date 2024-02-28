@@ -36,21 +36,24 @@ public class ShooterShifter extends SubsystemBase {
     shawtyShifter.set(true);
     longShifter.set(false);
     setShawtyShifter(true);
+    setDoubleRetract(false);
   }
 
   public void extendLongShifter() {
     shawtyShifter.set(false);
     longShifter.set(true);
     setLongShifter(true);
+    setDoubleRetract(false);
   }
 
   public void doubleExtend() {
     shawtyShifter.set(true);
     longShifter.set(true);
     setDoubleExtended(true);
+    setDoubleRetract(false);
   }
 
-  public boolean getIsParked() { return doubleRetracted; }
+  public boolean getIsDoubleRetracted() { return doubleRetracted; }
   public boolean getIsFirstShootStage() { return shifterOneExtended; }
   public boolean getIsSecondShootStage() { return shifterTwoExtended; }
   public boolean getIsThirdShootStage() { return doubleExtended; }
@@ -73,7 +76,7 @@ public class ShooterShifter extends SubsystemBase {
   public void initSendable(SendableBuilder builder) {
     if (Constants.debugMode) {
       builder.setSmartDashboardType("Shooter Shifter");
-      builder.addBooleanProperty("speed", this::getIsParked, null);
+      builder.addBooleanProperty("speed", this::getIsDoubleRetracted, null);
       builder.addBooleanProperty("speed", this::getIsFirstShootStage, null);
       builder.addBooleanProperty("speed", this::getIsSecondShootStage, null);
       builder.addBooleanProperty("speed", this::getIsThirdShootStage, null);
