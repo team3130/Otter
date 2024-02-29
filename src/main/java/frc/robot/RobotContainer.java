@@ -151,15 +151,10 @@ public class RobotContainer {
     chassis.resetOdometry(new Pose2d(0, 0, new Rotation2d()));
   }
 
-  /*
-  public Command visionShifterVelocityShoot() {
-    return new SequentialCommandGroup(new VisionShift(shooterShifter), new VisionVelocityShoot(shooter));
-  }
-  */
-
   public void updateChassisPose() {
     chassis.updateOdometryFromSwerve();
   }
+
 
   /**
    * adds the subsystem {@link edu.wpi.first.util.sendable.Sendable} objects to a 'Subsystems' shuffleboard tab
@@ -218,4 +213,10 @@ public class RobotContainer {
             .onTrue(new ExampleCommand(m_exampleSubsystem));
     */
   }
+  /*
+  public Command visionShifterVelocityShoot() {
+    return new SequentialCommandGroup(new VisionShift(shooterShifter), new VisionVelocityShoot(shooter));
+  }
+  */
+
 }
