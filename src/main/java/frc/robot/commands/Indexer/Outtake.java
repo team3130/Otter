@@ -22,13 +22,13 @@ public class Outtake extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-
+    indexer.outtake();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    indexer.outtake();
+
   }
 
   // Called once the command ends or is interrupted.

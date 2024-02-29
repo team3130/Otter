@@ -32,14 +32,14 @@ public class ShooterShifter extends SubsystemBase {
     setDoubleRetract(true);
 
     setDoubleExtended(false);
-    setShawtyShifter(false);
+    setShortShifter(false);
     setLongShifter(false);
   }
 
-  public void extendShawtyShifter() {
+  public void extendShortShifter() {
     shawtyShifter.set(true);
     longShifter.set(false);
-    setShawtyShifter(true);
+    setShortShifter(true);
 
     setDoubleRetract(false);
     setDoubleExtended(false);
@@ -53,7 +53,7 @@ public class ShooterShifter extends SubsystemBase {
 
     setDoubleRetract(false);
     setDoubleExtended(false);
-    setShawtyShifter(false);
+    setShortShifter(false);
   }
 
   public void doubleExtend() {
@@ -62,7 +62,7 @@ public class ShooterShifter extends SubsystemBase {
     setDoubleExtended(true);
 
     setDoubleRetract(false);
-    setShawtyShifter(false);
+    setShortShifter(false);
     setLongShifter(false);
   }
 
@@ -71,9 +71,9 @@ public class ShooterShifter extends SubsystemBase {
   public boolean getIsLongShifterExtended() { return longShifterExtended; }
   public boolean getIsDoubleExtended() { return doubleExtended; }
   public void setDoubleRetract(boolean newIsParked) { doubleRetracted = newIsParked; }
-  public void setShawtyShifter(boolean newIsFirstShootStage) { shortShifterExtended = newIsFirstShootStage; }
+  public void setShortShifter(boolean newIsFirstShootStage) { shortShifterExtended = newIsFirstShootStage; }
   public void setLongShifter(boolean longShifterExtend) { longShifterExtended = longShifterExtend; }
-  public void setDoubleExtended(boolean newIsThirdShootStage) { longShifterExtended = newIsThirdShootStage; }
+  public void setDoubleExtended(boolean doubleExtend) { doubleExtended = doubleExtend; }
 
   @Override
   public void periodic() {

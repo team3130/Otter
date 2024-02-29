@@ -20,7 +20,7 @@ public class AutonMidShifter extends InstantCommand {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    shooterShifter.extendShawtyShifter();
+    shooterShifter.extendShortShifter();
     timer.reset();
     timer.start();
   }
