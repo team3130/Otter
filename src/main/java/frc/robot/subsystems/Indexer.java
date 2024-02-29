@@ -16,6 +16,7 @@ public class Indexer extends SubsystemBase {
   private final WPI_TalonSRX indexer;
   private double outakeSpeed = -1;
   private double spintakeSpeed = 1;
+  private double indexerVoltageCompensation = 10;
 
   public Indexer() {
     indexer = new WPI_TalonSRX(Constants.CAN.intakeIndexer);
@@ -23,7 +24,7 @@ public class Indexer extends SubsystemBase {
     indexer.configFactoryDefault();
     indexer.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
     indexer.setNeutralMode(NeutralMode.Coast);
-    indexer.configVoltageCompSaturation(10);
+    indexer.configVoltageCompSaturation(indexerVoltageCompensation);
     indexer.enableVoltageCompensation(true);
 
     indexer.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
@@ -47,12 +48,15 @@ public class Indexer extends SubsystemBase {
   public double getSpintakeSpeed() { return spintakeSpeed; }
   public void setOutakeSpeed(double newS) { outakeSpeed = newS; }
   public double getOutakeSpeed() { return outakeSpeed; }
+  public void setIndexerVoltageCompensation(double volts) { indexerVoltageCompensation = volts;}
+  public double getIndexerVoltageCompensation() { return indexerVoltageCompensation; }
 
   public void initSendable(SendableBuilder builder) {
     if (Constants.debugMode) {
       builder.setSmartDashboardType("Indexer");
-      builder.addDoubleProperty("Dumb spintake speed", this::getSpintakeSpeed, this::setSpintakeSpeed);
-      builder.addDoubleProperty("Dumb outtake speed", this::getOutakeSpeed, this::setOutakeSpeed);
+      builder.addDoubleProperty("Spintake speed", this::getSpintakeSpeed, this::setSpintakeSpeed);
+      builder.addDoubleProperty("Outtake speed", this::getOutakeSpeed, this::setOutakeSpeed);
+      builder.addDoubleProperty("Indexer Voltage comp", this::getIndexerVoltageCompensation, this::setIndexerVoltageCompensation);
     }
   }
 

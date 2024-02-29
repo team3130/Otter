@@ -30,11 +30,13 @@ public class VelocityShoot extends Command {
   public void initialize() {
     spinUpTime.reset();
     spinUpTime.start();
+    /*
 
     shooter.configureVelocitySlots();
     shooter.updateVelocityPID();
-
     shooter.setFlywheelVelocity();
+
+     */
   }
 
 
