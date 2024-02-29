@@ -4,31 +4,32 @@
 
 package frc.robot.commands.Indexer;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Indexer;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.ShooterShifter;
 
-public class Outtake extends Command {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
+public class AndrewIndex extends Command {
   private final Indexer indexer;
-  private final Timer timer = new Timer();
+  private final ShooterShifter shooterShifter;
 
-  public Outtake(Indexer indexer) {
+  public AndrewIndex(Indexer indexer, ShooterShifter shooterShifter) {
     this.indexer = indexer;
-    addRequirements(indexer);
+    this.shooterShifter = shooterShifter;
+    addRequirements(indexer, shooterShifter);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    indexer.outtake();
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
+    if (shooterShifter.getIsShortShifterExtended() || shooterShifter.getIsDoubleExtended()) {
+      indexer.spintake();
+    }
   }
 
   // Called once the command ends or is interrupted.

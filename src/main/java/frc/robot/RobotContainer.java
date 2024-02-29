@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.Chassis.TeleopDrive;
 import frc.robot.commands.Climber.ClimberExtend;
 import frc.robot.commands.Indexer.AlwaysIndex;
+import frc.robot.commands.Indexer.AndrewIndex;
 import frc.robot.commands.Intake.LimitedSpintake;
 import frc.robot.commands.Indexer.Outtake;
 import frc.robot.commands.ShooterShifter.ShortShifterExtend;
@@ -60,13 +61,10 @@ public class RobotContainer {
   private final Climber rightClimber;
   private final PS5Controller driverController = new PS5Controller(0);
   private final XboxController operatorController = new XboxController(1);
-  //private final AmpLEDs ampLEDs;
   private final LEDs robotLEDs;
   private final SendableChooser<Command> autoChooser;
   //private static SendableChooser<BooleanSupplier> isFieldMirrored = new SendableChooser<>();
   //private static Optional<DriverStation.Alliance> alliance = DriverStation.getAlliance();
-
-
 
   // container for the robot containing subsystems, OI devices, and commands
   public RobotContainer() {
@@ -137,7 +135,7 @@ public class RobotContainer {
   }
 
   public void LEDPeriodic() {
-    if (!shooterShifter.getIsDoubleRetracted()) {
+    if (shooterShifter.getIsDoubleExtended()) {
       robotLEDs.redRobot();
     } else if (intake.getIntakeLimitSwitch() || amp.getLimitSwitch()) {
       robotLEDs.purpleRobot();
@@ -177,17 +175,6 @@ public class RobotContainer {
     }
   }
 
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-
-  public Command getAutonomousCommand() {
-  // An example command will be run in autonomous
-  return Autos.exampleAuto(m_exampleSubsystem);
-  }
-   */
-
   // This method defines trigger -> command mappings
   // Triggers created via the Trigger constructor
   // CommandGenericHID subclass for CommandXboxController Xbox
@@ -216,7 +203,7 @@ public class RobotContainer {
     new JoystickTrigger(operatorController, Constants.XBox.LST_AXS_LTRIGGER).whileTrue(new ShortShifterExtend(shooterShifter));
     new JoystickButton(operatorController, Constants.XBox.LST_BTN_LBUMPER).whileTrue(new DoubleExtend(shooterShifter));
 
-    new JoystickTrigger(operatorController, Constants.XBox.LST_AXS_RTRIGGER).whileTrue(new AlwaysIndex(indexer));
+    new JoystickTrigger(operatorController, Constants.XBox.LST_AXS_RTRIGGER).whileTrue(new AndrewIndex(indexer, shooterShifter));
     new JoystickButton(operatorController, Constants.XBox.LST_BTN_RBUMPER).whileTrue(new OnlyShoot(shooter));
 
     new JoystickButton(operatorController, Constants.XBox.LST_BTN_Y).whileTrue(new ToggleAmp(amp));

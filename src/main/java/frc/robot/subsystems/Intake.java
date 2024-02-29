@@ -17,8 +17,6 @@ import frc.robot.Constants;
 public class Intake extends SubsystemBase {
     private final Solenoid intakePNMOne;
     private final DigitalInput intakeLimitSwitch;
-    private double dropTime = 0.2;
-
     public Intake() {
         intakePNMOne = new Solenoid(Constants.CAN.PCM, PneumaticsModuleType.CTREPCM, Constants.IDs.intakePNMChannel);
         intakeLimitSwitch = new DigitalInput(Constants.IDs.intakeLimitDIO);
@@ -38,13 +36,11 @@ public class Intake extends SubsystemBase {
     public void intakeDown(){
         intakePNMOne.set(true);
     }
-
-    public double getDropTime() { return dropTime; }
-    public void setDropTime(double dropTime) { this.dropTime = dropTime; }
     public void initSendable(SendableBuilder builder) {
-        builder.setSmartDashboardType("Intake");
-        builder.addBooleanProperty("intake limit switch", this::getIntakeLimitSwitch, null);
-        builder.addDoubleProperty("Drop time", this::getDropTime, this::setDropTime);
+        if (Constants.debugMode) {
+            builder.setSmartDashboardType("Intake");
+            builder.addBooleanProperty("intake limit switch", this::getIntakeLimitSwitch, null);
+        }
     }
     @Override
     public void periodic() {

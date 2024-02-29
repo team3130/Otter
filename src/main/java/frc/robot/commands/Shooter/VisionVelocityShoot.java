@@ -29,10 +29,10 @@ public class VisionVelocityShoot extends Command {
     spinUpTime.reset();
     spinUpTime.start();
 
+    /*
     shooter.configureVelocitySlots();
     shooter.updateVelocityPID();
 
-    /*
     if (CameraSubsystem.hasTarget()) {
       shooter.setFlywheelVelocity();
     }

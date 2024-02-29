@@ -202,9 +202,9 @@ public class Chassis extends SubsystemBase {
         targetController.setPID(targetP, targetI, targetD);
 
             if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
-                targetController.setSetpoint(Math.toRadians(30));
+                targetController.setSetpoint(Math.toRadians(159.9));
             } else {
-                targetController.setSetpoint(Math.toRadians(150));
+                targetController.setSetpoint(Math.toRadians(20.1));
             }
     }
 
