@@ -49,9 +49,11 @@ public class Indexer extends SubsystemBase {
   public double getOutakeSpeed() { return outakeSpeed; }
 
   public void initSendable(SendableBuilder builder) {
-    builder.setSmartDashboardType("Indexer");
-    builder.addDoubleProperty("Dumb spintake speed", this::getSpintakeSpeed, this::setSpintakeSpeed);
-    builder.addDoubleProperty("Dumb outtake speed", this::getOutakeSpeed, this::setOutakeSpeed);
+    if (Constants.debugMode) {
+      builder.setSmartDashboardType("Indexer");
+      builder.addDoubleProperty("Dumb spintake speed", this::getSpintakeSpeed, this::setSpintakeSpeed);
+      builder.addDoubleProperty("Dumb outtake speed", this::getOutakeSpeed, this::setOutakeSpeed);
+    }
   }
 
 }

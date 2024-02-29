@@ -10,10 +10,10 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import frc.robot.Constants;
 
 public class Climber extends SubsystemBase {
     private double currentMax = 0.0;
-    private double timerAmount = 0.1;
     private double pitCheckingSpeed = -0.5;
     private final DigitalInput limitSwitch;
     private final WPI_TalonSRX climberMotor;
@@ -75,9 +75,6 @@ public class Climber extends SubsystemBase {
     public void setCurrentMax(double current) {
         currentMax = current;
     }
-    public double getTimerAmount() {
-        return timerAmount;
-    }
     public int getJoystick() {
         return joystickUsed;
     }
@@ -86,9 +83,6 @@ public class Climber extends SubsystemBase {
     }
     public void setPitCheckingSpeed(double speed){
         pitCheckingSpeed = speed;
-    }
-    public void setTimerAmount(double timer) {
-        timerAmount = timer;
     }
 
     @Override
@@ -104,12 +98,14 @@ public class Climber extends SubsystemBase {
 
     @Override
     public void initSendable(SendableBuilder builder) {
-        builder.addBooleanProperty("ClimberBrokeLeft", this::brokeLimit, null);
-        builder.addDoubleProperty("currentMaxRight", this::getCurrentMax, this::setCurrentMax);
-        builder.addDoubleProperty("timerAmount", this::getTimerAmount, this::setTimerAmount);
-        builder.addDoubleProperty("checking speed", this::getPitCheckingSpeed, this::setPitCheckingSpeed);
-        builder.addBooleanProperty("Climber is reset", this::getIsClimberReset, null);
-        builder.addBooleanProperty("climb done", this::getClimbDone, null);
+        if (Constants.debugMode) {
+            builder.addBooleanProperty("ClimberBrokeLeft", this::brokeLimit, null);
+            builder.addDoubleProperty("currentMaxRight", this::getCurrentMax, this::setCurrentMax);
+            builder.addDoubleProperty("checking speed", this::getPitCheckingSpeed, this::setPitCheckingSpeed);
+            builder.addBooleanProperty("Climber is reset", this::getIsClimberReset, null);
+            builder.addBooleanProperty("climb done", this::getClimbDone, null);
+
+        }
     }
 
 
