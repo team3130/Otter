@@ -60,13 +60,10 @@ public class RobotContainer {
   private final Climber rightClimber;
   private final PS5Controller driverController = new PS5Controller(0);
   private final XboxController operatorController = new XboxController(1);
-  //private final AmpLEDs ampLEDs;
   private final LEDs robotLEDs;
   private final SendableChooser<Command> autoChooser;
   //private static SendableChooser<BooleanSupplier> isFieldMirrored = new SendableChooser<>();
   //private static Optional<DriverStation.Alliance> alliance = DriverStation.getAlliance();
-
-
 
   // container for the robot containing subsystems, OI devices, and commands
   public RobotContainer() {
