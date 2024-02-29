@@ -18,21 +18,35 @@
           }
         },
         {
-          "type": "named",
+          "type": "race",
           "data": {
-            "name": "Flywheel"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 2.0
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Index"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Flywheel"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 2.0
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Index"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
           }
         },
         {
