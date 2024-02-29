@@ -135,7 +135,7 @@ public class RobotContainer {
   }
 
   public void LEDPeriodic() {
-    if (!shooterShifter.getIsDoubleRetracted()) {
+    if (shooterShifter.getIsDoubleExtended()) {
       robotLEDs.redRobot();
     } else if (intake.getIntakeLimitSwitch() || amp.getLimitSwitch()) {
       robotLEDs.purpleRobot();
