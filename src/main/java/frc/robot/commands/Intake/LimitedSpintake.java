@@ -8,11 +8,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
 
-public class LimitSpintake extends Command {
+public class LimitedSpintake extends Command {
   private final Indexer indexer;
   private final Intake intake;
 
-  public LimitSpintake(Intake intake, Indexer indexer) {
+  public LimitedSpintake(Intake intake, Indexer indexer) {
     this.indexer = indexer;
     this.intake = intake;
     addRequirements(intake, indexer);

@@ -113,10 +113,13 @@ public class LEDs extends SubsystemBase {
     lol = whiteLED;
   }
 
+  /*
   @Override
   public void initSendable(SendableBuilder builder) {
-    builder.addBooleanProperty("white", this::getWhiteLED, this::setWhiteLED);
+    //builder.addBooleanProperty("white", this::getWhiteLED, this::setWhiteLED);
   }
+
+   */
 
   @Override
   public void periodic() {

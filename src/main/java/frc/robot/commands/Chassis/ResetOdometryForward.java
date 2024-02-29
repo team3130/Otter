@@ -6,18 +6,16 @@ package frc.robot.commands.Chassis;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.Constants;
 import frc.robot.subsystems.Chassis;
 
 /**
  * A command to automatically zero all odometry.
  */
-public class ResetOdometry extends InstantCommand {
+public class ResetOdometryForward extends InstantCommand {
   private final Chassis m_chassis;
 
-  public ResetOdometry(Chassis subsystem) {
+  public ResetOdometryForward(Chassis subsystem) {
     m_chassis = subsystem;
     addRequirements(subsystem);
   }

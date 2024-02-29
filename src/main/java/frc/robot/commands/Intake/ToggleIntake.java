@@ -8,10 +8,10 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.Intake;
 
 /** An example command that uses an example subsystem. */
-public class ToggleIntakeIn extends InstantCommand {
+public class ToggleIntake extends InstantCommand {
   private final Intake intake;
 
-  public ToggleIntakeIn(Intake intake) {
+  public ToggleIntake(Intake intake) {
     this.intake = intake;
     addRequirements(intake);
   }

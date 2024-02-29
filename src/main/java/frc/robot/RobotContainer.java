@@ -24,7 +24,7 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.Chassis.TeleopDrive;
 import frc.robot.commands.Climber.ClimberExtend;
 import frc.robot.commands.Indexer.AlwaysIndex;
-import frc.robot.commands.Intake.LimitSpintake;
+import frc.robot.commands.Intake.LimitedSpintake;
 import frc.robot.commands.Indexer.Outtake;
 import frc.robot.commands.ShooterShifter.ShortShifterExtend;
 import frc.robot.subsystems.Chassis;
@@ -36,7 +36,7 @@ import frc.robot.commands.ShooterShifter.DoubleRetract;
 import frc.robot.sensors.JoystickTrigger;
 import frc.robot.subsystems.*;
 import frc.robot.commands.Amp.*;
-import frc.robot.commands.Chassis.ResetOdometry;
+import frc.robot.commands.Chassis.ResetOdometryForward;
 import frc.robot.commands.Intake.*;
 import frc.robot.subsystems.Amp;
 import frc.robot.subsystems.LEDs.LEDs;
@@ -121,7 +121,7 @@ public class RobotContainer {
   }
 
   public Command resetOdometry() {
-    return new ResetOdometry(chassis);
+    return new ResetOdometryForward(chassis);
   }
 
   public InstantCommand resetShooterShifter() {
@@ -194,34 +194,41 @@ public class RobotContainer {
   // CommandPS4Controller subclass for PS4 Controller
   // CommandJoystick for flight joysticks
   private void configureBindings() {
+    /*
+    GAVIN DRIVER - Note: check Teleop button bindings in TeleopDrive
+     */
+    new POVButton(driverController, Constants.PS5.LST_POV_N).whileTrue(new ResetOdometryForward(chassis));
+    // Right joystick up == targeting amp
+    // Right joystick down == targeting speaker
+    // Press right joystick == targeting stage to speaker
+
+    new JoystickButton(driverController, Constants.PS5.LST_BTN_RBUMPER).whileTrue(new ToggleIntake(intake));
+    new JoystickTrigger(driverController, Constants.PS5.LST_AXS_RTRIGGER).whileTrue(new LimitedSpintake(intake, indexer));
+    new JoystickButton(driverController, Constants.PS5.circle).whileTrue(new AlwaysIndex(indexer));
+    new JoystickButton(driverController, Constants.PS5.x).whileTrue(new Outtake(indexer));
+
+    new JoystickTrigger(driverController, Constants.PS5.LST_AXS_LTRIGGER).whileTrue(new AmpOuttake(amp));
+
+    /*
+    ANDREW OPERATOR
+     */
+    new POVButton(operatorController, Constants.XBox.LST_POV_N).whileTrue(new DoubleRetract(shooterShifter));
+    new JoystickTrigger(operatorController, Constants.XBox.LST_AXS_LTRIGGER).whileTrue(new ShortShifterExtend(shooterShifter));
+    new JoystickButton(operatorController, Constants.XBox.LST_BTN_LBUMPER).whileTrue(new DoubleExtend(shooterShifter));
+
+    new JoystickTrigger(operatorController, Constants.XBox.LST_AXS_RTRIGGER).whileTrue(new AlwaysIndex(indexer));
+    new JoystickButton(operatorController, Constants.XBox.LST_BTN_RBUMPER).whileTrue(new OnlyShoot(shooter));
+
+    new JoystickButton(operatorController, Constants.XBox.LST_BTN_Y).whileTrue(new ToggleAmp(amp));
+    new JoystickButton(operatorController, Constants.XBox.LST_BTN_B).whileTrue(new AmpIntake(amp));
+    new JoystickButton(operatorController, Constants.XBox.LST_BTN_A).whileTrue(new AlwaysAmpIntake(amp));
+
+    //new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new VelocityShoot(shooter));
+    //new JoystickButton(operatorController, Constants.Buttons.LST_BTN_RBUMPER).whileTrue(new SequentialCommandGroup(new SmartSpintake(intake), new SmartIndex(intake)));
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     /*
     new Trigger(m_exampleSubsystem::exampleCondition)
             .onTrue(new ExampleCommand(m_exampleSubsystem));
     */
-
-    // GAVIN DRIVER
-    new POVButton(driverController, Constants.PS5.LST_POV_N).whileTrue(new ResetOdometry(chassis));
-    new JoystickTrigger(driverController, Constants.PS5.LST_AXS_LTRIGGER).whileTrue(new AmpOuttake(amp));
-    new JoystickTrigger(driverController, Constants.PS5.LST_AXS_RTRIGGER).whileTrue(new LimitSpintake(intake, indexer));
-    new JoystickButton(driverController, Constants.PS5.LST_BTN_RBUMPER).whileTrue(new ToggleIntakeIn(intake));
-    new JoystickButton(driverController, Constants.PS5.x).whileTrue(new Outtake(indexer));
-    new JoystickButton(driverController, Constants.PS5.circle).whileTrue(new AlwaysIndex(indexer));
-    //new POVButton(driverController, Constants.PS5.LST_POV_S).whileTrue(new WhiteLEDs(robotLEDs));
-
-    // ANDREW OPERATOR
-    new JoystickButton(operatorController, Constants.XBox.LST_BTN_Y).whileTrue(new ToggleAmp(amp));
-    new JoystickButton(operatorController, Constants.XBox.LST_BTN_B).whileTrue(new AmpIntake(amp));
-    new JoystickButton(operatorController, Constants.XBox.LST_BTN_A).whileTrue(new AlwaysAmpIntake(amp));
-
-    new JoystickButton(operatorController, Constants.XBox.LST_BTN_RBUMPER).whileTrue(new OnlyShoot(shooter));
-    new JoystickTrigger(operatorController, Constants.XBox.LST_AXS_RTRIGGER).whileTrue(new AlwaysIndex(indexer));
-
-    new JoystickButton(operatorController, Constants.XBox.LST_BTN_LBUMPER).whileTrue(new DoubleExtend(shooterShifter));
-    new POVButton(operatorController, Constants.XBox.LST_POV_N).whileTrue(new DoubleRetract(shooterShifter));
-    new JoystickTrigger(operatorController, Constants.XBox.LST_AXS_LTRIGGER).whileTrue(new ShortShifterExtend(shooterShifter)); // correct
-
-    //new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new VelocityShoot(shooter));
-    //new JoystickButton(operatorController, Constants.Buttons.LST_BTN_RBUMPER).whileTrue(new SequentialCommandGroup(new SmartSpintake(intake), new SmartIndex(intake)));
   }
 }

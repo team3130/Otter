@@ -67,9 +67,9 @@ public class TeleopDrive extends Command {
       omega = -controller.getRawAxis(Constants.PS5.LST_AXS_RJOYSTICKY);
 
 
-      if (chassis.tryingToTargetSpeakerWorking(omega, theta)) { // if the right joystick is pushed up
-          chassis.resetTargetSpeakerController(); // setpoint 90
-          theta = chassis.goToTargetPower(); // calculate using odo.rotation as process var
+      if (chassis.tryingToTargetSpeakerWorking(omega, theta)) {
+          chassis.resetTargetSpeakerController();
+          theta = chassis.goToTargetPower();
       } else if (chassis.tryingToTargetAmpTest(omega, theta)) {
           chassis.resetTargetAmpController();
           theta = chassis.goToTargetPower();
