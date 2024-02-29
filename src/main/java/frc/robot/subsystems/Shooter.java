@@ -188,34 +188,35 @@ public class Shooter extends SubsystemBase {
 
     @Override
     public void initSendable(SendableBuilder builder) {
-        builder.setSmartDashboardType("Shooter");
-        //builder.addDoubleProperty("proportion speed", this::getProportionVolt, this::setProportionVolt);
-        builder.addDoubleProperty("shooter volts", this::getFlywheelVolts, this::setFlywheelVolts);
+        if (Constants.debugMode) {
+            builder.setSmartDashboardType("Shooter");
+            //builder.addDoubleProperty("proportion speed", this::getProportionVolt, this::setProportionVolt);
+            builder.addDoubleProperty("shooter volts", this::getFlywheelVolts, this::setFlywheelVolts);
 
-        builder.addDoubleProperty("Top Flywheel Velocity (RPS)", this::getTopFlyVelocityRPS, null);
-        builder.addDoubleProperty("Bottom Flywheel Velocity (RPS)", this::getBottomFlyVelocityRPS, null);
+            builder.addDoubleProperty("Top Flywheel Velocity (RPS)", this::getTopFlyVelocityRPS, null);
+            builder.addDoubleProperty("Bottom Flywheel Velocity (RPS)", this::getBottomFlyVelocityRPS, null);
 
-        builder.addDoubleProperty("Top Velocity Setpoint", this::getTopVelocitySetpoint, this::setTopVelocitySetpoint);
-        builder.addDoubleProperty("Bottom Velocity Setpoint", this::getBottomVelocitySetpoint, this::setBottomVelocitySetpoint);
+            builder.addDoubleProperty("Top Velocity Setpoint", this::getTopVelocitySetpoint, this::setTopVelocitySetpoint);
+            builder.addDoubleProperty("Bottom Velocity Setpoint", this::getBottomVelocitySetpoint, this::setBottomVelocitySetpoint);
 
-        builder.addDoubleProperty("Top RPM", this::getTopFlyVelocityRPM, null);
-        builder.addDoubleProperty("Bottom RPM", this::getBottomFlyVelocityRPM, null);
+            builder.addDoubleProperty("Top RPM", this::getTopFlyVelocityRPM, null);
+            builder.addDoubleProperty("Bottom RPM", this::getBottomFlyVelocityRPM, null);
 
-        builder.addDoubleProperty("top volt supply", this::getTopFlyVoltSupply, null);
-        builder.addDoubleProperty("bottom volt supply", this::getBottomFlyVoltSupply, null);
+            builder.addDoubleProperty("top volt supply", this::getTopFlyVoltSupply, null);
+            builder.addDoubleProperty("bottom volt supply", this::getBottomFlyVoltSupply, null);
 
-        builder.addDoubleProperty("slot 0 kS", this::getSlot0_kS, this::setSlot0_kS);
-        builder.addDoubleProperty("slot 0 kV", this::getSlot0_kV, this::setSlot0_kV);
-        builder.addDoubleProperty("slot 0 kP", this::getSlot0_kP, this::setSlot0_kP);
-        builder.addDoubleProperty("slot 0 kI", this::getSlot0_kI, this::setSlot0_kI);
-        builder.addDoubleProperty("slot 0 kD", this::getSlot0_kD, this::setSlot0_kD);
+            builder.addDoubleProperty("slot 0 kS", this::getSlot0_kS, this::setSlot0_kS);
+            builder.addDoubleProperty("slot 0 kV", this::getSlot0_kV, this::setSlot0_kV);
+            builder.addDoubleProperty("slot 0 kP", this::getSlot0_kP, this::setSlot0_kP);
+            builder.addDoubleProperty("slot 0 kI", this::getSlot0_kI, this::setSlot0_kI);
+            builder.addDoubleProperty("slot 0 kD", this::getSlot0_kD, this::setSlot0_kD);
 
-        builder.addDoubleProperty("slot 1 kS", this::getSlot1_kS, this::setSlot1_kS);
-        builder.addDoubleProperty("slot 1 kV", this::getSlot1_kV, this::setSlot1_kV);
-        builder.addDoubleProperty("slot 1 kP", this::getSlot1_kP, this::setSlot1_kP);
-        builder.addDoubleProperty("slot 1 kI", this::getSlot1_kI, this::setSlot1_kI);
-        builder.addDoubleProperty("slot 1 kD", this::getSlot1_kD, this::setSlot1_kD);
-
+            builder.addDoubleProperty("slot 1 kS", this::getSlot1_kS, this::setSlot1_kS);
+            builder.addDoubleProperty("slot 1 kV", this::getSlot1_kV, this::setSlot1_kV);
+            builder.addDoubleProperty("slot 1 kP", this::getSlot1_kP, this::setSlot1_kP);
+            builder.addDoubleProperty("slot 1 kI", this::getSlot1_kI, this::setSlot1_kI);
+            builder.addDoubleProperty("slot 1 kD", this::getSlot1_kD, this::setSlot1_kD);
+        }
     }
 
     @Override
