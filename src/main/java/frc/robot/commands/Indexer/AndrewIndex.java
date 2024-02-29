@@ -6,26 +6,29 @@ package frc.robot.commands.Indexer;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Indexer;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.ShooterShifter;
 
-public class AlwaysIndex extends Command {
+public class AndrewIndex extends Command {
   private final Indexer indexer;
+  private final ShooterShifter shooterShifter;
 
-  public AlwaysIndex(Indexer indexer) {
+  public AndrewIndex(Indexer indexer, ShooterShifter shooterShifter) {
     this.indexer = indexer;
-    addRequirements(indexer);
+    this.shooterShifter = shooterShifter;
+    addRequirements(indexer, shooterShifter);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    indexer.spintake();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
+    if (shooterShifter.getIsShortShifterExtended() || shooterShifter.getIsDoubleExtended()) {
+      indexer.spintake();
+    }
   }
 
   // Called once the command ends or is interrupted.

@@ -14,8 +14,8 @@ public class ShooterShifter extends SubsystemBase {
   private final Solenoid shawtyShifter; // shorter pneumatic
   private final Solenoid longShifter; // longer pneumatic
   private boolean doubleRetracted = true; // both pneumatics down
-  private boolean shifterOneExtended = false; // pneumatic 1 up
-  private boolean shifterTwoExtended = false; // pneumatic 2 up
+  private boolean shortShifterExtended = false; // pneumatic 1 up
+  private boolean longShifterExtended = false; // pneumatic 2 up
   private boolean doubleExtended = false; // both pneumatics up
 
   public ShooterShifter() {
@@ -30,37 +30,50 @@ public class ShooterShifter extends SubsystemBase {
     shawtyShifter.set(false);
     longShifter.set(false);
     setDoubleRetract(true);
+
+    setDoubleExtended(false);
+    setShawtyShifter(false);
+    setLongShifter(false);
   }
 
   public void extendShawtyShifter() {
     shawtyShifter.set(true);
     longShifter.set(false);
     setShawtyShifter(true);
+
     setDoubleRetract(false);
+    setDoubleExtended(false);
+    setLongShifter(false);
   }
 
   public void extendLongShifter() {
     shawtyShifter.set(false);
     longShifter.set(true);
     setLongShifter(true);
+
     setDoubleRetract(false);
+    setDoubleExtended(false);
+    setShawtyShifter(false);
   }
 
   public void doubleExtend() {
     shawtyShifter.set(true);
     longShifter.set(true);
     setDoubleExtended(true);
+
     setDoubleRetract(false);
+    setShawtyShifter(false);
+    setLongShifter(false);
   }
 
   public boolean getIsDoubleRetracted() { return doubleRetracted; }
-  public boolean getIsFirstShootStage() { return shifterOneExtended; }
-  public boolean getIsSecondShootStage() { return shifterTwoExtended; }
-  public boolean getIsThirdShootStage() { return doubleExtended; }
+  public boolean getIsShortShifterExtended() { return shortShifterExtended; }
+  public boolean getIsLongShifterExtended() { return longShifterExtended; }
+  public boolean getIsDoubleExtended() { return doubleExtended; }
   public void setDoubleRetract(boolean newIsParked) { doubleRetracted = newIsParked; }
-  public void setShawtyShifter(boolean newIsFirstShootStage) { shifterOneExtended = newIsFirstShootStage; }
-  public void setLongShifter(boolean newIsSecondShootStage) { shifterTwoExtended = newIsSecondShootStage; }
-  public void setDoubleExtended(boolean newIsThirdShootStage) { shifterTwoExtended = newIsThirdShootStage; }
+  public void setShawtyShifter(boolean newIsFirstShootStage) { shortShifterExtended = newIsFirstShootStage; }
+  public void setLongShifter(boolean longShifterExtend) { longShifterExtended = longShifterExtend; }
+  public void setDoubleExtended(boolean newIsThirdShootStage) { longShifterExtended = newIsThirdShootStage; }
 
   @Override
   public void periodic() {
@@ -77,9 +90,9 @@ public class ShooterShifter extends SubsystemBase {
     if (Constants.debugMode) {
       builder.setSmartDashboardType("Shooter Shifter");
       builder.addBooleanProperty("speed", this::getIsDoubleRetracted, null);
-      builder.addBooleanProperty("speed", this::getIsFirstShootStage, null);
-      builder.addBooleanProperty("speed", this::getIsSecondShootStage, null);
-      builder.addBooleanProperty("speed", this::getIsThirdShootStage, null);
+      builder.addBooleanProperty("speed", this::getIsShortShifterExtended, null);
+      builder.addBooleanProperty("speed", this::getIsLongShifterExtended, null);
+      builder.addBooleanProperty("speed", this::getIsDoubleExtended, null);
     }
   }
 }
