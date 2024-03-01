@@ -83,7 +83,7 @@ public final class Constants {
    */
   public static class Swerve {
     public static double kMaxSteerVoltage = 4d;
-    public static double kMaxDriveVoltage = 10d;
+    public static double kMaxDriveVoltage = 8d;
 
     // SWERVE CAN NUMBERED LIKE CARTESIAN COORDIANTE QUADRANTS
     // front left
