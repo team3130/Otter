@@ -41,7 +41,7 @@ public class AutoShoot extends Command {
     @Override
     public void end(boolean interrupted) {
         shooter.stopShooters();
-        indexer.stoptake();
+        indexer.stopIndexer();
     }
 
     // Returns true when the command should end.

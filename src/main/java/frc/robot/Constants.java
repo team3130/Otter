@@ -131,15 +131,15 @@ public final class Constants {
     public final static double kD_FrontRight = 0;
     public final static double kF_FrontRight = 0;
 
-        public final static double kP_FrontLeft = 1.55;
-        public final static double kI_FrontLeft = 0.05;
-        public final static double kD_FrontLeft = 0.015;
-        public final static double kF_FrontLeft = 0;
+    public final static double kP_FrontLeft = 1.55;
+    public final static double kI_FrontLeft = 0.05;
+    public final static double kD_FrontLeft = 0.015;
+    public final static double kF_FrontLeft = 0;
 
-        public final static double kP_BackLeft = 1.0;
-        public final static double kI_BackLeft = 0;
-        public final static double kD_BackLeft = 0;
-        public final static double kF_BackLeft = 0;
+    public final static double kP_BackLeft = 1.0;
+    public final static double kI_BackLeft = 0;
+    public final static double kD_BackLeft = 0;
+    public final static double kF_BackLeft = 0;
 
     public final static double kP_BackRight = 1.2;
     public final static double kI_BackRight = 0.05;
@@ -240,23 +240,23 @@ public final class Constants {
     public static final int LST_BTN_LJOYSTICKPRESS = 9;
     public static final int LST_BTN_RJOYSTICKPRESS = 10;
 
-        // Gamepad POV List
-        public static final int LST_POV_UNPRESSED = -1;
-        public static final int LST_POV_N = 0;
-        public static final int LST_POV_NE = 45;
-        public static final int LST_POV_E = 90;
-        public static final int LST_POV_SE = 135;
-        public static final int LST_POV_S = 180;
-        public static final int LST_POV_SW = 225;
-        public static final int LST_POV_W = 270;
-        public static final int LST_POV_NW = 315;
+    // Gamepad POV List
+    public static final int LST_POV_UNPRESSED = -1;
+    public static final int LST_POV_N = 0;
+    public static final int LST_POV_NE = 45;
+    public static final int LST_POV_E = 90;
+    public static final int LST_POV_SE = 135;
+    public static final int LST_POV_S = 180;
+    public static final int LST_POV_SW = 225;
+    public static final int LST_POV_W = 270;
+    public static final int LST_POV_NW = 315;
 
-        // Gamepad Axis List
-        public static final int LST_AXS_LJOYSTICKX = 0;
-        public static final int LST_AXS_LJOYSTICKY = 1;
-        public static final int LST_AXS_LTRIGGER = 2;
-        public static final int LST_AXS_RTRIGGER = 3;
-        public static final int LST_AXS_RJOYSTICKX = 4;
-        public static final int LST_AXS_RJOYSTICKY = 5;
-    }
+    // Gamepad Axis List
+    public static final int LST_AXS_LJOYSTICKX = 0;
+    public static final int LST_AXS_LJOYSTICKY = 1;
+    public static final int LST_AXS_LTRIGGER = 2;
+    public static final int LST_AXS_RTRIGGER = 3;
+    public static final int LST_AXS_RJOYSTICKX = 4;
+    public static final int LST_AXS_RJOYSTICKY = 5;
+  }
 }

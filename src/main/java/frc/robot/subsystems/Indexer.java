@@ -8,7 +8,6 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.util.sendable.SendableBuilder;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -39,8 +38,16 @@ public class Indexer extends SubsystemBase {
     indexer.set(spintakeSpeed);
   }
 
+  public void outtake(){
+    indexer.set(outakeSpeed);
+  }
+
   public void shooterSpindex() {
     indexer.set(shooterSpindexSpeed);
+  }
+
+  public void stopIndexer() {
+    indexer.set(0);
   }
 
   public void autoSpintake() {
@@ -49,14 +56,6 @@ public class Indexer extends SubsystemBase {
 
   public void autoShooterSpindex() {
     indexer.set(autoShooterSpindexSpeed);
-  }
-
-  public void outtake(){
-    indexer.set(outakeSpeed);
-  }
-
-  public void stoptake(){
-    indexer.set(0);
   }
 
   public void setSpintakeSpeed(double newSpeed) { spintakeSpeed = newSpeed; }
@@ -73,6 +72,7 @@ public class Indexer extends SubsystemBase {
       builder.setSmartDashboardType("Indexer");
       builder.addDoubleProperty("Spintake speed", this::getSpintakeSpeed, this::setSpintakeSpeed);
       builder.addDoubleProperty("Outtake speed", this::getOutakeSpeed, this::setOutakeSpeed);
+      builder.addDoubleProperty("Shooter Index speed", this::getShooterSpindexSpeed, this::setShooterSpindexSpeed);
       builder.addDoubleProperty("Indexer Voltage comp", this::getIndexerVoltageCompensation, this::setIndexerVoltageCompensation);
     }
   }

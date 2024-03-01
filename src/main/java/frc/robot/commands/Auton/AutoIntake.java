@@ -41,7 +41,7 @@ public class AutoIntake extends InstantCommand {
   // stop the note
   @Override
   public void end(boolean interrupted) {
-    indexer.stoptake();
+    indexer.stopIndexer();
     intake.intakeUp();
   }
 
