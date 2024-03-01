@@ -10,6 +10,7 @@ import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.util.sendable.SendableBuilder;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -80,6 +81,9 @@ public final class Constants {
    *  bottom left,
    */
   public static class Swerve {
+    public static double kMaxSteerVoltage = 4d;
+    public static double kMaxDriveVoltage = 10d;
+
     // SWERVE CAN NUMBERED LIKE CARTESIAN COORDIANTE QUADRANTS
     // front left
     public final static int MOD_ONE_STEER = 2;
@@ -120,8 +124,6 @@ public final class Constants {
     };
 
     public final static double kPhysicalMaxSpeedMetersPerSecond = 4.60; // 3.54 with 8 volts of voltage compensation and 4.19 with 10 volts
-    public final static double kMaxSteerVoltage = 5d;
-    public final static double kMaxDriveVoltage = 10d;
     public final static double kDeadband = 0.055;
     public final static double kMaxAccelerationDrive = 7.5;
     public final static double kMaxAccelerationAngularDrive = 4.0*Math.PI;
@@ -276,4 +278,5 @@ public final class Constants {
     public static final int LST_AXS_RJOYSTICKX = 4;
     public static final int LST_AXS_RJOYSTICKY = 5;
   }
+
 }

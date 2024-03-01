@@ -11,6 +11,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.PS5Controller;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -108,6 +109,7 @@ public class RobotContainer {
     tab.addBoolean("Intake Has Note", intake::getIntakeLimitSwitch).withPosition(4, 0).withSize(4, 3);
     tab.add("AutoChooser", autoChooser).withPosition(4, 3).withSize(4, 1);
 
+
   }
 
   public void exportShuffleBoardData() {
@@ -119,6 +121,7 @@ public class RobotContainer {
       tab.add(leftClimber);
       tab.add(robotLEDs);
       tab.add(indexer);
+      chassis.exportSwerveModData(Shuffleboard.getTab("Swerve Modules"));
     }
   }
 
