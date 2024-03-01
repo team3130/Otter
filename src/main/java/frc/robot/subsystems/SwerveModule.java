@@ -26,6 +26,9 @@ public class SwerveModule implements Sendable {
     final VoltageOut steerMotorVoltRequest = new VoltageOut(0);
     final VoltageOut driveMotorVoltRequest = new VoltageOut(0);
 
+    private double steeringVoltage = 4d;
+    private double drivingVoltage = 10d;
+
     /**
      * Initializes a swerve module and its motors.
      * Initializes the steering PID controller.
@@ -150,9 +153,9 @@ public class SwerveModule implements Sendable {
         // percent output of the drive motor that the swerve controller wants you to go to by the physical max speed the bot can travel
         // TODO: underneath set control voltage output is not real
         // m_driveMotor.setControl(driveMotorVoltRequest.withOutput(12d* (state.speedMetersPerSecond / Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond)));
-        driveMotor.setVoltage((10d* (state.speedMetersPerSecond / Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond)));
+        driveMotor.setVoltage((drivingVoltage* (state.speedMetersPerSecond / Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond)));
         // set the steering motor based off the output of the PID controller
-        steerMotor.setVoltage(4d * turningPidController.calculate(Math.IEEEremainder(getTurningPositionRadians(), Math.PI * 2), state.angle.getRadians()));
+        steerMotor.setVoltage(steeringVoltage * turningPidController.calculate(Math.IEEEremainder(getTurningPositionRadians(), Math.PI * 2), state.angle.getRadians()));
     }
 
     /**
@@ -201,6 +204,12 @@ public class SwerveModule implements Sendable {
         return turningPidController.getD();
     }
 
+    public double getSteeringVoltage() { return steeringVoltage; }
+    public double getDrivingVoltage() { return drivingVoltage; }
+    public void setSteeringVoltage(double volt) { this.steeringVoltage = volt; }
+    public void setDrivingVoltage(double volt){this.drivingVoltage=volt;}
+
+
     /**
      * The string representation of the swerve module
      * @return "Swerve module side: " + sideNumber: int
@@ -228,6 +237,8 @@ public class SwerveModule implements Sendable {
             builder.addDoubleProperty("Steer position", this::getSteerRotations, null);
             builder.addDoubleProperty("Drive position", this::getDrivePosition, null);
             builder.addDoubleProperty("Absolute encoder position", this::getAbsoluteEncoderRads, null);
+            builder.addDoubleProperty("Steering Voltage", this::getSteeringVoltage, this::setSteeringVoltage);
+            builder.addDoubleProperty("Driving voltage", this:: getDrivingVoltage, this::setDrivingVoltage);
 /*        builder.addDoubleProperty("Steer velocity", this::getTurningVelocity, null);
         builder.addDoubleProperty("Steer relative", this::getRelativePositionDegrees, null);
         */

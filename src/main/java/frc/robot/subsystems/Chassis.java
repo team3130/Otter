@@ -42,7 +42,6 @@ public class Chassis extends SubsystemBase {
     private boolean fieldRelative = true; // field relative or robot oriented drive
     private double maxSpeedRead = 0; // updated periodically with the maximum speed that has been read on any of the swerve modules
     private final Field2d field; // sendable that gets put on shuffleboard with the auton trajectory and the robots current position
-    private final GenericEntry n_fieldOrriented; // comp network table entry for whether field oriented drivetrain
     private double targetMaxVelo = Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond; //TODO real
     private double targetMaxAcc = Constants.Swerve.kMaxAccelerationDrive; //TODO real
     private PIDController robotAngleController;
@@ -90,8 +89,10 @@ public class Chassis extends SubsystemBase {
         robotAngleController.setTolerance(0.0025, 0.05); // at position tolerance
 
         field = new Field2d();
-        SmartDashboard.putData("Field", field);
-        n_fieldOrriented = Shuffleboard.getTab("Chassis").add("field orriented", false).getEntry();
+        if (Constants.debugMode) {
+            SmartDashboard.putData("Field", field);
+        }
+        //n_fieldOrriented = Shuffleboard.getTab("Chassis").add("field orriented", false).getEntry();
         targetController = new PIDController(targetP, targetI, targetD);
 
 
@@ -366,8 +367,10 @@ public class Chassis extends SubsystemBase {
      */
     @Override
     public void periodic() {
-        n_fieldOrriented.setBoolean(fieldRelative);
-        field.setRobotPose(odometry.getEstimatedPosition());
+        //n_fieldOrriented.setBoolean(fieldRelative);
+        if (Constants.debugMode) {
+            field.setRobotPose(odometry.getEstimatedPosition());
+        }
     }
 
 

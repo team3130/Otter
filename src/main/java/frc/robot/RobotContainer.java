@@ -14,6 +14,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.PS5Controller;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -100,8 +101,13 @@ public class RobotContainer {
     //populateChooser();
 
     // Build an auto chooser. This will use Commands.none() as the default option.
-    autoChooser = AutoBuilder.buildAutoChooser("ShootLoadedIntakeTop");
+    autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
+
+    ShuffleboardTab tab = Shuffleboard.getTab("Competition");
+    tab.addBoolean("Intake Has Note", intake::getIntakeLimitSwitch).withPosition(4, 0).withSize(4, 3);
+    tab.add("AutoChooser", autoChooser).withPosition(4, 3).withSize(4, 1);
+
   }
 
   public void exportShuffleBoardData() {
