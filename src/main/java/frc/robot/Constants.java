@@ -24,7 +24,7 @@ import edu.wpi.first.util.sendable.SendableBuilder;
 public final class Constants {
   public static final boolean debugMode = false;
   public static final boolean navxReversed = false;
-  public static final boolean pitMode = false;
+  public static final boolean pitMode = true;
 
   public static class CAN {
     public final static int PCM = 1;
@@ -83,7 +83,7 @@ public final class Constants {
    */
   public static class Swerve {
     public static double kMaxSteerVoltage = 4d;
-    public static double kMaxDriveVoltage = 12d;
+    public static double kMaxDriveVoltage = 10d;
 
     // SWERVE CAN NUMBERED LIKE CARTESIAN COORDIANTE QUADRANTS
     // front left

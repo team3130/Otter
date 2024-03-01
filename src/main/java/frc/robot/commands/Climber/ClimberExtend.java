@@ -31,14 +31,14 @@ public class ClimberExtend extends Command {
         double power = -xboxController.getRawAxis(climber.getJoystick());
         power = power * Math.abs(power);
 
-        if (!climber.brokeLimit()) {
+        if (!climber.brokeLimit()) { // if climber goes up, climber is not reset
             climber.setIsClimberReset(false);
         }
 
         // checks if limit switch has been broken
-        if (climber.brokeLimit() && !climber.getIsClimberReset()) {
+        if (climber.brokeLimit() && !climber.getIsClimberReset()) { // if climber hits limit switch and climber not reset
             power = 0;
-            climber.setClimbDone(true);
+            climber.setClimbDone(true); // climb is done
         }
 
         if (power < 0.075) {
