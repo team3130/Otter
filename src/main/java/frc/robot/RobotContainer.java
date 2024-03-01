@@ -63,10 +63,7 @@ public class RobotContainer {
   private final XboxController operatorController = new XboxController(1);
   private final LEDs robotLEDs;
   private final SendableChooser<Command> autoChooser;
-  //private static SendableChooser<BooleanSupplier> isFieldMirrored = new SendableChooser<>();
-  //private static Optional<DriverStation.Alliance> alliance = DriverStation.getAlliance();
 
-  // container for the robot containing subsystems, OI devices, and commands
   public RobotContainer() {
     leftClimber = new Climber(Constants.CAN.climberLeft, Constants.IDs.kLLimitSwitch, Constants.XBox.LST_AXS_RJOYSTICKY, false);
     rightClimber = new Climber(Constants.CAN.climberRight, Constants.IDs.kRLimitSwitch, Constants.XBox.LST_AXS_LJOYSTICKY, false);
@@ -107,29 +104,16 @@ public class RobotContainer {
     SmartDashboard.putData("Auto Chooser", autoChooser);
   }
 
-  public void resetClimbers(){
-    leftClimber.setIsClimberReset(true);
-    rightClimber.setIsClimberReset(true);
-  }
-
-  public Command pick() {
-    return autoChooser.getSelected();
-  }
-
-  public Command resetOdometry() {
-    return new ResetOdometryForward(chassis);
-  }
-
-  public InstantCommand resetShooterShifter() {
-    return new DoubleRetract(shooterShifter);
-  }
-
-  public InstantCommand resetIntake() {
-    return new IntakeIn(intake);
-  }
-
-  public InstantCommand resetAmp() {
-    return new AmpDown(amp);
+  public void exportShuffleBoardData() {
+    if (Constants.debugMode) {
+      ShuffleboardTab tab = Shuffleboard.getTab("Subsystem Test");
+      tab.add(chassis);
+      tab.add(shooter);
+      tab.add(intake);
+      tab.add(leftClimber);
+      tab.add(robotLEDs);
+      tab.add(indexer);
+    }
   }
 
   public void LEDPeriodic() {
@@ -144,31 +128,30 @@ public class RobotContainer {
     }
   }
 
+  public Command pick() {
+    return autoChooser.getSelected();
+  }
+  public void resetClimbers(){
+    leftClimber.setIsClimberReset(true);
+    rightClimber.setIsClimberReset(true);
+  }
+  public InstantCommand resetShooterShifter() {
+    return new DoubleRetract(shooterShifter);
+  }
+  public InstantCommand resetIntake() {
+    return new IntakeIn(intake);
+  }
+  public InstantCommand resetAmp() {
+    return new AmpDown(amp);
+  }
 
   public void resetOdo() {
     chassis.resetOdometry(new Pose2d(0, 0, new Rotation2d()));
   }
-
   public void updateChassisPose() {
     chassis.updateOdometryFromSwerve();
   }
-
-
-  /**
-   * adds the subsystem {@link edu.wpi.first.util.sendable.Sendable} objects to a 'Subsystems' shuffleboard tab
-   */
-  public void exportShuffleBoardData() {
-    if (Constants.debugMode) {
-      ShuffleboardTab tab = Shuffleboard.getTab("Subsystem Test");
-      tab.add(chassis);
-      tab.add(shooter);
-      tab.add(intake);
-      tab.add(leftClimber);
-      tab.add(robotLEDs);
-      tab.add(indexer);
-    }
-  }
-
+  
   // This method defines trigger -> command mappings
   // Triggers created via the Trigger constructor
   // CommandGenericHID subclass for CommandXboxController Xbox
@@ -212,10 +195,4 @@ public class RobotContainer {
             .onTrue(new ExampleCommand(m_exampleSubsystem));
     */
   }
-  /*
-  public Command visionShifterVelocityShoot() {
-    return new SequentialCommandGroup(new VisionShift(shooterShifter), new VisionVelocityShoot(shooter));
-  }
-  */
-
 }
