@@ -93,19 +93,13 @@ public class SwerveModule implements Sendable {
         return Math.toRadians(absoluteEncoder.getAbsolutePosition().getValue() * 360);// / (Math.PI *2);
     }
 
-
     public double getAbsoluteEncoderRotation() {
         return absoluteEncoder.getAbsolutePosition().getValue();
     }
 
-    // updates steering PID controller
-    // param p is the new kP value
     public void updatePValue(double p) {
         turningPidController.setP(p);
     }
-
-    // updates the steering PID controller
-    // param d the new kD value
     public void updateDValue(double d) {
         turningPidController.setD(d);
     }
@@ -134,9 +128,7 @@ public class SwerveModule implements Sendable {
         return new SwerveModuleState(getDriveVelocity(), getTurningPosition());
     }
 
-    /**
-     * Default stop method to stop the motors
-     */
+    // Default stop method to stop the motors
     public void stop() {
         steerMotor.setControl(steerMotorVoltRequest.withOutput(0));
         driveMotor.setControl(driveMotorVoltRequest.withOutput(0));
@@ -162,8 +154,6 @@ public class SwerveModule implements Sendable {
         // set the steering motor based off the output of the PID controller
         steerMotor.setVoltage(4d * turningPidController.calculate(Math.IEEEremainder(getTurningPositionRadians(), Math.PI * 2), state.angle.getRadians()));
     }
-
-
 
     /**
      * Turns the motors to an angle
@@ -191,44 +181,24 @@ public class SwerveModule implements Sendable {
         return turningPidController.atSetpoint();
     }
 
-    /**
-     * Gets the P value for steering motors
-     * @return the P value
-     */
-    public double getPValue() {
-        return turningPidController.getP();
-    }
-
-    /**
-     * Gets the P value for steering motors
-     * @return the P value
-     */
-    public double getDValue() {
-        return turningPidController.getD();
-    }
-
-    /**
-     * Setter for the P value
-     * @param newP the new p value
-     */
     public void setPValue(double newP) {
         turningPidController.setP(newP);
     }
-
-    /**
-     * Setter for derby derv
-     * @param newD the new D value
-     */
     public void setDValue(double newD) {
         turningPidController.setD(newD);
     }
-
     public void setIValue(double newI) {
         turningPidController.setI(newI);
     }
 
+    public double getPValue() {
+        return turningPidController.getP();
+    }
     public double getIValue() {
         return turningPidController.getI();
+    }
+    public double getDValue() {
+        return turningPidController.getD();
     }
 
     /**

@@ -79,25 +79,8 @@ public class Amp extends SubsystemBase {
 
   @Override
   public void periodic() {
-    /*if(getLimitSwitch()){
-      timer.start();
-      controller.setRumble(GenericHID.RumbleType.kBothRumble, 1);
-      if (timer.hasElapsed(0.8)){
-        timer.reset();
-        controller.setRumble(GenericHID.RumbleType.kBothRumble, 0);
-      }
-    }*/
-    // This method will be called once per scheduler run
   }
 
-  @Override
-  public void simulationPeriodic() {
-    // This method will be called once per scheduler run during simulation
-  }
-
-  /**
-   * exports data to Shuffleboard
-   */
   public void initSendable(SendableBuilder builder) {
     if (Constants.debugMode) {
       builder.setSmartDashboardType("Amp");

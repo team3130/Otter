@@ -87,9 +87,6 @@ public class Climber extends SubsystemBase {
 
     @Override
     public void periodic() {
-        if (getClimbDone()){
-            //TODO LEDS RED
-        }
     }
 
     @Override

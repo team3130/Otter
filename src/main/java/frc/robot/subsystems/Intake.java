@@ -33,9 +33,11 @@ public class Intake extends SubsystemBase {
     public void intakeUp() {
         intakePNMOne.set(false);
     }
+
     public void intakeDown(){
         intakePNMOne.set(true);
     }
+
     public void initSendable(SendableBuilder builder) {
         if (Constants.debugMode) {
             builder.setSmartDashboardType("Intake");
