@@ -196,6 +196,23 @@ public final class Constants {
             kMaxAngularSpeedRadiansPerSecond, kMaxAngularAccelerationRadiansPerSecondSquared);
   }
 
+  // for AddressableLED adjusted HSV Class
+  public static class LEDColors {
+    public static final int redHSV = 0;
+    public static final int orangeHSV = 3;
+    public static final int yellowHSV = 10; // team default yellow
+    public static final int lightGreenHSV = 45;
+    public static final int darkGreenHSV = 60;
+    public static final int tealHSV = 65;
+    public static final int lightBlueHSV = 75;
+    public static final int blueHSV = 100;
+    public static final int darkBlueHSV = 120;
+    public static final int lightPurpleHSV = 140;
+    public static final int purpleHSV = 150;
+    public static final int pinkHSV = 170;
+    public static final int hotPink = 179;
+  }
+
   public static class PS5 {
     public static final int square = 1;
     public static final int x = 2;

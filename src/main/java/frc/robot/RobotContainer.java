@@ -77,9 +77,7 @@ public class RobotContainer {
     amp = new Amp();
     intake = new Intake();
     indexer = new Indexer();
-
-    //ampLEDs = new AmpLEDs();
-    robotLEDs = new LEDs(0, 23);
+    robotLEDs = new LEDs();
 
     // Named commands must be registered before the creation of any PathPlanner Autos or Paths
     // Do this in RobotContainer, after subsystem initialization, but before the creation of any other commands.

@@ -14,67 +14,40 @@ import frc.robot.Constants;
 
 public class LEDs extends SubsystemBase {
   AddressableLED shooterLEDs;
-  private final int shooterLength = 23;
-
+  private final int LEDLength = 23;
   private int rainbowFirstPixelHue = 20;
   private long shuffleboardTest;
+  private final int pwmPort = 0;
 
   AddressableLEDBuffer shooterBuffer;
-  private ComplexWidget whiteLEDs;
+  //private ComplexWidget whiteLEDs;
 
-  // 65 == teal
-  // 55 == green
-  // 0 == red
-  // 90 == pink
-  // 240 == green
-  // 40 ==
-  // 80 ==
-
-  public LEDs(int pwmPort, int length) {
+  public LEDs() {
     shooterLEDs = new AddressableLED(pwmPort); // PWM Port
-    shooterBuffer = new AddressableLEDBuffer(length);
+    shooterBuffer = new AddressableLEDBuffer(LEDLength);
     shooterLEDs.setLength(shooterBuffer.getLength());
     shooterLEDs.setData(shooterBuffer);
     shooterLEDs.start();
-
-
-    //whiteLEDs = Shuffleboard.getTab("LEDs").add("White LEDs", new WhiteLEDs(this));
+    // whiteLEDs = Shuffleboard.getTab("LEDs").add("White LEDs", new WhiteLEDs(this));
   }
 
-  public void setShuffleboardTest(long lol) { shuffleboardTest = lol;}
-  public int getShuffleboardTest() { return (int) shuffleboardTest;}
-
-  // 0 == red
-  // 3 == orange
-  // 10 == darker yellow
-  // 45 == light green
-  // 60 == dark green
-  // 65 == teal
-  // 75 == light blue
-  // 100 == blue
-  // 120 == dark blue
-  // 140 == light purple
-  // 170 == pink
-  // 179 == hotpink
-
-  // shooter yellow is 10 255 200
   public void yellowRobot() {
     for (var i = 0; i < shooterBuffer.getLength(); i++) {
-      shooterBuffer.setHSV(i, 10, 255, 200);
+      shooterBuffer.setHSV(i, Constants.LEDColors.yellowHSV, 255, 200);
     }
     shooterLEDs.setData(shooterBuffer);
   }
 
   public void purpleRobot() {
     for (var i = 0; i < shooterBuffer.getLength(); i++) {
-      shooterBuffer.setHSV(i, 150, 255, 200);
+      shooterBuffer.setHSV(i, Constants.LEDColors.purpleHSV, 255, 200);
     }
     shooterLEDs.setData(shooterBuffer);
   }
 
   public void redRobot() {
     for (var i = 0; i < shooterBuffer.getLength(); i++) {
-      shooterBuffer.setHSV(i, 0, 255, 200);
+      shooterBuffer.setHSV(i, Constants.LEDColors.redHSV, 255, 200);
     }
     shooterLEDs.setData(shooterBuffer);
   }
@@ -102,34 +75,6 @@ public class LEDs extends SubsystemBase {
     shooterLEDs.setData(shooterBuffer);
   }
 
-  public void orange() {
-    for (var i = 0; i < shooterBuffer.getLength(); i++) {
-      shooterBuffer.setHSV(i, 3, 255, 200);
-    }
-    shooterLEDs.setData(shooterBuffer);
-  }
-
-  public void testing() {
-    for (var i = 0; i < shooterBuffer.getLength(); i++) {
-      shooterBuffer.setLED(i, Color.kDarkGoldenrod);
-    }
-    shooterLEDs.setData(shooterBuffer);
-  }
-
-  public void shuffleColor() {
-    for (var i = 0; i < shooterBuffer.getLength(); i++) {
-      shooterBuffer.setHSV(i, getShuffleboardTest(), 255, 200);
-    }
-    shooterLEDs.setData(shooterBuffer);
-  }
-
-  public void teal() {
-    for (var i = 0; i < shooterBuffer.getLength(); i++) {
-      shooterBuffer.setHSV(i, 65, 255, 200);
-    }
-    shooterLEDs.setData(shooterBuffer);
-  }
-
   public void staticRainbow() {
     // For every pixel
     for (var i = 0; i < shooterBuffer.getLength(); i++) {
@@ -144,6 +89,17 @@ public class LEDs extends SubsystemBase {
     rainbowFirstPixelHue %= 180;
     shooterLEDs.setData(shooterBuffer);
   }
+
+  public void shuffleColor() {
+    for (var i = 0; i < shooterBuffer.getLength(); i++) {
+      shooterBuffer.setHSV(i, getShuffleboardTest(), 255, 200);
+    }
+    shooterLEDs.setData(shooterBuffer);
+  }
+
+
+  public void setShuffleboardTest(long lol) { shuffleboardTest = lol;}
+  public int getShuffleboardTest() { return (int) shuffleboardTest;}
 
   @Override
   public void initSendable(SendableBuilder builder) {
