@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.Chassis.TeleopDrive;
 import frc.robot.commands.Climber.ClimberExtend;
+import frc.robot.commands.Climber.PitClimberBackwards;
 import frc.robot.commands.Indexer.AlwaysIndex;
 import frc.robot.commands.Indexer.AndrewIndex;
 import frc.robot.commands.Intake.LimitedSpintake;
@@ -195,6 +196,9 @@ public class RobotContainer {
     // new JoystickButton(operatorController, Constants.XBox.LST_BTN_Y).whileTrue(new ToggleAmp(amp));
     new JoystickButton(operatorController, Constants.XBox.LST_BTN_B).whileTrue(new AmpIntake(amp));
     new JoystickButton(operatorController, Constants.XBox.LST_BTN_A).whileTrue(new AlwaysAmpIntake(amp));
+
+    new POVButton(operatorController, Constants.XBox.LST_POV_E).whileTrue(new PitClimberBackwards(rightClimber));
+    new POVButton(operatorController, Constants.XBox.LST_POV_W).whileTrue(new PitClimberBackwards(leftClimber));
 
     //new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new VelocityShoot(shooter));
     //new JoystickButton(operatorController, Constants.Buttons.LST_BTN_RBUMPER).whileTrue(new SequentialCommandGroup(new SmartSpintake(intake), new SmartIndex(intake)));

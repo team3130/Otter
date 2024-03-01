@@ -5,6 +5,7 @@
 package frc.robot.commands.Climber;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.subsystems.Climber;
 import edu.wpi.first.wpilibj.Timer;
 
@@ -20,8 +21,10 @@ public class PitClimberBackwards extends Command {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
+        if (Constants.pitMode) {
+            climber.setClimberSpeed(-0.5);
+        }
         // starts the motors and timer
-        climber.setClimberSpeed(-0.5);
 
     }
 
