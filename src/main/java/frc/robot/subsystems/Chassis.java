@@ -16,11 +16,9 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -100,7 +98,7 @@ public class Chassis extends SubsystemBase {
                 this::getPose2d, // Robot pose supplier
                 this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
                 this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-                this::driveRobotRelative,
+                this::driveAutonRobotRelative,
                 new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
                         new PIDConstants(3, 0, 0), // Translation PID constants
                         new PIDConstants(8, 0.15, 0.5), // Rotation PID constants
@@ -212,8 +210,8 @@ public class Chassis extends SubsystemBase {
      * If the PID controllers of the {@link SwerveModule}'s are all done
      * @return whether the wheels are zereod/PID controllers are done
      */
-    public void drive(double x, double y, double theta) {
-        drive(x, y, theta, getFieldRelative());
+    public void teleDrive(double x, double y, double theta) {
+        teleDrive(x, y, theta, getFieldRelative());
     }
     public boolean getAutoConfig() {
         return AutoBuilder.isConfigured();
@@ -237,7 +235,7 @@ public class Chassis extends SubsystemBase {
      * drive(x, y, theta) with additional parameter for if robot is field relative or not
      * This method will drive the swerve modules based to x, y and theta vectors.
      */
-    public void drive(double x, double y, double theta, boolean fieldRelative) {
+    public void teleDrive(double x, double y, double theta, boolean fieldRelative) {
         if (fieldRelative) {
             setModuleStates(kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(x, y, theta, getRotation2d())));
         } else {
@@ -337,6 +335,16 @@ public class Chassis extends SubsystemBase {
         modules[Constants.SwerveModules.three].setDesiredState(desiredStates[Constants.SwerveModules.three]);
         modules[Constants.SwerveModules.four].setDesiredState(desiredStates[Constants.SwerveModules.four]);
     }
+
+    public void setAutonModuleStates(SwerveModuleState[] desiredStates) {
+        SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
+
+        modules[Constants.SwerveModules.one].setAutonDesiredState(desiredStates[Constants.SwerveModules.one]);
+        modules[Constants.SwerveModules.two].setAutonDesiredState(desiredStates[Constants.SwerveModules.two]);
+        modules[Constants.SwerveModules.three].setAutonDesiredState(desiredStates[Constants.SwerveModules.three]);
+        modules[Constants.SwerveModules.four].setAutonDesiredState(desiredStates[Constants.SwerveModules.four]);
+    }
+
 
 
     // Spins the wheels to an angle
@@ -479,12 +487,12 @@ public class Chassis extends SubsystemBase {
     }
 
     // passes the x y omega ChassisSpeeds supplied by PathPlanner to driveAuton()
-    public void driveRobotRelative(ChassisSpeeds speeds){
+    public void driveAutonRobotRelative(ChassisSpeeds speeds){
         driveAuton(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond, speeds.omegaRadiansPerSecond);
     }
 
     // uses supplied ChassisSpeeds to drive autonomously in RobotRelative mode
     public void driveAuton(double x, double y, double theta) {
-        setModuleStates(kinematics.toSwerveModuleStates(new ChassisSpeeds(x, y, theta)));
+        setAutonModuleStates(kinematics.toSwerveModuleStates(new ChassisSpeeds(x, y, theta)));
     }
 }
