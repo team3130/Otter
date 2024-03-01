@@ -152,9 +152,9 @@ public class SwerveModule implements Sendable {
         state = SwerveModuleState.optimize(state, getState().angle);
         // percent output of the drive motor that the swerve controller wants you to go to by the physical max speed the bot can travel
         // m_driveMotor.setControl(driveMotorVoltRequest.withOutput(12d* (state.speedMetersPerSecond / Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond)));
-        driveMotor.setVoltage((10d* (state.speedMetersPerSecond / Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond)));
+        driveMotor.setVoltage((Constants.Swerve.kMaxDriveVoltage* (state.speedMetersPerSecond / Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond)));
         // set the steering motor based off the output of the PID controller
-        steerMotor.setVoltage(4d * turningPidController.calculate(Math.IEEEremainder(getTurningPositionRadians(), Math.PI * 2), state.angle.getRadians()));
+        steerMotor.setVoltage(Constants.Swerve.kMaxSteerVoltage* turningPidController.calculate(Math.IEEEremainder(getTurningPositionRadians(), Math.PI * 2), state.angle.getRadians()));
     }
 
     public void setAutonDesiredState(SwerveModuleState state) {
@@ -168,9 +168,9 @@ public class SwerveModule implements Sendable {
         state = SwerveModuleState.optimize(state, getState().angle);
         // percent output of the drive motor that the swerve controller wants you to go to by the physical max speed the bot can travel
         // m_driveMotor.setControl(driveMotorVoltRequest.withOutput(12d* (state.speedMetersPerSecond / Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond)));
-        driveMotor.setVoltage((Constants.Swerve.kMaxDriveVoltage* (state.speedMetersPerSecond / Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond)));
+        driveMotor.setVoltage((10d* (state.speedMetersPerSecond / Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond)));
         // set the steering motor based off the output of the PID controller
-        steerMotor.setVoltage(Constants.Swerve.kMaxSteerVoltage * turningPidController.calculate(Math.IEEEremainder(getTurningPositionRadians(), Math.PI * 2), state.angle.getRadians()));
+        steerMotor.setVoltage(4d * turningPidController.calculate(Math.IEEEremainder(getTurningPositionRadians(), Math.PI * 2), state.angle.getRadians()));
     }
 
     /**
