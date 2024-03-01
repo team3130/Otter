@@ -26,14 +26,14 @@ public class AutoPreloadShoot extends Command {
         timer2.start();
         spinUpTime.reset();
         spinUpTime.start();
-        shooter.runShooters();
+        shooter.runShooterFlywheels();
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
         if (spinUpTime.hasElapsed(0.5)){
-            indexer.spintake();
+            indexer.autoSpintake();
         }
     }
 

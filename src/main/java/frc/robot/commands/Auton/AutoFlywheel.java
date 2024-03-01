@@ -6,7 +6,6 @@ package frc.robot.commands.Auton;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 
 public class AutoFlywheel extends Command {
@@ -21,7 +20,7 @@ public class AutoFlywheel extends Command {
     public void initialize() {
         spinUpTime.reset();
         spinUpTime.start();
-        shooter.runShooters();
+        shooter.runShooterFlywheels();
     }
 
     // Called every time the scheduler runs while the command is scheduled.

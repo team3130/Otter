@@ -34,7 +34,7 @@ public class AutoIntake extends InstantCommand {
   @Override
   public void execute() {
     if (timer.hasElapsed(1)) {
-      indexer.spintake();
+      indexer.autoSpintake();
     }
   }
 

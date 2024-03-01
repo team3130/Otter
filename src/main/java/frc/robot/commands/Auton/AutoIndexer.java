@@ -20,7 +20,7 @@ public class AutoIndexer extends Command {
     public void initialize() {
         spinUpTime.reset();
         spinUpTime.start();
-        indexer.spintake();
+        indexer.autoShooterSpindex();
     }
 
     // Called every time the scheduler runs while the command is scheduled.

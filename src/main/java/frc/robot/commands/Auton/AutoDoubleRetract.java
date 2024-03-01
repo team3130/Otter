@@ -8,11 +8,11 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.ShooterShifter;
 
-public class AutonMidShifter extends InstantCommand {
+public class AutoDoubleRetract extends InstantCommand {
   private final ShooterShifter shooterShifter;
   private final Timer timer = new Timer();
 
-  public AutonMidShifter(ShooterShifter shifter) {
+  public AutoDoubleRetract(ShooterShifter shifter) {
     shooterShifter = shifter;
     addRequirements(shifter);
   }
@@ -20,7 +20,7 @@ public class AutonMidShifter extends InstantCommand {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    shooterShifter.extendShortShifter();
+    shooterShifter.doubleRetract();
     timer.reset();
     timer.start();
   }

@@ -5,15 +5,14 @@
 package frc.robot.commands.Auton;
 
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.ShooterShifter;
 
-public class AutonDoubleExtend extends InstantCommand {
+public class AutoDoubleExtend extends InstantCommand {
   private final ShooterShifter shooterShifter;
   private final Timer timer = new Timer();
 
-  public AutonDoubleExtend(ShooterShifter shifter) {
+  public AutoDoubleExtend(ShooterShifter shifter) {
     shooterShifter = shifter;
     addRequirements(shifter);
   }

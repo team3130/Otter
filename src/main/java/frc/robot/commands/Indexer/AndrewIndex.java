@@ -28,7 +28,7 @@ public class AndrewIndex extends Command {
   @Override
   public void execute() {
     if (shooterShifter.getIsShortShifterExtended() || shooterShifter.getIsDoubleExtended()) {
-      indexer.spintake();
+      indexer.shooterSpindex();
     }
   }
 

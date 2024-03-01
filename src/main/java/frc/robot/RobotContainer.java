@@ -86,9 +86,9 @@ public class RobotContainer {
     NamedCommands.registerCommand("Shoot", new AutoShoot(shooter, indexer));
     NamedCommands.registerCommand("PreloadShoot", new AutoPreloadShoot(shooter, indexer));
     NamedCommands.registerCommand("Intake", new AutoIntake(intake, indexer));
-    NamedCommands.registerCommand("ShiftDoubleExtend", new AutonDoubleExtend(shooterShifter));
-    NamedCommands.registerCommand("ShiftDoubleRetract", new AutonDoubleRetract(shooterShifter));
-    NamedCommands.registerCommand("ShiftShortExtend", new AutonMidShifter(shooterShifter));
+    NamedCommands.registerCommand("ShiftDoubleExtend", new AutoDoubleExtend(shooterShifter));
+    NamedCommands.registerCommand("ShiftDoubleRetract", new AutoDoubleRetract(shooterShifter));
+    NamedCommands.registerCommand("ShiftShortExtend", new AutoMidShifter(shooterShifter));
     NamedCommands.registerCommand("Flywheel", new AutoFlywheel(shooter));
     NamedCommands.registerCommand("Index", new AutoIndexer(indexer));
 
@@ -167,6 +167,7 @@ public class RobotContainer {
       tab.add(intake);
       tab.add(leftClimber);
       tab.add(robotLEDs);
+      tab.add(indexer);
     }
   }
 

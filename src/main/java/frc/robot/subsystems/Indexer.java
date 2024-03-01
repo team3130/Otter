@@ -14,9 +14,12 @@ import frc.robot.Constants;
 
 public class Indexer extends SubsystemBase {
   private final WPI_TalonSRX indexer;
-  private double outakeSpeed = -1;
-  private double spintakeSpeed = 1;
   private double indexerVoltageCompensation = 10;
+  private double outakeSpeed = -1;
+  private double spintakeSpeed = 1; // 10
+  private double shooterSpindexSpeed = 0.3; // 3 volts
+  private double autoSpintakeSpeed = 1; // 10
+  private double autoShooterSpindexSpeed = 1;
 
   public Indexer() {
     indexer = new WPI_TalonSRX(Constants.CAN.intakeIndexer);
@@ -36,6 +39,18 @@ public class Indexer extends SubsystemBase {
     indexer.set(spintakeSpeed);
   }
 
+  public void shooterSpindex() {
+    indexer.set(shooterSpindexSpeed);
+  }
+
+  public void autoSpintake() {
+    indexer.set(autoSpintakeSpeed);
+  }
+
+  public void autoShooterSpindex() {
+    indexer.set(autoShooterSpindexSpeed);
+  }
+
   public void outtake(){
     indexer.set(outakeSpeed);
   }
@@ -50,6 +65,8 @@ public class Indexer extends SubsystemBase {
   public double getOutakeSpeed() { return outakeSpeed; }
   public void setIndexerVoltageCompensation(double volts) { indexerVoltageCompensation = volts;}
   public double getIndexerVoltageCompensation() { return indexerVoltageCompensation; }
+  public void setShooterSpindexSpeed(double lol) { shooterSpindexSpeed = lol;}
+  public double getShooterSpindexSpeed() { return shooterSpindexSpeed; }
 
   public void initSendable(SendableBuilder builder) {
     if (Constants.debugMode) {
