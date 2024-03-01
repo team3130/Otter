@@ -24,7 +24,7 @@ import edu.wpi.first.util.sendable.SendableBuilder;
 public final class Constants {
   public static final boolean debugMode = false;
   public static final boolean navxReversed = false;
-  public static final boolean pitMode = true;
+  public static final boolean pitMode = false;
 
   public static class CAN {
     public final static int PCM = 1;
