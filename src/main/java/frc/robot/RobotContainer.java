@@ -129,6 +129,8 @@ public class RobotContainer {
       robotLEDs.redRobot();
     } else if (intake.getIntakeLimitSwitch() || amp.getLimitSwitch()) {
       robotLEDs.purpleRobot();
+    } else if (leftClimber.getClimbDone() && rightClimber.getClimbDone()) {
+      robotLEDs.movingRainbow();
     } else {
       robotLEDs.yellowRobot();
     }
@@ -196,8 +198,8 @@ public class RobotContainer {
     new JoystickButton(operatorController, Constants.XBox.LST_BTN_A).whileTrue(new AlwaysAmpIntake(amp));
 
 
-    new POVButton(operatorController, Constants.XBox.LST_POV_W).whileTrue(new PitClimberReset(rightClimber));
-    new POVButton(operatorController, Constants.XBox.LST_POV_E).whileTrue(new PitClimberReset(leftClimber));
+    new POVButton(operatorController, Constants.XBox.LST_POV_W).whileTrue(new PitClimberReset(rightClimber));//right
+    new POVButton(operatorController, Constants.XBox.LST_POV_E).whileTrue(new PitClimberReset(leftClimber));//left
 
     /*
     //new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new VelocityShoot(shooter));

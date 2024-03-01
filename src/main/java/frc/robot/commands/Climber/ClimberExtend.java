@@ -31,8 +31,6 @@ public class ClimberExtend extends Command {
         double power = -xboxController.getRawAxis(climber.getJoystick());
         power = power * Math.abs(power);
 
-
-        /*
         if (!climber.brokeLimit()) {
             climber.setIsClimberReset(false);
         }
@@ -42,8 +40,6 @@ public class ClimberExtend extends Command {
             power = 0;
             climber.setClimbDone(true);
         }
-        
-         */
 
         if (power < 0.075) {
             power = 0;
