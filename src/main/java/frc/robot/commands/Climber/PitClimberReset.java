@@ -7,13 +7,12 @@ package frc.robot.commands.Climber;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.Climber;
-import edu.wpi.first.wpilibj.Timer;
 
 /** An example command that uses an example subsystem. */
-public class PitClimberBackwards extends Command {
+public class PitClimberReset extends Command {
     private final Climber climber;
 
-    public PitClimberBackwards(Climber climber) {
+    public PitClimberReset(Climber climber) {
       this.climber = climber;
       addRequirements(climber);
     }
@@ -23,9 +22,8 @@ public class PitClimberBackwards extends Command {
     public void initialize() {
         if (Constants.pitMode) {
             climber.setClimberSpeed(-0.5);
+            climber.setIsClimberReset(false);
         }
-        // starts the motors and timer
-
     }
 
     // Called every time the scheduler runs while the command is scheduled.
@@ -37,11 +35,16 @@ public class PitClimberBackwards extends Command {
     @Override
     public void end(boolean interrupted) {
         climber.stop();
+        climber.setIsClimberReset(true);
     }
 
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-      return false;
+        if (climber.brokeLimit()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
