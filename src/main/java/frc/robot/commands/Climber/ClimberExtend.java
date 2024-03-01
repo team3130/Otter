@@ -46,7 +46,7 @@ public class ClimberExtend extends Command {
             power = 0;
         }
             climber.setClimberSpeed(power);
-        }
+    }
 
 
     // Called once the command ends or is interrupted.

@@ -22,7 +22,6 @@ public class PitClimberReset extends Command {
     public void initialize() {
         if (Constants.pitMode) {
             climber.setClimberSpeed(-0.7);
-            climber.setIsClimberReset(false);
         }
     }
 

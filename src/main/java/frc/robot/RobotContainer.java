@@ -196,7 +196,7 @@ public class RobotContainer {
     new JoystickButton(operatorController, Constants.XBox.LST_BTN_A).whileTrue(new AlwaysAmpIntake(amp));
 
     new POVButton(operatorController, Constants.XBox.LST_POV_W).whileTrue(new PitClimberReset(rightClimber));
-    new JoystickButton(operatorController, Constants.XBox.LST_BTN_X).whileTrue(new PitClimberReset(leftClimber));
+    new POVButton(operatorController, Constants.XBox.LST_POV_E).whileTrue(new PitClimberReset(leftClimber));
 
     //new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new VelocityShoot(shooter));
     //new JoystickButton(operatorController, Constants.Buttons.LST_BTN_RBUMPER).whileTrue(new SequentialCommandGroup(new SmartSpintake(intake), new SmartIndex(intake)));
