@@ -16,7 +16,7 @@ public class Indexer extends SubsystemBase {
   private double indexerVoltageCompensation = 10;
   private double outakeSpeed = -1;
   private double spintakeSpeed = 1; // 10
-  private double shooterSpindexSpeed = 0.3; // 3 volts
+  private double shooterSpindexSpeed = 0.4; // 3 volts
   private double autoSpintakeSpeed = 1; // 10
   private double autoShooterSpindexSpeed = 1;
 
