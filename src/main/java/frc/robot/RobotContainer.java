@@ -30,7 +30,6 @@ import frc.robot.commands.Intake.LimitedSpintake;
 import frc.robot.commands.Indexer.Outtake;
 import frc.robot.commands.ShooterShifter.ShortShifterExtend;
 import frc.robot.subsystems.Chassis;
-import frc.robot.subsystems.Climber;
 import frc.robot.commands.Auton.*;
 import frc.robot.commands.Shooter.*;
 import frc.robot.commands.ShooterShifter.DoubleExtend;
@@ -93,6 +92,7 @@ public class RobotContainer {
 
     // Default commands running in the background when other commands not scheduled
     chassis.setDefaultCommand(new TeleopDrive(chassis, driverController));
+
     leftClimber.setDefaultCommand(new ClimberExtend(leftClimber, operatorController));
     rightClimber.setDefaultCommand(new ClimberExtend(rightClimber, operatorController));
 
@@ -129,8 +129,6 @@ public class RobotContainer {
       robotLEDs.redRobot();
     } else if (intake.getIntakeLimitSwitch() || amp.getLimitSwitch()) {
       robotLEDs.purpleRobot();
-    } else if (leftClimber.getClimbDone() && rightClimber.getClimbDone() && !leftClimber.getIsClimberReset() && !rightClimber.getIsClimberReset()) {
-      robotLEDs.movingRainbow();
     } else {
       robotLEDs.yellowRobot();
     }
@@ -139,10 +137,12 @@ public class RobotContainer {
   public Command pick() {
     return autoChooser.getSelected();
   }
-  public void resetClimbers(){
+
+  public void resetClimbers() {
     leftClimber.setIsClimberReset(true);
     rightClimber.setIsClimberReset(true);
   }
+
   public InstantCommand resetShooterShifter() {
     return new DoubleRetract(shooterShifter);
   }
@@ -195,9 +195,11 @@ public class RobotContainer {
     new JoystickButton(operatorController, Constants.XBox.LST_BTN_B).whileTrue(new AmpIntake(amp));
     new JoystickButton(operatorController, Constants.XBox.LST_BTN_A).whileTrue(new AlwaysAmpIntake(amp));
 
+
     new POVButton(operatorController, Constants.XBox.LST_POV_W).whileTrue(new PitClimberReset(rightClimber));
     new POVButton(operatorController, Constants.XBox.LST_POV_E).whileTrue(new PitClimberReset(leftClimber));
 
+    /*
     //new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new VelocityShoot(shooter));
     //new JoystickButton(operatorController, Constants.Buttons.LST_BTN_RBUMPER).whileTrue(new SequentialCommandGroup(new SmartSpintake(intake), new SmartIndex(intake)));
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`

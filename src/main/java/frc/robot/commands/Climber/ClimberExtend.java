@@ -32,6 +32,7 @@ public class ClimberExtend extends Command {
         power = power * Math.abs(power);
 
 
+        /*
         if (!climber.brokeLimit()) {
             climber.setIsClimberReset(false);
         }
@@ -41,11 +42,14 @@ public class ClimberExtend extends Command {
             power = 0;
             climber.setClimbDone(true);
         }
+        
+         */
 
         if (power < 0.075) {
             power = 0;
         }
-            climber.setClimberSpeed(power);
+
+        climber.setClimberSpeed(power);
     }
 
 

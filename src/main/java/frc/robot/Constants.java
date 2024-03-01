@@ -30,7 +30,7 @@ public final class Constants {
     public final static int PCM = 1;
     public final static int ampMotor = 14;
     public final static int climberRight = 15;
-    public final static int climberLeft = 10; // 16 is the usual canid
+    public final static int climberLeft = 16;
     public final static int shooterTopFlywheel = 20;
     public final static int shooterBottomFlywheel = 21;
     public final static int intakeIndexer = 22;
@@ -83,7 +83,7 @@ public final class Constants {
    */
   public static class Swerve {
     public static double kMaxSteerVoltage = 4d;
-    public static double kMaxDriveVoltage = 8d;
+    public static double kMaxDriveVoltage = 12d;
 
     // SWERVE CAN NUMBERED LIKE CARTESIAN COORDIANTE QUADRANTS
     // front left

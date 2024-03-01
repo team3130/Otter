@@ -18,12 +18,14 @@ public class ShortShifterExtend extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    shooterShifter.extendShortShifter();
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    shooterShifter.extendShortShifter();
+  }
 
   // Called once the command ends or is interrupted.
   @Override
