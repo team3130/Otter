@@ -237,9 +237,9 @@ public class Chassis extends SubsystemBase {
      */
     public void teleDrive(double x, double y, double theta, boolean fieldRelative) {
         if (fieldRelative) {
-            setModuleStates(kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(x, y, theta, getRotation2d())));
+            setTeleopModuleStates(kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(x, y, theta, getRotation2d())));
         } else {
-            setModuleStates(kinematics.toSwerveModuleStates(new ChassisSpeeds(x, y, theta)));
+            setTeleopModuleStates(kinematics.toSwerveModuleStates(new ChassisSpeeds(x, y, theta)));
         }
     }
 
@@ -327,13 +327,13 @@ public class Chassis extends SubsystemBase {
     }
 
     // set module states to desired states
-    public void setModuleStates(SwerveModuleState[] desiredStates) {
+    public void setTeleopModuleStates(SwerveModuleState[] desiredStates) {
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
 
-        modules[Constants.SwerveModules.one].setDesiredState(desiredStates[Constants.SwerveModules.one]);
-        modules[Constants.SwerveModules.two].setDesiredState(desiredStates[Constants.SwerveModules.two]);
-        modules[Constants.SwerveModules.three].setDesiredState(desiredStates[Constants.SwerveModules.three]);
-        modules[Constants.SwerveModules.four].setDesiredState(desiredStates[Constants.SwerveModules.four]);
+        modules[Constants.SwerveModules.one].setTeleopDesiredState(desiredStates[Constants.SwerveModules.one]);
+        modules[Constants.SwerveModules.two].setTeleopDesiredState(desiredStates[Constants.SwerveModules.two]);
+        modules[Constants.SwerveModules.three].setTeleopDesiredState(desiredStates[Constants.SwerveModules.three]);
+        modules[Constants.SwerveModules.four].setTeleopDesiredState(desiredStates[Constants.SwerveModules.four]);
     }
 
     public void setAutonModuleStates(SwerveModuleState[] desiredStates) {

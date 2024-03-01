@@ -141,7 +141,7 @@ public class SwerveModule implements Sendable {
      * Set the desired swerve module state
      * @param state the state to set the swerve modules to
      */
-    public void setDesiredState(SwerveModuleState state) {
+    public void setTeleopDesiredState(SwerveModuleState state) {
         // dead-band
         if (Math.abs(state.speedMetersPerSecond) < 0.001) {
             stop();
