@@ -142,7 +142,7 @@ public class RobotContainer {
     } else if (leftClimber.getClimbDone() && rightClimber.getClimbDone()) {
       robotLEDs.movingRainbow();
     } else {
-      robotLEDs.shooterYellow();
+      robotLEDs.yellowRobot();
     }
   }
 
