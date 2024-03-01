@@ -21,7 +21,7 @@ public class PitClimberReset extends Command {
     @Override
     public void initialize() {
         if (Constants.pitMode) {
-            climber.setClimberSpeed(-0.5);
+            climber.setClimberSpeed(-0.7);
             climber.setIsClimberReset(false);
         }
     }
@@ -35,16 +35,11 @@ public class PitClimberReset extends Command {
     @Override
     public void end(boolean interrupted) {
         climber.stop();
-        climber.setIsClimberReset(true);
     }
 
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        if (climber.brokeLimit()) {
-            return true;
-        } else {
-            return false;
-        }
+        return  false;
     }
 }

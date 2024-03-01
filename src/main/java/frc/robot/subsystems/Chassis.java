@@ -168,7 +168,8 @@ public class Chassis extends SubsystemBase {
     }
 
 
-    public void resetTargetSpeakerController() {
+    public void
+    resetTargetSpeakerController() {
         targetController.reset();
         targetController.enableContinuousInput(-Math.PI, Math.PI);
         targetController.setTolerance(Math.toRadians(1.0));
