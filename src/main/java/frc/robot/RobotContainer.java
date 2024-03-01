@@ -40,7 +40,7 @@ import frc.robot.commands.Amp.*;
 import frc.robot.commands.Chassis.ResetOdometryForward;
 import frc.robot.commands.Intake.*;
 import frc.robot.subsystems.Amp;
-import frc.robot.subsystems.LEDs.LEDs;
+import frc.robot.subsystems.LEDs;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
