@@ -181,7 +181,7 @@ public class RobotContainer {
     new JoystickButton(driverController, Constants.PS5.circle).whileTrue(new AlwaysIndex(indexer));
     new JoystickButton(driverController, Constants.PS5.x).whileTrue(new Outtake(indexer));
 
-    new JoystickTrigger(driverController, Constants.PS5.LST_AXS_LTRIGGER).whileTrue(new AmpOuttake(amp));
+    //new JoystickTrigger(driverController, Constants.PS5.LST_AXS_LTRIGGER).whileTrue(new AmpOuttake(amp));
 
     /*
     ANDREW OPERATOR
@@ -194,8 +194,8 @@ public class RobotContainer {
     new JoystickButton(operatorController, Constants.XBox.LST_BTN_RBUMPER).whileTrue(new OnlyShoot(shooter));
 
     // new JoystickButton(operatorController, Constants.XBox.LST_BTN_Y).whileTrue(new ToggleAmp(amp));
-    new JoystickButton(operatorController, Constants.XBox.LST_BTN_B).whileTrue(new AmpIntake(amp));
-    new JoystickButton(operatorController, Constants.XBox.LST_BTN_A).whileTrue(new AlwaysAmpIntake(amp));
+    //new JoystickButton(operatorController, Constants.XBox.LST_BTN_B).whileTrue(new AmpIntake(amp));
+    //new JoystickButton(operatorController, Constants.XBox.LST_BTN_A).whileTrue(new AlwaysAmpIntake(amp));
 
 
     new POVButton(operatorController, Constants.XBox.LST_POV_W).whileTrue(new PitClimberReset(rightClimber));//right
