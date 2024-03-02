@@ -18,12 +18,13 @@ public class OnlyShoot extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    shooter.runShooterFlywheels();
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    shooter.runShooterFlywheels();
   }
 
   // Called once the command ends or is interrupted.
