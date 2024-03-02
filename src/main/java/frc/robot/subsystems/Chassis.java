@@ -53,6 +53,7 @@ public class Chassis extends SubsystemBase {
     private boolean isTargetingStageAmpSide = false;
     private boolean isTargetingStageSourceSide = false;
     private boolean isTargetingPodium = false;
+    private boolean isTargetingBackClimb = false;
     private int fiducialID = 0;
     private PIDController targetController;
     private double XtargetV = 0;
@@ -158,6 +159,16 @@ public class Chassis extends SubsystemBase {
         }
     }
 
+    public boolean isTargetingBackClimb(double omega, double theta) {
+        if (omega > 0.5 && Math.abs(theta) < 0.5) {
+            isTargetingBackClimb = true;
+            return true;
+        } else {
+            isTargetingBackClimb = false;
+            return false;
+        }
+    }
+
     public double goToTargetPower() {
         return targetController.calculate(getRotation2d().getRadians());
     }
@@ -173,6 +184,21 @@ public class Chassis extends SubsystemBase {
                 targetController.setSetpoint(Math.toRadians(180));
             } else {
                 targetController.setSetpoint(Math.toRadians(0));
+            }
+        }
+    }
+
+    public void resetTargetBackClimbController() {
+        targetController.reset();
+        targetController.enableContinuousInput(-Math.PI, Math.PI);
+        targetController.setTolerance(Math.toRadians(1.0));
+        targetController.setPID(targetP, targetI, targetD);
+
+        if (isTargetingSpeaker) {
+            if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+                targetController.setSetpoint(Math.toRadians(0));
+            } else {
+                targetController.setSetpoint(Math.toRadians(180));
             }
         }
     }
