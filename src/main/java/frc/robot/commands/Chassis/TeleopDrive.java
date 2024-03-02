@@ -93,12 +93,12 @@ public class TeleopDrive extends Command {
           y = 0;
       }
 
-          // apply slew rate limiter which also converts to m/s and rad.s
-          x = xLimiter.calculate(x * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
-          y = yLimiter.calculate(y * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
+      // apply slew rate limiter which also converts to m/s and rad.s
+      x = xLimiter.calculate(x * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
+      y = yLimiter.calculate(y * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
 
-          chassis.teleDrive(x, y, theta); //uses either driving or targeting inputs for theta
-      }
+      chassis.teleDrive(x, y, theta); //uses either driving or targeting inputs for theta
+  }
 
 
 
