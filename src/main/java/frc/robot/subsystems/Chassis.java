@@ -46,8 +46,12 @@ public class Chassis extends SubsystemBase {
     private double targetP = 10d;
     private double targetI = 0.2;
     private double targetD = 0.8;
-    private boolean isTryingToTargetSpeakerWorking = false;
-    private boolean isTryingAmpTest = false;
+    private boolean isTargetingSpeaker = false;
+    private boolean isTargetingAmp = false;
+    private boolean isTargetingSpeakerAmpSide = false;
+    private boolean isTargetingSpeakerSourceSide = false;
+    private boolean isTargetingStageAmpSide = false;
+    private boolean isTargetingStageSourceSide = false;
     private boolean isTargetingPodium = false;
     private int fiducialID = 0;
     private PIDController targetController;
@@ -117,48 +121,39 @@ public class Chassis extends SubsystemBase {
         );
     }
 
+    public void setIsTargetingSpeaker(boolean target) { isTargetingSpeaker = target; }
+    public void setIsTargetingAmp(boolean target) { isTargetingAmp = target; }
+    public void setIsTargetingSpeakerAmpSide(boolean target) { isTargetingSpeakerAmpSide = target; }
+    public void setIsTargetingSpeakerSourceSide(boolean target) { isTargetingSpeakerSourceSide = target; }
+    public void setIsTargetingStageAmpSide(boolean target) { isTargetingStageAmpSide = target; }
+    public void setIsTargetingStageSourceSide(boolean target) { isTargetingStageSourceSide = target; }
+    public void setIsTargetingPodium(boolean target) { isTargetingPodium = target;}
 
-    public boolean targetControllerDone(){
-        return targetController.atSetpoint();
-    }
+    public boolean getIsTargetingSpeaker() { return isTargetingSpeaker; }
+    public boolean getIsTargetingAmp() { return isTargetingAmp; }
+    public boolean getIsTargetingSpeakerAmpSide() { return isTargetingSpeakerAmpSide; }
+    public boolean getIsTargetingSpeakerSourceSide() { return isTargetingSpeakerSourceSide; }
+    public boolean getIsTargetingStageAmpSide() { return isTargetingStageAmpSide; }
+    public boolean getIsTargetingStageSourceSide() { return isTargetingStageSourceSide; }
+    public boolean getIsTargetingPodium() { return isTargetingPodium ;}
 
-
-    public void setXTargetV(double newXF){
-        XtargetV = newXF ;
-    }
-    public void setYTargetV(double newYF){
-        YtargetF = newYF ;
-    }
-
-
-    public double getXTargetV() {
-        return XtargetV;
-    }
-    public double getYTargetV() {
-        return YtargetF;
-    }
-    public boolean getIsTryingToTargetSpeaker(){
-    return isTryingToTargetSpeakerWorking;
-    }
-
-
-    public boolean tryingToTargetAmpTest(double omega, double theta){
+    public boolean isTargetingAmp(double omega, double theta){
         if (omega > 0.5 && Math.abs(theta) < 0.5){
-           isTryingAmpTest = true;
-           return true;
+            isTargetingAmp = true;
+            return true;
         } else {
-            isTryingAmpTest = false;
+            isTargetingAmp = false;
             return false;
         }
     }
 
     // if the right joystick is pushed up, trying to target = true
-    public boolean tryingToTargetSpeakerWorking(double omega, double theta) {
+    public boolean isTargetingSpeaker(double omega, double theta) {
         if (omega < -0.5 && Math.abs(theta) < 0.5) {
-            isTryingToTargetSpeakerWorking = true;
+            isTargetingSpeaker = true;
             return true;
         } else {
-            isTryingToTargetSpeakerWorking = false;
+            isTargetingSpeaker = false;
             return false;
         }
     }
@@ -167,19 +162,77 @@ public class Chassis extends SubsystemBase {
         return targetController.calculate(getRotation2d().getRadians());
     }
 
-
-    public void
-    resetTargetSpeakerController() {
+    public void resetTargetSpeakerController() {
         targetController.reset();
         targetController.enableContinuousInput(-Math.PI, Math.PI);
         targetController.setTolerance(Math.toRadians(1.0));
         targetController.setPID(targetP, targetI, targetD);
 
-        if (isTryingToTargetSpeakerWorking) {
+        if (isTargetingSpeaker) {
             if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
                 targetController.setSetpoint(Math.toRadians(180));
             } else {
                 targetController.setSetpoint(Math.toRadians(0));
+            }
+        }
+    }
+
+    public void resetTargetSpeaker_AmpSideController() {
+        targetController.reset();
+        targetController.enableContinuousInput(-Math.PI, Math.PI);
+        targetController.setTolerance(Math.toRadians(1.0));
+        targetController.setPID(targetP, targetI, targetD);
+
+        if (isTargetingSpeakerAmpSide) {
+            if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+                targetController.setSetpoint(Math.toRadians(220)); // 220 === -140 on Pathplanner
+            } else {
+                targetController.setSetpoint(Math.toRadians(320)); // -40 on pathplanner
+            }
+        }
+    }
+
+    public void resetTargetSpeaker_SourceSideController() {
+        targetController.reset();
+        targetController.enableContinuousInput(-Math.PI, Math.PI);
+        targetController.setTolerance(Math.toRadians(1.0));
+        targetController.setPID(targetP, targetI, targetD);
+
+        if (isTargetingSpeakerSourceSide) {
+            if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+                targetController.setSetpoint(Math.toRadians(140));
+            } else {
+                targetController.setSetpoint(Math.toRadians(40));
+            }
+        }
+    }
+
+    public void resetTargetStage_AmpSideController() {
+        targetController.reset();
+        targetController.enableContinuousInput(-Math.PI, Math.PI);
+        targetController.setTolerance(Math.toRadians(1.0));
+        targetController.setPID(targetP, targetI, targetD);
+
+        if (isTargetingStageAmpSide) {
+            if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+                targetController.setSetpoint(Math.toRadians(120));
+            } else {
+                targetController.setSetpoint(Math.toRadians(60));
+            }
+        }
+    }
+
+    public void resetTargetStage_SourceSideController() {
+        targetController.reset();
+        targetController.enableContinuousInput(-Math.PI, Math.PI);
+        targetController.setTolerance(Math.toRadians(1.0));
+        targetController.setPID(targetP, targetI, targetD);
+
+        if (isTargetingStageSourceSide) {
+            if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+                targetController.setSetpoint(Math.toRadians(240)); // -120 on Pathplanner
+            } else {
+                targetController.setSetpoint(Math.toRadians(300)); // -60 on Pathplanner
             }
         }
     }
@@ -189,10 +242,11 @@ public class Chassis extends SubsystemBase {
         targetController.enableContinuousInput(-Math.PI, Math.PI);
         targetController.setTolerance(Math.toRadians(1.0));
         targetController.setPID(targetP, targetI, targetD);
-        if (isTryingAmpTest) {
+        if (isTargetingAmp) {
             targetController.setSetpoint(Math.toRadians(90));
         }
     }
+
 
     public void resetTargetPodiumController() {
         targetController.reset();
@@ -200,12 +254,15 @@ public class Chassis extends SubsystemBase {
         targetController.setTolerance(Math.toRadians(1.0));
         targetController.setPID(targetP, targetI, targetD);
 
+        if (isTargetingPodium) {
             if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
                 targetController.setSetpoint(Math.toRadians(159.9));
             } else {
                 targetController.setSetpoint(Math.toRadians(20.1));
             }
+        }
     }
+
 
     /**
      * If the PID controllers of the {@link SwerveModule}'s are all done
@@ -427,6 +484,11 @@ public class Chassis extends SubsystemBase {
     public void setTargetD(double d) { targetD = d; }
 
 
+    public void setXTargetV(double newXF){ XtargetV = newXF ;}
+    public void setYTargetV(double newYF){YtargetF = newYF ;}
+    public double getXTargetV() {return XtargetV;}
+    public double getYTargetV() {return YtargetF;}
+
     // return the x position from odometry
     private double getX() { return odometry.getEstimatedPosition().getX(); }
 
@@ -460,8 +522,16 @@ public class Chassis extends SubsystemBase {
             builder.addDoubleProperty("target P", this::getTargetP, this::setTargetP);
             builder.addDoubleProperty("target I", this::getTargetI, this::setTargetI);
             builder.addDoubleProperty("target D", this::getTargetD, this::setTargetD);
-            builder.addBooleanProperty("is targeting speaker", this::getIsTryingToTargetSpeaker, null);
-            builder.addBooleanProperty("is targeting amp", this::getIsTryingToTargetSpeaker, null);
+
+            builder.addBooleanProperty("is targeting speaker", this::getIsTargetingSpeaker, null);
+            builder.addBooleanProperty("is targeting amp", this::getIsTargetingAmp, null);
+            builder.addBooleanProperty("is targeting podium", this::getIsTargetingPodium, null);
+
+            builder.addBooleanProperty("is targeting speaker from amp", this::getIsTargetingSpeakerAmpSide, null);
+            builder.addBooleanProperty("is targeting speaker from source", this::getIsTargetingSpeakerSourceSide, null);
+            builder.addBooleanProperty("is targeting stage from amp", this::getIsTargetingStageAmpSide, null);
+            builder.addBooleanProperty("is targeting stage from source", this::getIsTargetingStageSourceSide, null);
+
             builder.addDoubleProperty("target F", this::getXTargetV, this::setXTargetV);
             builder.addDoubleProperty("target YF", this::getYTargetV, this::setYTargetV);
             builder.addDoubleProperty("target XF", this::getXTargetV, this::setXTargetV);

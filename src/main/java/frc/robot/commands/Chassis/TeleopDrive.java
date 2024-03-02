@@ -67,19 +67,22 @@ public class TeleopDrive extends Command {
       omega = -controller.getRawAxis(Constants.PS5.LST_AXS_RJOYSTICKY);
 
 
-      if (chassis.tryingToTargetSpeakerWorking(omega, theta)) {
+      if (chassis.isTargetingSpeaker(omega, theta)) {
           chassis.resetTargetSpeakerController();
           theta = chassis.goToTargetPower();
-      } else if (chassis.tryingToTargetAmpTest(omega, theta)) {
+
+      } else if (chassis.isTargetingAmp(omega, theta)) {
           chassis.resetTargetAmpController();
           theta = chassis.goToTargetPower();
       } else if (controller.getRawButton(Constants.PS5.LST_BTN_RJOYSTICKPRESS)) {
           chassis.resetTargetPodiumController();
           theta = chassis.goToTargetPower();
+
       } else { // normal driving
           theta = Math.abs(theta) > Constants.Swerve.kDeadband ? theta : 0.0;
           theta = turningLimiter.calculate(theta) * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond;
       }
+
 
       // square the inputs
       y = y * Math.abs(y);
