@@ -122,178 +122,7 @@ public class Chassis extends SubsystemBase {
         );
     }
 
-    public void setIsTargetingSpeaker(boolean target) { isTargetingSpeaker = target; }
-    public void setIsTargetingAmp(boolean target) { isTargetingAmp = target; }
-    public void setIsTargetingSpeakerAmpSide(boolean target) { isTargetingSpeakerAmpSide = target; }
-    public void setIsTargetingSpeakerSourceSide(boolean target) { isTargetingSpeakerSourceSide = target; }
-    public void setIsTargetingStageAmpSide(boolean target) { isTargetingStageAmpSide = target; }
-    public void setIsTargetingStageSourceSide(boolean target) { isTargetingStageSourceSide = target; }
-    public void setIsTargetingPodium(boolean target) { isTargetingPodium = target;}
 
-    public boolean getIsTargetingSpeaker() { return isTargetingSpeaker; }
-    public boolean getIsTargetingAmp() { return isTargetingAmp; }
-    public boolean getIsTargetingSpeakerAmpSide() { return isTargetingSpeakerAmpSide; }
-    public boolean getIsTargetingSpeakerSourceSide() { return isTargetingSpeakerSourceSide; }
-    public boolean getIsTargetingStageAmpSide() { return isTargetingStageAmpSide; }
-    public boolean getIsTargetingStageSourceSide() { return isTargetingStageSourceSide; }
-    public boolean getIsTargetingPodium() { return isTargetingPodium ;}
-
-    public boolean isTargetingAmp(double omega, double theta){
-        if (omega > 0.5 && Math.abs(theta) < 0.5){
-            isTargetingAmp = true;
-            return true;
-        } else {
-            isTargetingAmp = false;
-            return false;
-        }
-    }
-
-    // if the right joystick is pushed up, trying to target = true
-    public boolean isTargetingSpeaker(double omega, double theta) {
-        if (omega < -0.5 && Math.abs(theta) < 0.5) {
-            isTargetingSpeaker = true;
-            return true;
-        } else {
-            isTargetingSpeaker = false;
-            return false;
-        }
-    }
-
-    public boolean isTargetingBackClimb(double omega, double theta) {
-        if (omega > 0.5 && Math.abs(theta) < 0.5) {
-            isTargetingBackClimb = true;
-            return true;
-        } else {
-            isTargetingBackClimb = false;
-            return false;
-        }
-    }
-
-    public double goToTargetPower() {
-        return targetController.calculate(getRotation2d().getRadians());
-    }
-
-    public void resetTargetSpeakerController() {
-        targetController.reset();
-        targetController.enableContinuousInput(-Math.PI, Math.PI);
-        targetController.setTolerance(Math.toRadians(1.0));
-        targetController.setPID(targetP, targetI, targetD);
-
-        if (isTargetingSpeaker) {
-            if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
-                targetController.setSetpoint(Math.toRadians(180));
-            } else {
-                targetController.setSetpoint(Math.toRadians(0));
-            }
-        }
-    }
-
-    public void resetTargetBackClimbController() {
-        targetController.reset();
-        targetController.enableContinuousInput(-Math.PI, Math.PI);
-        targetController.setTolerance(Math.toRadians(1.0));
-        targetController.setPID(targetP, targetI, targetD);
-
-        if (isTargetingBackClimb) {
-            if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
-                targetController.setSetpoint(Math.toRadians(0));
-            } else {
-                targetController.setSetpoint(Math.toRadians(180));
-            }
-        }
-    }
-
-    public void resetTargetSpeaker_AmpSideController() {
-        targetController.reset();
-        targetController.enableContinuousInput(-Math.PI, Math.PI);
-        targetController.setTolerance(Math.toRadians(1.0));
-        targetController.setPID(targetP, targetI, targetD);
-
-        if (isTargetingSpeakerAmpSide) {
-            if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
-                targetController.setSetpoint(Math.toRadians(220)); // 220 === -140 on Pathplanner
-            } else {
-                targetController.setSetpoint(Math.toRadians(320)); // -40 on pathplanner
-            }
-        }
-    }
-
-    public void resetTargetSpeaker_SourceSideController() {
-        targetController.reset();
-        targetController.enableContinuousInput(-Math.PI, Math.PI);
-        targetController.setTolerance(Math.toRadians(1.0));
-        targetController.setPID(targetP, targetI, targetD);
-
-        if (isTargetingSpeakerSourceSide) {
-            if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
-                targetController.setSetpoint(Math.toRadians(140));
-            } else {
-                targetController.setSetpoint(Math.toRadians(40));
-            }
-        }
-    }
-
-    public void resetTargetStage_AmpSideController() {
-        targetController.reset();
-        targetController.enableContinuousInput(-Math.PI, Math.PI);
-        targetController.setTolerance(Math.toRadians(1.0));
-        targetController.setPID(targetP, targetI, targetD);
-
-        if (isTargetingStageAmpSide) {
-            if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
-                targetController.setSetpoint(Math.toRadians(120));
-            } else {
-                targetController.setSetpoint(Math.toRadians(60));
-            }
-        }
-    }
-
-    public void resetTargetStage_SourceSideController() {
-        targetController.reset();
-        targetController.enableContinuousInput(-Math.PI, Math.PI);
-        targetController.setTolerance(Math.toRadians(1.0));
-        targetController.setPID(targetP, targetI, targetD);
-
-        if (isTargetingStageSourceSide) {
-            if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
-                targetController.setSetpoint(Math.toRadians(240)); // -120 on Pathplanner
-            } else {
-                targetController.setSetpoint(Math.toRadians(300)); // -60 on Pathplanner
-            }
-        }
-    }
-
-    public void resetTargetAmpController() {
-        targetController.reset();
-        targetController.enableContinuousInput(-Math.PI, Math.PI);
-        targetController.setTolerance(Math.toRadians(1.0));
-        targetController.setPID(targetP, targetI, targetD);
-        if (isTargetingAmp) {
-            targetController.setSetpoint(Math.toRadians(90));
-        }
-    }
-
-
-    public void resetTargetPodiumController() {
-        targetController.reset();
-        targetController.enableContinuousInput(-Math.PI, Math.PI);
-        targetController.setTolerance(Math.toRadians(1.0));
-        targetController.setPID(targetP, targetI, targetD);
-
-        if (isTargetingPodium) {
-            if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
-                targetController.setSetpoint(Math.toRadians(159.9));
-            } else {
-                targetController.setSetpoint(Math.toRadians(20.1));
-            }
-        }
-    }
-
-
-    /**
-     * If the PID controllers of the {@link SwerveModule}'s are all done
-     * @return whether the wheels are zereod/PID controllers are done
-     */
     public void teleopDrive(double x, double y, double theta) {
         teleopDrive(x, y, theta, getFieldRelative());
     }
@@ -477,6 +306,177 @@ public class Chassis extends SubsystemBase {
     public void updateDValuesFromSwerveModule(double dValue) {
         Arrays.stream(modules).forEach((SwerveModule modules) -> modules.updateDValue(dValue));
     }
+
+
+    public boolean isTargetingAmp(double omega, double theta){
+        if (omega > 0.5 && Math.abs(theta) < 0.5){
+            isTargetingAmp = true;
+            return true;
+        } else {
+            isTargetingAmp = false;
+            return false;
+        }
+    }
+
+    // if the right joystick is pushed up, trying to target = true
+    public boolean isTargetingSpeaker(double omega, double theta) {
+        if (omega < -0.5 && Math.abs(theta) < 0.5) {
+            isTargetingSpeaker = true;
+            return true;
+        } else {
+            isTargetingSpeaker = false;
+            return false;
+        }
+    }
+
+    public boolean isTargetingBackClimb(double omega, double theta) {
+        if (omega > 0.5 && Math.abs(theta) < 0.5) {
+            isTargetingBackClimb = true;
+            return true;
+        } else {
+            isTargetingBackClimb = false;
+            return false;
+        }
+    }
+
+    public double goToTargetPower() {
+        return targetController.calculate(getRotation2d().getRadians());
+    }
+
+    public void resetTargetSpeakerController() {
+        targetController.reset();
+        targetController.enableContinuousInput(-Math.PI, Math.PI);
+        targetController.setTolerance(Math.toRadians(1.0));
+        targetController.setPID(targetP, targetI, targetD);
+
+        if (isTargetingSpeaker) {
+            if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+                targetController.setSetpoint(Math.toRadians(180));
+            } else {
+                targetController.setSetpoint(Math.toRadians(0));
+            }
+        }
+    }
+
+    public void resetTargetBackClimbController() {
+        targetController.reset();
+        targetController.enableContinuousInput(-Math.PI, Math.PI);
+        targetController.setTolerance(Math.toRadians(1.0));
+        targetController.setPID(targetP, targetI, targetD);
+
+        if (isTargetingBackClimb) {
+            if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+                targetController.setSetpoint(Math.toRadians(0));
+            } else {
+                targetController.setSetpoint(Math.toRadians(180));
+            }
+        }
+    }
+
+    public void resetTargetSpeaker_AmpSideController() {
+        targetController.reset();
+        targetController.enableContinuousInput(-Math.PI, Math.PI);
+        targetController.setTolerance(Math.toRadians(1.0));
+        targetController.setPID(targetP, targetI, targetD);
+
+        if (isTargetingSpeakerAmpSide) {
+            if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+                targetController.setSetpoint(Math.toRadians(220)); // 220 === -140 on Pathplanner
+            } else {
+                targetController.setSetpoint(Math.toRadians(320)); // -40 on pathplanner
+            }
+        }
+    }
+
+    public void resetTargetSpeaker_SourceSideController() {
+        targetController.reset();
+        targetController.enableContinuousInput(-Math.PI, Math.PI);
+        targetController.setTolerance(Math.toRadians(1.0));
+        targetController.setPID(targetP, targetI, targetD);
+
+        if (isTargetingSpeakerSourceSide) {
+            if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+                targetController.setSetpoint(Math.toRadians(140));
+            } else {
+                targetController.setSetpoint(Math.toRadians(40));
+            }
+        }
+    }
+
+    public void resetTargetStage_AmpSideController() {
+        targetController.reset();
+        targetController.enableContinuousInput(-Math.PI, Math.PI);
+        targetController.setTolerance(Math.toRadians(1.0));
+        targetController.setPID(targetP, targetI, targetD);
+
+        if (isTargetingStageAmpSide) {
+            if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+                targetController.setSetpoint(Math.toRadians(120));
+            } else {
+                targetController.setSetpoint(Math.toRadians(60));
+            }
+        }
+    }
+
+    public void resetTargetStage_SourceSideController() {
+        targetController.reset();
+        targetController.enableContinuousInput(-Math.PI, Math.PI);
+        targetController.setTolerance(Math.toRadians(1.0));
+        targetController.setPID(targetP, targetI, targetD);
+
+        if (isTargetingStageSourceSide) {
+            if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+                targetController.setSetpoint(Math.toRadians(240)); // -120 on Pathplanner
+            } else {
+                targetController.setSetpoint(Math.toRadians(300)); // -60 on Pathplanner
+            }
+        }
+    }
+
+    public void resetTargetAmpController() {
+        targetController.reset();
+        targetController.enableContinuousInput(-Math.PI, Math.PI);
+        targetController.setTolerance(Math.toRadians(1.0));
+        targetController.setPID(targetP, targetI, targetD);
+        if (isTargetingAmp) {
+            targetController.setSetpoint(Math.toRadians(90));
+        }
+    }
+
+
+    public void resetTargetPodiumController() {
+        targetController.reset();
+        targetController.enableContinuousInput(-Math.PI, Math.PI);
+        targetController.setTolerance(Math.toRadians(1.0));
+        targetController.setPID(targetP, targetI, targetD);
+
+        if (isTargetingPodium) {
+            if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+                targetController.setSetpoint(Math.toRadians(159.9));
+            } else {
+                targetController.setSetpoint(Math.toRadians(20.1));
+            }
+        }
+    }
+
+
+
+    public void setIsTargetingSpeaker(boolean target) { isTargetingSpeaker = target; }
+    public void setIsTargetingAmp(boolean target) { isTargetingAmp = target; }
+    public void setIsTargetingSpeakerAmpSide(boolean target) { isTargetingSpeakerAmpSide = target; }
+    public void setIsTargetingSpeakerSourceSide(boolean target) { isTargetingSpeakerSourceSide = target; }
+    public void setIsTargetingStageAmpSide(boolean target) { isTargetingStageAmpSide = target; }
+    public void setIsTargetingStageSourceSide(boolean target) { isTargetingStageSourceSide = target; }
+    public void setIsTargetingPodium(boolean target) { isTargetingPodium = target;}
+
+    public boolean getIsTargetingSpeaker() { return isTargetingSpeaker; }
+    public boolean getIsTargetingAmp() { return isTargetingAmp; }
+    public boolean getIsTargetingSpeakerAmpSide() { return isTargetingSpeakerAmpSide; }
+    public boolean getIsTargetingSpeakerSourceSide() { return isTargetingSpeakerSourceSide; }
+    public boolean getIsTargetingStageAmpSide() { return isTargetingStageAmpSide; }
+    public boolean getIsTargetingStageSourceSide() { return isTargetingStageSourceSide; }
+    public boolean getIsTargetingPodium() { return isTargetingPodium ;}
+
 
     // gets the kP values for each module
     public double getPValuesForSwerveModules() {

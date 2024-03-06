@@ -5,11 +5,16 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.configs.ClosedLoopRampsConfigs;
+import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.Slot1Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -20,11 +25,12 @@ public class Shooter extends SubsystemBase {
 
     final VoltageOut topVoltReq = new VoltageOut(0);
     final VoltageOut bottomVoltReq = new VoltageOut(0);
-    //final VelocityVoltage topVelocityRequest = new VelocityVoltage(0).withSlot(1);
-    //final VelocityVoltage bottomVelocityRequest = new VelocityVoltage(0).withSlot(0); // class instance
-    //double topVelocitySetpoint = 8;
-    //double bottomVelocitySetpoint = 8;
-    /*
+    final VelocityVoltage topVelocityRequest = new VelocityVoltage(0).withSlot(1);
+    final VelocityVoltage bottomVelocityRequest = new VelocityVoltage(0).withSlot(0); // class instance
+    double topVelocitySetpoint = 8;
+    double bottomVelocitySetpoint = 8;
+
+
     Slot0Configs slot0Configs; // gains for top flywheel slot
     private double slot0_kS = 0; // DONT USE KS
     private double slot0_kV = 0; // OLD VALUE: 0.135;
@@ -42,8 +48,6 @@ public class Shooter extends SubsystemBase {
     private double bottomFeedForwardVolt;
     ClosedLoopRampsConfigs topClosedLoopRamp;
     ClosedLoopRampsConfigs bottomClosedLoopRamp;
-
-     */
 
 
     public Shooter() {
@@ -63,7 +67,6 @@ public class Shooter extends SubsystemBase {
         topFlywheel.getConfigurator().apply(new ClosedLoopRampsConfigs().withVoltageClosedLoopRampPeriod(1));
         bottomFlywheel.getConfigurator().apply(new ClosedLoopRampsConfigs().withVoltageClosedLoopRampPeriod(1));
 
-        /*
         slot0Configs = new Slot0Configs(); // gains for top flywheel slot
         slot1Configs = new Slot1Configs(); // gains for bottom flywheel slot
 
@@ -87,7 +90,6 @@ public class Shooter extends SubsystemBase {
             tab.addDouble("Top Flywheel Velocity", this::getTopFlyVelocityRPS).withPosition(4, 0).withSize(1, 1);
             tab.addDouble("Bottom Flywheel Velocity", this::getBottomFlyVelocityRPM).withPosition(4, 3).withSize(1, 1);
         }
-        */
     }
 
     public void runShooterFlywheels() {
@@ -100,7 +102,7 @@ public class Shooter extends SubsystemBase {
         bottomFlywheel.setControl(bottomVoltReq.withOutput(0));
     }
 
-    /*
+
     public void updateVelocityPID() {
         topFlywheel.getConfigurator().apply(slot0Configs);
         bottomFlywheel.getConfigurator().apply(slot1Configs);
@@ -126,8 +128,6 @@ public class Shooter extends SubsystemBase {
         slot1Configs.kI = slot1_kI; // 1/rot - output per unit of integrated error in velocity (output/rotation)
         slot1Configs.kD = slot1_kD; // output per unit of error derivative in velocity (output/ (rps/s))
     }
-
-     */
 
     @Override
     public void periodic() {
@@ -158,7 +158,7 @@ public class Shooter extends SubsystemBase {
     public double getFlywheelVolts(){ return flywheelVolts;}
     public void setFlywheelVolts(double volt){flywheelVolts = volt;}
 
-    /*
+
     public double getSlot0_kS() { return slot0_kS; }
     public double getSlot0_kV() { return slot0_kV; }
     public double getSlot0_kP() { return slot0_kP; }
@@ -185,7 +185,6 @@ public class Shooter extends SubsystemBase {
     public void setBottomVelocitySetpoint(double newVelocity) {this.bottomVelocitySetpoint = newVelocity;}
     public double getTopVelocitySetpoint() {return this.topVelocitySetpoint;}
     public double getBottomVelocitySetpoint() {return this.bottomVelocitySetpoint;}
-     */
 
     @Override
     public void initSendable(SendableBuilder builder) {
@@ -206,7 +205,6 @@ public class Shooter extends SubsystemBase {
             builder.addDoubleProperty("Live Supplied Volts to Top Flywheel", this::getTopFlywheelSuppliedVolts, null);
             builder.addDoubleProperty("Live Supplied Volts to Bottom Flywheel", this::getBottomFlywheelSuppliedVolts, null);
 
-            /*
             builder.addDoubleProperty("slot 0 kS", this::getSlot0_kS, this::setSlot0_kS);
             builder.addDoubleProperty("slot 0 kV", this::getSlot0_kV, this::setSlot0_kV);
             builder.addDoubleProperty("slot 0 kP", this::getSlot0_kP, this::setSlot0_kP);
@@ -218,7 +216,6 @@ public class Shooter extends SubsystemBase {
             builder.addDoubleProperty("slot 1 kP", this::getSlot1_kP, this::setSlot1_kP);
             builder.addDoubleProperty("slot 1 kI", this::getSlot1_kI, this::setSlot1_kI);
             builder.addDoubleProperty("slot 1 kD", this::getSlot1_kD, this::setSlot1_kD);
-            */
         }
     }
 

@@ -247,18 +247,18 @@ public class SwerveModule implements Sendable {
     public double getSwerveSteeringVoltage() {
         return Constants.Swerve.maxSteerVoltage;
     }
-
     public void setSwerveSteeringVoltage(double lol) {
         Constants.Swerve.maxSteerVoltage = lol;
     }
-
     public double getSwerveDrivingVoltage() {
         return Constants.Swerve.maxDriveVoltage;
     }
-
     public void getSwerveDrivingVoltage(double lol) {
         Constants.Swerve.maxDriveVoltage = lol;
     }
+
+    public double getModuleSteeringSupplyCurrent() { return steerMotor.getSupplyCurrent().getValue();}
+    public double getModuleDrivingSupplyCurrent() { return driveMotor.getSupplyCurrent().getValue();}
 
     /**
      * Builds the sendable for shuffleboard
@@ -274,6 +274,10 @@ public class SwerveModule implements Sendable {
             builder.addDoubleProperty("Absolute encoder position", this::getAbsoluteEncoderRads, null);
             builder.addDoubleProperty("Constant Steering voltage", this::getSwerveSteeringVoltage, this::setSwerveSteeringVoltage);
             builder.addDoubleProperty("Constant Driving voltage", this::getSwerveDrivingVoltage, this::getSwerveDrivingVoltage);
+
+            builder.addDoubleProperty("Steering Module Current Supply", this::getModuleSteeringSupplyCurrent, null);
+            builder.addDoubleProperty("Driving Module Current Supply", this::getModuleDrivingSupplyCurrent, null);
+
             //    builder.addDoubleProperty("Steering Voltage", this::getSteeringVoltage, this::setSteeringVoltage);
             // builder.addDoubleProperty("Driving voltage", this:: getDrivingVoltage, this::setDrivingVoltage);
 /*        builder.addDoubleProperty("Steer velocity", this::getTurningVelocity, null);
