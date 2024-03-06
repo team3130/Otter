@@ -95,7 +95,7 @@ public class TeleopDrive extends Command {
       x = xLimiter.calculate(x * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
       y = yLimiter.calculate(y * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
 
-      chassis.teleDrive(x, y, theta); //uses either driving or targeting inputs for theta
+      chassis.teleopDrive(x, y, theta); //uses either driving or targeting inputs for theta
   }
 
 

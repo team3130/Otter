@@ -4,13 +4,9 @@
 
 package frc.robot;
 
-import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
-import com.pathplanner.lib.util.PIDConstants;
-import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.util.sendable.SendableBuilder;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -82,8 +78,8 @@ public final class Constants {
    *  bottom left,
    */
   public static class Swerve {
-    public static double kMaxSteerVoltage = 4d;
-    public static double kMaxDriveVoltage = 10d;
+    public static double maxSteerVoltage = 4d;
+    public static double maxDriveVoltage = 10d;
 
     // SWERVE CAN NUMBERED LIKE CARTESIAN COORDIANTE QUADRANTS
     // front left
@@ -152,15 +148,6 @@ public final class Constants {
     public final static double[] kI_Swerve = new double[] {kI_FrontLeft, kI_BackLeft, kI_FrontRight, kI_BackRight};
     public final static double[] kD_Swerve = new double[] {kD_FrontLeft, kD_BackLeft, kD_FrontRight, kD_BackRight};
     public final static double[] kF_Swerve = new double[] {kF_FrontLeft, kF_BackLeft, kF_FrontRight, kF_BackRight};
-
-    public static final HolonomicPathFollowerConfig holonomicPathFollowerConfig = new HolonomicPathFollowerConfig(
-      new PIDConstants(3, 0, 0), // Translation PID constants
-      new PIDConstants(7, 0, 0.01), // Rotation PID constants
-      3, // Max module speed, in m/s
-      0.41295, // Drive base radius in meters. Distance from robot center to furthest module.
-               // sqrt(0.584^2 + 0.584^2)/2
-      new ReplanningConfig() // Default path replanning config. See the API for the options here
-    );
   }
 
   public static class SwerveModules {

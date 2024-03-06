@@ -152,9 +152,9 @@ public class SwerveModule implements Sendable {
         state = SwerveModuleState.optimize(state, getState().angle);
         // percent output of the drive motor that the swerve controller wants you to go to by the physical max speed the bot can travel
         // m_driveMotor.setControl(driveMotorVoltRequest.withOutput(12d* (state.speedMetersPerSecond / Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond)));
-        driveMotor.setVoltage((Constants.Swerve.kMaxDriveVoltage* (state.speedMetersPerSecond / Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond)));
+        driveMotor.setVoltage(Constants.Swerve.maxDriveVoltage * (state.speedMetersPerSecond / Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond));
         // set the steering motor based off the output of the PID controller
-        steerMotor.setVoltage(Constants.Swerve.kMaxSteerVoltage* turningPidController.calculate(Math.IEEEremainder(getTurningPositionRadians(), Math.PI * 2), state.angle.getRadians()));
+        steerMotor.setVoltage(Constants.Swerve.maxSteerVoltage * turningPidController.calculate(Math.IEEEremainder(getTurningPositionRadians(), Math.PI * 2), state.angle.getRadians()));
     }
 
     public void setAutonDesiredState(SwerveModuleState state) {
@@ -245,19 +245,19 @@ public class SwerveModule implements Sendable {
 
 
     public double getSwerveSteeringVoltage() {
-        return Constants.Swerve.kMaxSteerVoltage;
+        return Constants.Swerve.maxSteerVoltage;
     }
 
     public void setSwerveSteeringVoltage(double lol) {
-        Constants.Swerve.kMaxSteerVoltage = lol;
+        Constants.Swerve.maxSteerVoltage = lol;
     }
 
     public double getSwerveDrivingVoltage() {
-        return Constants.Swerve.kMaxDriveVoltage;
+        return Constants.Swerve.maxDriveVoltage;
     }
 
     public void getSwerveDrivingVoltage(double lol) {
-        Constants.Swerve.kMaxDriveVoltage = lol;
+        Constants.Swerve.maxDriveVoltage = lol;
     }
 
     /**

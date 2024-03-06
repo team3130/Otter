@@ -294,17 +294,8 @@ public class Chassis extends SubsystemBase {
      * If the PID controllers of the {@link SwerveModule}'s are all done
      * @return whether the wheels are zereod/PID controllers are done
      */
-    public void teleDrive(double x, double y, double theta) {
-        teleDrive(x, y, theta, getFieldRelative());
-    }
-    public boolean getAutoConfig() {
-        return AutoBuilder.isConfigured();
-    }
-    public boolean turnToAnglePIDIsDone() {
-        return modules[Constants.SwerveModules.one].PIDisDone() &&
-                modules[Constants.SwerveModules.two].PIDisDone() &&
-                modules[Constants.SwerveModules.three].PIDisDone() &&
-                modules[Constants.SwerveModules.four].PIDisDone();
+    public void teleopDrive(double x, double y, double theta) {
+        teleopDrive(x, y, theta, getFieldRelative());
     }
 
     /**
@@ -319,7 +310,7 @@ public class Chassis extends SubsystemBase {
      * drive(x, y, theta) with additional parameter for if robot is field relative or not
      * This method will drive the swerve modules based to x, y and theta vectors.
      */
-    public void teleDrive(double x, double y, double theta, boolean fieldRelative) {
+    public void teleopDrive(double x, double y, double theta, boolean fieldRelative) {
         if (fieldRelative) {
             setTeleopModuleStates(kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(x, y, theta, getRotation2d())));
         } else {
