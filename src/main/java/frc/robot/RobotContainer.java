@@ -122,6 +122,11 @@ public class RobotContainer {
       tab.add(indexer);
       chassis.exportSwerveModData(Shuffleboard.getTab("Swerve Modules"));
     }
+
+    if (Constants.shooterMode) {
+      ShuffleboardTab tab = Shuffleboard.getTab("Subsystem Test");
+      tab.add(shooter);
+    }
   }
 
   public void LEDPeriodic() {
@@ -192,6 +197,8 @@ public class RobotContainer {
 
     new JoystickTrigger(operatorController, Constants.XBox.LST_AXS_RTRIGGER).whileTrue(new AndrewIndex(indexer, shooterShifter));
     new JoystickButton(operatorController, Constants.XBox.LST_BTN_RBUMPER).whileTrue(new OnlyShoot(shooter));
+
+    new JoystickButton(operatorController, Constants.XBox.LST_BTN_B).whileTrue(new VelocityShoot(shooter));
 
     // new JoystickButton(operatorController, Constants.XBox.LST_BTN_Y).whileTrue(new ToggleAmp(amp));
     //new JoystickButton(operatorController, Constants.XBox.LST_BTN_B).whileTrue(new AmpIntake(amp));

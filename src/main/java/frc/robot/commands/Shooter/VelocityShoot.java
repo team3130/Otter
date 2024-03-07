@@ -28,15 +28,9 @@ public class VelocityShoot extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    spinUpTime.reset();
-    spinUpTime.start();
-    /*
-
     shooter.configureVelocitySlots();
     shooter.updateVelocityPID();
     shooter.setFlywheelVelocity();
-
-     */
   }
 
 
