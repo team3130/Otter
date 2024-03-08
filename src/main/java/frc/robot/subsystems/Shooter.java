@@ -34,7 +34,6 @@ public class Shooter extends SubsystemBase {
     double bottomVelocitySetpoint = 40;
 
 
-
     private double topFeedForwardVolt = 0;
     private double bottomFeedForwardVolt = 0;
     Slot0Configs slot0Configs; // gains for top flywheel slot

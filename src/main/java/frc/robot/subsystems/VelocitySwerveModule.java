@@ -1,10 +1,11 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstantsFactory;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -17,7 +18,7 @@ import frc.robot.Constants;
 
 
 // Swerve module that reflects the actual swerve modules
-public class SwerveModule implements Sendable {
+public class VelocitySwerveModule implements Sendable {
     private final TalonFX steerMotor; // the steering motor
     private final TalonFX driveMotor; // the driving motor
     private final CANcoder absoluteEncoder; // the can encoder attached to the shaft
@@ -26,7 +27,15 @@ public class SwerveModule implements Sendable {
     private final int side; // the side that the bot is on
     final VoltageOut steerMotorVoltRequest = new VoltageOut(0);
     final VoltageOut driveMotorVoltRequest = new VoltageOut(0);
-    final SwerveModuleConstantsFactory swerve_one = new SwerveModuleConstantsFactory();
+
+    final VelocityVoltage driveVelocityRequest = new VelocityVoltage(0).withSlot(0);
+    private double driveFeedForwardVolt = 0;
+    Slot0Configs slot0Configs; // gains for drive velocity
+    private double slot0_kS = 0; // DONT USE KS
+    private double slot0_kV = 0.115; // OLD VALUE: 0.135;
+    private double slot0_kP = 0.6; // OLD VALUE: 0.3;
+    private double slot0_kI = 0; // OLD VALUE: 0
+    private double slot0_kD = 0.2; // OLD VALUE: 0.01;
 
     //private double steeringVoltage = 4d;
     //private double drivingVoltage = 10d;
@@ -36,7 +45,7 @@ public class SwerveModule implements Sendable {
      * Initializes the steering PID controller.
      * @param side is reflective in {@link Constants}
      */
-    public SwerveModule(int side) {
+    public VelocitySwerveModule(int side) {
         steerMotor = new TalonFX(Constants.Swerve.turningID[side]);
         driveMotor = new TalonFX(Constants.Swerve.spinningID[side]);
 
@@ -57,6 +66,14 @@ public class SwerveModule implements Sendable {
         absoluteEncoderOffset = Constants.SwerveEncoderOffsets.kCANCoderOffsets[side];
         this.side =side;
 
+        slot0Configs = new Slot0Configs();
+        slot0Configs.kS = slot0_kS; // Add 0.05 V output to overcome static friction
+        slot0Configs.kV = slot0_kV; // 1/(rps) - A velocity target of 1 rps results in 0.12 V output
+        slot0Configs.kP = slot0_kP; // 1/rps - An error of 1 rps results in 0.11 V output
+        slot0Configs.kI = slot0_kI; // 1/rot - output per unit of integrated error in velocity (output/rotation)
+        slot0Configs.kD = slot0_kD; // output per unit of error derivative in velocity (output/ (rps/s))
+
+
 
         resetEncoders();
 
@@ -65,6 +82,42 @@ public class SwerveModule implements Sendable {
         name += " " + side;
         SendableRegistry.addLW(this, name, name);
     }
+
+    public void configureVelocitySlots() {
+        slot0Configs.kS = slot0_kS; // Add 0.05 V output to overcome static friction
+
+        slot0Configs.kV = slot0_kV; // 1/(rps) - A velocity target of 1 rps results in 0.12 V output
+        slot0Configs.kP = slot0_kP; // 1/rps - An error of 1 rps results in 0.11 V output
+        slot0Configs.kI = slot0_kI; // 1/rot - output per unit of integrated error in velocity (output/rotation)
+        slot0Configs.kD = slot0_kD; // output per unit of error derivative in velocity (output/ (rps/s))
+    }
+
+    public void updateVelocityPID() {
+        driveMotor.getConfigurator().apply(slot0Configs);
+    }
+
+    /**
+     * Set the desired swerve module state
+     * @param state the state to set the swerve modules to
+     */
+    public void setTeleopDesiredState(SwerveModuleState state) {
+        // dead-band
+        if (Math.abs(state.speedMetersPerSecond) < 0.001) {
+            stop();
+            return;
+        }
+
+        // max turn is 90 degrees optimization
+        state = SwerveModuleState.optimize(state, getState().angle);
+        configureVelocitySlots();
+        updateVelocityPID();
+        driveMotor.setControl(driveVelocityRequest.withVelocity(state.speedMetersPerSecond/Constants.SwerveConversions.wheelCircumference).withFeedForward(driveFeedForwardVolt));
+        //driveMotor.setVoltage(Constants.Swerve.maxDriveVoltage * (state.speedMetersPerSecond / Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond));
+        // TODO: positional controller by phoenix eventually
+        steerMotor.setVoltage(Constants.Swerve.maxSteerVoltage * turningPidController.calculate(Math.IEEEremainder(getTurningPositionRadians(), Math.PI * 2), state.angle.getRadians()));
+    }
+
+
 
     // returns the amount of distance the drive motor has travelled in meters
     public double getDrivePosition() {
@@ -95,17 +148,6 @@ public class SwerveModule implements Sendable {
         return Math.toRadians(absoluteEncoder.getAbsolutePosition().getValue() * 360);// / (Math.PI *2);
     }
 
-    public double getAbsoluteEncoderRotation() {
-        return absoluteEncoder.getAbsolutePosition().getValue();
-    }
-
-    public void updatePValue(double p) {
-        turningPidController.setP(p);
-    }
-    public void updateDValue(double d) {
-        turningPidController.setD(d);
-    }
-
     /**
      * Resets the relative encoders according the absolute encoder involving the offset
      */
@@ -133,42 +175,6 @@ public class SwerveModule implements Sendable {
     public void stop() {
         steerMotor.setControl(steerMotorVoltRequest.withOutput(0));
         driveMotor.setControl(driveMotorVoltRequest.withOutput(0));
-    }
-
-    /**
-     * Set the desired swerve module state
-     * @param state the state to set the swerve modules to
-     */
-    public void setTeleopDesiredState(SwerveModuleState state) {
-        // dead-band
-        if (Math.abs(state.speedMetersPerSecond) < 0.001) {
-            stop();
-            return;
-        }
-
-        // max turn is 90 degrees optimization
-        state = SwerveModuleState.optimize(state, getState().angle);
-        // percent output of the drive motor that the swerve controller wants you to go to by the physical max speed the bot can travel
-        // m_driveMotor.setControl(driveMotorVoltRequest.withOutput(12d* (state.speedMetersPerSecond / Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond)));
-        driveMotor.setVoltage(Constants.Swerve.maxDriveVoltage * (state.speedMetersPerSecond / Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond));
-        // set the steering motor based off the output of the PID controller
-        steerMotor.setVoltage(Constants.Swerve.maxSteerVoltage * turningPidController.calculate(Math.IEEEremainder(getTurningPositionRadians(), Math.PI * 2), state.angle.getRadians()));
-    }
-
-    public void setAutonDesiredState(SwerveModuleState state) {
-        // dead-band
-        if (Math.abs(state.speedMetersPerSecond) < 0.001) {
-            stop();
-            return;
-        }
-
-        // max turn is 90 degrees optimization
-        state = SwerveModuleState.optimize(state, getState().angle);
-        // percent output of the drive motor that the swerve controller wants you to go to by the physical max speed the bot can travel
-        // m_driveMotor.setControl(driveMotorVoltRequest.withOutput(12d* (state.speedMetersPerSecond / Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond)));
-        driveMotor.setVoltage((10d* (state.speedMetersPerSecond / Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond)));
-        // set the steering motor based off the output of the PID controller
-        steerMotor.setVoltage(4d * turningPidController.calculate(Math.IEEEremainder(getTurningPositionRadians(), Math.PI * 2), state.angle.getRadians()));
     }
 
     /**
