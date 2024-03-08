@@ -63,11 +63,6 @@ public class Shooter extends SubsystemBase {
         topFlywheel.getConfigurator().apply(new TalonFXConfiguration()); // config factory default
         bottomFlywheel.getConfigurator().apply(new TalonFXConfiguration()); // config factory default
 
-        topFlywheel.getConfigurator().apply(new VoltageConfigs().withPeakForwardVoltage(5));
-        topFlywheel.getConfigurator().apply(new VoltageConfigs().withPeakForwardVoltage(5));
-        topFlywheel.getConfigurator().apply(new VoltageConfigs().withPeakReverseVoltage(5));
-        topFlywheel.getConfigurator().apply(new VoltageConfigs().withPeakReverseVoltage(5));
-
         topFlywheel.setNeutralMode(NeutralModeValue.Coast);
         bottomFlywheel.setNeutralMode(NeutralModeValue.Coast);
 
