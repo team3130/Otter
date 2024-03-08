@@ -35,6 +35,7 @@ public class Amp extends SubsystemBase {
   private TrapezoidProfile.Constraints constraints;
   private double maxVelo= 1;
   private double maxAcc = 1;
+  private boolean hasZeroed = false;
 
   public Amp() {
     ampLimit = new DigitalInput(Constants.IDs.ampLimitDIO);
@@ -56,6 +57,15 @@ public class Amp extends SubsystemBase {
     ampController.setGoal(highSetpoint);
     ampController.setTolerance(15);
     ampController.setPID(P, I, D);
+  }
+  public boolean getHasZeroed(){
+    return hasZeroed;
+  }
+  public void setHasZeroedTrue(){
+    hasZeroed = true;
+  }
+  public void setHasZeroedFalse(){
+    hasZeroed = false;
   }
   public int getHighSetpoint(){
     return highSetpoint;
@@ -91,6 +101,9 @@ public class Amp extends SubsystemBase {
   }
   public void ampMotorStop() {
     ampSpinningMotor.set(ControlMode.PercentOutput, 0);
+  }
+  public void resetEncoder(){
+    ampLiftingMotor.setSelectedSensorPosition(0);
   }
 
   public boolean getLimitSwitch() {

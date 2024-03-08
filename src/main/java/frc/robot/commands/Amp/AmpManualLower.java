@@ -22,7 +22,7 @@ public class AmpManualLower extends InstantCommand {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    amp.manualAmpLiftUp();
+    amp.manualAmpLowerDown();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -31,11 +31,16 @@ public class AmpManualLower extends InstantCommand {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    amp.ampMotorStop();
+    if (amp.getLimitSwitch()) {
+      amp.resetEncoder();
+    }
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return amp.getEncoderPosition() < amp.getEncoderMax();
+    return amp.getLimitSwitch();
   }
 }
