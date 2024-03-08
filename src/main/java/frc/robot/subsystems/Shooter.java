@@ -9,7 +9,6 @@ import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-import edu.wpi.first.units.Current;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -63,12 +62,7 @@ public class Shooter extends SubsystemBase {
 
         topFlywheel.getConfigurator().apply(new TalonFXConfiguration()); // config factory default
         bottomFlywheel.getConfigurator().apply(new TalonFXConfiguration()); // config factory default
-
-        topFlywheel.getConfigurator().apply(new VoltageConfigs().withPeakForwardVoltage(5));
-        topFlywheel.getConfigurator().apply(new VoltageConfigs().withPeakForwardVoltage(5));
-        topFlywheel.getConfigurator().apply(new VoltageConfigs().withPeakReverseVoltage(5));
-        topFlywheel.getConfigurator().apply(new VoltageConfigs().withPeakReverseVoltage(5));
-
+        
         topFlywheel.setNeutralMode(NeutralModeValue.Coast);
         bottomFlywheel.setNeutralMode(NeutralModeValue.Coast);
 
@@ -118,7 +112,7 @@ public class Shooter extends SubsystemBase {
     }
 
 
-    public void updateVelocityPID() {
+    public void configureVelocitySlots() {
         topFlywheel.getConfigurator().apply(slot0Configs);
         bottomFlywheel.getConfigurator().apply(slot1Configs);
     }
@@ -128,7 +122,7 @@ public class Shooter extends SubsystemBase {
         bottomFlywheel.setControl(bottomVelocityRequest.withVelocity(bottomVelocitySetpoint).withFeedForward(bottomFeedForwardVolt));
     }
 
-    public void configureVelocitySlots() {
+    public void updatePIDValues() {
         slot0Configs.kS = slot0_kS; // Add 0.05 V output to overcome static friction
 
         slot0Configs.kV = slot0_kV; // 1/(rps) - A velocity target of 1 rps results in 0.12 V output
