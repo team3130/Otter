@@ -166,6 +166,7 @@ public class Amp extends SubsystemBase {
       builder.addIntegerProperty("high setpoint", this::getHighSetpoint, this::setHighSetpoint);
       builder.addIntegerProperty("low setpoint", this::getLowSetpoint, this::setLowSetpoint);
       builder.addBooleanProperty("Is At Setpoint", this::isAtSetpoint, null);
+      builder.addBooleanProperty("has zeroed", this::getHasZeroed, null);
     }
   }
 }
