@@ -29,13 +29,14 @@ public class VelocitySwerveModule implements Sendable {
     final VoltageOut driveMotorVoltRequest = new VoltageOut(0);
 
     final VelocityVoltage driveVelocityRequest = new VelocityVoltage(0).withSlot(0);
+
     private double driveFeedForwardVolt = 0;
     Slot0Configs slot0Configs; // gains for drive velocity
     private double slot0_kS = 0; // DONT USE KS
-    private double slot0_kV = 0.115; // OLD VALUE: 0.135;
-    private double slot0_kP = 0.6; // OLD VALUE: 0.3;
+    private double slot0_kV = 0; // OLD VALUE: 0.135;
+    private double slot0_kP = 0; // OLD VALUE: 0.3;
     private double slot0_kI = 0; // OLD VALUE: 0
-    private double slot0_kD = 0.2; // OLD VALUE: 0.01;
+    private double slot0_kD = 0; // OLD VALUE: 0.01;
 
     //private double steeringVoltage = 4d;
     //private double drivingVoltage = 10d;
