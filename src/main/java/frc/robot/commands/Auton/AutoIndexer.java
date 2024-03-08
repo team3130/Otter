@@ -6,12 +6,12 @@ package frc.robot.commands.Auton;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Indexer;
+import frc.robot.subsystems.IntakeShooter;
 
 public class AutoIndexer extends Command {
-    private final Indexer indexer;
+    private final IntakeShooter indexer;
     private Timer spinUpTime = new Timer();
-    public AutoIndexer(Indexer indexer) {
+    public AutoIndexer(IntakeShooter indexer) {
         this.indexer = indexer;
         addRequirements(indexer);
     }

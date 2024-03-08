@@ -4,15 +4,14 @@
 
 package frc.robot.commands.Intake;
 
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.IntakePNM;
 
 /** An example command that uses an example subsystem. */
 public class IntakeIn extends InstantCommand {
-  private final Intake intake;
+  private final IntakePNM intake;
 
-  public IntakeIn(Intake intake) {
+  public IntakeIn(IntakePNM intake) {
     this.intake = intake;
     addRequirements(intake);
   }

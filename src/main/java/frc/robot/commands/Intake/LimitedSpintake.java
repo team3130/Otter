@@ -6,13 +6,13 @@ package frc.robot.commands.Intake;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Indexer;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.IntakePNM;
 
 public class LimitedSpintake extends Command {
   private final Indexer indexer;
-  private final Intake intake;
+  private final IntakePNM intake;
 
-  public LimitedSpintake(Intake intake, Indexer indexer) {
+  public LimitedSpintake(IntakePNM intake, Indexer indexer) {
     this.indexer = indexer;
     this.intake = intake;
     addRequirements(intake, indexer);

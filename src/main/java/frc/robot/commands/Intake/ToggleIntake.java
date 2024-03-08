@@ -5,13 +5,13 @@
 package frc.robot.commands.Intake;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.IntakePNM;
 
 /** An example command that uses an example subsystem. */
 public class ToggleIntake extends InstantCommand {
-  private final Intake intake;
+  private final IntakePNM intake;
 
-  public ToggleIntake(Intake intake) {
+  public ToggleIntake(IntakePNM intake) {
     this.intake = intake;
     addRequirements(intake);
   }

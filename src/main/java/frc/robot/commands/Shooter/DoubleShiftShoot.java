@@ -5,14 +5,14 @@
 package frc.robot.commands.Shooter;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.IntakeShooter;
 import frc.robot.subsystems.ShooterShifter;
 
 public class DoubleShiftShoot extends Command {
-  private final Shooter shooter;
+  private final IntakeShooter shooter;
   private final ShooterShifter shooterShifter;
 
-  public DoubleShiftShoot(Shooter shooter, ShooterShifter shooterShifter) {
+  public DoubleShiftShoot(IntakeShooter shooter, ShooterShifter shooterShifter) {
     this.shooter = shooter;
     this.shooterShifter = shooterShifter;
     addRequirements(shooter, shooterShifter);

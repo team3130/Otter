@@ -6,12 +6,12 @@ package frc.robot.commands.Auton;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.IntakeShooter;
 
 public class AutoFlywheel extends Command {
-    private final Shooter shooter;
+    private final IntakeShooter shooter;
     private Timer spinUpTime = new Timer();
-    public AutoFlywheel(Shooter shooter) {
+    public AutoFlywheel(IntakeShooter shooter) {
         this.shooter = shooter;
         addRequirements(shooter);
     }

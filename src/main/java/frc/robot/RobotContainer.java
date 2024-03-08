@@ -53,9 +53,8 @@ import frc.robot.subsystems.LEDs;
 public class RobotContainer {
   private final Chassis chassis;
   private final Amp amp;
-  private final Intake intake;
-  private final Shooter shooter;
-  private final Indexer indexer;
+  private final IntakePNM intake;
+  private final IntakeShooter intakeShooter;
   private final ShooterShifter shooterShifter;
   private final Climber leftClimber;
   private final Climber rightClimber;
@@ -68,24 +67,23 @@ public class RobotContainer {
     leftClimber = new Climber(Constants.CAN.climberLeft, Constants.IDs.kLLimitSwitch, Constants.XBox.LST_AXS_RJOYSTICKY, false);
     rightClimber = new Climber(Constants.CAN.climberRight, Constants.IDs.kRLimitSwitch, Constants.XBox.LST_AXS_LJOYSTICKY, false);
 
-    shooter = new Shooter();
+    intakeShooter = new IntakeShooter();
     shooterShifter = new ShooterShifter();
     chassis = new Chassis();
     amp = new Amp();
-    intake = new Intake();
-    indexer = new Indexer();
+    intake = new IntakePNM();
     robotLEDs = new LEDs();
 
     // Named commands must be registered before the creation of any PathPlanner Autos or Paths
     // Do this in RobotContainer, after subsystem initialization, but before the creation of any other commands.
-    NamedCommands.registerCommand("Shoot", new AutoShoot(shooter, indexer));
-    NamedCommands.registerCommand("PreloadShoot", new AutoPreloadShoot(shooter, indexer));
-    NamedCommands.registerCommand("Intake", new AutoIntake(intake, indexer));
+    NamedCommands.registerCommand("Shoot", new AutoShoot(intakeShooter));
+    NamedCommands.registerCommand("PreloadShoot", new AutoPreloadShoot(intakeShooter));
+    NamedCommands.registerCommand("Intake", new AutoIntake(intake, intakeShooter));
     NamedCommands.registerCommand("ShiftDoubleExtend", new AutoDoubleExtend(shooterShifter));
     NamedCommands.registerCommand("ShiftDoubleRetract", new AutoDoubleRetract(shooterShifter));
     NamedCommands.registerCommand("ShiftShortExtend", new AutoMidShifter(shooterShifter));
-    NamedCommands.registerCommand("Flywheel", new AutoFlywheel(shooter));
-    NamedCommands.registerCommand("Index", new AutoIndexer(indexer));
+    NamedCommands.registerCommand("Flywheel", new AutoFlywheel(intakeShooter));
+    NamedCommands.registerCommand("Index", new AutoIndexer(intakeShooter));
 
     configureBindings(); // configure button bindings
     exportShuffleBoardData(); // export ShuffleBoardData
@@ -105,7 +103,7 @@ public class RobotContainer {
     SmartDashboard.putData("Auto Chooser", autoChooser);
 
     ShuffleboardTab tab = Shuffleboard.getTab("Competition");
-    tab.addBoolean("Intake Has Note", intake::getIntakeLimitSwitch).withPosition(0, 0).withSize(13, 5);
+    tab.addBoolean("Intake Has Note", intakeShooter::getIntakeLimitSwitch).withPosition(0, 0).withSize(13, 5);
     tab.add("AutoChooser", autoChooser).withPosition(4, 5).withSize(4, 1);
 
 
@@ -115,11 +113,10 @@ public class RobotContainer {
     if (Constants.debugMode) {
       ShuffleboardTab tab = Shuffleboard.getTab("Subsystem Test");
       tab.add(chassis);
-      tab.add(shooter);
+      tab.add(intakeShooter);
       tab.add(intake);
       tab.add(leftClimber);
       tab.add(robotLEDs);
-      tab.add(indexer);
       chassis.exportSwerveModData(Shuffleboard.getTab("Swerve Modules"));
     }
   }
@@ -127,7 +124,7 @@ public class RobotContainer {
   public void LEDPeriodic() {
     if (shooterShifter.getIsDoubleExtended()) {
       robotLEDs.redRobot();
-    } else if (intake.getIntakeLimitSwitch() || amp.getLimitSwitch()) {
+    } else if (intakeShooter.getIntakeLimitSwitch() || amp.getLimitSwitch()) {
       robotLEDs.purpleRobot();
     } else if (leftClimber.getClimbDone() && rightClimber.getClimbDone()) {
       robotLEDs.movingRainbow();
@@ -191,9 +188,9 @@ public class RobotContainer {
     new JoystickButton(operatorController, Constants.XBox.LST_BTN_LBUMPER).whileTrue(new DoubleExtend(shooterShifter));
 
     new JoystickTrigger(operatorController, Constants.XBox.LST_AXS_RTRIGGER).whileTrue(new AndrewIndex(indexer, shooterShifter));
-    new JoystickButton(operatorController, Constants.XBox.LST_BTN_RBUMPER).whileTrue(new OnlyShoot(shooter));
+    new JoystickButton(operatorController, Constants.XBox.LST_BTN_RBUMPER).whileTrue(new OnlyShoot(intakeShooter));
 
-    new JoystickButton(operatorController, Constants.XBox.LST_BTN_B).whileTrue(new VelocityShoot(shooter));
+    new JoystickButton(operatorController, Constants.XBox.LST_BTN_B).whileTrue(new VelocityShoot(intakeShooter));
 
     // new JoystickButton(operatorController, Constants.XBox.LST_BTN_Y).whileTrue(new ToggleAmp(amp));
     //new JoystickButton(operatorController, Constants.XBox.LST_BTN_B).whileTrue(new AmpIntake(amp));

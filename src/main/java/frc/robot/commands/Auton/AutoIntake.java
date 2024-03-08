@@ -7,16 +7,17 @@ package frc.robot.commands.Auton;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.Indexer;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.IntakePNM;
+import frc.robot.subsystems.IntakeShooter;
 
 /** An example command that uses an example subsystem. */
 public class AutoIntake extends InstantCommand {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final Intake intake;
-  private final Indexer indexer;
+  private final IntakePNM intake;
+  private final IntakeShooter indexer;
   private Timer timer = new Timer();
 
-  public AutoIntake(Intake intake, Indexer indexer) {
+  public AutoIntake(IntakePNM intake, IntakeShooter indexer) {
     this.intake = intake;
     this.indexer = indexer;
     addRequirements(intake, indexer);
@@ -48,7 +49,7 @@ public class AutoIntake extends InstantCommand {
   // end this command once the note is at its desired place to stop (via encoders)
   @Override
   public boolean isFinished() {
-    if (intake.getIntakeLimitSwitch() || timer.hasElapsed(3)) {
+    if (indexer.getIntakeLimitSwitch() || timer.hasElapsed(3)) {
       return true;
     } else {
       return false;

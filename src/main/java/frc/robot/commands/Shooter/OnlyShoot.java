@@ -5,12 +5,12 @@
 package frc.robot.commands.Shooter;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.IntakeShooter;
 
 public class OnlyShoot extends Command {
-  private final Shooter shooter;
+  private final IntakeShooter shooter;
 
-  public OnlyShoot(Shooter shooter) {
+  public OnlyShoot(IntakeShooter shooter) {
     this.shooter = shooter;
     addRequirements(shooter);
   }

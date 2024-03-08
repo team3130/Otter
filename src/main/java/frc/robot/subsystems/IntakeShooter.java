@@ -4,18 +4,25 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix6.configs.*;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class Shooter extends SubsystemBase {
+public class IntakeShooter extends SubsystemBase {
+
+    private final DigitalInput intakeLimitSwitch;
+
     private final TalonFX topFlywheel; // we should probably change these names once we learn more
     private final TalonFX bottomFlywheel; // we should probably change these names once we learn more
     private double flywheelVolts = 5;
@@ -55,8 +62,21 @@ public class Shooter extends SubsystemBase {
     ClosedLoopRampsConfigs bottomClosedLoopRamp;
 
 
+    private final WPI_TalonSRX indexer;
+    private double indexerVoltageCompensation = 10;
+    private double outakeSpeed = -1;
+    private double spintakeSpeed = 1; // 10
+    private double shooterSpindexSpeed = 0.7;
+    private double autoSpintakeSpeed = 1; // 10
+    private double autoShooterSpindexSpeed = 1;
 
-    public Shooter() {
+
+
+    public IntakeShooter() {
+
+        intakeLimitSwitch = new DigitalInput(Constants.IDs.intakeLimitDIO);
+
+
         topFlywheel = new TalonFX(Constants.CAN.shooterTopFlywheel);
         bottomFlywheel = new TalonFX(Constants.CAN.shooterBottomFlywheel);
 
@@ -90,8 +110,21 @@ public class Shooter extends SubsystemBase {
         slot1Configs.kP = slot1_kP; // 1/rps - An error of 1 rps results in 0.11 V output                        indexMotor = new WPI_TalonSRX(10);
         slot1Configs.kI = slot1_kI; // 1/rot - output per unit of integrated error in velocity (output/rotation)
         slot1Configs.kD = slot1_kD; // output per unit of error derivative in velocity (output/ (rps/s))         indexMotor.configVoltageCompSaturation(4);
+        
+        indexer = new WPI_TalonSRX(Constants.CAN.intakeIndexer);
 
+        indexer.configFactoryDefault();
+        indexer.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+        indexer.setNeutralMode(NeutralMode.Coast);
+        indexer.configVoltageCompSaturation(indexerVoltageCompensation);
+        indexer.enableVoltageCompensation(true);
 
+        indexer.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+        //currLimitConfigs.currentLimit = 30;
+        //indexer.configSupplyCurrentLimit(currLimitConfigs);
+
+        indexer.setInverted(false);
+        
         if (Constants.debugMode) {
             ShuffleboardTab tab = Shuffleboard.getTab("Shooter Velocity");
             tab.addDouble("Top Velocity Graph", this::getTopFlyVelocityRPS).withWidget("Graph").withPosition(0, 0).withSize(4, 3);
@@ -99,6 +132,11 @@ public class Shooter extends SubsystemBase {
             tab.addDouble("Top Flywheel Velocity", this::getTopFlyVelocityRPS).withPosition(4, 0).withSize(1, 1);
             tab.addDouble("Bottom Flywheel Velocity", this::getBottomFlyVelocityRPS).withPosition(4, 3).withSize(1, 1);
         }
+    }
+    
+
+    public boolean getIntakeLimitSwitch() {
+        return !intakeLimitSwitch.get();
     }
 
     public void runShooterFlywheels() {
@@ -210,10 +248,48 @@ public class Shooter extends SubsystemBase {
 
 
 
+    public void spintake() {
+        indexer.set(spintakeSpeed);
+    }
 
-    @Override
+    public void outtake(){
+        indexer.set(outakeSpeed);
+    }
+
+    public void shooterSpindex() {
+        indexer.set(shooterSpindexSpeed);
+    }
+
+    public void stopIndexer() {
+        indexer.set(0);
+    }
+
+    public void autoSpintake() {
+        indexer.set(autoSpintakeSpeed);
+    }
+
+    public void autoShooterSpindex() {
+        indexer.set(autoShooterSpindexSpeed);
+    }
+
+    public void setSpintakeSpeed(double newSpeed) { spintakeSpeed = newSpeed; }
+    public double getSpintakeSpeed() { return spintakeSpeed; }
+    public void setOutakeSpeed(double newS) { outakeSpeed = newS; }
+    public double getOutakeSpeed() { return outakeSpeed; }
+    public void setIndexerVoltageCompensation(double volts) { indexerVoltageCompensation = volts;}
+    public double getIndexerVoltageCompensation() { return indexerVoltageCompensation; }
+    public void setShooterSpindexSpeed(double lol) { shooterSpindexSpeed = lol;}
+    public double getShooterSpindexSpeed() { return shooterSpindexSpeed; }
+
+    public double getIndexerCurrent() { return indexer.getSupplyCurrent();}
+
+
+@Override
     public void initSendable(SendableBuilder builder) {
         if (Constants.debugMode) {
+            builder.setSmartDashboardType("Intake");
+            builder.addBooleanProperty("intake limit switch", this::getIntakeLimitSwitch, null);
+
             builder.setSmartDashboardType("Shooter");
             //builder.addDoubleProperty("proportion speed", this::getProportionVolt, this::setProportionVolt);
             builder.addDoubleProperty("top current", this::getTopCurrent, null);
@@ -249,6 +325,12 @@ public class Shooter extends SubsystemBase {
             builder.addDoubleProperty("slot 1 kI", this::getSlot1_kI, this::setSlot1_kI);
             builder.addDoubleProperty("slot 1 kD", this::getSlot1_kD, this::setSlot1_kD);
 
+            builder.setSmartDashboardType("Indexer");
+            builder.addDoubleProperty("Spintake speed", this::getSpintakeSpeed, this::setSpintakeSpeed);
+            builder.addDoubleProperty("Outtake speed", this::getOutakeSpeed, this::setOutakeSpeed);
+            builder.addDoubleProperty("Shooter Index speed", this::getShooterSpindexSpeed, this::setShooterSpindexSpeed);
+            builder.addDoubleProperty("Indexer Voltage comp", this::getIndexerVoltageCompensation, this::setIndexerVoltageCompensation);
+            builder.addDoubleProperty("indexer current", this::getIndexerCurrent, null);
         }
     }
 

@@ -8,16 +8,16 @@ package frc.robot.commands.Shooter;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.IntakeShooter;
 
 public class VisionVelocityShoot extends Command {
-  private final Shooter shooter;
+  private final IntakeShooter shooter;
   private Timer spinUpTime = new Timer();
 
   /**
    * @param shooter  The subsystem used by this command.
    */
-  public VisionVelocityShoot(Shooter shooter) {
+  public VisionVelocityShoot(IntakeShooter shooter) {
     this.shooter = shooter;
     addRequirements(shooter);
   }
