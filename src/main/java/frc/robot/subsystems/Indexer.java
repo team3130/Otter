@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -19,6 +20,7 @@ public class Indexer extends SubsystemBase {
   private double shooterSpindexSpeed = 0.7;
   private double autoSpintakeSpeed = 1; // 10
   private double autoShooterSpindexSpeed = 1;
+  //private SupplyCurrentLimitConfiguration currLimitConfigs = new SupplyCurrentLimitConfiguration();
 
   public Indexer() {
     indexer = new WPI_TalonSRX(Constants.CAN.intakeIndexer);
@@ -30,6 +32,8 @@ public class Indexer extends SubsystemBase {
     indexer.enableVoltageCompensation(true);
 
     indexer.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+    //currLimitConfigs.currentLimit = 30;
+    //indexer.configSupplyCurrentLimit(currLimitConfigs);
 
     indexer.setInverted(false);
   }
@@ -67,6 +71,8 @@ public class Indexer extends SubsystemBase {
   public void setShooterSpindexSpeed(double lol) { shooterSpindexSpeed = lol;}
   public double getShooterSpindexSpeed() { return shooterSpindexSpeed; }
 
+  public double getIndexerCurrent() { return indexer.getSupplyCurrent();}
+
   public void initSendable(SendableBuilder builder) {
     if (Constants.debugMode) {
       builder.setSmartDashboardType("Indexer");
@@ -74,6 +80,7 @@ public class Indexer extends SubsystemBase {
       builder.addDoubleProperty("Outtake speed", this::getOutakeSpeed, this::setOutakeSpeed);
       builder.addDoubleProperty("Shooter Index speed", this::getShooterSpindexSpeed, this::setShooterSpindexSpeed);
       builder.addDoubleProperty("Indexer Voltage comp", this::getIndexerVoltageCompensation, this::setIndexerVoltageCompensation);
+      builder.addDoubleProperty("indexer current", this::getIndexerCurrent, null);
     }
   }
 

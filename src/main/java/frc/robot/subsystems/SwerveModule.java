@@ -66,14 +66,11 @@ public class SwerveModule implements Sendable {
 
     // returns the amount of distance the drive motor has travelled in meters
     public double getDrivePosition() {
-        //return driveMotor.getPosition().getValue() * Constants.Conversions.DriveRotToMeters;
         return driveMotor.getPosition().getValue() * Constants.SwerveConversions.DriveRotToMeters;
     }
 
     // returns the position of the steering motor radians
     public Rotation2d getTurningPosition() {
-        // return steerMotor.getPosition().getValue() * Constants.Conversions.SteerRotToRads;
-
         return new Rotation2d(steerMotor.getPosition().getValue() * Constants.SwerveConversions.SteerRotToRads);
     }
 
@@ -112,7 +109,6 @@ public class SwerveModule implements Sendable {
      */
     public void resetEncoders() {
         steerMotor.setPosition((getAbsoluteEncoderRads() - absoluteEncoderOffset) / Constants.SwerveConversions.SteerRotToRads);
-        //steerMotor.setPosition((getAbsoluteEncoderRad() - absoluteEncoderOffset) / Constants.Conversions.SteerRotToRads);
     }
 
     /**

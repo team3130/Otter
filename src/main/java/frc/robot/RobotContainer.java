@@ -122,11 +122,6 @@ public class RobotContainer {
       tab.add(indexer);
       chassis.exportSwerveModData(Shuffleboard.getTab("Swerve Modules"));
     }
-
-    if (Constants.shooterMode) {
-      ShuffleboardTab tab = Shuffleboard.getTab("Subsystem Test");
-      tab.add(shooter);
-    }
   }
 
   public void LEDPeriodic() {

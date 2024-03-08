@@ -9,6 +9,7 @@ import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import edu.wpi.first.units.Current;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -24,6 +25,11 @@ public class Shooter extends SubsystemBase {
     final VoltageOut bottomVoltReq = new VoltageOut(0);
     final VelocityVoltage topVelocityRequest = new VelocityVoltage(0).withSlot(0);
     final VelocityVoltage bottomVelocityRequest = new VelocityVoltage(0).withSlot(1); // class instance
+
+    //private CurrentLimitsConfigs topCurrentConfigs = new CurrentLimitsConfigs();
+    //private CurrentLimitsConfigs bottomCurrentConfigs = new CurrentLimitsConfigs();
+
+
     double topVelocitySetpoint = 40;
     double bottomVelocitySetpoint = 40;
 
@@ -50,6 +56,7 @@ public class Shooter extends SubsystemBase {
     ClosedLoopRampsConfigs bottomClosedLoopRamp;
 
 
+
     public Shooter() {
         topFlywheel = new TalonFX(Constants.CAN.shooterTopFlywheel);
         bottomFlywheel = new TalonFX(Constants.CAN.shooterBottomFlywheel);
@@ -67,6 +74,9 @@ public class Shooter extends SubsystemBase {
 
         topFlywheel.setInverted(true);
         bottomFlywheel.setInverted(true);
+
+        //topFlywheel.getConfigurator().apply(topCurrentConfigs.withSupplyCurrentLimit(40));
+        //bottomFlywheel.getConfigurator().apply(bottomCurrentConfigs.withSupplyCurrentLimit(40));
 
         // idk if these ramp rates do anything :(
         topFlywheel.getConfigurator().apply(new ClosedLoopRampsConfigs().withVoltageClosedLoopRampPeriod(1));
@@ -88,8 +98,7 @@ public class Shooter extends SubsystemBase {
         slot1Configs.kD = slot1_kD; // output per unit of error derivative in velocity (output/ (rps/s))         indexMotor.configVoltageCompSaturation(4);
 
 
-
-        if (Constants.shooterMode) {
+        if (Constants.debugMode) {
             ShuffleboardTab tab = Shuffleboard.getTab("Shooter Velocity");
             tab.addDouble("Top Velocity Graph", this::getTopFlyVelocityRPS).withWidget("Graph").withPosition(0, 0).withSize(4, 3);
             tab.addDouble("Bottom Velocity Graph", this::getBottomFlyVelocityRPS).withWidget("Graph").withPosition(0, 3).withSize(4, 3);
@@ -207,11 +216,15 @@ public class Shooter extends SubsystemBase {
 
 
 
+
     @Override
     public void initSendable(SendableBuilder builder) {
-        if (Constants.shooterMode) {
+        if (Constants.debugMode) {
             builder.setSmartDashboardType("Shooter");
             //builder.addDoubleProperty("proportion speed", this::getProportionVolt, this::setProportionVolt);
+            builder.addDoubleProperty("top current", this::getTopCurrent, null);
+            builder.addDoubleProperty("bottom current", this::getBottomCurrent, null);
+
             builder.addDoubleProperty("shooter volts", this::getFlywheelVolts, this::setFlywheelVolts);
 
             builder.addDoubleProperty("Top Flywheel Velocity (RPS)", this::getTopFlyVelocityRPS, null);
