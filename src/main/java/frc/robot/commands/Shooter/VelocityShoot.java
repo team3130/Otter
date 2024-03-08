@@ -8,6 +8,7 @@ package frc.robot.commands.Shooter;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.subsystems.Shooter;
 
 public class VelocityShoot extends Command {
@@ -28,8 +29,10 @@ public class VelocityShoot extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    if (Constants.debugMode) {
+      shooter.updatePIDValues();
+    }
     shooter.configureVelocitySlots();
-    shooter.updateVelocityPID();
     shooter.setFlywheelVelocity();
   }
 
