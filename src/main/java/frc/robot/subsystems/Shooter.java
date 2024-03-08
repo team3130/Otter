@@ -19,7 +19,7 @@ public class Shooter extends SubsystemBase {
     private final TalonFX topFlywheel; // we should probably change these names once we learn more
     private final TalonFX bottomFlywheel; // we should probably change these names once we learn more
     private double flywheelVolts = 5;
-
+    private double maxTime = 2;
     final VoltageOut topVoltReq = new VoltageOut(0);
     final VoltageOut bottomVoltReq = new VoltageOut(0);
     final VelocityVoltage topVelocityRequest = new VelocityVoltage(0).withSlot(0);
@@ -29,8 +29,8 @@ public class Shooter extends SubsystemBase {
     //private CurrentLimitsConfigs bottomCurrentConfigs = new CurrentLimitsConfigs();
 
 
-    double topVelocitySetpoint = 40;
-    double bottomVelocitySetpoint = 40;
+    double topVelocitySetpoint = 30;
+    double bottomVelocitySetpoint = 30;
 
 
 
@@ -121,6 +121,30 @@ public class Shooter extends SubsystemBase {
         topFlywheel.setControl(topVelocityRequest.withVelocity(topVelocitySetpoint).withFeedForward(topFeedForwardVolt));
         bottomFlywheel.setControl(bottomVelocityRequest.withVelocity(bottomVelocitySetpoint).withFeedForward(bottomFeedForwardVolt));
     }
+    public void setFlywheelMovingSetpoint(double currentTime) {
+        if ((currentTime / maxTime) < 1) {
+            topFlywheel.setControl(topVelocityRequest.withVelocity((currentTime / maxTime) * topVelocitySetpoint).withFeedForward(topFeedForwardVolt));
+            bottomFlywheel.setControl(bottomVelocityRequest.withVelocity((currentTime / maxTime) * bottomVelocitySetpoint).withFeedForward(bottomFeedForwardVolt));
+        } else {
+            setFlywheelVelocity();
+        }
+    }
+    public void setFlywheelMovingSetpointWithMomentum(double currentTime, double topSpeed, double bottomSpeed) {
+        double newTopSet = topVelocitySetpoint - topSpeed; //ground left to cover
+        double newBottomSet = bottomVelocitySetpoint - bottomSpeed;
+
+        if ((currentTime / maxTime) < 1) { //make sure you are not applying >100% of setpoint
+            topFlywheel.setControl(topVelocityRequest.withVelocity(topSpeed + ((currentTime / maxTime) * newTopSet)).withFeedForward(topFeedForwardVolt));
+            bottomFlywheel.setControl(bottomVelocityRequest.withVelocity(bottomSpeed + ((currentTime / maxTime) * newBottomSet)).withFeedForward(bottomFeedForwardVolt));
+            // setpoint = how fast you are going now + (% of time used * ground left to cover)
+        } else {
+            setFlywheelVelocity(); //normal
+        }
+    }
+    public void switchOffFlywheels(double currentTime){
+        //WIP
+    }
+
 
     public void updatePIDValues() {
         slot0Configs.kS = slot0_kS; // Add 0.05 V output to overcome static friction
@@ -163,6 +187,14 @@ public class Shooter extends SubsystemBase {
 
     public double getTopCurrent() {return topFlywheel.getSupplyCurrent().getValue();}
     public double getBottomCurrent() {return bottomFlywheel.getSupplyCurrent().getValue();}
+
+    public double getMaxTime(){
+        return maxTime;
+    }
+    public void setMaxTime(double time){
+        maxTime = time;
+    }
+
 
     public double getFlywheelRampTime() { return this.getFlywheelVolts();}
     public double getFlywheelVolts(){ return flywheelVolts;}
@@ -232,7 +264,7 @@ public class Shooter extends SubsystemBase {
 
             builder.addDoubleProperty("top volt supply", this::getTopFlyVoltSupply, null);
             builder.addDoubleProperty("bottom volt supply", this::getBottomFlyVoltSupply, null);
-
+            builder.addDoubleProperty("max spin up time", this::getMaxTime, this::setMaxTime);
             builder.addDoubleProperty("top feedForward value", this::getTopFeedForwardVolt, this::setTopFeedForwardVolt);
             builder.addDoubleProperty("bottom feedforward value", this::getBottomFeedForwardVolt, this::setBottomFeedForwardVolt);
 

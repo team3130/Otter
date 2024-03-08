@@ -194,6 +194,7 @@ public class RobotContainer {
     new JoystickButton(operatorController, Constants.XBox.LST_BTN_RBUMPER).whileTrue(new OnlyShoot(shooter));
 
     new JoystickButton(operatorController, Constants.XBox.LST_BTN_B).whileTrue(new VelocityShoot(shooter));
+    new JoystickButton(operatorController, Constants.XBox.LST_BTN_A).whileTrue(new VelocityMovingSetpoint(shooter));
 
     // new JoystickButton(operatorController, Constants.XBox.LST_BTN_Y).whileTrue(new ToggleAmp(amp));
     //new JoystickButton(operatorController, Constants.XBox.LST_BTN_B).whileTrue(new AmpIntake(amp));
