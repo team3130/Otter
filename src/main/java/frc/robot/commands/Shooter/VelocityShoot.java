@@ -13,7 +13,6 @@ import frc.robot.subsystems.Shooter;
 
 public class VelocityShoot extends Command {
   private final Shooter shooter;
-  private Timer spinUpTime = new Timer();
 
   /**
    * Creates a new ExampleCommand.
