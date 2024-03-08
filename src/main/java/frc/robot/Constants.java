@@ -18,13 +18,14 @@ import edu.wpi.first.math.util.Units;
  */
 @SuppressWarnings("ALL")
 public final class Constants {
-  public static final boolean debugMode = false;
+  public static final boolean debugMode = true;
   public static final boolean navxReversed = false;
   public static final boolean pitMode = false;
 
   public static class CAN {
     public final static int PCM = 1;
-    public final static int ampMotor = 14;
+    public final static int ampLiftMotor = 14;
+    public final static int ampSpinMotor =23;
     public final static int climberRight = 15;
     public final static int climberLeft = 16;
     public final static int shooterTopFlywheel = 20;

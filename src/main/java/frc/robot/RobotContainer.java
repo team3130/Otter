@@ -152,7 +152,7 @@ public class RobotContainer {
     return new IntakeIn(intake);
   }
   public InstantCommand resetAmp() {
-    return new AmpDown(amp);
+    return new AmpManualLower(amp);
   }
 
   public void resetOdo() {

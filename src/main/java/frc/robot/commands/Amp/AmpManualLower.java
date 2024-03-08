@@ -4,17 +4,17 @@
 
 package frc.robot.commands.Amp;
 
-import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.Amp;
 
 /** An example command that uses an example subsystem. */
-public class ToggleAmp extends Command {
+public class AmpManualLower extends InstantCommand {
   private final Amp amp;
 
   /**
    * @param amp The subsystem used by this command.
    */
-  public ToggleAmp(Amp amp) {
+  public AmpManualLower(Amp amp) {
     this.amp = amp;
     addRequirements(amp);
   }
@@ -22,7 +22,7 @@ public class ToggleAmp extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    amp.toggleAmp();
+    amp.manualAmpLiftUp();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -36,6 +36,6 @@ public class ToggleAmp extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return amp.getEncoderPosition() < amp.getEncoderMax();
   }
 }
