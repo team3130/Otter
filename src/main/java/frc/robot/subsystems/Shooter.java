@@ -129,14 +129,16 @@ public class Shooter extends SubsystemBase {
             setFlywheelVelocity();
         }
     }
-    public void setFlywheelMovingSetpointWithMomentum(double currentTime, double topSpeed, double bottomSpeed) {
-        double newTopSet = topVelocitySetpoint - topSpeed; //ground left to cover
-        double newBottomSet = bottomVelocitySetpoint - bottomSpeed;
 
-        if ((currentTime / maxTime) < 1) { //make sure you are not applying >100% of setpoint
-            topFlywheel.setControl(topVelocityRequest.withVelocity(topSpeed + ((currentTime / maxTime) * newTopSet)).withFeedForward(topFeedForwardVolt));
-            bottomFlywheel.setControl(bottomVelocityRequest.withVelocity(bottomSpeed + ((currentTime / maxTime) * newBottomSet)).withFeedForward(bottomFeedForwardVolt));
-            // setpoint = how fast you are going now + (% of time used * ground left to cover)
+    // setFlywheelMovingSetpoint when the flywheels are still running to compensate for dips
+    public void setFlywheelMovingSetpointWithMomentum(double currentTime, double currentTopFlywheelSpeed, double currentBottomFlywheelSpeed) {
+        double newTopFlySetpoint = topVelocitySetpoint - currentTopFlywheelSpeed; //ground left to cover
+        double newBottomFlySetpoint = bottomVelocitySetpoint - currentBottomFlywheelSpeed;
+
+        if ((currentTime / maxTime) < 1) { // make sure you are not applying >100% of setpoint
+            topFlywheel.setControl(topVelocityRequest.withVelocity(currentTopFlywheelSpeed + ((currentTime / maxTime) * newTopFlySetpoint)).withFeedForward(topFeedForwardVolt));
+            bottomFlywheel.setControl(bottomVelocityRequest.withVelocity(currentBottomFlywheelSpeed + ((currentTime / maxTime) * newBottomFlySetpoint)).withFeedForward(bottomFeedForwardVolt));
+            // setpoint = how fast you are going now + (% of time used * rps left to setpoint); make sure it is never over setpoint
         } else {
             setFlywheelVelocity(); //normal
         }
