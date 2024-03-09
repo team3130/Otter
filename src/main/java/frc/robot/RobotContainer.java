@@ -53,7 +53,7 @@ import frc.robot.subsystems.LEDs;
 public class RobotContainer {
   private final Chassis chassis;
   private final Amp amp;
-  private final IntakePNM intake;
+  private final IntakePNM intakePNM;
   private final IntakeShooter intakeShooter;
   private final ShooterShifter shooterShifter;
   private final Climber leftClimber;
@@ -71,14 +71,14 @@ public class RobotContainer {
     shooterShifter = new ShooterShifter();
     chassis = new Chassis();
     amp = new Amp();
-    intake = new IntakePNM();
+    intakePNM = new IntakePNM();
     robotLEDs = new LEDs();
 
     // Named commands must be registered before the creation of any PathPlanner Autos or Paths
     // Do this in RobotContainer, after subsystem initialization, but before the creation of any other commands.
     NamedCommands.registerCommand("Shoot", new AutoShoot(intakeShooter));
     NamedCommands.registerCommand("PreloadShoot", new AutoPreloadShoot(intakeShooter));
-    NamedCommands.registerCommand("Intake", new AutoIntake(intake, intakeShooter));
+    NamedCommands.registerCommand("Intake", new AutoIntake(intakePNM, intakeShooter));
     NamedCommands.registerCommand("ShiftDoubleExtend", new AutoDoubleExtend(shooterShifter));
     NamedCommands.registerCommand("ShiftDoubleRetract", new AutoDoubleRetract(shooterShifter));
     NamedCommands.registerCommand("ShiftShortExtend", new AutoMidShifter(shooterShifter));
@@ -114,7 +114,7 @@ public class RobotContainer {
       ShuffleboardTab tab = Shuffleboard.getTab("Subsystem Test");
       tab.add(chassis);
       tab.add(intakeShooter);
-      tab.add(intake);
+      tab.add(intakePNM);
       tab.add(leftClimber);
       tab.add(robotLEDs);
       chassis.exportSwerveModData(Shuffleboard.getTab("Swerve Modules"));
@@ -146,7 +146,7 @@ public class RobotContainer {
     return new DoubleRetract(shooterShifter);
   }
   public InstantCommand resetIntake() {
-    return new IntakeIn(intake);
+    return new IntakeIn(intakePNM);
   }
   public InstantCommand resetAmp() {
     return new AmpDown(amp);
@@ -173,10 +173,10 @@ public class RobotContainer {
     // Right joystick down == targeting speaker
     // Press right joystick == targeting stage to speaker
 
-    new JoystickButton(driverController, Constants.PS5.LST_BTN_RBUMPER).whileTrue(new ToggleIntake(intake));
-    new JoystickTrigger(driverController, Constants.PS5.LST_AXS_RTRIGGER).whileTrue(new LimitedSpintake(intake, indexer));
-    new JoystickButton(driverController, Constants.PS5.circle).whileTrue(new AlwaysIndex(indexer));
-    new JoystickButton(driverController, Constants.PS5.x).whileTrue(new Outtake(indexer));
+    new JoystickButton(driverController, Constants.PS5.LST_BTN_RBUMPER).whileTrue(new ToggleIntake(intakePNM));
+    new JoystickTrigger(driverController, Constants.PS5.LST_AXS_RTRIGGER).whileTrue(new LimitedSpintake(intakeShooter));
+    new JoystickButton(driverController, Constants.PS5.circle).whileTrue(new AlwaysIndex(intakeShooter));
+    new JoystickButton(driverController, Constants.PS5.x).whileTrue(new Outtake(intakeShooter));
 
     //new JoystickTrigger(driverController, Constants.PS5.LST_AXS_LTRIGGER).whileTrue(new AmpOuttake(amp));
 
@@ -187,7 +187,7 @@ public class RobotContainer {
     new JoystickTrigger(operatorController, Constants.XBox.LST_AXS_LTRIGGER).whileTrue(new ShortShifterExtend(shooterShifter));
     new JoystickButton(operatorController, Constants.XBox.LST_BTN_LBUMPER).whileTrue(new DoubleExtend(shooterShifter));
 
-    new JoystickTrigger(operatorController, Constants.XBox.LST_AXS_RTRIGGER).whileTrue(new AndrewIndex(indexer, shooterShifter));
+    new JoystickTrigger(operatorController, Constants.XBox.LST_AXS_RTRIGGER).whileTrue(new AndrewIndex(intakeShooter, shooterShifter));
     new JoystickButton(operatorController, Constants.XBox.LST_BTN_RBUMPER).whileTrue(new OnlyShoot(intakeShooter));
 
     new JoystickButton(operatorController, Constants.XBox.LST_BTN_B).whileTrue(new VelocityShoot(intakeShooter));

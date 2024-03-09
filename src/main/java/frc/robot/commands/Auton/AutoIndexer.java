@@ -10,7 +10,7 @@ import frc.robot.subsystems.IntakeShooter;
 
 public class AutoIndexer extends Command {
     private final IntakeShooter indexer;
-    private Timer spinUpTime = new Timer();
+    private Timer timer = new Timer();
     public AutoIndexer(IntakeShooter indexer) {
         this.indexer = indexer;
         addRequirements(indexer);
@@ -18,8 +18,8 @@ public class AutoIndexer extends Command {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        spinUpTime.reset();
-        spinUpTime.start();
+        timer.reset();
+        timer.start();
         indexer.autoShooterSpindex();
     }
 
@@ -37,7 +37,7 @@ public class AutoIndexer extends Command {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        if (spinUpTime.hasElapsed(.75)) {
+        if (timer.hasElapsed(.75)) {
             return true;
         } else {
             return false;

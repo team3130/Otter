@@ -6,12 +6,11 @@ package frc.robot.commands.Auton;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.IntakeShooter;
 
 public class AutoPreloadShoot extends Command {
     private final IntakeShooter shooter;
-    private Timer spinUpTime = new Timer();
+    private Timer timer = new Timer();
     private Timer timer2 = new Timer();
     public AutoPreloadShoot(IntakeShooter shooter) {
         this.shooter = shooter;
@@ -22,16 +21,16 @@ public class AutoPreloadShoot extends Command {
     public void initialize() {
         timer2.reset();
         timer2.start();
-        spinUpTime.reset();
-        spinUpTime.start();
-        shooter.runShooterFlywheels();
+        timer.reset();
+        timer.start();
+        shooter.rawRunShooterFlywheels();
     }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        if (spinUpTime.hasElapsed(0.5)){
-            shooter.autoSpintake();
+        if (timer.hasElapsed(0.5)){
+            shooter.autoShooterSpindex();
         }
     }
 

@@ -5,12 +5,12 @@
 package frc.robot.commands.Indexer;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Indexer;
+import frc.robot.subsystems.IntakeShooter;
 
 public class AlwaysIndex extends Command {
-  private final Indexer indexer;
+  private final IntakeShooter indexer;
 
-  public AlwaysIndex(Indexer indexer) {
+  public AlwaysIndex(IntakeShooter indexer) {
     this.indexer = indexer;
     addRequirements(indexer);
   }

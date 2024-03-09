@@ -6,7 +6,6 @@ package frc.robot.commands.Auton;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.IntakePNM;
 import frc.robot.subsystems.IntakeShooter;
 
@@ -17,10 +16,10 @@ public class AutoIntake extends InstantCommand {
   private final IntakeShooter indexer;
   private Timer timer = new Timer();
 
-  public AutoIntake(IntakePNM intake, IntakeShooter indexer) {
-    this.intake = intake;
+  public AutoIntake(IntakePNM intakePNM, IntakeShooter indexer) {
+    this.intake = intakePNM;
     this.indexer = indexer;
-    addRequirements(intake, indexer);
+    addRequirements(intakePNM, indexer);
   }
 
   // intake down, running at groundIntake speed

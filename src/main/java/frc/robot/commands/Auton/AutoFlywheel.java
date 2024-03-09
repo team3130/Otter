@@ -20,7 +20,8 @@ public class AutoFlywheel extends Command {
     public void initialize() {
         spinUpTime.reset();
         spinUpTime.start();
-        shooter.runShooterFlywheels();
+        shooter.configureVelocitySlots();
+        shooter.autoSetFlywheelVelocity();
     }
 
     // Called every time the scheduler runs while the command is scheduled.

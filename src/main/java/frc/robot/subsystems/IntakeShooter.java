@@ -66,7 +66,7 @@ public class IntakeShooter extends SubsystemBase {
     private double indexerVoltageCompensation = 10;
     private double outakeSpeed = -1;
     private double spintakeSpeed = 1; // 10
-    private double shooterSpindexSpeed = 0.7;
+    private double shooterSpindexSpeed = 1;
     private double autoSpintakeSpeed = 1; // 10
     private double autoShooterSpindexSpeed = 1;
 
@@ -139,7 +139,7 @@ public class IntakeShooter extends SubsystemBase {
         return !intakeLimitSwitch.get();
     }
 
-    public void runShooterFlywheels() {
+    public void rawRunShooterFlywheels() {
         topFlywheel.setControl(topVoltReq.withOutput(flywheelVolts));
         bottomFlywheel.setControl(bottomVoltReq.withOutput(flywheelVolts));
     }
@@ -149,13 +149,17 @@ public class IntakeShooter extends SubsystemBase {
         bottomFlywheel.setControl(bottomVoltReq.withOutput(0));
     }
 
-
     public void configureVelocitySlots() {
         topFlywheel.getConfigurator().apply(slot0Configs);
         bottomFlywheel.getConfigurator().apply(slot1Configs);
     }
 
     public void setFlywheelVelocity() {
+        topFlywheel.setControl(topVelocityRequest.withVelocity(topVelocitySetpoint).withFeedForward(topFeedForwardVolt));
+        bottomFlywheel.setControl(bottomVelocityRequest.withVelocity(bottomVelocitySetpoint).withFeedForward(bottomFeedForwardVolt));
+    }
+
+    public void autoSetFlywheelVelocity() {
         topFlywheel.setControl(topVelocityRequest.withVelocity(topVelocitySetpoint).withFeedForward(topFeedForwardVolt));
         bottomFlywheel.setControl(bottomVelocityRequest.withVelocity(bottomVelocitySetpoint).withFeedForward(bottomFeedForwardVolt));
     }

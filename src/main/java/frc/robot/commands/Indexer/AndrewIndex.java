@@ -5,14 +5,14 @@
 package frc.robot.commands.Indexer;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Indexer;
+import frc.robot.subsystems.IntakeShooter;
 import frc.robot.subsystems.ShooterShifter;
 
 public class AndrewIndex extends Command {
-  private final Indexer indexer;
+  private final IntakeShooter indexer;
   private final ShooterShifter shooterShifter;
 
-  public AndrewIndex(Indexer indexer, ShooterShifter shooterShifter) {
+  public AndrewIndex(IntakeShooter indexer, ShooterShifter shooterShifter) {
     this.indexer = indexer;
     this.shooterShifter = shooterShifter;
     addRequirements(indexer, shooterShifter);

@@ -6,14 +6,14 @@ package frc.robot.commands.Indexer;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Indexer;
+import frc.robot.subsystems.IntakeShooter;
 
 public class Outtake extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final Indexer indexer;
+  private final IntakeShooter indexer;
   private final Timer timer = new Timer();
 
-  public Outtake(Indexer indexer) {
+  public Outtake(IntakeShooter indexer) {
     this.indexer = indexer;
     addRequirements(indexer);
   }
