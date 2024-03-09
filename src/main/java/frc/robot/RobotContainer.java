@@ -73,7 +73,7 @@ public class RobotContainer {
     chassis = new Chassis();
     amp = new Amp();
     intake = new Intake();
-    indexer = new Indexer();
+    indexer = new Indexer(shooter);
     robotLEDs = new LEDs();
 
     // Named commands must be registered before the creation of any PathPlanner Autos or Paths
@@ -107,9 +107,18 @@ public class RobotContainer {
     ShuffleboardTab tab = Shuffleboard.getTab("Competition");
     tab.addBoolean("Intake Has Note", intake::getIntakeLimitSwitch).withPosition(0, 0).withSize(13, 5);
     tab.add("AutoChooser", autoChooser).withPosition(4, 5).withSize(4, 1);
-
-
   }
+
+  /*
+  public boolean flywheelVelocitiesReady() {
+    if ((shooter.getTopFlyVelocityRPS() > (shooter.getTopVelocitySetpoint() - 2)) && (shooter.getBottomFlyVelocityRPS() > (shooter.getBottomVelocitySetpoint() - 2))) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+   */
 
   public void exportShuffleBoardData() {
     if (Constants.debugMode) {

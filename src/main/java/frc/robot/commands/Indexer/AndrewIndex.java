@@ -6,6 +6,7 @@ package frc.robot.commands.Indexer;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Indexer;
+import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.ShooterShifter;
 
 public class AndrewIndex extends Command {
@@ -27,7 +28,7 @@ public class AndrewIndex extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (shooterShifter.getIsShortShifterExtended() || shooterShifter.getIsDoubleExtended()) {
+    if ((shooterShifter.getIsShortShifterExtended() || shooterShifter.getIsDoubleExtended()) && indexer.flywheelVelocitiesReady()) {
       indexer.shooterSpindex();
     }
   }
@@ -41,6 +42,10 @@ public class AndrewIndex extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    if (!indexer.flywheelVelocitiesReady()) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }
