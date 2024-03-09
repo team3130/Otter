@@ -91,6 +91,8 @@ public class Shooter extends SubsystemBase {
         slot1Configs.kI = slot1_kI; // 1/rot - output per unit of integrated error in velocity (output/rotation)
         slot1Configs.kD = slot1_kD; // output per unit of error derivative in velocity (output/ (rps/s))         indexMotor.configVoltageCompSaturation(4);
 
+        topFlywheel.getConfigurator().apply(slot0Configs);
+        bottomFlywheel.getConfigurator().apply(slot1Configs);
 
         if (Constants.debugMode) {
             ShuffleboardTab tab = Shuffleboard.getTab("Shooter Velocity");
