@@ -9,13 +9,13 @@ import frc.robot.subsystems.IntakeShooter;
 import frc.robot.subsystems.ShooterShifter;
 
 public class AndrewIndex extends Command {
-  private final IntakeShooter indexer;
+  private final IntakeShooter intakeShooter;
   private final ShooterShifter shooterShifter;
 
-  public AndrewIndex(IntakeShooter indexer, ShooterShifter shooterShifter) {
-    this.indexer = indexer;
+  public AndrewIndex(IntakeShooter intakeShooter, ShooterShifter shooterShifter) {
+    this.intakeShooter = intakeShooter;
     this.shooterShifter = shooterShifter;
-    addRequirements(indexer, shooterShifter);
+    addRequirements(intakeShooter, shooterShifter);
   }
 
   // Called when the command is initially scheduled.
@@ -27,15 +27,15 @@ public class AndrewIndex extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (shooterShifter.getIsShortShifterExtended() || shooterShifter.getIsDoubleExtended()) {
-      indexer.shooterSpindex();
+    if ((shooterShifter.getIsShortShifterExtended() || shooterShifter.getIsDoubleExtended()) && intakeShooter.flywheelVelocitiesReady()) {
+      intakeShooter.shooterSpindex();
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    indexer.stopIndexer();
+    intakeShooter.stopIndexer();
   }
 
   // Returns true when the command should end.

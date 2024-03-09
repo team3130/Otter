@@ -133,6 +133,14 @@ public class IntakeShooter extends SubsystemBase {
             tab.addDouble("Bottom Flywheel Velocity", this::getBottomFlyVelocityRPS).withPosition(4, 3).withSize(1, 1);
         }
     }
+
+    public boolean flywheelVelocitiesReady() {
+        if ((getTopFlyVelocityRPS() > (topVelocitySetpoint - 2)) && (getBottomFlyVelocityRPS() > (bottomVelocitySetpoint - 2))) {
+            return true;
+        } else {
+            return false;
+        }
+    }
     
 
     public boolean getIntakeLimitSwitch() {
