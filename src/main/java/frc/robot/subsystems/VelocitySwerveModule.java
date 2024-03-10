@@ -64,7 +64,7 @@ public class VelocitySwerveModule implements Sendable {
         turningPidController.enableContinuousInput(-Math.PI, Math.PI); // wrap for circles
         turningPidController.setTolerance(0.0025, 0.05); // at position tolerance
 
-        absoluteEncoderOffset = Constants.SwerveEncoderOffsets.kCANCoderOffsets[side];
+        absoluteEncoderOffset = Constants.EncoderOffsets.kCANCoderOffsets[side];
         this.side =side;
 
         slot0Configs = new Slot0Configs();

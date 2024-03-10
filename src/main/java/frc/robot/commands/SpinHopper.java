@@ -2,46 +2,57 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.Amp;
+package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Amp;
+import frc.robot.subsystems.Hopper;
 
 /** An example command that uses an example subsystem. */
-public class AlwaysAmpIntake extends Command {
-  private final Amp amp;
+public class SpinHopper extends Command {
+  private final Hopper m_hopper;
+  private final Timer timer;
 
   /**
-   * @param amp The subsystem used by this command.
+   * Creates a new ExampleCommand.
+   *
+   * @param subsystem The subsystem used by this command.
    */
-  public AlwaysAmpIntake(Amp amp) {
-    this.amp = amp;
-    addRequirements(amp);
+  public SpinHopper(Hopper subsystem) {
+    timer = new Timer();
+    m_hopper = subsystem;
+    // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(subsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    amp.intakeAmp();
+    m_hopper.spinHopper();
+    timer.reset();
+    timer.start();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    amp.ampMotorStop();
+    m_hopper.stopHopper();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    if (timer.hasElapsed(2.0)) {
+      timer.stop();
+      return true;
+    } else {
+      return false;
+    }
   }
 
 }

@@ -7,6 +7,7 @@ package frc.robot.commands.Chassis;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PS5Controller;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.Chassis;
@@ -14,13 +15,10 @@ import frc.robot.subsystems.Chassis;
 /** A default command to drive in teleop based off the joysticks*/
 public class TeleopDrive extends Command {
   private final Chassis chassis;
-  private final PS5Controller controller;
+  private final XboxController controller;
 
   private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
-  private double y;
-  private double x;
-  private double theta;
-  public TeleopDrive(Chassis chassis, PS5Controller PS5controller) {
+  public TeleopDrive(Chassis chassis, XboxController PS5controller) {
     this.chassis = chassis;
     this.controller = PS5controller;
 
@@ -53,18 +51,18 @@ public class TeleopDrive extends Command {
       double omega = 0d;
 
       if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
-          y = controller.getRawAxis(Constants.PS5.LST_AXS_LJOYSTICKX);
-          x = controller.getRawAxis(Constants.PS5.LST_AXS_LJOYSTICKY);
+          y = controller.getRawAxis(Constants.XBox.LST_AXS_LJOYSTICKX);
+          x = controller.getRawAxis(Constants.XBox.LST_AXS_LJOYSTICKY);
       } else { // blue alliance
-          y = -controller.getRawAxis(Constants.PS5.LST_AXS_LJOYSTICKX);
-          x = -controller.getRawAxis(Constants.PS5.LST_AXS_LJOYSTICKY);
+          y = -controller.getRawAxis(Constants.XBox.LST_AXS_LJOYSTICKX);
+          x = -controller.getRawAxis(Constants.XBox.LST_AXS_LJOYSTICKY);
       }
 
       // theta the same for both alliances
-      theta = -controller.getRawAxis(Constants.PS5.LST_AXS_RJOYSTICKX);
+      theta = -controller.getRawAxis(Constants.XBox.LST_AXS_RJOYSTICKX);
 
       // angle used for targeting
-      omega = -controller.getRawAxis(Constants.PS5.LST_AXS_RJOYSTICKY);
+      omega = -controller.getRawAxis(Constants.XBox.LST_AXS_RJOYSTICKY);
 
 
       if (chassis.isTargetingSpeaker(omega, theta)) {
