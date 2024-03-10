@@ -38,6 +38,9 @@ public class VelocitySwerveModule implements Sendable {
     private double slot0_kI = 0; // OLD VALUE: 0
     private double slot0_kD = 0; // OLD VALUE: 0.01;
 
+
+    private SwerveModuleState tuningDesiredState;
+
     //private double steeringVoltage = 4d;
     //private double drivingVoltage = 10d;
 
@@ -74,7 +77,7 @@ public class VelocitySwerveModule implements Sendable {
         slot0Configs.kI = slot0_kI; // 1/rot - output per unit of integrated error in velocity (output/rotation)
         slot0Configs.kD = slot0_kD; // output per unit of error derivative in velocity (output/ (rps/s))
 
-
+        tuningDesiredState = new SwerveModuleState(Constants.Swerve.tuningDesiredVelocity, new Rotation2d());
 
         resetEncoders();
 
@@ -93,6 +96,18 @@ public class VelocitySwerveModule implements Sendable {
         slot0Configs.kD = slot0_kD; // output per unit of error derivative in velocity (output/ (rps/s))
     }
 
+    /*
+
+    public void setTuningDesiredVelocity(double lol) {
+        Constants.Swerve.tuningDesiredVelocity = lol;
+    }
+
+    public double getTuningDesiredVelocity() {
+        return Constants.Swerve.tuningDesiredVelocity;
+    }
+
+     */
+
     public void updateVelocityPID() {
         driveMotor.getConfigurator().apply(slot0Configs);
     }
@@ -101,7 +116,7 @@ public class VelocitySwerveModule implements Sendable {
      * Set the desired swerve module state
      * @param state the state to set the swerve modules to
      */
-    public void setTeleopDesiredState(SwerveModuleState state) {
+    public void setTuningVelocityState(SwerveModuleState state) {
         // dead-band
         if (Math.abs(state.speedMetersPerSecond) < 0.001) {
             stop();
@@ -118,6 +133,22 @@ public class VelocitySwerveModule implements Sendable {
         steerMotor.setVoltage(Constants.Swerve.maxSteerVoltage * turningPidController.calculate(Math.IEEEremainder(getTurningPositionRadians(), Math.PI * 2), state.angle.getRadians()));
     }
 
+    public void setTeleopDesiredState(SwerveModuleState state) {
+        // dead-band
+        if (Math.abs(state.speedMetersPerSecond) < 0.001) {
+            stop();
+            return;
+        }
+
+        // max turn is 90 degrees optimization
+        state = SwerveModuleState.optimize(state, getState().angle);
+        // percent output of the drive motor that the swerve controller wants you to go to by the physical max speed the bot can travel
+        // TODO: underneath set control voltage output is not real
+        // m_driveMotor.setControl(driveMotorVoltRequest.withOutput(12d* (state.speedMetersPerSecond / Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond)));
+        driveMotor.setVoltage((10d* (state.speedMetersPerSecond / Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond)));
+        // set the steering motor based off the output of the PID controller
+        steerMotor.setVoltage(Constants.Swerve.maxSteerVoltage * turningPidController.calculate(Math.IEEEremainder(getTurningPositionRadians(), Math.PI * 2), state.angle.getRadians()));
+    }
 
 
     // returns the amount of distance the drive motor has travelled in meters
@@ -291,6 +322,8 @@ public class VelocitySwerveModule implements Sendable {
             builder.addDoubleProperty("Swerve P " + getRealSide(), this::getPValue, this::setPValue);
             builder.addDoubleProperty("Swerve I " + getRealSide(), this::getIValue, this::setIValue);
             builder.addDoubleProperty("Swerve D " + getRealSide(), this::getDValue, this::setDValue);
+
+            //builder.addDoubleProperty("tuning desired velocity", this::getTuningDesiredVelocity, this::setTuningDesiredVelocity);
         }
     }
 
@@ -305,4 +338,5 @@ public class VelocitySwerveModule implements Sendable {
     public double getRelDegrees() {
         return Math.toDegrees(getTurningPositionRadians());
     }
+
 }

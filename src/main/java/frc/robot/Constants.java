@@ -18,7 +18,7 @@ import edu.wpi.first.math.util.Units;
  */
 @SuppressWarnings("ALL")
 public final class Constants {
-  public static final boolean debugMode = false;
+  public static final boolean debugMode = true;
   public static final boolean navxReversed = false;
   public static final boolean pitMode = false;
 
@@ -85,6 +85,8 @@ public final class Constants {
   public static class Swerve {
     public static double maxSteerVoltage = 4d;
     public static double maxDriveVoltage = 10d;
+
+    public static double tuningDesiredVelocity = 5d;
 
     // SWERVE CAN NUMBERED LIKE CARTESIAN COORDIANTE QUADRANTS
     // front right

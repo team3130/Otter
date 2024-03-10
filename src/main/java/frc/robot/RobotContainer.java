@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.Chassis.TeleopDrive;
+import frc.robot.commands.Chassis.TuneTeleopDrive;
 import frc.robot.commands.Chassis.ZeroEverything;
 import frc.robot.commands.Chassis.ZeroWheels;
 import frc.robot.commands.SpinHopper;
@@ -164,7 +165,9 @@ public class RobotContainer {
     // driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
     new POVButton(driverController, Constants.XBox.LST_POV_N).whileTrue(new ZeroEverything(chassis));
     new POVButton(driverController, Constants.XBox.LST_POV_W).whileTrue(new ZeroWheels(chassis));
-    new JoystickButton(driverController, Constants.XBox.LST_BTN_Y).whileTrue(new SpinHopper(hopper));
+    new JoystickButton(driverController, Constants.XBox.LST_BTN_B).whileTrue(new SpinHopper(hopper));
+
+    new JoystickButton(driverController, Constants.XBox.LST_BTN_Y).whileTrue(new TuneTeleopDrive(chassis));
 
   }
 }
