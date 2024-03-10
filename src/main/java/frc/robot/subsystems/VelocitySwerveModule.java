@@ -30,13 +30,13 @@ public class VelocitySwerveModule implements Sendable {
 
     final VelocityVoltage driveVelocityRequest = new VelocityVoltage(0).withSlot(0);
 
-    private double driveFeedForwardVolt = 0;
+    private double driveFeedForwardVolt = 1;
     Slot0Configs slot0Configs; // gains for drive velocity
     private double slot0_kS = 0; // DONT USE KS
-    private double slot0_kV = 0; // OLD VALUE: 0.135;
-    private double slot0_kP = 0; // OLD VALUE: 0.3;
-    private double slot0_kI = 0; // OLD VALUE: 0
-    private double slot0_kD = 0; // OLD VALUE: 0.01;
+    private double slot0_kV = 0.3;
+    private double slot0_kP = 0.5;
+    private double slot0_kI = 0;
+    private double slot0_kD = 0;
 
 
     private SwerveModuleState tuningDesiredState;
@@ -77,6 +77,8 @@ public class VelocitySwerveModule implements Sendable {
         slot0Configs.kI = slot0_kI; // 1/rot - output per unit of integrated error in velocity (output/rotation)
         slot0Configs.kD = slot0_kD; // output per unit of error derivative in velocity (output/ (rps/s))
 
+        driveMotor.getConfigurator().apply(slot0Configs);
+
         tuningDesiredState = new SwerveModuleState(Constants.Swerve.tuningDesiredVelocity, new Rotation2d());
 
         resetEncoders();
@@ -96,7 +98,7 @@ public class VelocitySwerveModule implements Sendable {
         slot0Configs.kD = slot0_kD; // output per unit of error derivative in velocity (output/ (rps/s))
     }
 
-    /*
+
 
     public void setTuningDesiredVelocity(double lol) {
         Constants.Swerve.tuningDesiredVelocity = lol;
@@ -105,8 +107,6 @@ public class VelocitySwerveModule implements Sendable {
     public double getTuningDesiredVelocity() {
         return Constants.Swerve.tuningDesiredVelocity;
     }
-
-     */
 
     public void updateVelocityPID() {
         driveMotor.getConfigurator().apply(slot0Configs);
@@ -117,14 +117,6 @@ public class VelocitySwerveModule implements Sendable {
      * @param state the state to set the swerve modules to
      */
     public void setTuningVelocityState(SwerveModuleState state) {
-        // dead-band
-        if (Math.abs(state.speedMetersPerSecond) < 0.001) {
-            stop();
-            return;
-        }
-
-        // max turn is 90 degrees optimization
-        state = SwerveModuleState.optimize(state, getState().angle);
         configureVelocitySlots();
         updateVelocityPID();
         driveMotor.setControl(driveVelocityRequest.withVelocity(state.speedMetersPerSecond/Constants.SwerveConversions.wheelCircumference).withFeedForward(driveFeedForwardVolt));
@@ -296,6 +288,24 @@ public class VelocitySwerveModule implements Sendable {
     public double getModuleSteeringSupplyCurrent() { return steerMotor.getSupplyCurrent().getValue();}
     public double getModuleDrivingSupplyCurrent() { return driveMotor.getSupplyCurrent().getValue();}
 
+    public double getDriveFalconRPS() { return driveMotor.getVelocity().getValue(); }
+    public double getDriveWheelRPM() { return driveMotor.getVelocity().getValue() / Constants.SwerveConversions.driveGearRatio * 60; }
+    public double getDriveLinearVelocity() { return (driveMotor.getVelocity().getValue() /Constants.SwerveConversions.driveGearRatio)* Constants.SwerveConversions.wheelCircumference; }
+
+    public double getSlot0_kS() { return slot0_kS; }
+    public double getSlot0_kV() { return slot0_kV; }
+    public double getSlot0_kP() { return slot0_kP; }
+    public double getSlot0_kI() { return slot0_kI; }
+    public double getSlot0_kD() { return slot0_kD; }
+    public void setSlot0_kS(double newS) { this.slot0_kS = newS; }
+    public void setSlot0_kV(double newV) { this.slot0_kV = newV; }
+    public void setSlot0_kP(double newP) { this.slot0_kP = newP; }
+    public void setSlot0_kI(double newI) { this.slot0_kI = newI; }
+    public void setSlot0_kD(double newD) { this.slot0_kD = newD; }
+
+    public double getDriveFeedForwardVolt() { return driveFeedForwardVolt;}
+    public void setDriveFeedForwardVolt(double newFF) { this.driveFeedForwardVolt = newFF;}
+
     /**
      * Builds the sendable for shuffleboard
      * @param builder sendable builder
@@ -319,11 +329,20 @@ public class VelocitySwerveModule implements Sendable {
 /*        builder.addDoubleProperty("Steer velocity", this::getTurningVelocity, null);
         builder.addDoubleProperty("Steer relative", this::getRelativePositionDegrees, null);
         */
-            builder.addDoubleProperty("Swerve P " + getRealSide(), this::getPValue, this::setPValue);
-            builder.addDoubleProperty("Swerve I " + getRealSide(), this::getIValue, this::setIValue);
-            builder.addDoubleProperty("Swerve D " + getRealSide(), this::getDValue, this::setDValue);
+            builder.addDoubleProperty("Swerve Turning P " + getRealSide(), this::getPValue, this::setPValue);
+            builder.addDoubleProperty("Swerve Turning I " + getRealSide(), this::getIValue, this::setIValue);
+            builder.addDoubleProperty("Swerve Turning D " + getRealSide(), this::getDValue, this::setDValue);
 
-            //builder.addDoubleProperty("tuning desired velocity", this::getTuningDesiredVelocity, this::setTuningDesiredVelocity);
+
+            builder.addDoubleProperty("Driving kS" + getRealSide(), this::getSlot0_kS, this::setSlot0_kS);
+            builder.addDoubleProperty("Driving kV" + getRealSide(), this::getSlot0_kV, this::setSlot0_kV);
+            builder.addDoubleProperty("Driving kP" + getRealSide(), this::getSlot0_kP, this::setSlot0_kP);
+            builder.addDoubleProperty("Driving kI" + getRealSide(), this::getSlot0_kI, this::setSlot0_kI);
+            builder.addDoubleProperty("Driving kD" + getRealSide(), this::getSlot0_kD, this::setSlot0_kD);
+            builder.addDoubleProperty("Driving FF" + getRealSide(), this::getDriveFeedForwardVolt, this::setDriveFeedForwardVolt);
+            builder.addDoubleProperty("tuning desired velocity", this::getTuningDesiredVelocity, this::setTuningDesiredVelocity);
+            builder.addDoubleProperty("drive RPS", this::getDriveWheelRPM, null);
+            builder.addDoubleProperty("drive linear mps", this::getDriveLinearVelocity, null);
         }
     }
 

@@ -86,7 +86,7 @@ public final class Constants {
     public static double maxSteerVoltage = 4d;
     public static double maxDriveVoltage = 10d;
 
-    public static double tuningDesiredVelocity = 5d;
+    public static double tuningDesiredVelocity = 4d;
 
     // SWERVE CAN NUMBERED LIKE CARTESIAN COORDIANTE QUADRANTS
     // front right
@@ -173,7 +173,7 @@ public final class Constants {
   }
   // gear ratios and/or ticks per rev, etc.
   public static class SwerveConversions {
-    public final static double driveGearRatio = 6.12; // Checked 2/2/24 //6.75  checked 1/19/23
+    public final static double driveGearRatio = 6.72; //6.12; // Checked 2/2/24 //6.75  checked 1/19/23
     public final static double steerGearRatio = 21.4; // Checked 2/2/24 //150d/7d = 21.42857  checked 1/19
     public static final double wheelDiameter = Units.inchesToMeters(3.9);
     public static final double wheelCircumference = wheelDiameter * Math.PI;
