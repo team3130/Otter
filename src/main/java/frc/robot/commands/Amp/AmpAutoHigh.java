@@ -8,13 +8,13 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.Amp;
 
 /** An example command that uses an example subsystem. */
-public class AmpAutoLower extends InstantCommand {
+public class AmpAutoHigh extends InstantCommand {
   private final Amp amp;
 
   /**
    * @param amp The subsystem used by this command.
    */
-  public AmpAutoLower(Amp amp) {
+  public AmpAutoHigh(Amp amp) {
     this.amp = amp;
     addRequirements(amp);
   }
@@ -22,7 +22,7 @@ public class AmpAutoLower extends InstantCommand {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    amp.resetControllerLow();
+    amp.resetControllerHigh();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -35,9 +35,6 @@ public class AmpAutoLower extends InstantCommand {
   @Override
   public void end(boolean interrupted) {
     amp.ampMotorStop();
-    if (amp.getLimitSwitch()) {
-      amp.resetEncoder();
-    }
   }
 
   // Returns true when the command should end.

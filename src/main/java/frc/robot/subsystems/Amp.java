@@ -27,6 +27,7 @@ public class Amp extends SubsystemBase {
   private double outtakeAmpSpeed = -1;
   private int encoderMaxTicks = 215;
   private int highSetpoint = 200;
+  private int midSetpoint = 100;
   private int lowSetpoint = 15;
   private ProfiledPIDController ampController;
   private double P = 0;
@@ -52,40 +53,54 @@ public class Amp extends SubsystemBase {
     ampController = new ProfiledPIDController(P, I, D, constraints);
   }
 
-  public void resetControllerHigh(){
-    ampController.reset(getEncoderPosition());
-    ampController.setGoal(highSetpoint);
-    ampController.setTolerance(15);
-    ampController.setPID(P, I, D);
-  }
   public boolean getHasZeroed(){
     return hasZeroed;
   }
   public void setHasZeroedTrue(){
     hasZeroed = true;
   }
-  public void setHasZeroedFalse(){
-    hasZeroed = false;
+
+  public void resetControllerHigh(){
+    ampController.reset(getEncoderPosition());
+    ampController.setGoal(highSetpoint);
+    ampController.setTolerance(15);
+    ampController.setPID(P, I, D);
   }
-  public int getHighSetpoint(){
-    return highSetpoint;
-  }
-  public int getLowSetpoint(){
-    return lowSetpoint;
-  }
-  public void setHighSetpoint(long set){
-    highSetpoint = (int) set;
+  public void resetControllerMid(){
+    ampController.reset(getEncoderPosition());
+    ampController.setGoal(midSetpoint);
+    ampController.setTolerance(15);
+    ampController.setPID(P, I, D);
   }
 
-  public void setLowSetpoint(long set){
-    lowSetpoint = (int) set;
-  }
   public void resetControllerLow(){
     ampController.reset(getEncoderPosition());
     ampController.setGoal(lowSetpoint);
     ampController.setTolerance(15);
     ampController.setPID(P, I, D);
   }
+
+  public int getHighSetpoint(){
+    return highSetpoint;
+  }
+  public int getMidSetpoint() { return midSetpoint; }
+  public int getLowSetpoint(){
+    return lowSetpoint;
+  }
+
+
+  public void setHighSetpoint(long set){
+    highSetpoint = (int) set;
+  }
+  public void setMidSetpoint(long set){
+    midSetpoint = (int) set;
+  }
+  public void setLowSetpoint(long set){
+    lowSetpoint = (int) set;
+  }
+
+
+
   public void runController(){
     ampController.calculate(getEncoderPosition());
   }
@@ -165,6 +180,7 @@ public class Amp extends SubsystemBase {
       builder.addDoubleProperty("Encoder Position", this::getEncoderPosition, null);
       builder.addIntegerProperty("high setpoint", this::getHighSetpoint, this::setHighSetpoint);
       builder.addIntegerProperty("low setpoint", this::getLowSetpoint, this::setLowSetpoint);
+      builder.addIntegerProperty("mid setpoint", this::getMidSetpoint, this::setMidSetpoint);
       builder.addBooleanProperty("Is At Setpoint", this::isAtSetpoint, null);
       builder.addBooleanProperty("has zeroed", this::getHasZeroed, null);
     }
