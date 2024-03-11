@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
@@ -48,6 +49,12 @@ public class SwerveModule implements Sendable {
         driveMotor.getConfigurator().apply(new TalonFXConfiguration());
         driveMotor.setNeutralMode(NeutralModeValue.Brake);
         driveMotor.setInverted(false);
+
+        driveMotor.getConfigurator().apply((new CurrentLimitsConfigs().withSupplyCurrentLimitEnable(true).
+                withSupplyCurrentThreshold(40).withSupplyTimeThreshold(0)), 0);
+
+        steerMotor.getConfigurator().apply((new CurrentLimitsConfigs().withSupplyCurrentLimitEnable(true).
+                withSupplyCurrentThreshold(20).withSupplyTimeThreshold(0)), 0);
 
         turningPidController.enableContinuousInput(-Math.PI, Math.PI); // wrap for circles
         turningPidController.setTolerance(0.0025, 0.05); // at position tolerance
