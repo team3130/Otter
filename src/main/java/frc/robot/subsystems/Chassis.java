@@ -9,6 +9,7 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -43,9 +44,16 @@ public class Chassis extends SubsystemBase {
     private final GenericEntry n_fieldOrriented; // comp network table entry for whether field oriented drivetrain
     private double targetMaxVelo = Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond; //TODO real
     private double targetMaxAcc = Constants.Swerve.kMaxAccelerationDrive; //TODO real
+    private double idealShotDist = 2;
 
 
 
+    private Translation2d originToRobotVector = new Translation2d(0, 0);
+    private Translation2d robotToAprilTagVector = new Translation2d(0, 0);
+
+
+    private Translation2d originToAprilTagVector = new Translation2d(0, 0);
+    private Rotation2d theta = new Rotation2d(0);
     /**
      * Makes a chassis that starts at 0, 0, 0
      * the limelight object that we can use for updating odometry
@@ -78,6 +86,78 @@ public class Chassis extends SubsystemBase {
         Shuffleboard.getTab("Comp").add("field", field);
         n_fieldOrriented = Shuffleboard.getTab("Comp").add("field orriented", false).getEntry();
     }
+
+    // sets the coordinates of the current april tag-- works only if robot odometry is working and april tag is being looked at
+    public void setOriginToAprilTagVector(double aprilTagDistance, double aprilTagYaw) {
+        robotToAprilTagVector = new Translation2d(aprilTagDistance * Math.sin(Math.PI - aprilTagYaw), aprilTagDistance * Math.cos(Math.PI - aprilTagDistance));
+        originToAprilTagVector = robotToAprilTagVector.plus(originToRobotVector);
+
+    }
+
+
+    // returns the "correct" position of the robot. If the robot gets hit and odometry is messed up, we can use previous odometry data and april tag data to correct our coordinates (robot relative)
+    public Translation2d getOriginToRobotVector() {
+        return originToAprilTagVector.minus(robotToAprilTagVector);
+    }
+
+
+    // returns the position of the april tag relative to the robot
+    public Translation2d getRobotToAprilTagVector() {
+        return originToAprilTagVector.minus(originToRobotVector);
+    }
+
+
+    // returns the position of the last april tag seen
+    public Translation2d getOriginToAprilTagVector() {
+        return originToAprilTagVector;
+    }
+
+    public double getIdealShotDist() {
+        return idealShotDist;
+    }
+    public void setIdealShotDist(double dist){
+        idealShotDist = dist;
+    }
+
+    // This method generates the angle needed to turn to face a specific target without using a camera
+// - needs to be paired with Giorgia's face target code or needs to start with the camera facing the target
+    public double getAngleToFaceTarget() {
+        // the vector from the position that we are at currently to the april tag (target)
+        originToRobotVector = new Translation2d(getX(), getY());
+        robotToAprilTagVector = getRobotToAprilTagVector();
+        // the angle that we need to turn to in order to face the target
+        theta = robotToAprilTagVector.getAngle();
+        return theta.getRadians();
+    }
+
+
+    // shuffleboard setter - turns robot chassis to specified setpoint in degrees
+    public void setThetaDegrees(double newTheta) {
+        theta = Rotation2d.fromDegrees(newTheta);
+    }
+    public boolean isAtWAngle(){
+        return cameraSubsystem.targetControllerDone();
+    }
+    public boolean isAtWDistance(){
+        return (cameraSubsystem.isInLowShooterRange() || cameraSubsystem.isInMidShooterRange());
+    }
+
+    // shuffleboard getter - returns the robot's desired rotation towards a target in degrees
+    public double getThetaDegrees() {
+        return theta.getRadians();
+    }
+
+
+    //shuffleboard getter - returns the robot's rotation (holonomic) from odometry in degrees
+    public double getRotationDegrees() {
+        return getRotation2d().getDegrees();
+    }
+
+
+    public void correctOdometry() {
+        originToRobotVector = getOriginToRobotVector();
+    }
+
 
 
 
@@ -346,6 +426,9 @@ public class Chassis extends SubsystemBase {
         builder.addDoubleProperty("Y position", this::getY, null);
         builder.addDoubleProperty("rotation", this::getYaw, null);
         builder.addDoubleProperty("max speed read", this::getMaxSpeedRead, null);
+        builder.addBooleanProperty("is at shootable angle", this::isAtWAngle, null);
+        builder.addBooleanProperty("is at shootable distance", this::isAtWDistance, null);
+        builder.addDoubleProperty("ideal shot dist", this::getIdealShotDist, null);
     }
 
     /**

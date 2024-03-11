@@ -26,9 +26,13 @@ public class CameraSubsystem extends SubsystemBase {
   protected PhotonCamera camera = new PhotonCamera("cam");
   private static final ShuffleboardTab tab = Shuffleboard.getTab("PhotonCamera");
   AprilTagFieldLayout aprilTagFieldLayout;
+  private double camHeight = 1;
+  private double camOffest = 0;
+  private double camPitch = 0;
+  private double targetHeight = 1.5;
 
   Pose2d targetPose = new Pose2d(16.58, 5.55, Rotation2d.fromRadians(0));
-  Transform2d cameraToRobot = new Transform2d(3, 0, Rotation2d.fromRadians(0));
+  Transform2d cameraToRobot = new Transform2d(camOffest, camHeight, Rotation2d.fromRadians(0));
   private PhotonTrackedTarget CorrectTarget =new PhotonTrackedTarget(0,0,0, 0, -1, new Transform3d(), new Transform3d(), 0, new ArrayList<>(), new ArrayList<>());
   private double previousPipelineTimestamp = 0;
   private int redSpeakerTargetFiducialID;
@@ -38,6 +42,10 @@ public class CameraSubsystem extends SubsystemBase {
   private boolean isTryingToTarget = false;
   private int fiducialID = 0;
   private PIDController targetController;
+  private PIDController snapController;
+  private  double snapP = 10d;
+  private  double snapI = 0d;
+  private  double snapD = 0d;
   private  double targetP = 10d;
   private  double targetI = 0d;
   private  double targetD = 0d;
@@ -67,11 +75,15 @@ public class CameraSubsystem extends SubsystemBase {
 
 
       targetController = new PIDController(targetP, targetI, targetD);
+      snapController = new PIDController(snapP, snapI, snapD);
 
     }
 
   public boolean targetControllerDone(){
     return targetController.atSetpoint();
+  }
+  public boolean snapControllerDone(){
+    return snapController.atSetpoint();
   }
   public boolean isTryingToTarget(){
     return isTryingToTarget;
@@ -91,6 +103,30 @@ public class CameraSubsystem extends SubsystemBase {
 
   public double getTargetP() {
     return targetP;
+  }
+
+  public void setSnapP(double snapP) {
+    this.snapP = snapP;
+  }
+
+  public double getSnapP() {
+    return snapP;
+  }
+
+  public void setSnapI(double snapI) {
+    this.snapI = snapI;
+  }
+
+  public double getSnapI(){
+    return snapI;
+  }
+
+  public void setSnapD(double snapD) {
+    this.snapD = snapD;
+  }
+
+  public double getSnapD(){
+    return snapD;
   }
 
   public double getTargetI() {
@@ -123,13 +159,15 @@ public class CameraSubsystem extends SubsystemBase {
   }
 
 
-  public double goToTargetPower() {
-    if(hasTarget()){
-      return targetController.calculate(getTargetYaw(), 0);
-    }
-    else {
-      return 0;
-    }
+  public double goToTargetPower(double robot, double target) {
+      return targetController.calculate(robot, target);
+  }
+
+  public double snapX(double robot, double target) {
+      return targetController.calculate(robot, target);
+  }
+  public double snapY(double robot, double target) {
+      return targetController.calculate(robot, target);
   }
   public PhotonTrackedTarget getTarget() {
     if (!hasTarget()) {
@@ -183,6 +221,16 @@ public class CameraSubsystem extends SubsystemBase {
     }
     return -400d;
   }
+  public double getTargetPitch() {
+    if (!hasTarget()) {
+      return -400.0;
+    } else {
+      if (CorrectTarget != null && CorrectTarget.getPitch() != -400.0) {
+        return Math.toRadians(CorrectTarget.getPitch());
+      }
+    }
+    return -400d;
+  }
   public double getTargetDegrees() {
     return Math.toDegrees(getTargetYaw());
   }
@@ -193,16 +241,9 @@ public class CameraSubsystem extends SubsystemBase {
     builder.addDoubleProperty("targetYaw", this::getTargetDegrees, null);
     builder.addIntegerProperty("fiducial", this::getCorrectTargetID, null);
 
-    builder.addDoubleProperty("target P", this::getTargetP, this::setTargetP);
-    builder.addDoubleProperty("target I", this::getTargetI, this::setTargetI);
-    builder.addDoubleProperty("target D", this::getTargetD, this::setTargetD);
     builder.addBooleanProperty("is targeting", this::isTryingToTarget, null);
-    builder.addDoubleProperty("target F", this::getXTargetV, this::setXTargetV);
-    builder.addDoubleProperty("target YF", this::getYTargetV, this::setYTargetV);
-    builder.addDoubleProperty("target XF", this::getXTargetV, this::setXTargetV);
-
-
-
+    builder.addDoubleProperty("target dist", this::getDistToTarget, null);
+    builder.addDoubleProperty("target pitch", this::getTargetPitch, null);
   }
 
   // This method will be called once per scheduler run
@@ -221,6 +262,34 @@ public class CameraSubsystem extends SubsystemBase {
   }
   public void setCurrentTag(PhotonTrackedTarget target){
     CorrectTarget = target;
+  }
+  public double getDistToTarget(){
+    if (CorrectTarget.getPoseAmbiguity()<0.2){
+      return PhotonUtils.calculateDistanceToTargetMeters(camHeight, targetHeight, camPitch, getTargetPitch());
+    }
+    else {return 0;}
+  }
+  public double getXToTarget(){
+    if (CorrectTarget.getPoseAmbiguity()<0.2){
+      return PhotonUtils.estimateCameraToTargetTranslation(getDistToTarget(), Rotation2d.fromRadians(getTargetYaw())).getX();
+    }
+    else {return 0;}
+  }
+  public double getYToTarget(){
+    if (CorrectTarget.getPoseAmbiguity()<0.2){
+      return PhotonUtils.estimateCameraToTargetTranslation(getDistToTarget(), Rotation2d.fromRadians(getTargetYaw())).getY();
+    }
+    else {return 0;}
+  }
+  public boolean isInLowShooterRange(){//put shooter down and youre good to index
+    if (getDistToTarget()<2){
+      return true;
+    } else return false;
+  }
+  public boolean isInMidShooterRange(){ //put shooter up and youre good to index
+    if (getDistToTarget()>2 && getDistToTarget()<4){
+      return true;
+    } else return false;
   }
 
   @Override

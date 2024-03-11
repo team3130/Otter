@@ -45,6 +45,8 @@ public class RobotContainer {
 
   }
 
+  private boolean canShoot = false;
+
   /** adds the subsystem {@link edu.wpi.first.util.sendable.Sendable} objects to a 'Subsystems' shuffleboard tab */
   public void exportShuffleBoardData() {
     if (Constants.debugMode) {
@@ -71,6 +73,11 @@ public class RobotContainer {
     new JoystickButton(driverGamepad, Constants.Buttons.LST_BTN_A).whileTrue(new TargetingPressed(cameraSubsystem));
   }
 
+  public void checkIfCanShoot(){
+    if((cameraSubsystem.isInMidShooterRange()||cameraSubsystem.isInLowShooterRange()) && chassis.isAtWAngle()){ //shooter is at setpoint
+      canShoot= true;
+    } else canShoot= false;
+  }
   /*
   Sendable Commands
    */
