@@ -50,8 +50,8 @@ public class SnapToArc extends Command {
     @Override
     public void execute() {
         double theta = 0.0;
-        double y = ;
-        double x = ;
+        double y = 0.0;
+        double x = 0.0;
 
 
         if (camera.hasTarget()) {

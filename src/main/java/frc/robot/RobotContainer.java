@@ -43,6 +43,8 @@ public class RobotContainer {
   private final XboxController driverController = new XboxController(0);
   private final XboxController operatorController = new XboxController(1);
   private final TeleopDrive teleopDrive = new TeleopDrive(chassis,driverController,cameraSubsystem);
+
+  private boolean canShoot = false;
  // private final SendableChooser<Command> autoChooser;
 
   // container for the robot containing subsystems, OI devices, and commands
@@ -53,7 +55,6 @@ public class RobotContainer {
 
     configureBindings();
 
-    private boolean canShoot = false;
     // Default commands running in the background when other commands not scheduled
     chassis.setDefaultCommand(new TeleopDrive(chassis, driverController, cameraSubsystem));
 

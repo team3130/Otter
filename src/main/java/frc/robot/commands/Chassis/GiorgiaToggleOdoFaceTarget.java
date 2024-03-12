@@ -25,7 +25,7 @@ public class GiorgiaToggleOdoFaceTarget extends Command {
   private final XboxController xboxController;
   private final CameraSubsystem camera;
   private final SlewRateLimiter xLimiter, yLimiter;
-  public ToggleOdoFaceTarget(Chassis chassis, XboxController xboxController, CameraSubsystem camera) {
+  public GiorgiaToggleOdoFaceTarget(Chassis chassis, XboxController xboxController, CameraSubsystem camera) {
     this.chassis = chassis;
     this.camera = camera;
     this.xboxController = xboxController;

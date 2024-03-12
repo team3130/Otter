@@ -70,9 +70,6 @@ public class Chassis extends SubsystemBase {
 
     private Translation2d originToAprilTagVector = new Translation2d(0, 0);
     private Rotation2d theta = new Rotation2d(0);
-
-    private Translation2d originToAprilTagVector;
-    private Rotation2d theta = new Rotation2d(0);
     private boolean isFaceTargetting;
     private final CameraSubsystem cameraSubsystem = new CameraSubsystem();
 
@@ -284,11 +281,6 @@ public class Chassis extends SubsystemBase {
         return originToAprilTagVector.minus(originToRobotVector);
     }
 
-
-    // returns the position of the last april tag seen
-    public Translation2d getOriginToAprilTagVector() {
-        return originToAprilTagVector;
-    }
 
     public double getIdealShotDist() {
         return idealShotDist;
