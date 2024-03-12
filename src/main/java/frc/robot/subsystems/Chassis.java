@@ -6,12 +6,7 @@
 package frc.robot.subsystems;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
-import com.pathplanner.lib.util.PIDConstants;
-import com.pathplanner.lib.util.ReplanningConfig;
 
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -20,8 +15,6 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.math.kinematics.*;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.Timer;
@@ -31,7 +24,6 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.commands.Autos;
 import frc.robot.RobotContainer;
 import frc.robot.sensors.Navx;
 import frc.robot.swerve.SwerveModule;
@@ -431,7 +423,7 @@ public class Chassis extends SubsystemBase {
     public void setFaceTargetting(boolean newIsFaceTargetting){
         isFaceTargetting = newIsFaceTargetting;
     }
-    public boolean getFaceTargetting(){
+    public boolean isVectorFaceTargetting(){
         return isFaceTargetting;
     }
 
@@ -459,7 +451,7 @@ public class Chassis extends SubsystemBase {
         builder.addDoubleProperty("max speed read", this::getMaxSpeedRead, null);
         builder.addStringProperty("odometry pose2d", this::getOdometry, null);
         //builder.addDoubleProperty("Target Distance", this::getInitialAprilTagDistance, null);
-        builder.addBooleanProperty("IsFaceTargetToggled", this::getFaceTargetting, null);
+        builder.addBooleanProperty("IsFaceTargetToggled", this::isVectorFaceTargetting, null);
         builder.addDoubleProperty("angle to face target", this::getTheta, null);
         builder.addDoubleProperty("rotation from odometry (degrees)", this::getRotationFromOdo, this::setTheta );
         builder.addBooleanProperty("is at shootable angle", this::isAtWAngle, null);
@@ -485,13 +477,13 @@ public class Chassis extends SubsystemBase {
     /*This method generates the angle needed to turn to face a specific target without using a camera
        - needs to be paired with Giorgia's face target code or needs to start with the camera facing the target
      */
-    public void makeAngleToFaceTarget() {
+    public void vectorFaceAprilTag() {
         originToAprilTagVector = new Translation2d(3, 0);
         // the vector from the position that we are at currently to the april tag (target)
-        Translation2d currentPositionVector = new Translation2d(getX(), getY());
-        Translation2d currentPositionToAprilTagVector = originToAprilTagVector.minus(currentPositionVector);
+        Translation2d currentRobotPosition = new Translation2d(getX(), getY());
+        Translation2d robotPositionToAprilTagVector = originToAprilTagVector.minus(currentRobotPosition);
         // the angle that we need to turn to in order to face the target
-        theta = currentPositionToAprilTagVector.getAngle();
+        theta = robotPositionToAprilTagVector.getAngle();
     }
 
     public double getTheta() {

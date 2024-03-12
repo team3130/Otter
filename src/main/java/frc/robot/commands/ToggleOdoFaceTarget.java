@@ -5,10 +5,8 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.commands.Chassis.TeleopDrive;
 import frc.robot.subsystems.CameraSubsystem;
 import frc.robot.subsystems.Chassis;
-import frc.robot.subsystems.ExampleSubsystem;
 
 /** An example command that uses an example subsystem. */
 public class ToggleOdoFaceTarget extends Command {
@@ -30,8 +28,8 @@ public class ToggleOdoFaceTarget extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    chassis.setFaceTargetting(!chassis.getFaceTargetting());
-    chassis.makeAngleToFaceTarget();
+    chassis.setFaceTargetting(!chassis.isVectorFaceTargetting());
+    chassis.vectorFaceAprilTag();
     camera.resetTargetController();
   }
 
@@ -42,7 +40,7 @@ public class ToggleOdoFaceTarget extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    System.out.println(chassis.getFaceTargetting());
+    System.out.println(chassis.isVectorFaceTargetting());
 
   }
 

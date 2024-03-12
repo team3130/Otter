@@ -21,13 +21,19 @@ import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
+import java.util.ArrayList;
+
 
 public class CameraSubsystem extends SubsystemBase {
   protected PhotonCamera camera = new PhotonCamera("cam");
   private static final ShuffleboardTab tab = Shuffleboard.getTab("PhotonCamera");
   AprilTagFieldLayout aprilTagFieldLayout;
   Pose2d targetPose = new Pose2d(16.58, 5.55, Rotation2d.fromRadians(0));
-  Transform2d cameraToRobot = new Transform2d(3, 0, Rotation2d.fromRadians(0));
+  // Umars: Transform2d cameraToRobot = new Transform2d(3, 0, Rotation2d.fromRadians(0));
+
+  private PhotonTrackedTarget CorrectTarget = new PhotonTrackedTarget(0,0,0, 0, -1,
+          new Transform3d(), new Transform3d(), 0, new ArrayList<>(), new ArrayList<>());
+
   private double previousPipelineTimestamp = 0;
   private int speakerTargetFiducialID;
   private int ampTargetFiducialID;
@@ -51,6 +57,10 @@ public class CameraSubsystem extends SubsystemBase {
   private double camOffest = 0;
   private double camPitch = 0;
   private double targetHeight = 1.5;
+
+  // kv = (goal - current holonomic) * constant
+
+
   Transform2d cameraToRobot = new Transform2d(camOffest, camHeight, Rotation2d.fromRadians(0));
 
 
@@ -78,6 +88,8 @@ public class CameraSubsystem extends SubsystemBase {
 
     snapController = new PIDController(snapP, snapI, snapD);
   }
+
+
   public boolean targetControllerDone(){
     return targetController.atSetpoint();
   }
@@ -194,7 +206,7 @@ public class CameraSubsystem extends SubsystemBase {
 
 
   public double getTargetPitch() {
-    if (!hasTarget()) {zz
+    if (!hasTarget()) {
       return -400.0;
     } else {
       if (CorrectTarget != null && CorrectTarget.getPitch() != -400.0) {
