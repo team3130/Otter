@@ -52,6 +52,8 @@ public class RobotContainer {
     exportShuffleBoardData(); // export ShuffleBoardData
 
     configureBindings();
+
+    private boolean canShoot = false;
     // Default commands running in the background when other commands not scheduled
     chassis.setDefaultCommand(new TeleopDrive(chassis, driverController, cameraSubsystem));
 
@@ -70,6 +72,13 @@ public class RobotContainer {
     return new PathPlannerAuto("Pull out");
   }
   */
+
+
+  public void checkIfCanShoot(){
+    if((cameraSubsystem.isInMidShooterRange()||cameraSubsystem.isInLowShooterRange()) && chassis.isAtWAngle()){ //shooter is at setpoint
+      canShoot= true;
+    } else canShoot= false;
+  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

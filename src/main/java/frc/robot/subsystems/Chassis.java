@@ -59,6 +59,18 @@ public class Chassis extends SubsystemBase {
 //    private double initialAprilTagDistance = 0d;
 //    private double initialAprilTagAngle = 0d;
 //    private Translation2d initialAprilTagVector;
+
+    private double idealShotDist = 2;
+
+
+
+    private Translation2d originToRobotVector = new Translation2d(0, 0);
+    private Translation2d robotToAprilTagVector = new Translation2d(0, 0);
+
+
+    private Translation2d originToAprilTagVector = new Translation2d(0, 0);
+    private Rotation2d theta = new Rotation2d(0);
+
     private Translation2d originToAprilTagVector;
     private Rotation2d theta = new Rotation2d(0);
     private boolean isFaceTargetting;
@@ -253,6 +265,78 @@ public class Chassis extends SubsystemBase {
         }
     }
 
+    // sets the coordinates of the current april tag-- works only if robot odometry is working and april tag is being looked at
+    public void setOriginToAprilTagVector(double aprilTagDistance, double aprilTagYaw) {
+        robotToAprilTagVector = new Translation2d(aprilTagDistance * Math.sin(Math.PI - aprilTagYaw), aprilTagDistance * Math.cos(Math.PI - aprilTagDistance));
+        originToAprilTagVector = robotToAprilTagVector.plus(originToRobotVector);
+
+    }
+
+
+    // returns the "correct" position of the robot. If the robot gets hit and odometry is messed up, we can use previous odometry data and april tag data to correct our coordinates (robot relative)
+    public Translation2d getOriginToRobotVector() {
+        return originToAprilTagVector.minus(robotToAprilTagVector);
+    }
+
+
+    // returns the position of the april tag relative to the robot
+    public Translation2d getRobotToAprilTagVector() {
+        return originToAprilTagVector.minus(originToRobotVector);
+    }
+
+
+    // returns the position of the last april tag seen
+    public Translation2d getOriginToAprilTagVector() {
+        return originToAprilTagVector;
+    }
+
+    public double getIdealShotDist() {
+        return idealShotDist;
+    }
+    public void setIdealShotDist(double dist){
+        idealShotDist = dist;
+    }
+
+    // This method generates the angle needed to turn to face a specific target without using a camera
+// - needs to be paired with Giorgia's face target code or needs to start with the camera facing the target
+    public double getAngleToFaceTarget() {
+        // the vector from the position that we are at currently to the april tag (target)
+        originToRobotVector = new Translation2d(getX(), getY());
+        robotToAprilTagVector = getRobotToAprilTagVector();
+        // the angle that we need to turn to in order to face the target
+        theta = robotToAprilTagVector.getAngle();
+        return theta.getRadians();
+    }
+
+
+    // shuffleboard setter - turns robot chassis to specified setpoint in degrees
+    public void setThetaDegrees(double newTheta) {
+        theta = Rotation2d.fromDegrees(newTheta);
+    }
+    public boolean isAtWAngle(){
+        return cameraSubsystem.targetControllerDone();
+    }
+    public boolean isAtWDistance(){
+        return (cameraSubsystem.isInLowShooterRange() || cameraSubsystem.isInMidShooterRange());
+    }
+
+    // shuffleboard getter - returns the robot's desired rotation towards a target in degrees
+    public double getThetaDegrees() {
+        return theta.getRadians();
+    }
+
+
+    //shuffleboard getter - returns the robot's rotation (holonomic) from odometry in degrees
+    public double getRotationDegrees() {
+        return getRotation2d().getDegrees();
+    }
+
+
+    public void correctOdometry() {
+        originToRobotVector = getOriginToRobotVector();
+    }
+
+
     /**
      * periodic call to update odometry from encoders
      * Also provides a timestamp that the update occurred
@@ -386,7 +470,11 @@ public class Chassis extends SubsystemBase {
         builder.addBooleanProperty("IsFaceTargetToggled", this::getFaceTargetting, null);
         builder.addDoubleProperty("angle to face target", this::getTheta, null);
         builder.addDoubleProperty("rotation from odometry (degrees)", this::getRotationFromOdo, this::setTheta );
+        builder.addBooleanProperty("is at shootable angle", this::isAtWAngle, null);
+        builder.addBooleanProperty("is at shootable distance", this::isAtWDistance, null);
+        builder.addDoubleProperty("ideal shot dist", this::getIdealShotDist, null);
     }
+
 
     /**
      * AUTONOMOUS PATHPLANNER METHODS

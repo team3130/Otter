@@ -38,8 +38,20 @@ public class CameraSubsystem extends SubsystemBase {
   private double targetI = 0d;
   private double targetD = 0d;
 
+
+  private PIDController snapController;
+  private  double snapP = 10d;
+  private  double snapI = 0d;
+  private  double snapD = 0d;
+
   private double XtargetV = 0.2;
   private double YtargetF = 0.8;
+
+  private double camHeight = 1;
+  private double camOffest = 0;
+  private double camPitch = 0;
+  private double targetHeight = 1.5;
+  Transform2d cameraToRobot = new Transform2d(camOffest, camHeight, Rotation2d.fromRadians(0));
 
 
   /**
@@ -63,9 +75,15 @@ public class CameraSubsystem extends SubsystemBase {
     }
 
     targetController = new PIDController(targetP, targetI, targetD);
+
+    snapController = new PIDController(snapP, snapI, snapD);
   }
   public boolean targetControllerDone(){
     return targetController.atSetpoint();
+  }
+
+  public boolean snapControllerDone(){
+    return snapController.atSetpoint();
   }
   public void setTryingToTargetTrue(){
     isTryingToTarget=true;
@@ -78,6 +96,32 @@ public class CameraSubsystem extends SubsystemBase {
   }
   public void setYTargetV(double newYF){
     YtargetF = newYF ;
+  }
+
+
+
+  public void setSnapP(double snapP) {
+    this.snapP = snapP;
+  }
+
+  public double getSnapP() {
+    return snapP;
+  }
+
+  public void setSnapI(double snapI) {
+    this.snapI = snapI;
+  }
+
+  public double getSnapI(){
+    return snapI;
+  }
+
+  public void setSnapD(double snapD) {
+    this.snapD = snapD;
+  }
+
+  public double getSnapD(){
+    return snapD;
   }
 
 
@@ -128,6 +172,17 @@ public class CameraSubsystem extends SubsystemBase {
     }
   }
 
+  public double goToTargetPower(double robot, double target) {
+    return targetController.calculate(robot, target);
+  }
+
+  public double snapX(double robot, double target) {
+    return targetController.calculate(robot, target);
+  }
+  public double snapY(double robot, double target) {
+    return targetController.calculate(robot, target);
+  }
+
   public PhotonTrackedTarget getTarget() {
     if (!hasTarget()) {
       return null;
@@ -135,6 +190,18 @@ public class CameraSubsystem extends SubsystemBase {
       PhotonPipelineResult result = camera.getLatestResult();
       return result.getBestTarget();
     }
+  }
+
+
+  public double getTargetPitch() {
+    if (!hasTarget()) {
+      return -400.0;
+    } else {
+      if (CorrectTarget != null && CorrectTarget.getPitch() != -400.0) {
+        return Math.toRadians(CorrectTarget.getPitch());
+      }
+    }
+    return -400d;
   }
 
   public void resetTargetController() {
@@ -205,7 +272,8 @@ public class CameraSubsystem extends SubsystemBase {
     builder.addDoubleProperty("target YF", this::getYTargetV, this::setYTargetV);
     builder.addDoubleProperty("target XF", this::getXTargetV, this::setXTargetV);
 
-
+    builder.addDoubleProperty("target dist", this::getDistToTarget, null);
+    builder.addDoubleProperty("target pitch", this::getTargetPitch, null);
 
   }
 
@@ -220,6 +288,37 @@ public class CameraSubsystem extends SubsystemBase {
       fiducialID = result.getBestTarget().getFiducialId();
     }
   }
+
+
+  public double getDistToTarget(){
+    if (CorrectTarget.getPoseAmbiguity()<0.2){
+      return PhotonUtils.calculateDistanceToTargetMeters(camHeight, targetHeight, camPitch, getTargetPitch());
+    }
+    else {return 0;}
+  }
+  public double getXToTarget(){
+    if (CorrectTarget.getPoseAmbiguity()<0.2){
+      return PhotonUtils.estimateCameraToTargetTranslation(getDistToTarget(), Rotation2d.fromRadians(getTargetYaw())).getX();
+    }
+    else {return 0;}
+  }
+  public double getYToTarget(){
+    if (CorrectTarget.getPoseAmbiguity()<0.2){
+      return PhotonUtils.estimateCameraToTargetTranslation(getDistToTarget(), Rotation2d.fromRadians(getTargetYaw())).getY();
+    }
+    else {return 0;}
+  }
+  public boolean isInLowShooterRange(){//put shooter down and youre good to index
+    if (getDistToTarget()<2){
+      return true;
+    } else return false;
+  }
+  public boolean isInMidShooterRange(){ //put shooter up and youre good to index
+    if (getDistToTarget()>2 && getDistToTarget()<4){
+      return true;
+    } else return false;
+  }
+
 
   @Override
   public void simulationPeriodic() {

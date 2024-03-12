@@ -73,6 +73,12 @@ public class TeleopDrive extends Command {
         theta = -camera.targetController.calculate(chassis.getRotation2d().getRadians(), Math.toRadians(chassis.getTheta()));
       }
 
+      if (m_camera.isTryingToTarget() && (thetaJoystick != 0d)){
+        theta = m_camera.goToTargetPower(m_chassis.getRotation2d().getRadians(), m_camera.getTargetYaw());
+      } else {
+        theta = thetaJoystick;
+        theta = Math.abs(theta) > Constants.Swerve.kDeadband ? theta : 0.0;
+
 
       // square the inputs
       y = y * Math.abs(y);
