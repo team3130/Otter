@@ -56,6 +56,12 @@ public class SwerveModule implements Sendable {
         steerMotor.getConfigurator().apply((new CurrentLimitsConfigs().withSupplyCurrentLimitEnable(true).
                 withSupplyCurrentThreshold(20).withSupplyTimeThreshold(0)), 0);
 
+        driveMotor.getConfigurator().apply((new CurrentLimitsConfigs().withStatorCurrentLimitEnable(true).
+                withStatorCurrentLimit(40).withSupplyTimeThreshold(0)), 0);
+
+        steerMotor.getConfigurator().apply((new CurrentLimitsConfigs().withStatorCurrentLimitEnable(true).
+                withStatorCurrentLimit(20).withSupplyTimeThreshold(0)), 0);
+
         turningPidController.enableContinuousInput(-Math.PI, Math.PI); // wrap for circles
         turningPidController.setTolerance(0.0025, 0.05); // at position tolerance
 
