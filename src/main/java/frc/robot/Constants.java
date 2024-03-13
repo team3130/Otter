@@ -82,21 +82,21 @@ public final class Constants {
     public static double maxDriveVoltage = 10d;
 
     // SWERVE CAN NUMBERED LIKE CARTESIAN COORDIANTE QUADRANTS
-    // front left
+    // front right
     public final static int MOD_ONE_STEER = 2;
     public final static int MOD_ONE_DRIVE = 3;
 
-    // back left
+    // back right
     public final static int MOD_TWO_STEER = 4;
     public final static int MOD_TWO_DRIVE = 5;
 
-    // back right
+    // back left
     public final static int MOD_THREE_STEER = 6;
     public final static int MOD_THREE_DRIVE = 7;
 
     public final static int MOD_FOUR_STEER = 8;
     public final static int MOD_FOUR_DRIVE = 9;
-    // front right
+    // front left
     public final static int MOD_ONE_CANCODER = 10;
     public final static int MOD_TWO_CANCODER = 11;
     public final static int MOD_THREE_CANCODER = 12;
