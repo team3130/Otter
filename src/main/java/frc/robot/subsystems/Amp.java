@@ -44,10 +44,20 @@ public class Amp extends SubsystemBase {
     ampSpinningMotor = new WPI_TalonSRX(Constants.CAN.ampSpinMotor);
 
     ampLiftingMotor.configFactoryDefault();
+    ampSpinningMotor.configFactoryDefault();
+    ampSpinningMotor.configVoltageCompSaturation(3);
     ampLiftingMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
-    ampLiftingMotor.configVoltageCompSaturation(8);
     ampLiftingMotor.setInverted(false);
     ampSpinningMotor.setInverted(false);
+
+    ampSpinningMotor.enableCurrentLimit(true);
+    ampSpinningMotor.configContinuousCurrentLimit(20);
+    ampSpinningMotor.configPeakCurrentLimit(0);
+
+    ampLiftingMotor.enableCurrentLimit(true);
+    ampLiftingMotor.configContinuousCurrentLimit(20);
+    ampLiftingMotor.configPeakCurrentLimit(0);
+
 
     constraints = new TrapezoidProfile.Constraints(maxVelo, maxAcc);
     ampController = new ProfiledPIDController(P, I, D, constraints);
@@ -114,8 +124,11 @@ public class Amp extends SubsystemBase {
   public void outtakeAmp() {
     ampSpinningMotor.set(ControlMode.PercentOutput, outtakeAmpSpeed);
   }
-  public void ampMotorStop() {
+  public void ampSpinningMotorStop() {
     ampSpinningMotor.set(ControlMode.PercentOutput, 0);
+  }
+  public void ampLiftingMotorStop() {
+    ampLiftingMotor.set(ControlMode.PercentOutput, 0);
   }
   public void resetEncoder(){
     ampLiftingMotor.setSelectedSensorPosition(0);

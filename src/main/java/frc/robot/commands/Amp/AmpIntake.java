@@ -39,7 +39,7 @@ public class AmpIntake extends Command {
     /*timer.reset();
     timer.start();
     amp.rumble(timer);*/
-    amp.ampMotorStop();
+    amp.ampSpinningMotorStop();
   }
 
   // Returns true when the command should end.

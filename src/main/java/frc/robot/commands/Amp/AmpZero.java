@@ -32,7 +32,7 @@ public class AmpZero extends InstantCommand {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    amp.ampMotorStop();
+    amp.ampLiftingMotorStop();
     if (isFinished()){
       amp.resetEncoder();
       amp.setHasZeroedTrue();
