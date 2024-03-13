@@ -30,8 +30,8 @@ public class Indexer extends SubsystemBase {
     indexer.configFactoryDefault();
     indexer.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
     indexer.setNeutralMode(NeutralMode.Coast);
-    indexer.configVoltageCompSaturation(indexerVoltageCompensation);
     indexer.enableVoltageCompensation(true);
+    indexer.configVoltageCompSaturation(indexerVoltageCompensation);
 
     indexer.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
     //currLimitConfigs.currentLimit = 30;
