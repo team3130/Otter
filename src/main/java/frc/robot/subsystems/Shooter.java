@@ -13,6 +13,7 @@ import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -22,6 +23,9 @@ public class Shooter extends SubsystemBase {
     private final TalonFX topFlywheel; // we should probably change these names once we learn more
     private final TalonFX bottomFlywheel; // we should probably change these names once we learn more
     private double flywheelVolts = 5;
+    private double indexToAmpVolts = 2;
+    private DigitalInput shooterBeam;
+
 
     final VoltageOut topVoltReq = new VoltageOut(0);
     final VoltageOut bottomVoltReq = new VoltageOut(0);
@@ -53,6 +57,7 @@ public class Shooter extends SubsystemBase {
     public Shooter() {
         topFlywheel = new TalonFX(Constants.CAN.shooterTopFlywheel);
         bottomFlywheel = new TalonFX(Constants.CAN.shooterBottomFlywheel);
+        shooterBeam = new DigitalInput(Constants.IDs.shooterBeamDIO);
 
         topFlywheel.getConfigurator().apply(new TalonFXConfiguration()); // config factory default
         bottomFlywheel.getConfigurator().apply(new TalonFXConfiguration()); // config factory default
@@ -92,7 +97,15 @@ public class Shooter extends SubsystemBase {
         }
     }
 
+    public boolean getBeamHasNote(){
+        return shooterBeam.get();
+    }
+
     public void runShooterFlywheels() {
+        topFlywheel.setControl(topVoltReq.withOutput(flywheelVolts));
+        bottomFlywheel.setControl(bottomVoltReq.withOutput(flywheelVolts));
+    }
+    public void runIndexSpeed() {
         topFlywheel.setControl(topVoltReq.withOutput(flywheelVolts));
         bottomFlywheel.setControl(bottomVoltReq.withOutput(flywheelVolts));
     }
@@ -157,7 +170,8 @@ public class Shooter extends SubsystemBase {
     public double getFlywheelRampTime() { return this.getFlywheelVolts();}
     public double getFlywheelVolts(){ return flywheelVolts;}
     public void setFlywheelVolts(double volt){flywheelVolts = volt;}
-
+    public double getIndexToAmpVolts(){ return indexToAmpVolts;}
+    public void setIndexToAmpVolts(double volt){indexToAmpVolts = volt;}
 
     public double getSlot0_kS() { return slot0_kS; }
     public double getSlot0_kV() { return slot0_kV; }
@@ -192,6 +206,8 @@ public class Shooter extends SubsystemBase {
             builder.setSmartDashboardType("Shooter");
             //builder.addDoubleProperty("proportion speed", this::getProportionVolt, this::setProportionVolt);
             builder.addDoubleProperty("Shooter Volts", this::getFlywheelVolts, this::setFlywheelVolts);
+            builder.addDoubleProperty("Index To Amp Volts", this::getIndexToAmpVolts, this::setIndexToAmpVolts);
+            builder.addBooleanProperty("Shooter Beam", this::getBeamHasNote, null);
 
             builder.addDoubleProperty("Top Flywheel Velocity (RPS)", this::getTopFlyVelocityRPS, null);
             builder.addDoubleProperty("Bottom Flywheel Velocity (RPS)", this::getBottomFlyVelocityRPS, null);
