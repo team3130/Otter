@@ -45,6 +45,7 @@ public class Amp extends SubsystemBase {
 
     ampLiftingMotor.configFactoryDefault();
     ampSpinningMotor.configFactoryDefault();
+    ampSpinningMotor.enableVoltageCompensation(true);
     ampSpinningMotor.configVoltageCompSaturation(3);
     ampLiftingMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
     ampLiftingMotor.setInverted(false);
