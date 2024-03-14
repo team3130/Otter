@@ -27,6 +27,7 @@ import java.util.ArrayList;
 public class CameraSubsystem extends SubsystemBase {
   protected PhotonCamera camera = new PhotonCamera("cam");
   private static final ShuffleboardTab tab = Shuffleboard.getTab("PhotonCamera");
+
   AprilTagFieldLayout aprilTagFieldLayout;
   Pose2d targetPose = new Pose2d(16.58, 5.55, Rotation2d.fromRadians(0));
   // Umars: Transform2d cameraToRobot = new Transform2d(3, 0, Rotation2d.fromRadians(0));
@@ -38,6 +39,7 @@ public class CameraSubsystem extends SubsystemBase {
   private int speakerTargetFiducialID;
   private int ampTargetFiducialID;
   private boolean isTryingToTarget = false;
+  private double robotToTargetVisionDistance;
   private int fiducialID = 0;
   public PIDController targetController;
   private double targetP = 10d;
@@ -89,6 +91,20 @@ public class CameraSubsystem extends SubsystemBase {
     snapController = new PIDController(snapP, snapI, snapD);
   }
 
+  public double getRobotToTargetDistance() {
+    return camera.get
+  }
+
+  public double getTargetPitch() {
+    if (!hasTarget()) {
+      return -400.0;
+    } else {
+      if (CorrectTarget != null && CorrectTarget.getPitch() != -400.0) {
+        return Math.toRadians(CorrectTarget.getPitch());
+      }
+    }
+    return -400d;
+  }
 
   public boolean targetControllerDone(){
     return targetController.atSetpoint();

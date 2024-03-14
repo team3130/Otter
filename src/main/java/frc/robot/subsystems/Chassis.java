@@ -56,6 +56,7 @@ public class Chassis extends SubsystemBase {
 
 
 
+
     private Translation2d originToRobotVector = new Translation2d(0, 0);
     private Translation2d robotToAprilTagVector = new Translation2d(0, 0);
 
@@ -63,7 +64,7 @@ public class Chassis extends SubsystemBase {
     private Translation2d originToAprilTagVector = new Translation2d(0, 0);
     private Rotation2d theta = new Rotation2d(0);
     private boolean isFaceTargetting;
-    private final CameraSubsystem cameraSubsystem = new CameraSubsystem();
+    private final JuhaeCameraSubsystem juhaeCameraSubsystem = new JuhaeCameraSubsystem();
 
     /**
      * Makes a chassis that starts at 0, 0, 0
@@ -108,6 +109,7 @@ public class Chassis extends SubsystemBase {
                 this // Reference to this subsystem to set requirements
         );
     }
+
 
     /**
      * Our main method to drive using three variables. Locked to field relative or robot oriented based off of fieldRelative
@@ -298,10 +300,10 @@ public class Chassis extends SubsystemBase {
         theta = Rotation2d.fromDegrees(newTheta);
     }
     public boolean isAtWAngle(){
-        return cameraSubsystem.targetControllerDone();
+        return juhaeCameraSubsystem.targetControllerDone();
     }
     public boolean isAtWDistance(){
-        return (cameraSubsystem.isInLowShooterRange() || cameraSubsystem.isInMidShooterRange());
+        return (juhaeCameraSubsystem.isInLowShooterRange() || juhaeCameraSubsystem.isInMidShooterRange());
     }
 
     // shuffleboard getter - returns the robot's desired rotation towards a target in degrees
@@ -319,6 +321,7 @@ public class Chassis extends SubsystemBase {
     public void correctOdometry() {
         originToRobotVector = getOriginToRobotVector();
     }
+
 
 
     /**
@@ -433,7 +436,11 @@ public class Chassis extends SubsystemBase {
     // Gets the max speed field that we read thus far on this vm instance of rio
     public double getMaxSpeedRead() { return maxSpeedRead; }
 
-    public String getOdometry() { return odometry.getEstimatedPosition().toString(); }
+    public String getStringOdometry() { return odometry.getEstimatedPosition().toString(); }
+
+    public SwerveDrivePoseEstimator getOdometry() {
+        return odometry;
+    }
 
     /**
      * Initializes the data we send on shuffleboard
@@ -449,7 +456,7 @@ public class Chassis extends SubsystemBase {
         builder.addDoubleProperty("Y position", this::getY, null);
         builder.addDoubleProperty("rotation", this::getYaw, null);
         builder.addDoubleProperty("max speed read", this::getMaxSpeedRead, null);
-        builder.addStringProperty("odometry pose2d", this::getOdometry, null);
+        builder.addStringProperty("odometry pose2d", this::getStringOdometry, null);
         //builder.addDoubleProperty("Target Distance", this::getInitialAprilTagDistance, null);
         builder.addBooleanProperty("IsFaceTargetToggled", this::isVectorFaceTargetting, null);
         builder.addDoubleProperty("angle to face target", this::getTheta, null);

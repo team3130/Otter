@@ -67,8 +67,10 @@ public class TeleopDrive extends Command {
     robotTargetAngle = -controller.getRawAxis(Constants.PS5.LST_AXS_RJOYSTICKY); // angle used for targeting
 
     // press up on right joystick is vector targeting faceTarget
-    if (robotTheta != 0) {
-      camera/chassis.simpleFaceTarget();
+    if (robotTheta != 0 && simpleFaceTarget) {
+      theta = camera.goToTargetPower();
+    } else if (robotTheta !=0 && vectorFaceTarget) {
+
       chassis.vectorFaceAprilTag();
       robotTheta = -camera.targetController.calculate(chassis.getRotation2d().getRadians(), Math.toRadians(chassis.getTheta()));
     } else if (chassis.isTargetingSpeaker) {
