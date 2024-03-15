@@ -103,9 +103,9 @@ public class Chassis extends SubsystemBase {
                 this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
                 this::driveAutonRobotRelative,
                 new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-                        new PIDConstants(3, 0, 0), // Translation PID constants
+                        new PIDConstants(2, 0, 0), // Translation PID constants
                         new PIDConstants(8, 0.15, 0.5), // Rotation PID constants
-                        3, // Max module speed, in m/s
+                        4.2, // Max module speed, in m/s
                         0.41295, // Drive base radius in meters. Distance from robot center to the furthest module: sqrt(0.584^2 + 0.584^2)/2
                         new ReplanningConfig() // Default path replanning config. See the API for the options here
                 ),
@@ -139,9 +139,9 @@ public class Chassis extends SubsystemBase {
      */
     public void teleopDrive(double x, double y, double theta, boolean fieldRelative) {
         if (fieldRelative) {
-            setTeleopModuleStates(kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(x, y, theta, getRotation2d())));
+            setVelocityTeleopModuleStates(kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(x, y, theta, getRotation2d())));
         } else {
-            setTeleopModuleStates(kinematics.toSwerveModuleStates(new ChassisSpeeds(x, y, theta)));
+            setVelocityTeleopModuleStates(kinematics.toSwerveModuleStates(new ChassisSpeeds(x, y, theta)));
         }
     }
 
@@ -242,20 +242,33 @@ public class Chassis extends SubsystemBase {
         modules[Constants.SwerveModules.four].setTeleopDesiredState(desiredStates[Constants.SwerveModules.four]);
     }
 
+    public void setVelocityTeleopModuleStates(SwerveModuleState[] desiredStates) {
+        SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
+
+        modules[Constants.SwerveModules.one].setVelocityState(desiredStates[Constants.SwerveModules.one]);
+        modules[Constants.SwerveModules.two].setVelocityState(desiredStates[Constants.SwerveModules.two]);
+        modules[Constants.SwerveModules.three].setVelocityState(desiredStates[Constants.SwerveModules.three]);
+        modules[Constants.SwerveModules.four].setVelocityState(desiredStates[Constants.SwerveModules.four]);
+    }
+
     public void tuningTestPls() {
-        modules[Constants.SwerveModules.one].setTuningVelocityState(new SwerveModuleState(Constants.Swerve.tuningDesiredVelocity, new Rotation2d()));
-        modules[Constants.SwerveModules.two].setTuningVelocityState(new SwerveModuleState(Constants.Swerve.tuningDesiredVelocity, new Rotation2d()));
-        modules[Constants.SwerveModules.three].setTuningVelocityState(new SwerveModuleState(Constants.Swerve.tuningDesiredVelocity, new Rotation2d()));
-        modules[Constants.SwerveModules.four].setTuningVelocityState(new SwerveModuleState(Constants.Swerve.tuningDesiredVelocity, new Rotation2d()));
+        modules[Constants.SwerveModules.one].setTuningVelocityState(new SwerveModuleState(tuningDesiredVelocityRPS(), new Rotation2d()));
+        modules[Constants.SwerveModules.two].setTuningVelocityState(new SwerveModuleState(tuningDesiredVelocityRPS(), new Rotation2d()));
+        modules[Constants.SwerveModules.three].setTuningVelocityState(new SwerveModuleState(tuningDesiredVelocityRPS(), new Rotation2d()));
+        modules[Constants.SwerveModules.four].setTuningVelocityState(new SwerveModuleState(tuningDesiredVelocityRPS(), new Rotation2d()));
     }
 
     public void setAutonModuleStates(SwerveModuleState[] desiredStates) {
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
 
-        modules[Constants.SwerveModules.one].setTeleopDesiredState(desiredStates[Constants.SwerveModules.one]);
-        modules[Constants.SwerveModules.two].setTeleopDesiredState(desiredStates[Constants.SwerveModules.two]);
-        modules[Constants.SwerveModules.three].setTeleopDesiredState(desiredStates[Constants.SwerveModules.three]);
-        modules[Constants.SwerveModules.four].setTeleopDesiredState(desiredStates[Constants.SwerveModules.four]);
+        modules[Constants.SwerveModules.one].setVelocityState(desiredStates[Constants.SwerveModules.one]);
+        modules[Constants.SwerveModules.two].setVelocityState(desiredStates[Constants.SwerveModules.two]);
+        modules[Constants.SwerveModules.three].setVelocityState(desiredStates[Constants.SwerveModules.three]);
+        modules[Constants.SwerveModules.four].setVelocityState(desiredStates[Constants.SwerveModules.four]);
+    }
+
+    public double tuningDesiredVelocityRPS() {
+        return (Constants.Swerve.tuningDesiredVelocity / Constants.SwerveConversions.wheelCircumference) * Constants.SwerveConversions.driveGearRatio;
     }
 
 

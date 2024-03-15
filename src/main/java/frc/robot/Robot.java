@@ -80,7 +80,7 @@ public class Robot extends TimedRobot {
     //autonomousCommand = robotContainer.pick();
     // CommandScheduler.getInstance().schedule(robotContainer.shootAuto());
 
-  //  autonomousCommand = robotContainer.pick();
+    autonomousCommand = robotContainer.pick();
     // schedule the autonomous command (example)
     if (autonomousCommand != null) {
       //CommandScheduler.getInstance().schedule(robotContainer.getAutonomousCommand());

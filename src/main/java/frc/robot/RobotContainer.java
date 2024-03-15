@@ -101,6 +101,10 @@ public class RobotContainer {
 
   }
 
+  public Command pick() {
+    return autoChooser.getSelected();
+  }
+
   public void exportShuffleBoardData() {
     if (Constants.debugMode) {
       ShuffleboardTab tab = Shuffleboard.getTab("Subsystem Test");
@@ -126,9 +130,7 @@ public class RobotContainer {
     }
   }
 
-  public Command pick() {
-    return autoChooser.getSelected();
-  }
+
 
   public void resetClimbers() {
     leftClimber.setIsClimberReset(true);

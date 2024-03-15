@@ -88,6 +88,13 @@ public final class Constants {
 
     public static double tuningDesiredVelocity = 4d;
 
+
+    public static double slot0_kS = 0; // DONT USE KS
+    public static double slot0_kV = 0.11; // measured 3/14/24
+    public static double slot0_kP = 0.29; // measured 3/14/24
+    public static double slot0_kI = 0;
+    public static double slot0_kD = 0;
+
     // SWERVE CAN NUMBERED LIKE CARTESIAN COORDIANTE QUADRANTS
     // front right
     public final static int leftFrontSteer = 2;
