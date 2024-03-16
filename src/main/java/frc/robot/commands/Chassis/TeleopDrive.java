@@ -65,16 +65,17 @@ public class TeleopDrive extends Command {
         omega = -controller.getRawAxis(Constants.XBox.LST_AXS_RJOYSTICKY);
 
 
+        /*
         if (chassis.isTargetingSpeaker(omega, theta)) {
             chassis.resetTargetSpeakerController();
             theta = chassis.goToTargetPower();
         } else if (chassis.isTargetingBackClimb(omega, theta)) {
             chassis.resetTargetBackClimbController();
             theta = chassis.goToTargetPower();
-        } else { // normal driving
+
+         */
             theta = Math.abs(theta) > Constants.Swerve.kDeadband ? theta : 0.0;
             theta = turningLimiter.calculate(theta) * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond;
-        }
 
 
         // square the inputs

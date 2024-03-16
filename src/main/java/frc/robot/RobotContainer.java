@@ -109,11 +109,6 @@ public class RobotContainer {
     if (Constants.debugMode) {
       ShuffleboardTab tab = Shuffleboard.getTab("Subsystem Test");
       tab.add(chassis);
-//      tab.add(shooter);
-//      tab.add(intake);
-//      tab.add(leftClimber);
-//      tab.add(robotLEDs);
-//      tab.add(indexer);
       chassis.exportSwerveModData(Shuffleboard.getTab("Swerve Modules"));
     }
   }
