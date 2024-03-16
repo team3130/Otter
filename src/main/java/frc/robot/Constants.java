@@ -133,7 +133,7 @@ public final class Constants {
     public final static double kMaxSteerVoltage = 5d;
     public final static double kMaxDriveVoltage = 10d;
 
-    public final static double kDeadband = 0.075;
+    public final static double kDeadband = 0.06;
 
     public final static double kMaxAccelerationDrive = 7;
     public final static double kMaxAccelerationAngularDrive = 4.0*Math.PI;

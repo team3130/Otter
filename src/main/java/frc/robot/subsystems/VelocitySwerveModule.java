@@ -29,7 +29,8 @@ public class VelocitySwerveModule implements Sendable {
     final VoltageOut driveMotorVoltRequest = new VoltageOut(0);
 
     final VelocityVoltage driveVelocityRequest = new VelocityVoltage(0).withSlot(0);
-    private double teleopDesiredVelocity = 0;
+    private double teleopDesiredVelocityError = 0;
+    private double desiredStateVelocity = 0;
 
     Slot0Configs slot0Configs; // gains for drive velocity
 
@@ -47,7 +48,8 @@ public class VelocitySwerveModule implements Sendable {
         driveMotor = new TalonFX(Constants.Swerve.spinningID[side]);
 
         absoluteEncoder = new CANcoder(Constants.Swerve.CANCoders[side]);
-        turningPidController = new PIDController(Constants.Swerve.kP_Swerve[side], Constants.Swerve.kI_Swerve[side], Constants.Swerve.kD_Swerve[side]);
+        turningPidController = new PIDController(1.5,0, 0.05);
+
 
         steerMotor.getConfigurator().apply(new TalonFXConfiguration()); // config factory default
         steerMotor.setNeutralMode(NeutralModeValue.Brake); // Brake mode
@@ -122,16 +124,17 @@ public class VelocitySwerveModule implements Sendable {
 
         state = SwerveModuleState.optimize(state, getState().angle);
         driveMotor.setControl(driveVelocityRequest.withVelocity((state.speedMetersPerSecond / Constants.SwerveConversions.wheelCircumference) *Constants.SwerveConversions.driveGearRatio));
-        // TODO: positional controller by phoenix eventually
         steerMotor.setVoltage(Constants.Swerve.maxSteerVoltage * turningPidController.calculate(Math.IEEEremainder(getTurningPositionRadians(), Math.PI * 2), state.angle.getRadians()));
         if (Constants.debugMode) {
-            teleopDesiredVelocity = ((state.speedMetersPerSecond / Constants.SwerveConversions.wheelCircumference) *Constants.SwerveConversions.driveGearRatio) - getDriveVelocityFalcon();
+            teleopDesiredVelocityError = ((state.speedMetersPerSecond / Constants.SwerveConversions.wheelCircumference) *Constants.SwerveConversions.driveGearRatio) - getDriveVelocityFalcon();
+            desiredStateVelocity = (state.speedMetersPerSecond);
         }
     }
 
     public double getDriveVelocityPIDError() {
-        return teleopDesiredVelocity;
+        return teleopDesiredVelocityError;
     }
+    public double getDesiredStateVelocity() { return desiredStateVelocity; }
 
     public void setTeleopDesiredState(SwerveModuleState state) {
         // dead-band
@@ -173,6 +176,13 @@ public class VelocitySwerveModule implements Sendable {
     public double getDriveVelocityFalcon() {
         return driveMotor.getVelocity().getValue();
     }
+    public double getDriveAccelerationFalcon() {
+        return driveMotor.getAcceleration().getValue();
+    }
+    public double getDriveLinearAcceleration() {
+        return (driveMotor.getAcceleration().getValue() /Constants.SwerveConversions.driveGearRatio)* Constants.SwerveConversions.wheelCircumference; }
+
+
 
     // gets the speed at which the steering motor turns in radians per second
     public double getTurningVelocity() {
@@ -327,12 +337,16 @@ public class VelocitySwerveModule implements Sendable {
             // builder.addDoubleProperty("Drive velocity", this::getDriveVelocity, null);
             builder.addDoubleProperty("Steer position", this::getSteerRotations, null);
             builder.addDoubleProperty("Drive position", this::getDrivePosition, null);
+            builder.addDoubleProperty("Drive linear acceleration", this::getDriveLinearAcceleration, null);
+
             builder.addDoubleProperty("Absolute encoder position", this::getAbsoluteEncoderRads, null);
             builder.addDoubleProperty("Constant Steering voltage", this::getSwerveSteeringVoltage, this::setSwerveSteeringVoltage);
             builder.addDoubleProperty("Constant Driving voltage", this::getSwerveDrivingVoltage, this::getSwerveDrivingVoltage);
 
             builder.addDoubleProperty("Steering Module Current Supply", this::getModuleSteeringSupplyCurrent, null);
             builder.addDoubleProperty("Driving Module Current Supply", this::getModuleDrivingSupplyCurrent, null);
+
+            builder.addDoubleProperty("Desired State Velocity", this::getDesiredStateVelocity, null);
 
             //    builder.addDoubleProperty("Steering Voltage", this::getSteeringVoltage, this::setSteeringVoltage);
             // builder.addDoubleProperty("Driving voltage", this:: getDrivingVoltage, this::setDrivingVoltage);

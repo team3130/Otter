@@ -104,8 +104,10 @@ public class Chassis extends SubsystemBase {
                 this::driveAutonRobotRelative,
                 new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
                         new PIDConstants(2, 0, 0), // Translation PID constants
-                        new PIDConstants(5, 1.3, 0), // Rotation PID constants
-                        4.5, // Max module speed, in m/s
+                        new PIDConstants(.5, 0, 0.85), // Rotation PID constants
+                        // other rotational pid 10, 0.2, 0.8
+                        // 5 1.3 0 from 3/15
+                        4, // Max module speed, in m/s
                         0.41295, // Drive base radius in meters. Distance from robot center to the furthest module: sqrt(0.584^2 + 0.584^2)/2
                         new ReplanningConfig() // Default path replanning config. See the API for the options here
                 ),
@@ -124,6 +126,7 @@ public class Chassis extends SubsystemBase {
     public void teleopDrive(double x, double y, double theta) {
         teleopDrive(x, y, theta, getFieldRelative());
     }
+
 
     /**
      * Our main method to drive using three variables. Locked to field relative or robot oriented based off of fieldRelative
