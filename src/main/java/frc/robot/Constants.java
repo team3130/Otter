@@ -81,6 +81,17 @@ public final class Constants {
     public static double maxSteerVoltage = 4d;
     public static double maxDriveVoltage = 10d;
 
+    public static double tuningDesiredVelocity = 4d;
+
+
+
+    public static double slot0_kS = 0; // DONT USE KS
+    public static double slot0_kV = 0.11; // measured 3/14/24
+    public static double slot0_kP = 0.29; // measured 3/14/24
+    public static double slot0_kI = 0;
+    public static double slot0_kD = 0;
+
+
     // SWERVE CAN NUMBERED LIKE CARTESIAN COORDIANTE QUADRANTS
     // front right
     public final static int MOD_ONE_STEER = 2;
@@ -167,13 +178,14 @@ public final class Constants {
 
   // gear ratios and/or ticks per rev, etc.
   public static class SwerveConversions {
-    public final static double kDriveGearRatio = 6.12; // Checked 2/2/24 //6.75  checked 1/19/23
-    public final static double kSteerGearRatio = 21.4; // Checked 2/2/24 //150d/7d = 21.42857  checked 1/19
-    public static final double kWheelDiameter = Units.inchesToMeters(3.9);
-    public final static double DriveRotToMeters = kWheelDiameter * Math.PI * 1/(kDriveGearRatio); // multiply by
-    public static final double SteerRotToRads = 1/(kSteerGearRatio) * Math.PI * 2; // multiply by position
-    public static final double DriveRotToMetersPerSecond = DriveRotToMeters * 10; // multiply by velocity
-    public static final double SteerRotToRadsPerSecond = SteerRotToRads * 10; // multiply by velocity
+    public final static double driveGearRatio = 6.12; // Checked 2/2/24 //6.75  checked 1/19/23
+    public final static double steerGearRatio = 21.4; // Checked 2/2/24 //150d/7d = 21.42857  checked 1/19
+    public static final double wheelDiameter = Units.inchesToMeters(3.9);
+    public static final double wheelCircumference = wheelDiameter * Math.PI;
+    public final static double driveRotToMeters = wheelDiameter * Math.PI * 1/(driveGearRatio); // multiply by
+    public static final double steerRotToRads = 1/(steerGearRatio) * Math.PI * 2; // multiply by position
+    public static final double driveRotToMetersPerSecond = driveRotToMeters * 10; // multiply by velocity
+    public static final double steerRotToRadsPerSecond = steerRotToRads * 10; // multiply by velocity
   }
 
   public static class Auton {

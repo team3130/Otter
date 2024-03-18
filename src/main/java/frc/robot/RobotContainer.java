@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
+import frc.robot.commands.Chassis.DriveVelocityTuning;
 import frc.robot.commands.Chassis.TeleopDrive;
 import frc.robot.commands.Climber.ClimberExtend;
 import frc.robot.commands.Climber.PitClimberReset;
@@ -190,6 +191,8 @@ public class RobotContainer {
     new JoystickButton(driverController, Constants.PS5.circle).whileTrue(new AlwaysIndex(indexer));
     new JoystickButton(driverController, Constants.PS5.x).whileTrue(new Outtake(indexer));
 
+    new JoystickButton(driverController, Constants.PS5.triangle).whileTrue(new DriveVelocityTuning(chassis));
+
     //new JoystickTrigger(driverController, Constants.PS5.LST_AXS_LTRIGGER).whileTrue(new AmpOuttake(amp));
 
     /*
@@ -211,8 +214,8 @@ public class RobotContainer {
 
     new POVButton(operatorController, Constants.XBox.LST_POV_W).whileTrue(new PitClimberReset(rightClimber));//right
     new POVButton(operatorController, Constants.XBox.LST_POV_E).whileTrue(new PitClimberReset(leftClimber));//left
-
-    /*
+  }
+  /*
     //new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new VelocityShoot(shooter));
     //new JoystickButton(operatorController, Constants.Buttons.LST_BTN_RBUMPER).whileTrue(new SequentialCommandGroup(new SmartSpintake(intake), new SmartIndex(intake)));
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
@@ -220,5 +223,4 @@ public class RobotContainer {
     new Trigger(m_exampleSubsystem::exampleCondition)
             .onTrue(new ExampleCommand(m_exampleSubsystem));
     */
-  }
 }
