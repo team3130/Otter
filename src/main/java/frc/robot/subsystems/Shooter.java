@@ -25,8 +25,8 @@ public class Shooter extends SubsystemBase {
     final VelocityVoltage topVelocityRequest = new VelocityVoltage(0).withSlot(0);
     final VelocityVoltage bottomVelocityRequest = new VelocityVoltage(0).withSlot(1); // class instance
 
-    //private CurrentLimitsConfigs topCurrentConfigs = new CurrentLimitsConfigs();
-    //private CurrentLimitsConfigs bottomCurrentConfigs = new CurrentLimitsConfigs();
+    private CurrentLimitsConfigs topCurrentConfigs = new CurrentLimitsConfigs();
+    private CurrentLimitsConfigs bottomCurrentConfigs = new CurrentLimitsConfigs();
 
 
     double topVelocitySetpoint = 30;
@@ -69,8 +69,8 @@ public class Shooter extends SubsystemBase {
         topFlywheel.setInverted(true);
         bottomFlywheel.setInverted(true);
 
-        //topFlywheel.getConfigurator().apply(topCurrentConfigs.withSupplyCurrentLimit(40));
-        //bottomFlywheel.getConfigurator().apply(bottomCurrentConfigs.withSupplyCurrentLimit(40));
+        topFlywheel.getConfigurator().apply(topCurrentConfigs.withSupplyCurrentLimit(40));
+        bottomFlywheel.getConfigurator().apply(bottomCurrentConfigs.withSupplyCurrentLimit(40));
 
         // idk if these ramp rates do anything :(
         topFlywheel.getConfigurator().apply(new ClosedLoopRampsConfigs().withVoltageClosedLoopRampPeriod(1));

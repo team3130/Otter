@@ -53,13 +53,12 @@ public class VelocityMovingSetpoint extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-      if ((timer.get() / shooter.getMaxTime()) < 1) { // make sure you are not applying >100% of setpoint
-        shooter.setBottomVelocitySetpoint( topStartingPoint + ((timer.get() / shooter.getMaxTime()) * topRPSToIncrease));
-        shooter.setTopVelocitySetpoint( + ((timer.get() / shooter.getMaxTime()) * bottomRPSToIncrease));
+      if ((timer.get() / shooter.getMaxTime()) < 1) { // make sure you are not applying >100% of setpoint before incrementing
+        shooter.setTopVelocitySetpoint( topStartingPoint + ((timer.get() / shooter.getMaxTime()) * topRPSToIncrease));
+        shooter.setBottomVelocitySetpoint( bottomStartingPoint + ((timer.get() / shooter.getMaxTime()) * bottomRPSToIncrease));
         // setpoint = how fast you are going now + (% of time used * rps the controller has to cover to setpoint); make sure it is never over setpoint
-      } else {
-        shooter.setFlywheelVelocity(); //normal going straight to setpoint, assumes youve hit it previously
       }
+      shooter.setFlywheelVelocity(); //normal going straight to setpoint, assumes youve hit it previously
   }
 
 
