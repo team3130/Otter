@@ -5,30 +5,35 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.CameraSubsystem;
+import frc.robot.subsystems.Chassis;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.JuhaeCameraSubsystem;
 
 /** An example command that uses an example subsystem. */
 public class JuhaeSnapToArcPID extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final ExampleSubsystem m_subsystem;
+  private final JuhaeCameraSubsystem cameraSubsystem;
+  private final Chassis chassis;
 
   /**
    * Creates a new ExampleCommand.
    *
-   * @param subsystem The subsystem used by this command.
+   * @param cameraSubsystem The subsystem used by this command.
    */
-  public JuhaeSnapToArcPID(ExampleSubsystem subsystem) {
-    m_subsystem = subsystem;
+  public JuhaeSnapToArcPID(JuhaeCameraSubsystem cameraSubsystem, Chassis chassis) {
+    this.cameraSubsystem = cameraSubsystem;
+    this.chassis = chassis;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(subsystem);
+    addRequirements(cameraSubsystem, chassis);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    getLastEstimatedRobotToTarget();
-    getVectorSetpointSnapToArc();
-    getSnapToTargetSetpoint();
+    cameraSubsystem.getLastEstimatedRobotToTarget();
+    cameraSubsystem.getVectorSetpointSnapToArc();
+    cameraSubsystem.getSnapToTargetSetpoint();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

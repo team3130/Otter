@@ -7,25 +7,20 @@ package frc.robot.commands.Chassis;
 
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
-import frc.robot.sensors.Navx;
 import frc.robot.subsystems.CameraSubsystem;
 import frc.robot.subsystems.Chassis;
 
 
 /** A default command to drive in teleop based off the joysticks*/
-public class GiorgiaToggleOdoFaceTarget extends Command {
+public class GiorgiaFaceTarget extends Command {
   private final Chassis chassis;
   private final XboxController xboxController;
   private final CameraSubsystem camera;
   private final SlewRateLimiter xLimiter, yLimiter;
-  public GiorgiaToggleOdoFaceTarget(Chassis chassis, XboxController xboxController, CameraSubsystem camera) {
+  public GiorgiaFaceTarget(Chassis chassis, XboxController xboxController, CameraSubsystem camera) {
     this.chassis = chassis;
     this.camera = camera;
     this.xboxController = xboxController;
