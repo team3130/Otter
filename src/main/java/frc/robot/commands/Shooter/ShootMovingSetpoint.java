@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.Shooter;
 
-public class VelocityMovingSetpoint extends Command {
+public class ShootMovingSetpoint extends Command {
   private final Shooter shooter;
   private Timer timer = new Timer();
   double topStartingPoint = 0;
@@ -24,7 +24,7 @@ public class VelocityMovingSetpoint extends Command {
    *
    * @param shooter  The subsystem used by this command.
    */
-  public VelocityMovingSetpoint(Shooter shooter) {
+  public ShootMovingSetpoint(Shooter shooter) {
     this.shooter = shooter;
     addRequirements(shooter);
   }
@@ -54,11 +54,12 @@ public class VelocityMovingSetpoint extends Command {
   @Override
   public void execute() {
       if ((timer.get() / shooter.getMaxTime()) < 1) { // make sure you are not applying >100% of setpoint before incrementing
-        shooter.setTopVelocitySetpoint( topStartingPoint + ((timer.get() / shooter.getMaxTime()) * topRPSToIncrease));
-        shooter.setBottomVelocitySetpoint( bottomStartingPoint + ((timer.get() / shooter.getMaxTime()) * bottomRPSToIncrease));
+        shooter.setTopFlywheelVelocity( topStartingPoint + ((timer.get() / shooter.getMaxTime()) * topRPSToIncrease));
+        shooter.setBottomFlywheelVelocity( bottomStartingPoint + ((timer.get() / shooter.getMaxTime()) * bottomRPSToIncrease));
         // setpoint = how fast you are going now + (% of time used * rps the controller has to cover to setpoint); make sure it is never over setpoint
+      } else {
+        shooter.setFlywheelVelocity(); //normal going straight to setpoint, assumes youve hit it previously
       }
-      shooter.setFlywheelVelocity(); //normal going straight to setpoint, assumes youve hit it previously
   }
 
 
