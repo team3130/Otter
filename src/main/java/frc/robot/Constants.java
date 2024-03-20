@@ -86,10 +86,10 @@ public final class Constants {
 
 
     public static double slot0_kS = 0; // DONT USE KS
-    public static double slot0_kV = 0.11; // measured 3/14/24
-    public static double slot0_kP = 0.29; // measured 3/14/24
+    public static double slot0_kV = 0.12; // measured 3/19/24
+    public static double slot0_kP = 0.015; // measured 3/14/24
     public static double slot0_kI = 0;
-    public static double slot0_kD = 0;
+    public static double slot0_kD = 0.001;
 
 
     // SWERVE CAN NUMBERED LIKE CARTESIAN COORDIANTE QUADRANTS
@@ -131,9 +131,11 @@ public final class Constants {
             new Translation2d(wheelBase / 2.0, trackWidth / 2.0) // 4, pos pos
     };
 
-    public final static double kPhysicalMaxSpeedMetersPerSecond = 4.60; // 3.54 with 8 volts of voltage compensation and 4.19 with 10 volts
+    // / 3.54 with 8 volts of voltage compensation and 4.19 with 10 volts
+    // 4.8 max speed, 5 acceleration, drops to 9.6
+    public final static double kPhysicalMaxSpeedMetersPerSecond = 4.8;
     public final static double kDeadband = 0.055;
-    public final static double kMaxAccelerationDrive = 7.5;
+    public final static double kMaxAccelerationDrive = 7;
     public final static double kMaxAccelerationAngularDrive = 4.0*Math.PI;
 
     public final static double kP_FrontRight = 1.35;

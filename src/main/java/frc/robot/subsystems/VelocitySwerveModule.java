@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VelocityVoltage;
@@ -48,7 +49,7 @@ public class VelocitySwerveModule implements Sendable {
         driveMotor = new TalonFX(Constants.Swerve.spinningID[side]);
 
         absoluteEncoder = new CANcoder(Constants.Swerve.CANCoders[side]);
-        turningPidController = new PIDController(1.5,0, 0.05);
+        turningPidController = new PIDController(1,0, 0);
 
 
         steerMotor.getConfigurator().apply(new TalonFXConfiguration()); // config factory default
@@ -75,6 +76,18 @@ public class VelocitySwerveModule implements Sendable {
         driveMotor.getConfigurator().apply(slot0Configs);
 
         resetEncoders();
+
+        driveMotor.getConfigurator().apply((new CurrentLimitsConfigs().withSupplyCurrentLimitEnable(true).
+                withSupplyCurrentThreshold(40).withSupplyTimeThreshold(0)), 0);
+
+        steerMotor.getConfigurator().apply((new CurrentLimitsConfigs().withSupplyCurrentLimitEnable(true).
+                withSupplyCurrentThreshold(20).withSupplyTimeThreshold(0)), 0);
+
+        driveMotor.getConfigurator().apply((new CurrentLimitsConfigs().withStatorCurrentLimitEnable(true).
+                withStatorCurrentLimit(40).withSupplyTimeThreshold(0)), 0);
+
+        steerMotor.getConfigurator().apply((new CurrentLimitsConfigs().withStatorCurrentLimitEnable(true).
+                withStatorCurrentLimit(20).withSupplyTimeThreshold(0)), 0);
 
         String name = this.getClass().getSimpleName();
         name = name.substring(name.lastIndexOf('.') + 1);
