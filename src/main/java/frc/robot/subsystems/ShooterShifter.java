@@ -19,8 +19,8 @@ public class ShooterShifter extends SubsystemBase {
   private boolean doubleExtended = false; // both pneumatics up
 
   public ShooterShifter() {
-    shawtyShifter = new Solenoid(Constants.CAN.PCM, PneumaticsModuleType.CTREPCM , Constants.IDs.longShifterChannel);
-    longShifter = new Solenoid(Constants.CAN.PCM, PneumaticsModuleType.CTREPCM , Constants.IDs.smallShifterChannel);
+    shawtyShifter = new Solenoid(Constants.CAN.PCM, PneumaticsModuleType.CTREPCM , Constants.IDs.shawtyShifterChannel);
+    longShifter = new Solenoid(Constants.CAN.PCM, PneumaticsModuleType.CTREPCM , Constants.IDs.longShifterChannel);
 
     shawtyShifter.set(false);
     longShifter.set(false);

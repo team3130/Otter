@@ -3,7 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 
 
-package frc.robot.commands.Shooter;
+package frc.robot.commands.Indexer;
 
 
 import edu.wpi.first.wpilibj.Timer;
@@ -11,21 +11,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Shooter;
 
-public class VeloFlywheelsAndInitialIndex extends Command {
-  private final Shooter shooter;
+public class IndexToBeam extends Command {
   private final Indexer indexer;
+  private final Shooter shooter;
 
   private Timer spinUpTime = new Timer();
 
-  /**
-   * Creates a new ExampleCommand.
-   *
-   * @param shooter  The subsystem used by this command.
-   */
-  public VeloFlywheelsAndInitialIndex(Shooter shooter, Indexer indexer) {
-    this.shooter = shooter;
+  public IndexToBeam(Indexer indexer, Shooter shooter) {
     this.indexer = indexer;
-
+    this.shooter = shooter;
     addRequirements(shooter);
     addRequirements(indexer);
 
@@ -53,7 +47,6 @@ public class VeloFlywheelsAndInitialIndex extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    shooter.stopShooters();
     indexer.stopIndexer();
   }
 

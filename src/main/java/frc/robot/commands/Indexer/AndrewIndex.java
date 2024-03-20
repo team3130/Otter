@@ -6,15 +6,18 @@ package frc.robot.commands.Indexer;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Indexer;
+import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.ShooterShifter;
 
 public class AndrewIndex extends Command {
   private final Indexer indexer;
   private final ShooterShifter shooterShifter;
+  private final Shooter shooter;
 
-  public AndrewIndex(Indexer indexer, ShooterShifter shooterShifter) {
+  public AndrewIndex(Indexer indexer, ShooterShifter shooterShifter, Shooter shooter) {
     this.indexer = indexer;
     this.shooterShifter = shooterShifter;
+    this.shooter = shooter;
     addRequirements(indexer, shooterShifter);
   }
 
@@ -27,7 +30,7 @@ public class AndrewIndex extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (shooterShifter.getIsShortShifterExtended() || shooterShifter.getIsDoubleExtended()) {
+    if (shooter.getFlywheelsAtVelocitySetpoint() && (shooterShifter.getIsShortShifterExtended() || shooterShifter.getIsDoubleExtended())) {
       indexer.shooterSpindex();
     }
   }

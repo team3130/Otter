@@ -19,12 +19,12 @@ public class DoubleExtend extends InstantCommand {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    shooterShifter.doubleExtend();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    shooterShifter.doubleExtend();}
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override

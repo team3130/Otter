@@ -25,6 +25,7 @@ import frc.robot.commands.Chassis.TeleopDrive;
 import frc.robot.commands.Climber.ClimberExtend;
 import frc.robot.commands.Climber.PitClimberReset;
 import frc.robot.commands.Indexer.AlwaysIndex;
+import frc.robot.commands.Indexer.IndexToBeam;
 import frc.robot.commands.Intake.LimitedSpintake;
 import frc.robot.commands.Indexer.Outtake;
 import frc.robot.commands.ShooterShifter.ShortShifterExtend;
@@ -184,23 +185,22 @@ public class RobotContainer {
     /*
     ANDREW OPERATOR
      */
-    new POVButton(operatorController, Constants.XBox.LST_POV_N).whileTrue(new DoubleRetract(shooterShifter));
-    new JoystickTrigger(operatorController, Constants.XBox.LST_AXS_LTRIGGER).whileTrue(new ShortShifterExtend(shooterShifter));
-    new JoystickButton(operatorController, Constants.XBox.LST_BTN_LBUMPER).whileTrue(new DoubleExtend(shooterShifter));
+    new POVButton(operatorController, Constants.XBox.LST_POV_N).whileTrue(new DoubleExtend(shooterShifter));
+    new POVButton(operatorController, Constants.XBox.LST_POV_W).whileTrue(new ShortShifterExtend(shooterShifter));
+    new POVButton(operatorController, Constants.XBox.LST_POV_S).whileTrue(new DoubleRetract(shooterShifter));
 
     new JoystickTrigger(operatorController, Constants.XBox.LST_AXS_RTRIGGER).whileTrue(new AlwaysIndex(indexer));
-    new JoystickButton(operatorController, Constants.XBox.LST_BTN_RBUMPER).whileTrue(new OnlyShoot(shooter));
+    new JoystickButton(operatorController, Constants.XBox.LST_BTN_RBUMPER).whileTrue(new IndexToBeam(indexer,shooter));
 
-    new JoystickButton(operatorController, Constants.XBox.LST_BTN_B).whileTrue(new VelocityShoot(shooter));
+    new JoystickButton(operatorController, Constants.XBox.LST_BTN_LBUMPER).whileTrue(new OnlyShoot(shooter));
+
+    new JoystickButton(operatorController, Constants.XBox.LST_BTN_B).whileTrue(new ShuttleMovingSetpoint(shooter));
     new JoystickButton(operatorController, Constants.XBox.LST_BTN_A).whileTrue(new ShootMovingSetpoint(shooter));
 
     // new JoystickButton(operatorController, Constants.XBox.LST_BTN_Y).whileTrue(new ToggleAmp(amp));
     //new JoystickButton(operatorController, Constants.XBox.LST_BTN_B).whileTrue(new AmpIntake(amp));
     //new JoystickButton(operatorController, Constants.XBox.LST_BTN_A).whileTrue(new AlwaysAmpIntake(amp));
 
-
-    new POVButton(operatorController, Constants.XBox.LST_POV_W).whileTrue(new PitClimberReset(rightClimber));//right
-    new POVButton(operatorController, Constants.XBox.LST_POV_E).whileTrue(new PitClimberReset(leftClimber));//left
 
     /*
     //new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new VelocityShoot(shooter));
