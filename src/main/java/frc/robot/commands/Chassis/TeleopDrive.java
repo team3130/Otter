@@ -84,10 +84,9 @@ public class TeleopDrive extends Command {
       x = x * Math.abs(x);
 
       // apply dead-band
-      if (( x * x + y * y ) <= (Constants.Swerve.kDeadband * Constants.Swerve.kDeadband)) {
+      if ( ( (x * x) + (y * y) ) <= (Constants.Swerve.kDeadband * Constants.Swerve.kDeadband)) {
           x = 0;
-          y = 0;
-      }
+          y = 0;}
       /*
       if (Math.abs(x) < Constants.Swerve.kDeadband) {
           x = 0;
