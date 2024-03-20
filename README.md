@@ -1,5 +1,5 @@
 # Otter
-Otter is the robot repository for the 2024 Crescendo season.
+Otter is the code base for the 2024 Crescendo season and the team robot ShowstoppE.R.R.
 
 ## Mechanisms
 Shooter (velocity PID controller), shooter shifter, intake, climber, and amper

@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
@@ -49,6 +50,18 @@ public class SwerveModule implements Sendable {
         driveMotor.setNeutralMode(NeutralModeValue.Brake);
         driveMotor.setInverted(false);
 
+        driveMotor.getConfigurator().apply((new CurrentLimitsConfigs().withSupplyCurrentLimitEnable(true).
+                withSupplyCurrentThreshold(40).withSupplyTimeThreshold(0)), 0);
+
+        steerMotor.getConfigurator().apply((new CurrentLimitsConfigs().withSupplyCurrentLimitEnable(true).
+                withSupplyCurrentThreshold(20).withSupplyTimeThreshold(0)), 0);
+
+        driveMotor.getConfigurator().apply((new CurrentLimitsConfigs().withStatorCurrentLimitEnable(true).
+                withStatorCurrentLimit(40).withSupplyTimeThreshold(0)), 0);
+
+        steerMotor.getConfigurator().apply((new CurrentLimitsConfigs().withStatorCurrentLimitEnable(true).
+                withStatorCurrentLimit(20).withSupplyTimeThreshold(0)), 0);
+
         turningPidController.enableContinuousInput(-Math.PI, Math.PI); // wrap for circles
         turningPidController.setTolerance(0.0025, 0.05); // at position tolerance
 
@@ -66,14 +79,11 @@ public class SwerveModule implements Sendable {
 
     // returns the amount of distance the drive motor has travelled in meters
     public double getDrivePosition() {
-        //return driveMotor.getPosition().getValue() * Constants.Conversions.DriveRotToMeters;
         return driveMotor.getPosition().getValue() * Constants.SwerveConversions.DriveRotToMeters;
     }
 
     // returns the position of the steering motor radians
     public Rotation2d getTurningPosition() {
-        // return steerMotor.getPosition().getValue() * Constants.Conversions.SteerRotToRads;
-
         return new Rotation2d(steerMotor.getPosition().getValue() * Constants.SwerveConversions.SteerRotToRads);
     }
 
@@ -112,7 +122,6 @@ public class SwerveModule implements Sendable {
      */
     public void resetEncoders() {
         steerMotor.setPosition((getAbsoluteEncoderRads() - absoluteEncoderOffset) / Constants.SwerveConversions.SteerRotToRads);
-        //steerMotor.setPosition((getAbsoluteEncoderRad() - absoluteEncoderOffset) / Constants.Conversions.SteerRotToRads);
     }
 
     /**

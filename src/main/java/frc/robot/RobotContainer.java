@@ -25,7 +25,6 @@ import frc.robot.commands.Chassis.TeleopDrive;
 import frc.robot.commands.Climber.ClimberExtend;
 import frc.robot.commands.Climber.PitClimberReset;
 import frc.robot.commands.Indexer.AlwaysIndex;
-import frc.robot.commands.Indexer.AndrewIndex;
 import frc.robot.commands.Intake.LimitedSpintake;
 import frc.robot.commands.Indexer.Outtake;
 import frc.robot.commands.ShooterShifter.ShortShifterExtend;
@@ -39,7 +38,6 @@ import frc.robot.subsystems.*;
 import frc.robot.commands.Amp.*;
 import frc.robot.commands.Chassis.ResetOdometryForward;
 import frc.robot.commands.Intake.*;
-import frc.robot.subsystems.Amp;
 import frc.robot.subsystems.LEDs;
 
 /**
@@ -190,8 +188,11 @@ public class RobotContainer {
     new JoystickTrigger(operatorController, Constants.XBox.LST_AXS_LTRIGGER).whileTrue(new ShortShifterExtend(shooterShifter));
     new JoystickButton(operatorController, Constants.XBox.LST_BTN_LBUMPER).whileTrue(new DoubleExtend(shooterShifter));
 
-    new JoystickTrigger(operatorController, Constants.XBox.LST_AXS_RTRIGGER).whileTrue(new AndrewIndex(indexer, shooterShifter));
+    new JoystickTrigger(operatorController, Constants.XBox.LST_AXS_RTRIGGER).whileTrue(new AlwaysIndex(indexer));
     new JoystickButton(operatorController, Constants.XBox.LST_BTN_RBUMPER).whileTrue(new OnlyShoot(shooter));
+
+    new JoystickButton(operatorController, Constants.XBox.LST_BTN_B).whileTrue(new VelocityShoot(shooter));
+    new JoystickButton(operatorController, Constants.XBox.LST_BTN_A).whileTrue(new ShootMovingSetpoint(shooter));
 
     // new JoystickButton(operatorController, Constants.XBox.LST_BTN_Y).whileTrue(new ToggleAmp(amp));
     //new JoystickButton(operatorController, Constants.XBox.LST_BTN_B).whileTrue(new AmpIntake(amp));
