@@ -54,7 +54,7 @@ public class AmpIndexHitBeam extends Command {
 
   // Returns true when the command should end.
   @Override
-  public boolean isFinished() { return amp.getAmpBeamHasNote(); //had a note
+  public boolean isFinished() { return shooter.getBeamHasNote(); //had a note
   }
 
 }

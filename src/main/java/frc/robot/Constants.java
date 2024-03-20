@@ -35,15 +35,12 @@ public final class Constants {
 
   public static class IDs {
     public static final int intakePNMChannel = 1;
-    public final static int intakeLimitDIO = 1;
-    public final static int shooterBeamDIO = 5;
+    public final static int intakeLimitDIO = 0;
+    public final static int shooterBeamDIO = 1;
 
-    public final static int ampPNMChannel = 4;
-    public final static int ampLimitDIO = 0;
-    public final static int ampBeamDIO = 4;
-    
-    public final static int longShifterChannel = 3;
-    public final static int smallShifterChannel = 2;
+    public final static int ampLimitDIO = 4;
+    public final static int longShifterChannel = 2;
+    public final static int smallShifterChannel = 3;
 
     public static final int kRLimitSwitch = 3;
     public static final int kLLimitSwitch = 2;

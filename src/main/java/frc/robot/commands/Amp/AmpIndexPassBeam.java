@@ -42,7 +42,7 @@ public class AmpIndexPassBeam extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (amp.getAmpBeamHasNote() && !hasSeenNote){
+    if (shooter.getBeamHasNote() && !hasSeenNote){
       hasSeenNote = true; //note that we saw the note for the first time
     }
 
@@ -58,7 +58,7 @@ public class AmpIndexPassBeam extends Command {
 
   // Returns true when the command should end.
   @Override
-  public boolean isFinished() { return !amp.getAmpBeamHasNote() && hasSeenNote; //had a note and now we cant see it means it has passed
+  public boolean isFinished() { return !shooter.getBeamHasNote() && hasSeenNote; //had a note and now we cant see it means it has passed
   }
 
 }

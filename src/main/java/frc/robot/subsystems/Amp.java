@@ -20,7 +20,6 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 
 public class Amp extends SubsystemBase {
   private final DigitalInput ampLimit;
-  private final DigitalInput ampBeam;
   private final WPI_TalonSRX ampLiftingMotor;
   private final WPI_TalonSRX ampSpinningMotor;
   private double intakeAmpSpeed = 1;
@@ -42,7 +41,6 @@ public class Amp extends SubsystemBase {
 
   public Amp() {
     ampLimit = new DigitalInput(Constants.IDs.ampLimitDIO);
-    ampBeam = new DigitalInput(Constants.IDs.ampBeamDIO);
 
     ampLiftingMotor = new WPI_TalonSRX(Constants.CAN.ampLiftMotor);
     ampSpinningMotor = new WPI_TalonSRX(Constants.CAN.ampSpinMotor);
@@ -72,9 +70,6 @@ public class Amp extends SubsystemBase {
 
     constraints = new TrapezoidProfile.Constraints(maxVelo, maxAcc);
     ampController = new ProfiledPIDController(P, I, D, constraints);
-  }
-  public boolean getAmpBeamHasNote(){
-    return ampBeam.get();
   }
   public boolean getHasZeroed(){
     return hasZeroed;
@@ -209,7 +204,6 @@ public class Amp extends SubsystemBase {
       builder.addIntegerProperty("mid setpoint", this::getMidSetpoint, this::setMidSetpoint);
       builder.addBooleanProperty("Is At Setpoint", this::isAtSetpoint, null);
       builder.addBooleanProperty("has zeroed", this::getHasZeroed, null);
-      builder.addBooleanProperty("amp beam has note", this::getAmpBeamHasNote, null);
     }
   }
 }
