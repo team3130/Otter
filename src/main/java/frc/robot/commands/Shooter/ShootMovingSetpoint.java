@@ -60,6 +60,8 @@ public class ShootMovingSetpoint extends Command {
       } else {
         shooter.setFlywheelVelocity(); //normal going straight to setpoint, assumes youve hit it previously
       }
+    shooter.checkFlywheelsAtVelocitySetpoint(shooter.getTopVelocitySetpoint(), shooter.getBottomVelocitySetpoint());
+
   }
 
 

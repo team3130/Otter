@@ -19,6 +19,7 @@ public class Shooter extends SubsystemBase {
     private final TalonFX topFlywheel; // we should probably change these names once we learn more
     private final TalonFX bottomFlywheel; // we should probably change these names once we learn more
     private double flywheelVolts = 5;
+    private boolean flywheelsAtSetpoints = false;
     private double maxTime = 4;
     final VoltageOut topVoltReq = new VoltageOut(0);
     final VoltageOut bottomVoltReq = new VoltageOut(0);
@@ -143,6 +144,15 @@ public class Shooter extends SubsystemBase {
             setFlywheelVelocity();
         }
     }
+    public void checkFlywheelsAtVelocitySetpoint(double topsetpoint, double bottomsetpoint){
+        flywheelsAtSetpoints = (Math.abs( getTopFlyVelocityRPS() - topsetpoint) < 2 && Math.abs( getBottomFlyVelocityRPS() - bottomsetpoint) < 2);
+    }
+    public boolean getFlywheelsAtVelocitySetpoint(){
+        return flywheelsAtSetpoints;
+    }
+    public boolean setFlywheelsAtVelocitySetpoint(){
+        return flywheelsAtSetpoints;
+    }
 
     // setFlywheelMovingSetpoint when the flywheels are still running to compensate for dips
     public void setFlywheelMovingSetpointWithMomentum(double currentTime, double currentTopFlywheelSpeed, double currentBottomFlywheelSpeed) {
@@ -197,7 +207,7 @@ public class Shooter extends SubsystemBase {
     public double getBottomFlyVelocityRPS() { return bottomFlywheel.getVelocity().getValue();}
     public double getTopFlyVelocityRPM() { return topFlywheel.getVelocity().getValue() * 60; }
     public double getBottomFlyVelocityRPM() { return bottomFlywheel.getVelocity().getValue() * 60;}
-    public double getTopSlowFlyVelocityRPS() { return topSlowVelocitySetpoint; }
+    public double getTopSlowFlyVelocitySetpoint() { return topSlowVelocitySetpoint; }
     public double getBottomSlowVelocitySetpoint() { return bottomSlowVelocitySetpoint; }
 
     public void setTopSlowFlyVelocityRPS(double slow) {topSlowVelocitySetpoint = slow;}
