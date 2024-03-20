@@ -144,6 +144,9 @@ public class Chassis extends SubsystemBase {
             setVelocityTeleopModuleStates(kinematics.toSwerveModuleStates(new ChassisSpeeds(x, y, theta)));
         }
     }
+    public void teleopDrive(ChassisSpeeds speeds){
+        setVelocityTeleopModuleStates(kinematics.toSwerveModuleStates(speeds));
+    }
 
     // Flip-flops between field relative and bot relative swerve drive
     public void flipFieldRelative() {

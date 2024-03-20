@@ -5,10 +5,12 @@
 package frc.robot.commands.Chassis;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PS5Controller;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
+import frc.robot.SlewRateLimiterSpeeds;
 import frc.robot.subsystems.Chassis;
 
 /** A default command to drive in teleop based off the joysticks*/
@@ -16,7 +18,7 @@ public class TeleopDrive extends Command {
   private final Chassis chassis;
   private final PS5Controller controller;
 
-  private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
+  private final SlewRateLimiterSpeeds accelerationLimiter;
   private double y;
   private double x;
   private double theta;
@@ -27,9 +29,7 @@ public class TeleopDrive extends Command {
     // Use addRequirements() here to declare subsystem dependencies.
     m_requirements.add(chassis);
 
-    xLimiter = new SlewRateLimiter(Constants.Swerve.kMaxAccelerationDrive);
-    yLimiter = new SlewRateLimiter(Constants.Swerve.kMaxAccelerationDrive);
-    turningLimiter = new SlewRateLimiter(Constants.Swerve.kMaxAccelerationAngularDrive);
+    accelerationLimiter = new SlewRateLimiterSpeeds(Constants.Swerve.kMaxAccelerationDrive, Constants.Swerve.kMaxAccelerationAngularDrive, new ChassisSpeeds());
   }
 
   /**
@@ -37,6 +37,7 @@ public class TeleopDrive extends Command {
    */
   @Override
   public void initialize() {
+      accelerationLimiter.reset(new ChassisSpeeds());
   }
 
   /**
@@ -63,6 +64,7 @@ public class TeleopDrive extends Command {
       // theta the same for both alliances
       theta = -controller.getRawAxis(Constants.PS5.LST_AXS_RJOYSTICKX);
 
+      /*
       // angle used for targeting
       omega = -controller.getRawAxis(Constants.PS5.LST_AXS_RJOYSTICKY);
 
@@ -75,13 +77,8 @@ public class TeleopDrive extends Command {
           theta = chassis.goToTargetPower();
       } else { // normal driving
           theta = Math.abs(theta) > Constants.Swerve.kDeadband ? theta : 0.0;
-          theta = turningLimiter.calculate(theta) * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond;
       }
-
-
-      // square the inputs
-      y = y * Math.abs(y);
-      x = x * Math.abs(x);
+      */
 
       // apply dead-band
       if (Math.abs(x) < Constants.Swerve.kDeadband) {
@@ -90,12 +87,21 @@ public class TeleopDrive extends Command {
       if (Math.abs(y) < Constants.Swerve.kDeadband) {
           y = 0;
       }
+      
+      // square the inputs
+      y = y * Math.abs(y);
+      x = x * Math.abs(x);
 
-      // apply slew rate limiter which also converts to m/s and rad.s
-      x = xLimiter.calculate(x * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
-      y = yLimiter.calculate(y * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
+    // convert joystick offsets to chassis speeds and apply slew rate limiter
+      ChassisSpeeds newSpeeds = accelerationLimiter.calculate(new ChassisSpeeds(
+              x     * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond,
+              y     * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond,
+              theta * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond / (Constants.Swerve.trackWidth/2.0)
+      ));
 
-      chassis.teleopDrive(x, y, theta); //uses either driving or targeting inputs for theta
+      chassis.teleopDrive(newSpeeds);
+
+
   }
 
 
