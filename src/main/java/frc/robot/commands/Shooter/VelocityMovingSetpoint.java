@@ -40,8 +40,8 @@ public class VelocityMovingSetpoint extends Command {
     }
     shooter.configureVelocitySlots();
 
-    topStartingPoint = shooter.getTopVelocitySetpoint() - shooter.getTopFlyVelocityRPS(); //momentum in the wheels creates a nonzero starting state
-    bottomStartingPoint = shooter.getBottomVelocitySetpoint() - shooter.getBottomFlyVelocityRPS();
+    topStartingPoint = shooter.getTopFlyVelocityRPS(); //momentum in the wheels creates a nonzero starting state
+    bottomStartingPoint = shooter.getBottomFlyVelocityRPS();
 
     topRPSToIncrease = shooter.getTopVelocitySetpoint() - topStartingPoint; //ground left to cover
     bottomRPSToIncrease = shooter.getBottomVelocitySetpoint() - bottomStartingPoint;

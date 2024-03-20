@@ -19,7 +19,7 @@ public class Shooter extends SubsystemBase {
     private final TalonFX topFlywheel; // we should probably change these names once we learn more
     private final TalonFX bottomFlywheel; // we should probably change these names once we learn more
     private double flywheelVolts = 5;
-    private double maxTime = 2;
+    private double maxTime = 4;
     final VoltageOut topVoltReq = new VoltageOut(0);
     final VoltageOut bottomVoltReq = new VoltageOut(0);
     final VelocityVoltage topVelocityRequest = new VelocityVoltage(0).withSlot(0);
