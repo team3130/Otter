@@ -84,13 +84,18 @@ public class TeleopDrive extends Command {
       x = x * Math.abs(x);
 
       // apply dead-band
+      if (( x * x + y * y ) <= (Constants.Swerve.kDeadband * Constants.Swerve.kDeadband)) {
+          x = 0;
+          y = 0;
+      }
+      /*
       if (Math.abs(x) < Constants.Swerve.kDeadband) {
           x = 0;
       }
       if (Math.abs(y) < Constants.Swerve.kDeadband) {
           y = 0;
       }
-
+       */
       // apply slew rate limiter which also converts to m/s and rad.s
       x = xLimiter.calculate(x * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
       y = yLimiter.calculate(y * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
