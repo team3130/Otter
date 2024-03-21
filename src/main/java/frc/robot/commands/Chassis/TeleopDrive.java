@@ -5,6 +5,7 @@
 package frc.robot.commands.Chassis;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PS5Controller;
@@ -29,7 +30,7 @@ public class TeleopDrive extends Command {
     // Use addRequirements() here to declare subsystem dependencies.
     m_requirements.add(chassis);
 
-    accelerationLimiter = new SlewRateLimiterSpeeds(Constants.Swerve.kMaxAccelerationDrive, Constants.Swerve.kMaxAccelerationAngularDrive, new ChassisSpeeds());
+    accelerationLimiter = new SlewRateLimiterSpeeds(Constants.Swerve.kMaxAccelerationDrive, Constants.Swerve.kMaxDeccelerationDrive, Constants.Swerve.kMaxAccelerationAngularDrive, new ChassisSpeeds());
   }
 
   /**
@@ -97,11 +98,9 @@ public class TeleopDrive extends Command {
               x     * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond,
               y     * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond,
               theta * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond / (Constants.Swerve.trackWidth/2.0)
-      ));
+      ), new Translation2d(x,y));
 
       chassis.teleopDrive(newSpeeds);
-
-
   }
 
 
