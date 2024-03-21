@@ -29,6 +29,7 @@ public class IndexToBeam extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    indexer.indexToBeam();
 
   }
 
@@ -36,11 +37,7 @@ public class IndexToBeam extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (!shooter.getBeamHasNote()){
-      indexer.spintake();
-    }
 
-    //spin up the flywheels
   }
 
 
@@ -54,6 +51,6 @@ public class IndexToBeam extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return shooter.getBeamHasNote();
   }
 }

@@ -38,8 +38,8 @@ public class Shooter extends SubsystemBase {
     double topVelocitySetpoint = 30;
     double bottomVelocitySetpoint = 30;
 
-    double topSlowVelocitySetpoint = 5;
-    double bottomSlowVelocitySetpoint = 5;
+    double topSlowVelocitySetpoint = 10;
+    double bottomSlowVelocitySetpoint = 10;
 
 
     private double topFeedForwardVolt = 0;
@@ -111,7 +111,7 @@ public class Shooter extends SubsystemBase {
     }
 
     public boolean getBeamHasNote(){
-        return shooterBeam.get();
+        return !shooterBeam.get();
     }
 
     public void runShooterFlywheels() {

@@ -17,6 +17,8 @@ public class Indexer extends SubsystemBase {
   private double indexerVoltageCompensation = 10;
   private double outakeSpeed = -1;
   private double spintakeSpeed = 1; // 10
+  private double indexToBeamSpeed = 0.45; // 10
+
   private double shooterSpindexSpeed = 0.7;
   private double autoSpintakeSpeed = 1; // 10
   private double autoShooterSpindexSpeed = 1;
@@ -40,6 +42,9 @@ public class Indexer extends SubsystemBase {
 
   public void spintake() {
     indexer.set(spintakeSpeed);
+  }
+  public void indexToBeam() {
+    indexer.set(indexToBeamSpeed);
   }
 
   public void outtake(){

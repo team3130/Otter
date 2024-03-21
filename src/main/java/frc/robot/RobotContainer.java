@@ -25,6 +25,7 @@ import frc.robot.commands.Chassis.TeleopDrive;
 import frc.robot.commands.Climber.ClimberExtend;
 import frc.robot.commands.Climber.PitClimberReset;
 import frc.robot.commands.Indexer.AlwaysIndex;
+import frc.robot.commands.Indexer.AndrewIndex;
 import frc.robot.commands.Indexer.IndexToBeam;
 import frc.robot.commands.Intake.LimitedSpintake;
 import frc.robot.commands.Indexer.Outtake;
@@ -192,7 +193,7 @@ public class RobotContainer {
     new JoystickTrigger(operatorController, Constants.XBox.LST_AXS_RTRIGGER).whileTrue(new AlwaysIndex(indexer));
     new JoystickButton(operatorController, Constants.XBox.LST_BTN_RBUMPER).whileTrue(new IndexToBeam(indexer,shooter));
 
-    new JoystickButton(operatorController, Constants.XBox.LST_BTN_LBUMPER).whileTrue(new OnlyShoot(shooter));
+    new JoystickButton(operatorController, Constants.XBox.LST_BTN_LBUMPER).whileTrue(new AndrewIndex(indexer, shooterShifter, shooter));
 
     new JoystickButton(operatorController, Constants.XBox.LST_BTN_B).whileTrue(new ShuttleMovingSetpoint(shooter));
     new JoystickButton(operatorController, Constants.XBox.LST_BTN_A).whileTrue(new ShootMovingSetpoint(shooter));

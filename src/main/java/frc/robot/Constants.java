@@ -36,7 +36,7 @@ public final class Constants {
   public static class IDs {
     public static final int intakePNMChannel = 4;
     public final static int intakeLimitDIO = 0;
-    public final static int shooterBeamDIO = 10;
+    public final static int shooterBeamDIO = 1;
 
     public final static int ampLimitDIO = 4;
     public final static int shawtyShifterChannel = 5;
