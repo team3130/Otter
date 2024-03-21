@@ -72,7 +72,7 @@ public class SlewRateLimiterSpeeds {
         m_prevMove = m_prevMove.interpolate(inputMove, allowedNorm/wantedNorm);
         m_prevOmega = MathUtil.clamp(
                 input.omegaRadiansPerSecond - m_prevOmega,
-                -m_omegaRateLimit * elapsedTime,
+                -m_omegaRateLimit * elapsedTime, // acceleration * time = velocity
                 m_omegaRateLimit *elapsedTime);
         m_prevTime = currentTime;
         return new ChassisSpeeds(m_prevMove.getX(), m_prevMove.getY(), m_prevOmega);
