@@ -81,7 +81,7 @@ public final class Constants {
     public static double maxSteerVoltage = 4d;
     public static double maxDriveVoltage = 10d;
 
-    public static double tuningDesiredVelocity = 4d;
+    public static double tuningDesiredVelocity = 2d;
 
 
 

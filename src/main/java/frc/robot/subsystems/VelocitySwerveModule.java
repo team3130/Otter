@@ -49,7 +49,7 @@ public class VelocitySwerveModule implements Sendable {
         driveMotor = new TalonFX(Constants.Swerve.spinningID[side]);
 
         absoluteEncoder = new CANcoder(Constants.Swerve.CANCoders[side]);
-        turningPidController = new PIDController(1,0, 0);
+        turningPidController = new PIDController(1.5,0, 0);
 
 
         steerMotor.getConfigurator().apply(new TalonFXConfiguration()); // config factory default
@@ -129,6 +129,10 @@ public class VelocitySwerveModule implements Sendable {
         driveMotor.setControl(driveVelocityRequest.withVelocity(state.speedMetersPerSecond));
         // TODO: positional controller by phoenix eventually
         steerMotor.setVoltage(Constants.Swerve.maxSteerVoltage * turningPidController.calculate(Math.IEEEremainder(getTurningPositionRadians(), Math.PI * 2), state.angle.getRadians()));
+        if (Constants.debugMode) {
+            teleopDesiredVelocityError = ((state.speedMetersPerSecond / Constants.SwerveConversions.wheelCircumference) *Constants.SwerveConversions.driveGearRatio) - getDriveVelocityFalcon();
+            desiredStateVelocity = (state.speedMetersPerSecond);
+        }
     }
 
     public void setVelocityState(SwerveModuleState state) {
@@ -148,23 +152,6 @@ public class VelocitySwerveModule implements Sendable {
         return teleopDesiredVelocityError;
     }
     public double getDesiredStateVelocity() { return desiredStateVelocity; }
-
-    public void setTeleopDesiredState(SwerveModuleState state) {
-        // dead-band
-        if (Math.abs(state.speedMetersPerSecond) < 0.001) {
-            stop();
-            return;
-        }
-
-        // max turn is 90 degrees optimization
-        state = SwerveModuleState.optimize(state, getState().angle);
-        // percent output of the drive motor that the swerve controller wants you to go to by the physical max speed the bot can travel
-        // TODO: underneath set control voltage output is not real
-        // m_driveMotor.setControl(driveMotorVoltRequest.withOutput(12d* (state.speedMetersPerSecond / Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond)));
-        driveMotor.setVoltage((10d* (state.speedMetersPerSecond / Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond)));
-        // set the steering motor based off the output of the PID controller
-        steerMotor.setVoltage(Constants.Swerve.maxSteerVoltage * turningPidController.calculate(Math.IEEEremainder(getTurningPositionRadians(), Math.PI * 2), state.angle.getRadians()));
-    }
 
 
     // returns the amount of distance the drive motor has travelled in meters
