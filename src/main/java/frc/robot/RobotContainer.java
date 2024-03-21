@@ -21,6 +21,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
+import frc.robot.commands.Amp.index.AmpIndexPassBeam;
+import frc.robot.commands.Amp.index.AmpIndexUnlimited;
 import frc.robot.commands.Chassis.TeleopDrive;
 import frc.robot.commands.Climber.ClimberExtend;
 import frc.robot.commands.Climber.PitClimberReset;
@@ -190,17 +192,16 @@ public class RobotContainer {
     new POVButton(operatorController, Constants.XBox.LST_POV_W).whileTrue(new ShortShifterExtend(shooterShifter));
     new POVButton(operatorController, Constants.XBox.LST_POV_S).whileTrue(new DoubleRetract(shooterShifter));
 
-    new JoystickTrigger(operatorController, Constants.XBox.LST_AXS_RTRIGGER).whileTrue(new AlwaysIndex(indexer));
-    new JoystickButton(operatorController, Constants.XBox.LST_BTN_RBUMPER).whileTrue(new IndexToBeam(indexer,shooter));
+    new JoystickButton(operatorController, Constants.XBox.LST_BTN_Y).whileTrue(new AmpIndexUnlimited(amp, shooter, indexer ));
+    new JoystickButton(operatorController, Constants.XBox.LST_BTN_X).whileTrue(new AmpIndexPassBeam(amp, shooter, indexer ));
 
-    new JoystickButton(operatorController, Constants.XBox.LST_BTN_LBUMPER).whileTrue(new AndrewIndex(indexer, shooterShifter, shooter));
 
-    new JoystickButton(operatorController, Constants.XBox.LST_BTN_B).whileTrue(new ShuttleMovingSetpoint(shooter));
-    new JoystickButton(operatorController, Constants.XBox.LST_BTN_A).whileTrue(new ShootMovingSetpoint(shooter));
+    new JoystickButton(operatorController, Constants.XBox.LST_BTN_B).whileTrue(new AmpIntake(amp));
+    new JoystickButton(operatorController, Constants.XBox.LST_BTN_A).whileTrue(new AmpOuttake(amp));
 
-    // new JoystickButton(operatorController, Constants.XBox.LST_BTN_Y).whileTrue(new ToggleAmp(amp));
-    //new JoystickButton(operatorController, Constants.XBox.LST_BTN_B).whileTrue(new AmpIntake(amp));
-    //new JoystickButton(operatorController, Constants.XBox.LST_BTN_A).whileTrue(new AlwaysAmpIntake(amp));
+    new JoystickButton(operatorController, Constants.XBox.LST_BTN_LBUMPER).whileTrue(new AmpManualLower(amp));
+    new JoystickButton(operatorController, Constants.XBox.LST_BTN_RBUMPER).whileTrue(new AmpManualLift(amp));
+
 
 
     /*

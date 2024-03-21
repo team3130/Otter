@@ -52,12 +52,12 @@ public class Amp extends SubsystemBase {
     ampLiftingMotor.setNeutralMode(NeutralMode.Brake);
 
     ampSpinningMotor.enableVoltageCompensation(true);
-    ampSpinningMotor.configVoltageCompSaturation(3);
+    ampSpinningMotor.configVoltageCompSaturation(5);
 
     ampLiftingMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
 
     ampLiftingMotor.setInverted(false);
-    ampSpinningMotor.setInverted(false);
+    ampSpinningMotor.setInverted(true);
 
     ampSpinningMotor.enableCurrentLimit(true);
     ampSpinningMotor.configContinuousCurrentLimit(20);

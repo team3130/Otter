@@ -25,7 +25,7 @@ public final class Constants {
   public static class CAN {
     public final static int PCM = 1;
     public final static int ampLiftMotor = 14;
-    public final static int ampSpinMotor =23;
+    public final static int ampSpinMotor =28;
     public final static int climberRight = 15;
     public final static int climberLeft = 16;
     public final static int shooterTopFlywheel = 20;
