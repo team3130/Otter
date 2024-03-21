@@ -67,9 +67,9 @@ public class SlewRateLimiterSpeeds {
             currentRateLimit = m_linearAccRateLimit;
         }
 
-        double allowedNorm = MathUtil.clamp(wantedNorm, 0, currentRateLimit * elapsedTime);
+        double allowedNorm = MathUtil.clamp(wantedNorm, 0, currentRateLimit * elapsedTime); // clamping neg accel
 
-        m_prevMove = m_prevMove.interpolate(inputMove, allowedNorm/wantedNorm);
+        m_prevMove = m_prevMove.interpolate(inputMove, allowedNorm/wantedNorm); // t?
         m_prevOmega = MathUtil.clamp(
                 input.omegaRadiansPerSecond - m_prevOmega,
                 -m_omegaRateLimit * elapsedTime, // acceleration * time = velocity
