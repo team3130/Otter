@@ -62,9 +62,9 @@ public class SlewRateLimiterSpeeds {
         double elapsedTime = currentTime - m_prevTime;
         deltaNorm = new Translation2d(input.vxMetersPerSecond, input.vyMetersPerSecond).getNorm() - m_prevMove.getNorm();
         deltaRotation =  new Translation2d(input.vxMetersPerSecond, input.vyMetersPerSecond).getAngle().getRadians()- m_prevMove.getAngle().getRadians();
-        double t = (MathUtil.clamp(deltaNorm, m_prevMove.getNorm() - (Constants.Swerve.kMaxDeccelerationDrive * currentTime), m_prevMove.getNorm() + (Constants.Swerve.kMaxAccelerationDrive * currentTime))) / deltaNorm;
-        if (m_prevMove.getNorm())
-            
+        double t = (MathUtil.clamp(deltaNorm, m_prevMove.getNorm() - (Constants.Swerve.kMaxDeccelerationDrive * currentTime),
+                m_prevMove.getNorm() + (Constants.Swerve.kMaxAccelerationDrive * currentTime))) / deltaNorm;
+
         Translation2d inputMove = new Translation2d(input.vxMetersPerSecond, input.vyMetersPerSecond);
         double wantedNorm = inputMove.minus(m_prevMove).getNorm();
 
