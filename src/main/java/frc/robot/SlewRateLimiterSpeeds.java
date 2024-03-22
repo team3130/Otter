@@ -5,9 +5,8 @@ package frc.robot;
 import edu.wpi.first.math.MathSharedStore;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.util.sendable.SendableBuilder;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
 /**
@@ -23,6 +22,9 @@ public class SlewRateLimiterSpeeds {
     private double m_prevOmega;
     private double m_prevTime;
     private Translation2d prevJoystick;
+    private double deltaNorm;
+    private double deltaRotation;
+
 
 
     /**
@@ -39,7 +41,8 @@ public class SlewRateLimiterSpeeds {
         m_linearAccRateLimit = linearAccelerationRateLimit;
         m_linearDecRateLimit = linearDecelerationRateLimit;
         currentRateLimit = m_linearAccRateLimit;
-
+        deltaNorm = 0;
+        deltaRotation = 0;
         prevJoystick = new Translation2d(0,0);
         m_omegaRateLimit = omegaRateLimit;
         m_prevMove = new Translation2d(initialValue.vxMetersPerSecond, initialValue.vyMetersPerSecond);
@@ -54,18 +57,16 @@ public class SlewRateLimiterSpeeds {
      * @param input The input value whose slew rate is to be limited.
      * @return The filtered value, which will not change faster than the slew rate.
      */
-    public ChassisSpeeds calculate(ChassisSpeeds input, Translation2d joystick) {
+    public ChassisSpeeds calculate(ChassisSpeeds input) {
         double currentTime = MathSharedStore.getTimestamp();
         double elapsedTime = currentTime - m_prevTime;
-
+        deltaNorm = new Translation2d(input.vxMetersPerSecond, input.vyMetersPerSecond).getNorm() - m_prevMove.getNorm();
+        deltaRotation =  new Translation2d(input.vxMetersPerSecond, input.vyMetersPerSecond).getAngle().getRadians()- m_prevMove.getAngle().getRadians();
+        double t = (MathUtil.clamp(deltaNorm, m_prevMove.getNorm() - (Constants.Swerve.kMaxDeccelerationDrive * currentTime), m_prevMove.getNorm() + (Constants.Swerve.kMaxAccelerationDrive * currentTime))) / deltaNorm;
+        if (m_prevMove.getNorm())
+            
         Translation2d inputMove = new Translation2d(input.vxMetersPerSecond, input.vyMetersPerSecond);
         double wantedNorm = inputMove.minus(m_prevMove).getNorm();
-
-        if ( Math.abs(prevJoystick.getNorm()) > Math.abs(joystick.getNorm())){
-            currentRateLimit = m_linearDecRateLimit;
-        } else{
-            currentRateLimit = m_linearAccRateLimit;
-        }
 
         double allowedNorm = MathUtil.clamp(wantedNorm, 0, currentRateLimit * elapsedTime); // clamping neg accel
 
