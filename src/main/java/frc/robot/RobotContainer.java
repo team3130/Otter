@@ -122,6 +122,7 @@ public class RobotContainer {
       tab.add(leftClimber);
       tab.add(robotLEDs);
       tab.add(indexer);
+      tab.add(amp);
       chassis.exportSwerveModData(Shuffleboard.getTab("Swerve Modules"));
     }
   }
@@ -193,10 +194,10 @@ public class RobotContainer {
     new POVButton(operatorController, Constants.XBox.LST_POV_S).whileTrue(new DoubleRetract(shooterShifter));
 
     new JoystickButton(operatorController, Constants.XBox.LST_BTN_Y).whileTrue(new AmpIndexUnlimited(amp, shooter, indexer ));
-    new JoystickButton(operatorController, Constants.XBox.LST_BTN_X).whileTrue(new AmpIndexPassBeam(amp, shooter, indexer ));
+    new JoystickButton(operatorController, Constants.XBox.LST_BTN_X).whileTrue(new AmpIndexPassBeam(amp, shooter, indexer, shooterShifter ));
 
+    new JoystickButton(operatorController, Constants.XBox.LST_BTN_B).whileTrue(new AmpZero(amp));
 
-    new JoystickButton(operatorController, Constants.XBox.LST_BTN_B).whileTrue(new AmpIntake(amp));
     new JoystickButton(operatorController, Constants.XBox.LST_BTN_A).whileTrue(new AmpOuttake(amp));
 
     new JoystickButton(operatorController, Constants.XBox.LST_BTN_LBUMPER).whileTrue(new AmpManualLower(amp));

@@ -31,7 +31,7 @@ public class Amp extends SubsystemBase {
   private int midSetpoint = 100;
   private int lowSetpoint = 15;
   private ProfiledPIDController ampController;
-  private double P = 0;
+  private double P = 1;
   private double I = 0;
   private double D = 0;
   private TrapezoidProfile.Constraints constraints;
@@ -49,14 +49,17 @@ public class Amp extends SubsystemBase {
     ampSpinningMotor.configFactoryDefault();
 
     ampSpinningMotor.setNeutralMode(NeutralMode.Brake);
-    ampLiftingMotor.setNeutralMode(NeutralMode.Brake);
+    ampLiftingMotor.setNeutralMode(NeutralMode.Coast);
 
     ampSpinningMotor.enableVoltageCompensation(true);
-    ampSpinningMotor.configVoltageCompSaturation(5);
+    ampSpinningMotor.configVoltageCompSaturation(7);
+
+    ampLiftingMotor.enableVoltageCompensation(true);
+    ampLiftingMotor.configVoltageCompSaturation(5);
 
     ampLiftingMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
 
-    ampLiftingMotor.setInverted(false);
+    ampLiftingMotor.setInverted(true);
     ampSpinningMotor.setInverted(true);
 
     ampSpinningMotor.enableCurrentLimit(true);
@@ -71,6 +74,7 @@ public class Amp extends SubsystemBase {
     constraints = new TrapezoidProfile.Constraints(maxVelo, maxAcc);
     ampController = new ProfiledPIDController(P, I, D, constraints);
   }
+
   public boolean getHasZeroed(){
     return hasZeroed;
   }

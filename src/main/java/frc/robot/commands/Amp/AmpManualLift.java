@@ -38,6 +38,6 @@ public class AmpManualLift extends InstantCommand {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return amp.getEncoderPosition() < amp.getEncoderMax() || !amp.getHasZeroed();
+    return false;//amp.getEncoderPosition() < amp.getEncoderMax() || !amp.getHasZeroed();
   }
 }

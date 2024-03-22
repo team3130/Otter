@@ -122,6 +122,10 @@ public class Shooter extends SubsystemBase {
         topFlywheel.setControl(topVoltReq.withOutput(flywheelVolts));
         bottomFlywheel.setControl(bottomVoltReq.withOutput(flywheelVolts));
     }
+    public void runIndexToAmpSpeed() {
+        topFlywheel.setControl(topVoltReq.withOutput(indexToAmpVolts));
+        bottomFlywheel.setControl(bottomVoltReq.withOutput(indexToAmpVolts));
+    }
 
     public void stopShooters() {
         topFlywheel.setControl(topVoltReq.withOutput(0));

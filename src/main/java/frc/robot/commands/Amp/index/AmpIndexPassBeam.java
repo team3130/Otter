@@ -9,22 +9,25 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Amp;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.ShooterShifter;
 
 /** An example command that uses an example subsystem. */
 public class AmpIndexPassBeam extends Command {
   private final Amp amp;
   private final Shooter shooter;
   private final Indexer indexer;
+  private final ShooterShifter shifter;
   private boolean hasSeenNote = false;
   private Timer timer = new Timer();
 
   /**
    * @param amp The subsystem used by this command.
    */
-  public AmpIndexPassBeam(Amp amp, Shooter shooter, Indexer indexer) {
+  public AmpIndexPassBeam(Amp amp, Shooter shooter, Indexer indexer, ShooterShifter shifter) {
     this.amp = amp;
     this.shooter = shooter;
     this.indexer = indexer;
+    this.shifter = shifter;
     addRequirements(amp);
     addRequirements(shooter);
     addRequirements(indexer);
@@ -34,9 +37,12 @@ public class AmpIndexPassBeam extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    shooter.runIndexSpeed();
-    amp.intakeAmp();
-    indexer.spintake();
+    hasSeenNote = false;
+    if (shifter.getIsShortShifterExtended()) {
+      shooter.runIndexToAmpSpeed();
+      amp.outtakeAmp();
+      indexer.shooterSpindex();
+    }
   }
 
   // Called every time the scheduler runs while the command is scheduled.
