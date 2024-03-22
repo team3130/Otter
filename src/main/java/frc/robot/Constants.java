@@ -87,9 +87,9 @@ public final class Constants {
 
     public static double slot0_kS = 0; // DONT USE KS
     public static double slot0_kV = 0.12; // measured 3/19/24
-    public static double slot0_kP = 0.015; // measured 3/14/24
+    public static double slot0_kP = 0.2; // measured 3/14/24
     public static double slot0_kI = 0;
-    public static double slot0_kD = 0.001;
+    public static double slot0_kD = 0;
 
 
     // SWERVE CAN NUMBERED LIKE CARTESIAN COORDIANTE QUADRANTS

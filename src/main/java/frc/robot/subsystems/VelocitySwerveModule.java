@@ -49,7 +49,7 @@ public class VelocitySwerveModule implements Sendable {
         driveMotor = new TalonFX(Constants.Swerve.spinningID[side]);
 
         absoluteEncoder = new CANcoder(Constants.Swerve.CANCoders[side]);
-        turningPidController = new PIDController(1.5,0, 0);
+        turningPidController = new PIDController(0.8,0, 0);
 
 
         steerMotor.getConfigurator().apply(new TalonFXConfiguration()); // config factory default
