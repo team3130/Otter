@@ -23,6 +23,9 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.Amp.index.AmpIndexPassBeam;
 import frc.robot.commands.Amp.index.AmpIndexUnlimited;
+import frc.robot.commands.Amp.setpoints.AmpAutoHigh;
+import frc.robot.commands.Amp.setpoints.AmpAutoLow;
+import frc.robot.commands.Amp.setpoints.AmpAutoMid;
 import frc.robot.commands.Chassis.TeleopDrive;
 import frc.robot.commands.Climber.ClimberExtend;
 import frc.robot.commands.Climber.PitClimberReset;
@@ -116,11 +119,8 @@ public class RobotContainer {
   public void exportShuffleBoardData() {
     if (Constants.debugMode) {
       ShuffleboardTab tab = Shuffleboard.getTab("Subsystem Test");
-      tab.add(chassis);
       tab.add(shooter);
       tab.add(intake);
-      tab.add(leftClimber);
-      tab.add(robotLEDs);
       tab.add(indexer);
       tab.add(amp);
       chassis.exportSwerveModData(Shuffleboard.getTab("Swerve Modules"));
@@ -189,11 +189,10 @@ public class RobotContainer {
     /*
     ANDREW OPERATOR
      */
-    new POVButton(operatorController, Constants.XBox.LST_POV_N).whileTrue(new DoubleExtend(shooterShifter));
-    new POVButton(operatorController, Constants.XBox.LST_POV_W).whileTrue(new ShortShifterExtend(shooterShifter));
-    new POVButton(operatorController, Constants.XBox.LST_POV_S).whileTrue(new DoubleRetract(shooterShifter));
+    new POVButton(operatorController, Constants.XBox.LST_POV_N).whileTrue(new AmpAutoHigh(amp));
+    new POVButton(operatorController, Constants.XBox.LST_POV_W).whileTrue(new AmpAutoMid(amp));
+    new POVButton(operatorController, Constants.XBox.LST_POV_S).whileTrue(new AmpAutoLow(amp));
 
-    new JoystickButton(operatorController, Constants.XBox.LST_BTN_Y).whileTrue(new AmpIndexUnlimited(amp, shooter, indexer ));
     new JoystickButton(operatorController, Constants.XBox.LST_BTN_X).whileTrue(new AmpIndexPassBeam(amp, shooter, indexer, shooterShifter ));
 
     new JoystickButton(operatorController, Constants.XBox.LST_BTN_B).whileTrue(new AmpZero(amp));

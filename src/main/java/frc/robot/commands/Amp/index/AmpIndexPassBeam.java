@@ -38,7 +38,7 @@ public class AmpIndexPassBeam extends Command {
   @Override
   public void initialize() {
     hasSeenNote = false;
-    if (shifter.getIsShortShifterExtended()) {
+    if (shifter.getIsShortShifterExtended() || shifter.getIsDoubleRetracted()) {
       shooter.runIndexToAmpSpeed();
       amp.outtakeAmp();
       indexer.shooterSpindex();

@@ -33,7 +33,7 @@ public class AmpZero extends InstantCommand {
   @Override
   public void end(boolean interrupted) {
     amp.ampLiftingMotorStop();
-    if (isFinished()){
+    if (amp.getLimitSwitch()) {
       amp.resetEncoder();
       amp.setHasZeroedTrue();
     }

@@ -33,12 +33,13 @@ public class AmpManualLower extends InstantCommand {
   @Override
   public void end(boolean interrupted) {
     amp.ampLiftingMotorStop();
+    /*
     if (amp.getLimitSwitch()) {
       amp.resetEncoder();
       if (!amp.getHasZeroed()){
         amp.setHasZeroedTrue();
       }
-    }
+    }*/
   }
 
   // Returns true when the command should end.

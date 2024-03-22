@@ -22,13 +22,13 @@ public class AmpAutoHigh extends InstantCommand {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    amp.resetControllerHigh();
+    amp.resetController();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    amp.runController();
+    amp.runController(amp.getHighSetpoint());
   }
 
   // Called once the command ends or is interrupted.
@@ -40,6 +40,6 @@ public class AmpAutoHigh extends InstantCommand {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return amp.isAtSetpoint() || !amp.getHasZeroed();
+    return !amp.getHasZeroed();
   }
 }

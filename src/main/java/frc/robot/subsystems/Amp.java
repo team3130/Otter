@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.util.sendable.SendableBuilder;
@@ -26,17 +27,14 @@ public class Amp extends SubsystemBase {
   private double ampLiftSpeed = 0.5;
   private double ampLowerSpeed = -0.5;
   private double outtakeAmpSpeed = -1;
-  private int encoderMaxTicks = 215;
-  private int highSetpoint = 200;
-  private int midSetpoint = 100;
-  private int lowSetpoint = 15;
-  private ProfiledPIDController ampController;
-  private double P = 1;
+  private int encoderMaxTicks = 13600;
+  private int highSetpoint = 13550; //drop into amp
+  private int midSetpoint = 5465; //pick up from mid shooter
+  private int lowSetpoint = 100;
+  private PIDController ampController;
+  private double P = 0.0012;
   private double I = 0;
-  private double D = 0;
-  private TrapezoidProfile.Constraints constraints;
-  private double maxVelo= 1;
-  private double maxAcc = 1;
+  private double D = 0.00005;
   private boolean hasZeroed = false;
 
   public Amp() {
@@ -49,10 +47,10 @@ public class Amp extends SubsystemBase {
     ampSpinningMotor.configFactoryDefault();
 
     ampSpinningMotor.setNeutralMode(NeutralMode.Brake);
-    ampLiftingMotor.setNeutralMode(NeutralMode.Coast);
+    ampLiftingMotor.setNeutralMode(NeutralMode.Brake);
 
     ampSpinningMotor.enableVoltageCompensation(true);
-    ampSpinningMotor.configVoltageCompSaturation(7);
+    ampSpinningMotor.configVoltageCompSaturation(9);
 
     ampLiftingMotor.enableVoltageCompensation(true);
     ampLiftingMotor.configVoltageCompSaturation(5);
@@ -71,8 +69,7 @@ public class Amp extends SubsystemBase {
     ampLiftingMotor.configPeakCurrentLimit(0);
 
 
-    constraints = new TrapezoidProfile.Constraints(maxVelo, maxAcc);
-    ampController = new ProfiledPIDController(P, I, D, constraints);
+    ampController = new PIDController(P, I, D);
   }
 
   public boolean getHasZeroed(){
@@ -82,23 +79,8 @@ public class Amp extends SubsystemBase {
     hasZeroed = true;
   }
 
-  public void resetControllerHigh(){
-    ampController.reset(getEncoderPosition());
-    ampController.setGoal(highSetpoint);
-    ampController.setTolerance(15);
-    ampController.setPID(P, I, D);
-  }
-  public void resetControllerMid(){
-    ampController.reset(getEncoderPosition());
-    ampController.setGoal(midSetpoint);
-    ampController.setTolerance(15);
-    ampController.setPID(P, I, D);
-  }
-
-  public void resetControllerLow(){
-    ampController.reset(getEncoderPosition());
-    ampController.setGoal(lowSetpoint);
-    ampController.setTolerance(15);
+  public void resetController(){
+    ampController.setTolerance(100);
     ampController.setPID(P, I, D);
   }
 
@@ -123,8 +105,8 @@ public class Amp extends SubsystemBase {
 
 
 
-  public void runController(){
-    ampController.calculate(getEncoderPosition());
+  public double runController( double setpoint){
+    return ampController.calculate(getLiftingEncoderPosition(), setpoint);
   }
   public boolean isAtSetpoint(){
     return ampController.atSetpoint();
@@ -142,14 +124,14 @@ public class Amp extends SubsystemBase {
   public void ampLiftingMotorStop() {
     ampLiftingMotor.set(ControlMode.PercentOutput, 0);
   }
-  public void resetEncoder(){
-    ampLiftingMotor.setSelectedSensorPosition(0);
+  public void resetEncoder() {
+    ampLiftingMotor.setSelectedSensorPosition(-0);
   }
 
   public boolean getLimitSwitch() {
     return !ampLimit.get();
   }
-  public double getEncoderPosition() { return ampLiftingMotor.getSelectedSensorPosition();}
+  public double getLiftingEncoderPosition() { return -ampLiftingMotor.getSelectedSensorPosition();}
 
   public double getIntakeAmpSpeed() {
     return intakeAmpSpeed;
@@ -169,6 +151,9 @@ public class Amp extends SubsystemBase {
   public void setAmpLiftSpeed(double speed){
     ampLiftSpeed = speed;
   }
+  public void moveAmpAtSpeed(double speed){
+    ampLiftingMotor.set(ControlMode.PercentOutput, speed);
+  }
   public void setAmpLowerSpeed(double speed){
     ampLowerSpeed = speed;
   }
@@ -187,6 +172,24 @@ public class Amp extends SubsystemBase {
     ampLiftingMotor.set(ampLowerSpeed);
   }
 
+  public double getP(){
+    return P;
+  }
+  public double getI(){
+    return I;
+  }
+  public double getD(){
+    return D;
+  }
+  public void setP(double newP){
+     P = newP;
+  }
+  public void setI(double newI){
+    I = newI;
+  }
+  public void setD(double newD){
+    D = newD;
+  }
 
 
   @Override
@@ -202,12 +205,17 @@ public class Amp extends SubsystemBase {
       builder.addDoubleProperty("Lower Amp Speed", this::getAmpLowerSpeed, this::setAmpLowerSpeed);
       builder.addBooleanProperty("Limit Switch", this::getLimitSwitch, null);
       builder.addIntegerProperty("Encoder Max", this::getEncoderMax, this::setEncoderMax);
-      builder.addDoubleProperty("Encoder Position", this::getEncoderPosition, null);
+      builder.addDoubleProperty("Encoder Position", this::getLiftingEncoderPosition, null);
       builder.addIntegerProperty("high setpoint", this::getHighSetpoint, this::setHighSetpoint);
       builder.addIntegerProperty("low setpoint", this::getLowSetpoint, this::setLowSetpoint);
       builder.addIntegerProperty("mid setpoint", this::getMidSetpoint, this::setMidSetpoint);
       builder.addBooleanProperty("Is At Setpoint", this::isAtSetpoint, null);
       builder.addBooleanProperty("has zeroed", this::getHasZeroed, null);
+      builder.addDoubleProperty("p", this::getP, this::setP);
+      builder.addDoubleProperty("i", this::getI, this::setI);
+      builder.addDoubleProperty("d", this::getD, this::setD);
+
+
     }
   }
 }
