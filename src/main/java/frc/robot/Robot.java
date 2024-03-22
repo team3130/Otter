@@ -26,7 +26,6 @@ public class Robot extends TimedRobot {
   private Timer timer;
 
   private RobotContainer m_robotContainer;
-  private Timer timer;
   private boolean haveResetManually = false;
 
 
