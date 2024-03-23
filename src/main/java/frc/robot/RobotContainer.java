@@ -8,7 +8,6 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.PS5Controller;
@@ -18,17 +17,13 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
-import frc.robot.commands.Chassis.DriveVelocityTuning;
-import frc.robot.commands.Chassis.TeleopDrive;
+import frc.robot.commands.Chassis.*;
 import frc.robot.commands.Climber.ClimberExtend;
 import frc.robot.commands.Climber.PitClimberReset;
 import frc.robot.subsystems.Chassis;
-import frc.robot.sensors.JoystickTrigger;
 import frc.robot.subsystems.*;
-import frc.robot.commands.Chassis.ResetOdometryForward;
 import frc.robot.subsystems.LEDs;
 
 /**
@@ -138,7 +133,9 @@ public class RobotContainer {
     // Right joystick up == targeting amp
     // Right joystick down == targeting speaker
     // Press right joystick == targeting stage to speaker
-    new JoystickButton(driverController, Constants.PS5.triangle).whileTrue(new DriveVelocityTuning(chassis));
+    new JoystickButton(driverController, Constants.PS5.triangle).whileTrue(new SteerVelocityDriveForward(chassis));
+
+    new JoystickButton(driverController, Constants.PS5.x).whileTrue(new SteerVelocityDriveBacky(chassis));
 
     //new JoystickTrigger(driverController, Constants.PS5.LST_AXS_LTRIGGER).whileTrue(new AmpOuttake(amp));
 

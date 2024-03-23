@@ -49,7 +49,7 @@ public class VelocitySwerveModule implements Sendable {
         driveMotor = new TalonFX(Constants.Swerve.spinningID[side]);
 
         absoluteEncoder = new CANcoder(Constants.Swerve.CANCoders[side]);
-        turningPidController = new PIDController(0.8,0, 0);
+        turningPidController = new PIDController(1.8,0, 0);
 
 
         steerMotor.getConfigurator().apply(new TalonFXConfiguration()); // config factory default
@@ -127,7 +127,6 @@ public class VelocitySwerveModule implements Sendable {
         updateVelocityPID();
         state = SwerveModuleState.optimize(state, getState().angle);
         driveMotor.setControl(driveVelocityRequest.withVelocity(state.speedMetersPerSecond));
-        // TODO: positional controller by phoenix eventually
         steerMotor.setVoltage(Constants.Swerve.maxSteerVoltage * turningPidController.calculate(Math.IEEEremainder(getTurningPositionRadians(), Math.PI * 2), state.angle.getRadians()));
         if (Constants.debugMode) {
             teleopDesiredVelocityError = ((state.speedMetersPerSecond / Constants.SwerveConversions.wheelCircumference) *Constants.SwerveConversions.driveGearRatio) - getDriveVelocityFalcon();
@@ -138,10 +137,11 @@ public class VelocitySwerveModule implements Sendable {
     public void setVelocityState(SwerveModuleState state) {
         configureVelocitySlots();
         updateVelocityPID();
+        desiredStateVelocity = (state.speedMetersPerSecond);
 
         state = SwerveModuleState.optimize(state, getState().angle);
         driveMotor.setControl(driveVelocityRequest.withVelocity((state.speedMetersPerSecond / Constants.SwerveConversions.wheelCircumference) *Constants.SwerveConversions.driveGearRatio));
-        steerMotor.setVoltage(Constants.Swerve.maxSteerVoltage * turningPidController.calculate(Math.IEEEremainder(getTurningPositionRadians(), Math.PI * 2), state.angle.getRadians()));
+        steerMotor.setVoltage( Constants.Swerve.maxSteerVoltage * turningPidController.calculate(Math.IEEEremainder(getTurningPositionRadians(), Math.PI * 2), state.angle.getRadians()));
         if (Constants.debugMode) {
             teleopDesiredVelocityError = ((state.speedMetersPerSecond / Constants.SwerveConversions.wheelCircumference) *Constants.SwerveConversions.driveGearRatio) - getDriveVelocityFalcon();
             desiredStateVelocity = (state.speedMetersPerSecond);
@@ -171,6 +171,10 @@ public class VelocitySwerveModule implements Sendable {
     // gets the velocity of the drive motor in m/s
     public double getDriveVelocity() {
         return driveMotor.getVelocity().getValue() * Constants.SwerveConversions.driveRotToMeters * 10d;
+    }
+
+    public double getRawDriveVelocity() {
+        return driveMotor.getVelocity().getValue();
     }
 
     public double getDriveVelocityFalcon() {
