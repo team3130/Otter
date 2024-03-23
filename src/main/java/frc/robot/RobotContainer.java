@@ -188,29 +188,29 @@ public class RobotContainer {
 
     /*
     ANDREW OPERATOR
-     */
-    new POVButton(operatorController, Constants.XBox.LST_POV_N).whileTrue(new AmpAutoHigh(amp));
-    new POVButton(operatorController, Constants.XBox.LST_POV_W).whileTrue(new AmpAutoMid(amp));
-    new POVButton(operatorController, Constants.XBox.LST_POV_S).whileTrue(new AmpAutoLow(amp));
+     *
 
-    new JoystickButton(operatorController, Constants.XBox.LST_BTN_X).whileTrue(new AmpIndexPassBeam(amp, shooter, indexer, shooterShifter ));
+    /** amp setpoints **/
+    // not working new POVButton(operatorController, Constants.XBox.LST_POV_N).whileTrue(new AmpAutoHigh(amp));
+    //new POVButton(operatorController, Constants.XBox.LST_POV_W).whileTrue(new AmpAutoMid(amp));
+    // not working new POVButton(operatorController, Constants.XBox.LST_POV_S).whileTrue(new AmpAutoLow(amp));
 
-    new JoystickButton(operatorController, Constants.XBox.LST_BTN_B).whileTrue(new AmpZero(amp));
-
-    new JoystickButton(operatorController, Constants.XBox.LST_BTN_A).whileTrue(new AmpOuttake(amp));
-
-    new JoystickButton(operatorController, Constants.XBox.LST_BTN_LBUMPER).whileTrue(new AmpManualLower(amp));
-    new JoystickButton(operatorController, Constants.XBox.LST_BTN_RBUMPER).whileTrue(new AmpManualLift(amp));
+    /** amp prepping **/
+    //new JoystickButton(operatorController, Constants.XBox.LST_BTN_X).whileTrue(new AmpIndexPassBeam(amp, shooter, indexer, shooterShifter ));
 
 
+    //new JoystickButton(operatorController, Constants.XBox.LST_BTN_B).whileTrue(new AmpZero(amp));
 
-    /*
-    //new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new VelocityShoot(shooter));
-    //new JoystickButton(operatorController, Constants.Buttons.LST_BTN_RBUMPER).whileTrue(new SequentialCommandGroup(new SmartSpintake(intake), new SmartIndex(intake)));
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    /*
-    new Trigger(m_exampleSubsystem::exampleCondition)
-            .onTrue(new ExampleCommand(m_exampleSubsystem));
-    */
+    //new JoystickButton(operatorController, Constants.XBox.LST_BTN_A).whileTrue(new AmpOuttake(amp));
+
+    //new JoystickButton(operatorController, Constants.XBox.LST_BTN_LBUMPER).whileTrue(new AmpManualLower(amp));
+    //new JoystickButton(operatorController, Constants.XBox.LST_BTN_RBUMPER).whileTrue(new AmpManualLift(amp));
+
+
+    new JoystickButton(driverController, Constants.XBox.LST_BTN_RBUMPER).whileTrue(new VelocityShoot(shooter));
+    new JoystickTrigger(driverController, Constants.XBox.LST_AXS_RTRIGGER).whileTrue(new AndrewIndex(indexer, shooterShifter, shooter));
+    new JoystickTrigger(driverController, Constants.XBox.LST_AXS_LTRIGGER).whileTrue(new ShortShifterExtend(shooterShifter));
+    new JoystickButton(driverController, Constants.XBox.LST_BTN_LBUMPER).whileTrue(new DoubleExtend(shooterShifter));
+
   }
 }
