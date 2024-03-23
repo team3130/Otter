@@ -54,6 +54,13 @@ public class Chassis extends SubsystemBase {
     private boolean isTargetingBackClimb = false;
     private int fiducialID = 0;
     private PIDController targetController;
+    private PIDController simpleDistanceRobotController;
+    private double distanceP = 7;
+    private double distanceI = 0;
+    private double distanceD = 1.25;
+
+    private double targetDistanceX = 5;
+
     private double XtargetV = 0;
     private double YtargetF = 0;
 
@@ -85,6 +92,9 @@ public class Chassis extends SubsystemBase {
         // odometry wrapper class that has functionality for cameras that report position with latency
         odometry = new SwerveDrivePoseEstimator(kinematics, startingRotation, generatePoses(), startingPos);
 
+        simpleDistanceRobotController = new PIDController(distanceP, distanceI, distanceD);
+        simpleDistanceRobotController.setTolerance(0.0025, 0.05);
+
         robotAngleController = new PIDController(targetP, targetI, targetD);
         robotAngleController.enableContinuousInput(-Math.PI, Math.PI); // wrap for circles
         robotAngleController.setTolerance(0.0025, 0.05); // at position tolerance
@@ -103,7 +113,7 @@ public class Chassis extends SubsystemBase {
                 this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
                 this::driveAutonRobotRelative,
                 new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-                        new PIDConstants(2, 0, 0.001), // Translation PID constants
+                        new PIDConstants(7, 0, 0), // Translation PID constants
                         new PIDConstants(2.9, 0, 0.7), // Rotation PID constants
                         4.8, // Max module speed, in m/s
                         0.41295, // Drive base radius in meters. Distance from robot center to the furthest module: sqrt(0.584^2 + 0.584^2)/2
@@ -118,6 +128,14 @@ public class Chassis extends SubsystemBase {
                 },
                 this // Reference to this subsystem to set requirements
         );
+    }
+
+    public void updateDistancePIDVals() {
+        simpleDistanceRobotController.setPID(distanceP, distanceI, distanceD);
+    }
+
+    public double goToDistancePower() {
+        return simpleDistanceRobotController.calculate(getOdometryX(), targetDistanceX);
     }
 
 
@@ -516,6 +534,33 @@ public class Chassis extends SubsystemBase {
 
     public String getOdometry() { return odometry.getEstimatedPosition().toString(); }
 
+    public double getOdometryX() {
+        return odometry.getEstimatedPosition().getX();
+    }
+
+    public double getTargetDistanceX() {
+        return targetDistanceX;
+    }
+
+    public void setTargetDistanceX(double lol) {
+        this.targetDistanceX = lol;
+    }
+
+    public double getDistanceP() {
+        return distanceP;
+    }
+    public void setDistanceP(double lol) { this.distanceP = lol;}
+
+    public double getDistanceI() {
+        return distanceI;
+    }
+    public void setDistanceI(double lol) { this.distanceI = lol;}
+
+    public double getDistanceD() {
+        return distanceD;
+    }
+    public void setDistanceD(double lol) { this.distanceD = lol;}
+
     /**
      * Initializes the data we send on shuffleboard
      * Calls the default init sendable for Subsystem Bases
@@ -548,6 +593,12 @@ public class Chassis extends SubsystemBase {
             builder.addDoubleProperty("target F", this::getXTargetV, this::setXTargetV);
             builder.addDoubleProperty("target YF", this::getYTargetV, this::setYTargetV);
             builder.addDoubleProperty("target XF", this::getXTargetV, this::setXTargetV);
+
+            builder.addDoubleProperty("x target distance", this::getTargetDistanceX, this::setTargetDistanceX);
+
+            builder.addDoubleProperty("distance P", this::getDistanceP, this::setDistanceP);
+            builder.addDoubleProperty("distance I", this::getDistanceI, this::setDistanceI);
+            builder.addDoubleProperty("distance D", this::getDistanceD, this::setDistanceD);
         }
     }
 
