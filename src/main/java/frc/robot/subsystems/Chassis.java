@@ -26,8 +26,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.sensors.Navx;
 
-import java.util.Arrays;
-
 /**
  * Chassis is the drivetrain subsystem of our bot. Our physical chassis is a swerve drive,
  * so we use wpilib SwerveDriveKinematics and SwerveDrivePoseEstimator as opposed to Differential Drive objects
@@ -35,7 +33,7 @@ import java.util.Arrays;
 public class Chassis extends SubsystemBase {
     private final SwerveDriveKinematics kinematics; // geometry of swerve modules
     private final SwerveDrivePoseEstimator odometry; // odometry object
-    private final SwerveModule[] modules; // list of four swerve modules
+    private final VelocitySwerveModule[] modules; // list of four swerve modules
     private final Navx navx = Navx.GetInstance(); // initialize Navx
     private boolean fieldRelative = true; // field relative or robot oriented drive
     private double maxSpeedRead = 0; // updated periodically with the maximum speed that has been read on any of the swerve modules
@@ -78,11 +76,11 @@ public class Chassis extends SubsystemBase {
     public Chassis(Pose2d startingPos, Rotation2d startingRotation) {
         kinematics = new SwerveDriveKinematics(Constants.Swerve.moduleTranslations);
 
-        modules = new SwerveModule[4];
-        modules[Constants.SwerveModules.one] = new SwerveModule(Constants.SwerveModules.one);
-        modules[Constants.SwerveModules.two] = new SwerveModule(Constants.SwerveModules.two);
-        modules[Constants.SwerveModules.three] = new SwerveModule(Constants.SwerveModules.three);
-        modules[Constants.SwerveModules.four] = new SwerveModule(Constants.SwerveModules.four);
+        modules = new VelocitySwerveModule[4];
+        modules[Constants.SwerveModules.one] = new VelocitySwerveModule(Constants.SwerveModules.one);
+        modules[Constants.SwerveModules.two] = new VelocitySwerveModule(Constants.SwerveModules.two);
+        modules[Constants.SwerveModules.three] = new VelocitySwerveModule(Constants.SwerveModules.three);
+        modules[Constants.SwerveModules.four] = new VelocitySwerveModule(Constants.SwerveModules.four);
 
         // odometry wrapper class that has functionality for cameras that report position with latency
         odometry = new SwerveDrivePoseEstimator(kinematics, startingRotation, generatePoses(), startingPos);
@@ -105,9 +103,9 @@ public class Chassis extends SubsystemBase {
                 this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
                 this::driveAutonRobotRelative,
                 new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-                        new PIDConstants(3, 0, 0), // Translation PID constants
-                        new PIDConstants(8, 0.15, 0.5), // Rotation PID constants
-                        3, // Max module speed, in m/s
+                        new PIDConstants(8, 0, 0), // Translation PID constants
+                        new PIDConstants(2.9, 0, 0.7), // Rotation PID constants
+                        4.8, // Max module speed, in m/s
                         0.41295, // Drive base radius in meters. Distance from robot center to the furthest module: sqrt(0.584^2 + 0.584^2)/2
                         new ReplanningConfig() // Default path replanning config. See the API for the options here
                 ),
@@ -141,9 +139,9 @@ public class Chassis extends SubsystemBase {
      */
     public void teleopDrive(double x, double y, double theta, boolean fieldRelative) {
         if (fieldRelative) {
-            setTeleopModuleStates(kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(x, y, theta, getRotation2d())));
+            setVelocityTeleopModuleStates(kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(x, y, theta, getRotation2d())));
         } else {
-            setTeleopModuleStates(kinematics.toSwerveModuleStates(new ChassisSpeeds(x, y, theta)));
+            setVelocityTeleopModuleStates(kinematics.toSwerveModuleStates(new ChassisSpeeds(x, y, theta)));
         }
     }
 
@@ -230,44 +228,53 @@ public class Chassis extends SubsystemBase {
         return states;
     }
 
-    // set module states to desired states
-    public void setTeleopModuleStates(SwerveModuleState[] desiredStates) {
-        SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
-
-        modules[Constants.SwerveModules.one].setTeleopDesiredState(desiredStates[Constants.SwerveModules.one]);
-        modules[Constants.SwerveModules.two].setTeleopDesiredState(desiredStates[Constants.SwerveModules.two]);
-        modules[Constants.SwerveModules.three].setTeleopDesiredState(desiredStates[Constants.SwerveModules.three]);
-        modules[Constants.SwerveModules.four].setTeleopDesiredState(desiredStates[Constants.SwerveModules.four]);
-    }
-
     public void setAutonModuleStates(SwerveModuleState[] desiredStates) {
         SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
 
-        modules[Constants.SwerveModules.one].setAutonDesiredState(desiredStates[Constants.SwerveModules.one]);
-        modules[Constants.SwerveModules.two].setAutonDesiredState(desiredStates[Constants.SwerveModules.two]);
-        modules[Constants.SwerveModules.three].setAutonDesiredState(desiredStates[Constants.SwerveModules.three]);
-        modules[Constants.SwerveModules.four].setAutonDesiredState(desiredStates[Constants.SwerveModules.four]);
+        modules[Constants.SwerveModules.one].setVelocityState(desiredStates[Constants.SwerveModules.one]);
+        modules[Constants.SwerveModules.two].setVelocityState(desiredStates[Constants.SwerveModules.two]);
+        modules[Constants.SwerveModules.three].setVelocityState(desiredStates[Constants.SwerveModules.three]);
+        modules[Constants.SwerveModules.four].setVelocityState(desiredStates[Constants.SwerveModules.four]);
     }
 
+    public void setVelocityTeleopModuleStates(SwerveModuleState[] desiredStates) {
+        SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
+
+        modules[Constants.SwerveModules.one].setVelocityState(desiredStates[Constants.SwerveModules.one]);
+        modules[Constants.SwerveModules.two].setVelocityState(desiredStates[Constants.SwerveModules.two]);
+        modules[Constants.SwerveModules.three].setVelocityState(desiredStates[Constants.SwerveModules.three]);
+        modules[Constants.SwerveModules.four].setVelocityState(desiredStates[Constants.SwerveModules.four]);
+    }
+
+    public void driveTuningVelocity() {
+        modules[Constants.SwerveModules.one].setTuningVelocityState(new SwerveModuleState(tuningDesiredVelocityRPS(), new Rotation2d()));
+        modules[Constants.SwerveModules.two].setTuningVelocityState(new SwerveModuleState(tuningDesiredVelocityRPS(), new Rotation2d()));
+        modules[Constants.SwerveModules.three].setTuningVelocityState(new SwerveModuleState(tuningDesiredVelocityRPS(), new Rotation2d()));
+        modules[Constants.SwerveModules.four].setTuningVelocityState(new SwerveModuleState(tuningDesiredVelocityRPS(), new Rotation2d()));
+    }
+
+    public double tuningDesiredVelocityRPS() {
+        return (Constants.Swerve.tuningDesiredVelocity / Constants.SwerveConversions.wheelCircumference) * Constants.SwerveConversions.driveGearRatio;
+    }
 
 
     // Spins the wheels to an angle
     public void turnToAngle(double setpoint) {
-        for (SwerveModule module : modules) {
+        for (VelocitySwerveModule module : modules) {
             module.turnToAngle(setpoint);
         }
     }
 
     // Stops the devices connected to this subsystem
     public void stopModules(){
-        for (SwerveModule module : modules) {
+        for (VelocitySwerveModule module : modules) {
             module.stop();
         }
     }
 
     // Command to reset the encoders
     public void resetEncoders() {
-        for (SwerveModule module : modules) {
+        for (VelocitySwerveModule module : modules) {
             module.resetEncoders();
         }
     }
@@ -287,8 +294,8 @@ public class Chassis extends SubsystemBase {
 
 
     /**
-     * A vomit onto shuffleboard of the {@link SwerveModule} objects in Chassis
-     * @param tab the tab to add the {@link SwerveModule} objects
+     * A vomit onto shuffleboard of the {@link VelocitySwerveModule} objects in Chassis
+     * @param tab the tab to add the {@link VelocitySwerveModule} objects
      */
     public void exportSwerveModData(ShuffleboardTab tab) {
         tab.add(modules[0]);
@@ -296,17 +303,6 @@ public class Chassis extends SubsystemBase {
         tab.add(modules[2]);
         tab.add(modules[3]);
     }
-
-    // update the P values for the swerve module
-    public void updatePValuesFromSwerveModule(double pValue) {
-        Arrays.stream(modules).forEach((SwerveModule modules) -> modules.updatePValue(pValue));
-    }
-
-    // update the D values for the swerve module
-    public void updateDValuesFromSwerveModule(double dValue) {
-        Arrays.stream(modules).forEach((SwerveModule modules) -> modules.updateDValue(dValue));
-    }
-
 
     public boolean isTargetingAmp(double omega, double theta){
         if (omega > 0.5 && Math.abs(theta) < 0.5){

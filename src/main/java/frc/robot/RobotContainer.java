@@ -29,17 +29,14 @@ import frc.robot.commands.Indexer.AndrewIndex;
 import frc.robot.commands.Intake.LimitedSpintake;
 import frc.robot.commands.Indexer.Outtake;
 import frc.robot.commands.ShooterShifter.ShortShifterExtend;
-import frc.robot.subsystems.Chassis;
 import frc.robot.commands.Auton.*;
 import frc.robot.commands.Shooter.*;
 import frc.robot.commands.ShooterShifter.DoubleExtend;
 import frc.robot.commands.ShooterShifter.DoubleRetract;
 import frc.robot.sensors.JoystickTrigger;
 import frc.robot.subsystems.*;
-import frc.robot.commands.Amp.*;
 import frc.robot.commands.Chassis.ResetOdometryForward;
 import frc.robot.commands.Intake.*;
-import frc.robot.subsystems.Amp;
 import frc.robot.subsystems.LEDs;
 
 /**
@@ -52,7 +49,6 @@ import frc.robot.subsystems.LEDs;
 // The robot's subsystems and commands are defined here...
 public class RobotContainer {
   private final Chassis chassis;
-  private final Amp amp;
   private final Intake intake;
   private final Shooter shooter;
   private final Indexer indexer;
@@ -71,7 +67,6 @@ public class RobotContainer {
     shooter = new Shooter();
     shooterShifter = new ShooterShifter();
     chassis = new Chassis();
-    amp = new Amp();
     intake = new Intake();
     indexer = new Indexer(shooter);
     robotLEDs = new LEDs();
@@ -136,7 +131,7 @@ public class RobotContainer {
   public void LEDPeriodic() {
     if (shooterShifter.getIsDoubleExtended()) {
       robotLEDs.redRobot();
-    } else if (intake.getIntakeLimitSwitch() || amp.getLimitSwitch()) {
+    } else if (intake.getIntakeLimitSwitch() ) {
       robotLEDs.purpleRobot();
     } else if (leftClimber.getClimbDone() && rightClimber.getClimbDone()) {
       robotLEDs.movingRainbow();
@@ -160,10 +155,6 @@ public class RobotContainer {
   public InstantCommand resetIntake() {
     return new IntakeIn(intake);
   }
-  public InstantCommand resetAmp() {
-    return new AmpDown(amp);
-  }
-
   public void resetOdo() {
     chassis.resetOdometry(new Pose2d(0, 0, new Rotation2d()));
   }

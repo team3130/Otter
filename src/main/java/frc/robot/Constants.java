@@ -33,18 +33,19 @@ public final class Constants {
   }
 
   public static class IDs {
-    public static final int intakePNMChannel = 1;
-    public final static int intakeLimitDIO = 1;
 
-    public final static int ampPNMChannel = 4;
-    public final static int ampLimitDIO = 0;
-    
-    public final static int longShifterChannel = 3;
-    public final static int smallShifterChannel = 2;
+    public static final int intakePNMChannel = 4;
+    public final static int intakeLimitDIO = 0;
+
+    public final static int ampLimitDIO = 4;
+
+    public final static int longShifterChannel = 6;
+    public final static int smallShifterChannel = 5;
 
     public static final int kRLimitSwitch = 3;
     public static final int kLLimitSwitch = 2;
   }
+
 
   public static class AprilTags {
     public static final double TARGET_HEIGHT_METERS = Units.feetToMeters(0);
@@ -80,6 +81,17 @@ public final class Constants {
   public static class Swerve {
     public static double maxSteerVoltage = 4d;
     public static double maxDriveVoltage = 10d;
+
+    public static double tuningDesiredVelocity = 2d;
+
+
+
+    public static double slot0_kS = 0; // DONT USE KS
+    public static double slot0_kV = 0.12; // measured 3/19/24
+    public static double slot0_kP = 0.2; // measured 3/14/24
+    public static double slot0_kI = 0;
+    public static double slot0_kD = 0;
+
 
     // SWERVE CAN NUMBERED LIKE CARTESIAN COORDIANTE QUADRANTS
     // front right
@@ -120,9 +132,11 @@ public final class Constants {
             new Translation2d(wheelBase / 2.0, trackWidth / 2.0) // 4, pos pos
     };
 
-    public final static double kPhysicalMaxSpeedMetersPerSecond = 4.60; // 3.54 with 8 volts of voltage compensation and 4.19 with 10 volts
+    // / 3.54 with 8 volts of voltage compensation and 4.19 with 10 volts
+    // 4.8 max speed, 5 acceleration, drops to 9.6
+    public final static double kPhysicalMaxSpeedMetersPerSecond = 4.8;
     public final static double kDeadband = 0.055;
-    public final static double kMaxAccelerationDrive = 7.5;
+    public final static double kMaxAccelerationDrive = 7;
     public final static double kMaxAccelerationAngularDrive = 4.0*Math.PI;
 
     public final static double kP_FrontRight = 1.35;
@@ -167,13 +181,14 @@ public final class Constants {
 
   // gear ratios and/or ticks per rev, etc.
   public static class SwerveConversions {
-    public final static double kDriveGearRatio = 6.12; // Checked 2/2/24 //6.75  checked 1/19/23
-    public final static double kSteerGearRatio = 21.4; // Checked 2/2/24 //150d/7d = 21.42857  checked 1/19
-    public static final double kWheelDiameter = Units.inchesToMeters(3.9);
-    public final static double DriveRotToMeters = kWheelDiameter * Math.PI * 1/(kDriveGearRatio); // multiply by
-    public static final double SteerRotToRads = 1/(kSteerGearRatio) * Math.PI * 2; // multiply by position
-    public static final double DriveRotToMetersPerSecond = DriveRotToMeters * 10; // multiply by velocity
-    public static final double SteerRotToRadsPerSecond = SteerRotToRads * 10; // multiply by velocity
+    public final static double driveGearRatio = 6.12; // Checked 2/2/24 //6.75  checked 1/19/23
+    public final static double steerGearRatio = 21.4; // Checked 2/2/24 //150d/7d = 21.42857  checked 1/19
+    public static final double wheelDiameter = Units.inchesToMeters(3.9);
+    public static final double wheelCircumference = wheelDiameter * Math.PI;
+    public final static double driveRotToMeters = wheelDiameter * Math.PI * 1/(driveGearRatio); // multiply by
+    public static final double steerRotToRads = 1/(steerGearRatio) * Math.PI * 2; // multiply by position
+    public static final double driveRotToMetersPerSecond = driveRotToMeters * 10; // multiply by velocity
+    public static final double steerRotToRadsPerSecond = steerRotToRads * 10; // multiply by velocity
   }
 
   public static class Auton {
