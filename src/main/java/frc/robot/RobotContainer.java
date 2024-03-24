@@ -98,8 +98,8 @@ public class RobotContainer {
     // Default commands running in the background when other commands not scheduled
     chassis.setDefaultCommand(new TeleopDrive(chassis, driverController));
 
-    leftClimber.setDefaultCommand(new ClimberExtend(leftClimber, operatorController));
-    rightClimber.setDefaultCommand(new ClimberExtend(rightClimber, operatorController));
+    //leftClimber.setDefaultCommand(new ClimberExtend(leftClimber, operatorController));
+    //rightClimber.setDefaultCommand(new ClimberExtend(rightClimber, operatorController));
 
     //this.isFieldMirrored = new SendableChooser<>();
     //ally = DriverStation.getAlliance();
@@ -196,10 +196,8 @@ public class RobotContainer {
     // not working new POVButton(operatorController, Constants.XBox.LST_POV_S).whileTrue(new AmpAutoLow(amp));
 
     /** amp prepping **/
-    //new JoystickButton(operatorController, Constants.XBox.LST_BTN_X).whileTrue(new AmpIndexPassBeam(amp, shooter, indexer, shooterShifter ));
-
-
-    //new JoystickButton(operatorController, Constants.XBox.LST_BTN_B).whileTrue(new AmpZero(amp));
+    new JoystickButton(operatorController, Constants.XBox.LST_BTN_X).whileTrue(new AmpIndexPassBeam(amp, shooter, indexer, shooterShifter ));
+    new JoystickButton(operatorController, Constants.XBox.LST_BTN_B).whileTrue(new AmpZero(amp));
 
     //new JoystickButton(operatorController, Constants.XBox.LST_BTN_A).whileTrue(new AmpOuttake(amp));
 
