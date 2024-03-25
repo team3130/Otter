@@ -31,6 +31,7 @@ public class AndrewIndex extends Command {
   @Override
   public void execute() {
     if (shooter.getFlywheelsAtVelocitySetpoint() && (shooterShifter.getIsShortShifterExtended() || shooterShifter.getIsDoubleExtended())) {
+    if ((shooterShifter.getIsShortShifterExtended() || shooterShifter.getIsDoubleExtended()) && indexer.flywheelVelocitiesReady()) {
       indexer.shooterSpindex();
     }
   }
@@ -44,6 +45,10 @@ public class AndrewIndex extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    if (!indexer.flywheelVelocitiesReady()) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }

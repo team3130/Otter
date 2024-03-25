@@ -14,6 +14,7 @@ import frc.robot.Constants;
 
 public class Indexer extends SubsystemBase {
   private final WPI_TalonSRX indexer;
+  private final Shooter shooter;
   private double indexerVoltageCompensation = 10;
   private double outakeSpeed = -1;
   private double spintakeSpeed = 1; // 10
@@ -24,20 +25,29 @@ public class Indexer extends SubsystemBase {
   private double autoShooterSpindexSpeed = 1;
   //private SupplyCurrentLimitConfiguration currLimitConfigs = new SupplyCurrentLimitConfiguration();
 
-  public Indexer() {
+  public Indexer(Shooter shooter) {
+    this.shooter = shooter;
     indexer = new WPI_TalonSRX(Constants.CAN.intakeIndexer);
 
     indexer.configFactoryDefault();
     indexer.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
     indexer.setNeutralMode(NeutralMode.Coast);
-    indexer.configVoltageCompSaturation(indexerVoltageCompensation);
     indexer.enableVoltageCompensation(true);
+    indexer.configVoltageCompSaturation(indexerVoltageCompensation);
 
     indexer.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
     //currLimitConfigs.currentLimit = 30;
     //indexer.configSupplyCurrentLimit(currLimitConfigs);
 
     indexer.setInverted(false);
+  }
+
+  public boolean flywheelVelocitiesReady() {
+    if ((shooter.getTopFlyVelocityRPS() > (shooter.getTopVelocitySetpoint() - 2)) && (shooter.getBottomFlyVelocityRPS() > (shooter.getBottomVelocitySetpoint() - 2))) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   public void spintake() {

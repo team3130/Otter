@@ -42,9 +42,15 @@ public final class Constants {
     public final static int shawtyShifterChannel = 5;
     public final static int longShifterChannel = 6;
 
+    public final static int ampLimitDIO = 4;
+
+    public final static int longShifterChannel = 6;
+    public final static int smallShifterChannel = 5;
+
     public static final int kRLimitSwitch = 3;
     public static final int kLLimitSwitch = 2;
   }
+
 
   public static class AprilTags {
     public static final double TARGET_HEIGHT_METERS = Units.feetToMeters(0);
@@ -81,22 +87,33 @@ public final class Constants {
     public static double maxSteerVoltage = 4d;
     public static double maxDriveVoltage = 10d;
 
+    public static double tuningDesiredVelocity = 2d;
+
+
+
+    public static double slot0_kS = 0; // DONT USE KS
+    public static double slot0_kV = 0.12; // measured 3/19/24
+    public static double slot0_kP = 0.2; // measured 3/14/24
+    public static double slot0_kI = 0;
+    public static double slot0_kD = 0;
+
+
     // SWERVE CAN NUMBERED LIKE CARTESIAN COORDIANTE QUADRANTS
-    // front left
+    // front right
     public final static int MOD_ONE_STEER = 2;
     public final static int MOD_ONE_DRIVE = 3;
 
-    // back left
+    // back right
     public final static int MOD_TWO_STEER = 4;
     public final static int MOD_TWO_DRIVE = 5;
 
-    // back right
+    // back left
     public final static int MOD_THREE_STEER = 6;
     public final static int MOD_THREE_DRIVE = 7;
 
     public final static int MOD_FOUR_STEER = 8;
     public final static int MOD_FOUR_DRIVE = 9;
-    // front right
+    // front left
     public final static int MOD_ONE_CANCODER = 10;
     public final static int MOD_TWO_CANCODER = 11;
     public final static int MOD_THREE_CANCODER = 12;
@@ -120,9 +137,11 @@ public final class Constants {
             new Translation2d(wheelBase / 2.0, trackWidth / 2.0) // 4, pos pos
     };
 
-    public final static double kPhysicalMaxSpeedMetersPerSecond = 4.60; // 3.54 with 8 volts of voltage compensation and 4.19 with 10 volts
+    // / 3.54 with 8 volts of voltage compensation and 4.19 with 10 volts
+    // 4.8 max speed, 5 acceleration, drops to 9.6
+    public final static double kPhysicalMaxSpeedMetersPerSecond = 4.8;
     public final static double kDeadband = 0.055;
-    public final static double kMaxAccelerationDrive = 7.5;
+    public final static double kMaxAccelerationDrive = 7;
     public final static double kMaxAccelerationAngularDrive = 4.0*Math.PI;
 
     public final static double kP_FrontRight = 1.35;
@@ -167,13 +186,14 @@ public final class Constants {
 
   // gear ratios and/or ticks per rev, etc.
   public static class SwerveConversions {
-    public final static double kDriveGearRatio = 6.12; // Checked 2/2/24 //6.75  checked 1/19/23
-    public final static double kSteerGearRatio = 21.4; // Checked 2/2/24 //150d/7d = 21.42857  checked 1/19
-    public static final double kWheelDiameter = Units.inchesToMeters(3.9);
-    public final static double DriveRotToMeters = kWheelDiameter * Math.PI * 1/(kDriveGearRatio); // multiply by
-    public static final double SteerRotToRads = 1/(kSteerGearRatio) * Math.PI * 2; // multiply by position
-    public static final double DriveRotToMetersPerSecond = DriveRotToMeters * 10; // multiply by velocity
-    public static final double SteerRotToRadsPerSecond = SteerRotToRads * 10; // multiply by velocity
+    public final static double driveGearRatio = 6.12; // Checked 2/2/24 //6.75  checked 1/19/23
+    public final static double steerGearRatio = 21.4; // Checked 2/2/24 //150d/7d = 21.42857  checked 1/19
+    public static final double wheelDiameter = Units.inchesToMeters(3.9);
+    public static final double wheelCircumference = wheelDiameter * Math.PI;
+    public final static double driveRotToMeters = wheelDiameter * Math.PI * 1/(driveGearRatio); // multiply by
+    public static final double steerRotToRads = 1/(steerGearRatio) * Math.PI * 2; // multiply by position
+    public static final double driveRotToMetersPerSecond = driveRotToMeters * 10; // multiply by velocity
+    public static final double steerRotToRadsPerSecond = steerRotToRads * 10; // multiply by velocity
   }
 
   public static class Auton {
@@ -236,35 +256,36 @@ public final class Constants {
 
   public static class XBox {
     // Gamepad Button List
-    public static final int LST_BTN_A = 1;
-    public static final int LST_BTN_B = 2;
-    public static final int LST_BTN_X = 3;
-    public static final int LST_BTN_Y = 4;
-    public static final int LST_BTN_LBUMPER = 5;
-    public static final int LST_BTN_RBUMPER = 6;
-    public static final int LST_BTN_WINDOW = 7;
-    public static final int LST_BTN_MENU = 8;
-    public static final int LST_BTN_LJOYSTICKPRESS = 9;
-    public static final int LST_BTN_RJOYSTICKPRESS = 10;
+    public static final int BTN_A = 1;
+    public static final int BTN_B = 2;
+    public static final int BTN_X = 3;
+    public static final int BTN_Y = 4;
+
+    public static final int BTN_LBUMPER = 5;
+    public static final int BTN_RBUMPER = 6;
+    public static final int BTN_WINDOW = 7;
+    public static final int BTN_MENU = 8;
+    public static final int BTN_LJOYSTICK_PRESS = 9;
+    public static final int BTN_RJOYSTICK_PRESS = 10;
 
     // Gamepad POV List
-    public static final int LST_POV_UNPRESSED = -1;
-    public static final int LST_POV_N = 0;
-    public static final int LST_POV_NE = 45;
-    public static final int LST_POV_E = 90;
-    public static final int LST_POV_SE = 135;
-    public static final int LST_POV_S = 180;
-    public static final int LST_POV_SW = 225;
-    public static final int LST_POV_W = 270;
-    public static final int LST_POV_NW = 315;
+    public static final int POV_UNPRESSED = -1;
+    public static final int POV_N = 0;
+    public static final int POV_NE = 45;
+    public static final int POV_E = 90;
+    public static final int POV_SE = 135;
+    public static final int POV_S = 180;
+    public static final int POV_SW = 225;
+    public static final int POV_W = 270;
+    public static final int POV_NW = 315;
 
     // Gamepad Axis List
-    public static final int LST_AXS_LJOYSTICKX = 0;
-    public static final int LST_AXS_LJOYSTICKY = 1;
-    public static final int LST_AXS_LTRIGGER = 2;
-    public static final int LST_AXS_RTRIGGER = 3;
-    public static final int LST_AXS_RJOYSTICKX = 4;
-    public static final int LST_AXS_RJOYSTICKY = 5;
+    public static final int AXS_LJOYSTICK_X = 0;
+    public static final int AXS_LJOYSTICK_Y = 1;
+    public static final int AXS_LTRIGGER = 2;
+    public static final int AXS_RTRIGGER = 3;
+    public static final int AXS_RJOYSTICK_X = 4;
+    public static final int AXS_RJOYSTICK_Y = 5;
   }
 
 }

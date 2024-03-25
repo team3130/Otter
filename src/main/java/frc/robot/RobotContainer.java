@@ -6,6 +6,13 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot;
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
+
+package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -27,6 +34,7 @@ import frc.robot.commands.Amp.index.AutomatedPassToAmp;
 import frc.robot.commands.Amp.setpoints.AmpAutoHigh;
 import frc.robot.commands.Amp.setpoints.AmpAutoLow;
 import frc.robot.commands.Amp.setpoints.AmpAutoMid;
+import frc.robot.commands.Chassis.DriveToPID;
 import frc.robot.commands.Chassis.TeleopDrive;
 import frc.robot.commands.Indexer.AlwaysIndex;
 import frc.robot.commands.Indexer.AndrewIndex;
@@ -36,12 +44,10 @@ import frc.robot.commands.Indexer.Outtake;
 import frc.robot.commands.Shooter.VelocityShoot;
 import frc.robot.commands.ShooterShifter.DoubleExtend;
 import frc.robot.commands.ShooterShifter.ShortShifterExtend;
-import frc.robot.subsystems.Chassis;
 import frc.robot.commands.Auton.*;
 import frc.robot.commands.ShooterShifter.DoubleRetract;
 import frc.robot.sensors.JoystickTrigger;
 import frc.robot.subsystems.*;
-import frc.robot.commands.Amp.*;
 import frc.robot.commands.Chassis.ResetOdometryForward;
 import frc.robot.commands.Intake.*;
 import frc.robot.subsystems.LEDs;
@@ -56,7 +62,6 @@ import frc.robot.subsystems.LEDs;
 // The robot's subsystems and commands are defined here...
 public class RobotContainer {
   private final Chassis chassis;
-  private final Amp amp;
   private final Intake intake;
   private final Shooter shooter;
   private final Indexer indexer;
@@ -69,15 +74,14 @@ public class RobotContainer {
   private final SendableChooser<Command> autoChooser;
 
   public RobotContainer() {
-    leftClimber = new Climber(Constants.CAN.climberLeft, Constants.IDs.kLLimitSwitch, Constants.XBox.LST_AXS_RJOYSTICKY, false);
-    rightClimber = new Climber(Constants.CAN.climberRight, Constants.IDs.kRLimitSwitch, Constants.XBox.LST_AXS_LJOYSTICKY, false);
+    leftClimber = new Climber(Constants.CAN.climberLeft, Constants.IDs.kLLimitSwitch, Constants.XBox.AXS_RJOYSTICK_Y, false);
+    rightClimber = new Climber(Constants.CAN.climberRight, Constants.IDs.kRLimitSwitch, Constants.XBox.AXS_LJOYSTICK_Y, false);
 
     shooter = new Shooter();
     shooterShifter = new ShooterShifter();
     chassis = new Chassis();
-    amp = new Amp();
     intake = new Intake();
-    indexer = new Indexer();
+    indexer = new Indexer(shooter);
     robotLEDs = new LEDs();
 
     // Named commands must be registered before the creation of any PathPlanner Autos or Paths
@@ -111,9 +115,18 @@ public class RobotContainer {
     ShuffleboardTab tab = Shuffleboard.getTab("Competition");
     tab.addBoolean("Intake Has Note", intake::getIntakeLimitSwitch).withPosition(0, 0).withSize(13, 5);
     tab.add("AutoChooser", autoChooser).withPosition(4, 5).withSize(4, 1);
-
-
   }
+
+  /*
+  public boolean flywheelVelocitiesReady() {
+    if ((shooter.getTopFlyVelocityRPS() > (shooter.getTopVelocitySetpoint() - 2)) && (shooter.getBottomFlyVelocityRPS() > (shooter.getBottomVelocitySetpoint() - 2))) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+   */
 
   public void exportShuffleBoardData() {
     if (Constants.debugMode) {
@@ -129,7 +142,7 @@ public class RobotContainer {
   public void LEDPeriodic() {
     if (shooterShifter.getIsDoubleExtended()) {
       robotLEDs.redRobot();
-    } else if (intake.getIntakeLimitSwitch() || amp.getLimitSwitch()) {
+    } else if (intake.getIntakeLimitSwitch() ) {
       robotLEDs.purpleRobot();
     } else if (leftClimber.getClimbDone() && rightClimber.getClimbDone()) {
       robotLEDs.movingRainbow();
@@ -189,6 +202,9 @@ public class RobotContainer {
 
     new JoystickTrigger(driverController, Constants.PS5.LST_AXS_LTRIGGER).whileTrue(new AmpOuttake(amp));
 
+    // software testing
+    new JoystickButton(driverController, Constants.PS5.triangle).whileTrue(new DriveToPID(chassis));
+
     /*
     ANDREW OPERATOR
      */
@@ -219,5 +235,20 @@ public class RobotContainer {
     new JoystickButton(operatorController, Constants.XBox.LST_BTN_LBUMPER).whileTrue(new DoubleExtend(shooterShifter));
     new JoystickTrigger(operatorController, Constants.XBox.LST_AXS_LTRIGGER).whileTrue(new ShortShifterExtend(shooterShifter));
     new POVButton(operatorController, Constants.XBox.LST_POV_W).whileTrue(new DoubleRetract(shooterShifter));
+
+
+    new POVButton(operatorController, Constants.XBox.POV_W).whileTrue(new PitClimberReset(rightClimber));//right
+    new POVButton(operatorController, Constants.XBox.POV_E).whileTrue(new PitClimberReset(leftClimber));//left
+
+    /*
+    //new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new VelocityShoot(shooter));
+    //new JoystickButton(operatorController, Constants.Buttons.LST_BTN_RBUMPER).whileTrue(new SequentialCommandGroup(new SmartSpintake(intake), new SmartIndex(intake)));
+    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
+    /*
+    new Trigger(m_exampleSubsystem::exampleCondition)
+            .onTrue(new ExampleCommand(m_exampleSubsystem));
+    */
   }
 }
+
+

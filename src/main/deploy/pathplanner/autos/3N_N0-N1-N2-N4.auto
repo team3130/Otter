@@ -52,6 +52,12 @@
                     {
                       "type": "path",
                       "data": {
+                        "pathName": "swn-first-N4"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
                         "pathName": "swn-N1"
                       }
                     },
@@ -71,12 +77,6 @@
                       "type": "named",
                       "data": {
                         "name": "Index"
-                      }
-                    },
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "swn-N4"
                       }
                     }
                   ]

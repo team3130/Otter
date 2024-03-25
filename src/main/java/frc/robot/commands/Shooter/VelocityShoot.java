@@ -31,7 +31,6 @@ public class VelocityShoot extends Command {
     if (Constants.debugMode) {
       shooter.updatePIDValues();
     }
-    shooter.configureVelocitySlots();
     shooter.setFlywheelVelocity();
   }
 
