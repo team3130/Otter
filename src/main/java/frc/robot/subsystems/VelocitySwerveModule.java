@@ -61,16 +61,16 @@ public class VelocitySwerveModule implements Sendable {
         driveMotor.setInverted(false);
 
         driveMotor.getConfigurator().apply((new CurrentLimitsConfigs().withSupplyCurrentLimitEnable(true).
-                withSupplyCurrentThreshold(40).withSupplyTimeThreshold(0)), 0);
+                withSupplyCurrentThreshold(40).withSupplyTimeThreshold(0)), 0.01);
 
         steerMotor.getConfigurator().apply((new CurrentLimitsConfigs().withSupplyCurrentLimitEnable(true).
-                withSupplyCurrentThreshold(20).withSupplyTimeThreshold(0)), 0);
+                withSupplyCurrentThreshold(20).withSupplyTimeThreshold(0)), 0.01);
 
         driveMotor.getConfigurator().apply((new CurrentLimitsConfigs().withStatorCurrentLimitEnable(true).
-                withStatorCurrentLimit(40).withSupplyTimeThreshold(0)), 0);
+                withStatorCurrentLimit(40).withSupplyTimeThreshold(0)), 0.01);
 
         steerMotor.getConfigurator().apply((new CurrentLimitsConfigs().withStatorCurrentLimitEnable(true).
-                withStatorCurrentLimit(20).withSupplyTimeThreshold(0)), 0);
+                withStatorCurrentLimit(20).withSupplyTimeThreshold(0)), 0.01);
 
         turningPidController.enableContinuousInput(-Math.PI, Math.PI); // wrap for circles
         turningPidController.setTolerance(0.0025, 0.05); // at position tolerance

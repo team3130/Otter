@@ -53,18 +53,18 @@ public class TeleopDrive extends Command {
       double omega = 0d;
 
       if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
-          y = controller.getRawAxis(Constants.PS5.LST_AXS_LJOYSTICKX);
-          x = controller.getRawAxis(Constants.PS5.LST_AXS_LJOYSTICKY);
+          y = controller.getRawAxis(Constants.PS5.AXS_LJOYSTICKX);
+          x = controller.getRawAxis(Constants.PS5.AXS_LJOYSTICKY);
       } else { // blue alliance
-          y = -controller.getRawAxis(Constants.PS5.LST_AXS_LJOYSTICKX);
-          x = -controller.getRawAxis(Constants.PS5.LST_AXS_LJOYSTICKY);
+          y = -controller.getRawAxis(Constants.PS5.AXS_LJOYSTICKX);
+          x = -controller.getRawAxis(Constants.PS5.AXS_LJOYSTICKY);
       }
 
       // theta the same for both alliances
-      theta = -controller.getRawAxis(Constants.PS5.LST_AXS_RJOYSTICKX);
+      theta = -controller.getRawAxis(Constants.PS5.AXS_RJOYSTICK_X);
 
       // angle used for targeting
-      omega = -controller.getRawAxis(Constants.PS5.LST_AXS_RJOYSTICKY);
+      omega = -controller.getRawAxis(Constants.PS5.AXS_RJOYSTICK_Y);
 
 
       /*

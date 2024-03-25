@@ -12,7 +12,6 @@ import frc.robot.subsystems.Climber;
 public class ClimberExtend extends Command {
     private final Climber climber;
     private XboxController xboxController;
-    private int joystickButton;
 
     public ClimberExtend(Climber side, XboxController xboxController) {
         climber = side;

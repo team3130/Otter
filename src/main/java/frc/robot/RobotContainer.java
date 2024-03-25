@@ -23,28 +23,20 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
-import frc.robot.commands.Amp.AmpKirbyThenFlies;
-import frc.robot.commands.Amp.PrepAmp;
-import frc.robot.commands.Amp.Software.AmpAutoMid;
-import frc.robot.commands.Amp.Software.AmpManualLower;
-import frc.robot.commands.Amp.AmpOuttake;
-import frc.robot.commands.Amp.AmpAutoHigh;
-import frc.robot.commands.Amp.Software.AmpAutoLow;
+import frc.robot.commands.Amp.*;
 import frc.robot.commands.Amp.Software.AmpZero;
 import frc.robot.commands.Chassis.DriveToPID;
 import frc.robot.commands.Chassis.TeleopDrive;
+import frc.robot.commands.Climber.ClimberExtend;
+import frc.robot.commands.Climber.PitClimberReset;
 import frc.robot.commands.Indexer.AlwaysIndex;
 import frc.robot.commands.Indexer.AndrewIndexToShoot;
 import frc.robot.commands.Indexer.IndexToBeam;
 import frc.robot.commands.Intake.LimitedSpintake;
 import frc.robot.commands.Indexer.Outtake;
-import frc.robot.commands.Shooter.ShootMovingSetpoint;
 import frc.robot.commands.Shooter.ShuttleMovingSetpoint;
-import frc.robot.commands.ShooterShifter.DoubleExtend;
 import frc.robot.commands.ShooterShifter.ShortShifterExtend;
 import frc.robot.commands.Auton.*;
 import frc.robot.commands.ShooterShifter.DoubleRetract;
@@ -77,7 +69,7 @@ public class RobotContainer {
   private final Amp amp;
 
   public RobotContainer() {
-    leftClimber = new Climber(Constants.CAN.climberLeft, Constants.IDs.kLLimitSwitch, Constants.XBox.AXS_RJOYSTICK_Y, false);
+    leftClimber = new Climber(Constants.CAN.climberLeft, Constants.IDs.kLLimitSwitch, Constants.XBox.AXS_RJOYSTICK_Y, true);
     rightClimber = new Climber(Constants.CAN.climberRight, Constants.IDs.kRLimitSwitch, Constants.XBox.AXS_LJOYSTICK_Y, false);
 
     shooter = new Shooter();
@@ -105,8 +97,8 @@ public class RobotContainer {
     // Default commands running in the background when other commands not scheduled
     chassis.setDefaultCommand(new TeleopDrive(chassis, driverController));
 
-    //leftClimber.setDefaultCommand(new ClimberExtend(leftClimber, operatorController));
-    //rightClimber.setDefaultCommand(new ClimberExtend(rightClimber, operatorController));
+    leftClimber.setDefaultCommand(new ClimberExtend(leftClimber, operatorController));
+    rightClimber.setDefaultCommand(new ClimberExtend(rightClimber, operatorController));
 
     //this.isFieldMirrored = new SendableChooser<>();
     //ally = DriverStation.getAlliance();
@@ -139,6 +131,7 @@ public class RobotContainer {
       tab.add(intake);
       tab.add(indexer);
       tab.add(amp);
+      tab.add(rightClimber);
       chassis.exportSwerveModData(Shuffleboard.getTab("Swerve Modules"));
     }
   }
@@ -200,18 +193,18 @@ public class RobotContainer {
     /*
     GAVIN DRIVER - Note: check Teleop button bindings in TeleopDrive
      */
-    new POVButton(driverController, Constants.PS5.LST_POV_N).whileTrue(new ResetOdometryForward(chassis));
+    new POVButton(driverController, Constants.PS5.POV_N).whileTrue(new ResetOdometryForward(chassis));
 
     // intake / indexer
-    new JoystickTrigger(driverController, Constants.PS5.LST_AXS_RTRIGGER).whileTrue(new LimitedSpintake(intake, indexer));
-    new JoystickButton(driverController, Constants.PS5.circle).whileTrue(new AlwaysIndex(indexer));
-    new JoystickButton(driverController, Constants.PS5.LST_BTN_RBUMPER).whileTrue(new ToggleIntake(intake));
-    new JoystickButton(driverController, Constants.PS5.x).whileTrue(new Outtake(indexer));
+    new JoystickTrigger(driverController, Constants.PS5.AXS_RTRIGGER).whileTrue(new LimitedSpintake(intake, indexer));
+    new JoystickButton(driverController, Constants.PS5.BTN_CIRCLE).whileTrue(new AlwaysIndex(indexer));
+    new JoystickButton(driverController, Constants.PS5.BTN_RBUMPER).whileTrue(new ToggleIntake(intake));
+    new JoystickButton(driverController, Constants.PS5.BTN_X).whileTrue(new Outtake(indexer));
 
-    new JoystickTrigger(driverController, Constants.PS5.LST_AXS_LTRIGGER).whileTrue(new AmpOuttake(amp));
+    new JoystickTrigger(driverController, Constants.PS5.AXS_LTRIGGER).whileTrue(new AmpOuttake(amp));
 
     // software testing
-    new JoystickButton(driverController, Constants.PS5.triangle).whileTrue(new DriveToPID(chassis));
+    new JoystickButton(driverController, Constants.PS5.BTN_TRIANGLE).whileTrue(new DriveToPID(chassis));
 
     /*
     ANDREW OPERATOR
@@ -228,9 +221,8 @@ public class RobotContainer {
     new JoystickButton(operatorController, Constants.XBox.BTN_X).whileTrue(new ShuttleMovingSetpoint(shooter));
 
     // amp
-    new POVButton(operatorController, Constants.XBox.POV_N).whileTrue(
-            new SequentialCommandGroup(new PrepAmp(amp, shooterShifter), new AmpKirbyThenFlies(amp, shooter, shooterShifter, indexer)));
-
+    //new POVButton(operatorController, Constants.XBox.POV_N).whileTrue(
+            //new SequentialCommandGroup(new PrepAmp(amp, shooterShifter), new AmpKirbyThenFlies(amp, shooter, shooterShifter, indexer)));
 
     //new JoystickButton(operatorController, Constants.XBox.BTN_B).whileTrue(new ParallelCommandGroup(new AmpAutoMid(amp), new ShortShifterExtend(shooterShifter)));
     //new POVButton(operatorController, Constants.XBox.POV_N).whileTrue(new SequentialCommandGroup(new AutomatedPassToAmp(amp, shooter, indexer, shooterShifter), new AmpAutoHighScore(amp)));
@@ -240,18 +232,18 @@ public class RobotContainer {
     // shooter shifter
     //new JoystickButton(operatorController, Constants.XBox.BTN_LBUMPER).whileTrue(new DoubleExtend(shooterShifter));
     new JoystickTrigger(operatorController, Constants.XBox.AXS_LTRIGGER).whileTrue(new ShortShifterExtend(shooterShifter));
-    new POVButton(operatorController, Constants.XBox.POV_W).whileTrue(new DoubleRetract(shooterShifter));
+    //new POVButton(operatorController, Constants.XBox.POV_W).whileTrue(new DoubleRetract(shooterShifter));
 
 
     //software debugging
-    new POVButton(operatorController, Constants.XBox.POV_E).whileTrue(new AmpAutoHigh(amp));
+    //new POVButton(operatorController, Constants.XBox.POV_E).whileTrue(new AmpAutoHigh(amp));
     //new POVButton(operatorController, Constants.XBox.POV_W).whileTrue(new AmpAutoMid(amp));
-    new POVButton(operatorController, Constants.XBox.POV_S).whileTrue(new AmpAutoLow(amp));
-    new JoystickButton(operatorController, Constants.XBox.BTN_LBUMPER).whileTrue(new AmpManualLower(amp));
+    //new POVButton(operatorController, Constants.XBox.POV_S).whileTrue(new AmpAutoLow(amp));
+    new JoystickButton(operatorController, Constants.XBox.BTN_LBUMPER).whileTrue(new AmpHome(amp));
     //new JoystickButton(operatorController, Constants.XBox.LST_BTN_RBUMPER).whileTrue(new AmpManualLift(amp));
 
-    //new POVButton(operatorController, Constants.XBox.POV_W).whileTrue(new PitClimberReset(rightClimber));//right
-    //new POVButton(operatorController, Constants.XBox.POV_E).whileTrue(new PitClimberReset(leftClimber));//left
+    new POVButton(operatorController, Constants.XBox.POV_W).whileTrue(new PitClimberReset(rightClimber));//right
+    new POVButton(operatorController, Constants.XBox.POV_E).whileTrue(new PitClimberReset(leftClimber));//left
   }
 }
 

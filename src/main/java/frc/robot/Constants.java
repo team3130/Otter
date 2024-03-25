@@ -20,7 +20,7 @@ import edu.wpi.first.math.util.Units;
 public final class Constants {
   public static final boolean debugMode = true;
   public static final boolean navxReversed = false;
-  public static final boolean pitMode = false;
+  public static final boolean pitMode = true;
 
   public static class CAN {
     public final static int PCM = 1;
@@ -42,8 +42,8 @@ public final class Constants {
     public final static int shawtyShifterChannel = 5;
     public final static int longShifterChannel = 6;
 
-    public static final int kRLimitSwitch = 3;
-    public static final int kLLimitSwitch = 2;
+    public static final int kRLimitSwitch = 2;
+    public static final int kLLimitSwitch = 3;
   }
 
 
@@ -219,34 +219,34 @@ public final class Constants {
   }
 
   public static class PS5 {
-    public static final int square = 1;
-    public static final int x = 2;
-    public static final int circle = 3;
-    public static final int triangle = 4;
-    public static final int LST_BTN_LBUMPER = 5;
-    public static final int LST_BTN_RBUMPER = 6;
+    public static final int BTN_SQUARE = 1;
+    public static final int BTN_X = 2;
+    public static final int BTN_CIRCLE = 3;
+    public static final int BTN_TRIANGLE = 4;
+    public static final int BTN_LBUMPER = 5;
+    public static final int BTN_RBUMPER = 6;
 
-    public static final int LST_BTN_LJOYSTICKPRESS = 11;
-    public static final int LST_BTN_RJOYSTICKPRESS = 12;
+    public static final int BTN_LJOYSTICK_PRESS = 11;
+    public static final int BTN_RJOYSTICK_PRESS = 12;
 
     // Gamepad POV List
-    public static final int LST_POV_UNPRESSED = -1;
-    public static final int LST_POV_N = 0;
-    public static final int LST_POV_NE = 45;
-    public static final int LST_POV_E = 90;
-    public static final int LST_POV_SE = 135;
-    public static final int LST_POV_S = 180;
-    public static final int LST_POV_SW = 225;
-    public static final int LST_POV_W = 270;
-    public static final int LST_POV_NW = 315;
+    public static final int POV_UNPRESSED = -1;
+    public static final int POV_N = 0;
+    public static final int POV_NE = 45;
+    public static final int POV_E = 90;
+    public static final int POV_SE = 135;
+    public static final int POV_S = 180;
+    public static final int POV_SW = 225;
+    public static final int POV_W = 270;
+    public static final int POV_NW = 315;
 
     // Gamepad Axis List
-    public static final int LST_AXS_LJOYSTICKX = 0;
-    public static final int LST_AXS_LJOYSTICKY = 1;
-    public static final int LST_AXS_LTRIGGER = 3;
-    public static final int LST_AXS_RTRIGGER = 4;
-    public static final int LST_AXS_RJOYSTICKX = 2;
-    public static final int LST_AXS_RJOYSTICKY = 5;
+    public static final int AXS_LJOYSTICKX = 0;
+    public static final int AXS_LJOYSTICKY = 1;
+    public static final int AXS_LTRIGGER = 3;
+    public static final int AXS_RTRIGGER = 4;
+    public static final int AXS_RJOYSTICK_X = 2;
+    public static final int AXS_RJOYSTICK_Y = 5;
   }
 
   public static class XBox {

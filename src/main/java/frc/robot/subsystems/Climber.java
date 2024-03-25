@@ -96,7 +96,7 @@ public class Climber extends SubsystemBase {
     @Override
     public void initSendable(SendableBuilder builder) {
         if (Constants.debugMode) {
-            builder.addBooleanProperty("ClimberBrokeLeft", this::brokeLimit, null);
+            builder.addBooleanProperty("Limit hit", this::brokeLimit, null);
             builder.addDoubleProperty("currentMaxRight", this::getCurrentMax, this::setCurrentMax);
             builder.addDoubleProperty("checking speed", this::getPitCheckingSpeed, this::setPitCheckingSpeed);
             builder.addBooleanProperty("Climber is reset", this::getIsClimberReset, null);
