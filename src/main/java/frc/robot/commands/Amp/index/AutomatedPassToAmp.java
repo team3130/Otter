@@ -12,7 +12,7 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.ShooterShifter;
 
 /** An example command that uses an example subsystem. */
-public class AmpIndexPassBeam extends Command {
+public class AutomatedPassToAmp extends Command {
   private final Amp amp;
   private final Shooter shooter;
   private final Indexer indexer;
@@ -23,35 +23,31 @@ public class AmpIndexPassBeam extends Command {
   /**
    * @param amp The subsystem used by this command.
    */
-  public AmpIndexPassBeam(Amp amp, Shooter shooter, Indexer indexer, ShooterShifter shifter) {
+  public AutomatedPassToAmp(Amp amp, Shooter shooter, Indexer indexer, ShooterShifter shifter) {
     this.amp = amp;
     this.shooter = shooter;
     this.indexer = indexer;
     this.shifter = shifter;
-    addRequirements(amp);
-    addRequirements(shooter);
-    addRequirements(indexer);
-
+    addRequirements(shooter, indexer, shifter);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     hasSeenNote = false;
-    if (shifter.getIsShortShifterExtended() || shifter.getIsDoubleRetracted()) {
-      shooter.runIndexToAmpSpeed();
-      amp.outtakeAmp();
-      indexer.shooterSpindex();
-    }
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    if (shifter.getIsShortShifterExtended() && amp.getIsMid()) {
+      shooter.runIndexToAmpSpeed();
+      amp.outtakeAmp();
+      indexer.shooterSpindex();
+    }
     if (shooter.getBeamHasNote() && !hasSeenNote){
       hasSeenNote = true; //note that we saw the note for the first time
     }
-
   }
 
   // Called once the command ends or is interrupted.
@@ -60,11 +56,14 @@ public class AmpIndexPassBeam extends Command {
     shooter.stopShooters();
     amp.ampSpinningMotorStop();
     indexer.stopIndexer();
+    if (!shooter.getBeamHasNote() && hasSeenNote) {
+      amp.setIsReadyToScore(true);
+    }
   }
 
   // Returns true when the command should end.
   @Override
-  public boolean isFinished() { return !shooter.getBeamHasNote() && hasSeenNote; //had a note and now we cant see it means it has passed
+  public boolean isFinished() {
+    return !shooter.getBeamHasNote() && hasSeenNote; //had a note and now we cant see it means it has passed
   }
-
 }

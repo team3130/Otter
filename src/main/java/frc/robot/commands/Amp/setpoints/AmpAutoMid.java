@@ -23,6 +23,8 @@ public class AmpAutoMid extends InstantCommand {
   @Override
   public void initialize() {
     amp.resetController();
+    amp.setIsMid(false);
+    amp.setIsHigh(false);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -35,6 +37,9 @@ public class AmpAutoMid extends InstantCommand {
   @Override
   public void end(boolean interrupted) {
     amp.ampLiftingMotorStop();
+    if (amp.isAtSetpointWithDeadband()) {
+      amp.setIsMid(true);
+    }
   }
 
   // Returns true when the command should end.

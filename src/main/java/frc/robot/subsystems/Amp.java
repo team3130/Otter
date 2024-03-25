@@ -16,7 +16,7 @@ import frc.robot.Constants;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 
-
+import static java.lang.Math.abs;
 
 
 public class Amp extends SubsystemBase {
@@ -28,14 +28,17 @@ public class Amp extends SubsystemBase {
   private double ampLowerSpeed = -0.5;
   private double outtakeAmpSpeed = -1;
   private int encoderMaxTicks = 13600;
-  private int highSetpoint = 13550; //drop into amp
+  private int highSetpoint = 13500; //drop into amp
   private int midSetpoint = 5465; //pick up from mid shooter
-  private int lowSetpoint = 100;
+  private int lowSetpoint = 0;
   private PIDController ampController;
-  private double P = 0.0012;
+  private double P = 0.0013;
   private double I = 0;
   private double D = 0.00005;
   private boolean hasZeroed = false;
+  private boolean isMid = false;
+  private boolean isHigh = false;
+  private boolean isReadyToScore = false;
 
   public Amp() {
     ampLimit = new DigitalInput(Constants.IDs.ampLimitDIO);
@@ -70,6 +73,14 @@ public class Amp extends SubsystemBase {
 
 
     ampController = new PIDController(P, I, D);
+  }
+
+  public boolean getIsReadyToScore() {
+    return isReadyToScore;
+  }
+
+  public void setIsReadyToScore(boolean lol) {
+    isReadyToScore = lol;
   }
 
   public boolean getHasZeroed(){
@@ -110,6 +121,10 @@ public class Amp extends SubsystemBase {
   }
   public boolean isAtSetpoint(){
     return ampController.atSetpoint();
+  }
+
+  public boolean isAtSetpointWithDeadband() {
+    return ((abs(ampController.getSetpoint() - getLiftingEncoderPosition())) <= 150);
   }
 
   public void intakeAmp() {
@@ -191,6 +206,11 @@ public class Amp extends SubsystemBase {
     D = newD;
   }
 
+  public boolean getIsHigh() { return isHigh;}
+  public boolean getIsMid() { return isMid; }
+  public void setIsHigh(boolean high) { isHigh = high; }
+  public void setIsMid(boolean mid) { isMid = mid; }
+
 
   @Override
   public void periodic() {
@@ -215,6 +235,9 @@ public class Amp extends SubsystemBase {
       builder.addDoubleProperty("i", this::getI, this::setI);
       builder.addDoubleProperty("d", this::getD, this::setD);
 
+      builder.addBooleanProperty("is at mid", this::getIsMid, this::setIsMid);
+      builder.addBooleanProperty("is at high", this::getIsHigh, this::setIsHigh);
+      builder.addBooleanProperty("ready to score", this::getIsReadyToScore, this::setIsReadyToScore);
 
     }
   }

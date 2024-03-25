@@ -19,26 +19,25 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
-import frc.robot.commands.Amp.index.AmpIndexPassBeam;
-import frc.robot.commands.Amp.index.AmpIndexUnlimited;
+import frc.robot.commands.Amp.index.AutomatedPassToAmp;
 import frc.robot.commands.Amp.setpoints.AmpAutoHigh;
 import frc.robot.commands.Amp.setpoints.AmpAutoLow;
 import frc.robot.commands.Amp.setpoints.AmpAutoMid;
 import frc.robot.commands.Chassis.TeleopDrive;
-import frc.robot.commands.Climber.ClimberExtend;
-import frc.robot.commands.Climber.PitClimberReset;
 import frc.robot.commands.Indexer.AlwaysIndex;
 import frc.robot.commands.Indexer.AndrewIndex;
 import frc.robot.commands.Indexer.IndexToBeam;
 import frc.robot.commands.Intake.LimitedSpintake;
 import frc.robot.commands.Indexer.Outtake;
+import frc.robot.commands.Shooter.VelocityShoot;
+import frc.robot.commands.ShooterShifter.DoubleExtend;
 import frc.robot.commands.ShooterShifter.ShortShifterExtend;
 import frc.robot.subsystems.Chassis;
 import frc.robot.commands.Auton.*;
-import frc.robot.commands.Shooter.*;
-import frc.robot.commands.ShooterShifter.DoubleExtend;
 import frc.robot.commands.ShooterShifter.DoubleRetract;
 import frc.robot.sensors.JoystickTrigger;
 import frc.robot.subsystems.*;
@@ -170,45 +169,54 @@ public class RobotContainer {
   // CommandGenericHID subclass for CommandXboxController Xbox
   // CommandPS4Controller subclass for PS4 Controller
   // CommandJoystick for flight joysticks
+
+  // Right joystick up == targeting amp
+  // Right joystick down == targeting speaker
+  // Press right joystick == targeting stage to speaker
+
+  // face target == down on orientation stick
   private void configureBindings() {
     /*
     GAVIN DRIVER - Note: check Teleop button bindings in TeleopDrive
      */
     new POVButton(driverController, Constants.PS5.LST_POV_N).whileTrue(new ResetOdometryForward(chassis));
-    // Right joystick up == targeting amp
-    // Right joystick down == targeting speaker
-    // Press right joystick == targeting stage to speaker
 
-    new JoystickButton(driverController, Constants.PS5.LST_BTN_RBUMPER).whileTrue(new ToggleIntake(intake));
+    // intake / indexer
     new JoystickTrigger(driverController, Constants.PS5.LST_AXS_RTRIGGER).whileTrue(new LimitedSpintake(intake, indexer));
     new JoystickButton(driverController, Constants.PS5.circle).whileTrue(new AlwaysIndex(indexer));
-    new JoystickButton(driverController, Constants.PS5.x).whileTrue(new Outtake(indexer));
+    new JoystickButton(driverController, Constants.PS5.LST_BTN_RBUMPER).whileTrue(new ToggleIntake(intake));
+    new JoystickButton(driverController, Constants.PS5.x).whileTrue(new Outtake(indexer)); // TODO
 
-    //new JoystickTrigger(driverController, Constants.PS5.LST_AXS_LTRIGGER).whileTrue(new AmpOuttake(amp));
+    new JoystickTrigger(driverController, Constants.PS5.LST_AXS_LTRIGGER).whileTrue(new AmpOuttake(amp));
 
     /*
     ANDREW OPERATOR
-     *
-
-    /** amp setpoints **/
-    // not working new POVButton(operatorController, Constants.XBox.LST_POV_N).whileTrue(new AmpAutoHigh(amp));
-    //new POVButton(operatorController, Constants.XBox.LST_POV_W).whileTrue(new AmpAutoMid(amp));
-    // not working new POVButton(operatorController, Constants.XBox.LST_POV_S).whileTrue(new AmpAutoLow(amp));
-
-    /** amp prepping **/
-    new JoystickButton(operatorController, Constants.XBox.LST_BTN_X).whileTrue(new AmpIndexPassBeam(amp, shooter, indexer, shooterShifter ));
-    new JoystickButton(operatorController, Constants.XBox.LST_BTN_B).whileTrue(new AmpZero(amp));
-
-    //new JoystickButton(operatorController, Constants.XBox.LST_BTN_A).whileTrue(new AmpOuttake(amp));
-
+     */
+    // software debugging
+    // new POVButton(operatorController, Constants.XBox.LST_POV_N).whileTrue(new AmpAutoHigh(amp));
+    // new POVButton(operatorController, Constants.XBox.LST_POV_W).whileTrue(new AmpAutoMid(amp));
+    // new POVButton(operatorController, Constants.XBox.LST_POV_S).whileTrue(new AmpAutoLow(amp));
     //new JoystickButton(operatorController, Constants.XBox.LST_BTN_LBUMPER).whileTrue(new AmpManualLower(amp));
     //new JoystickButton(operatorController, Constants.XBox.LST_BTN_RBUMPER).whileTrue(new AmpManualLift(amp));
 
+    // indexer
+    new JoystickTrigger(operatorController, Constants.XBox.LST_AXS_RTRIGGER).whileTrue(new AndrewIndex(indexer, shooterShifter, shooter));
+    new JoystickButton(operatorController, Constants.XBox.LST_BTN_Y).whileTrue(new AlwaysIndex(indexer));
+    // break beam - new JoystickButton(operatorController, Constants.XBox.LST_BTN_Y).whileTrue(new IndexToBeam(indexer, shooter));
 
-    new JoystickButton(driverController, Constants.XBox.LST_BTN_RBUMPER).whileTrue(new VelocityShoot(shooter));
-    new JoystickTrigger(driverController, Constants.XBox.LST_AXS_RTRIGGER).whileTrue(new AndrewIndex(indexer, shooterShifter, shooter));
-    new JoystickTrigger(driverController, Constants.XBox.LST_AXS_LTRIGGER).whileTrue(new ShortShifterExtend(shooterShifter));
-    new JoystickButton(driverController, Constants.XBox.LST_BTN_LBUMPER).whileTrue(new DoubleExtend(shooterShifter));
+    // shooter
+    new JoystickButton(operatorController, Constants.XBox.LST_BTN_RBUMPER).whileTrue(new VelocityShoot(shooter));
+    // shuttle - new JoystickButton(operatorController, Constants.XBox.LST_BTN_RBUMPER).whileTrue(new VelocityShoot(shooter));
 
+    // amp
+    new JoystickButton(operatorController, Constants.XBox.LST_BTN_B).whileTrue(new ParallelCommandGroup(new AmpAutoMid(amp), new ShortShifterExtend(shooterShifter)));
+    new POVButton(operatorController, Constants.XBox.LST_POV_N).whileTrue(new SequentialCommandGroup(new AutomatedPassToAmp(amp, shooter, indexer, shooterShifter), new AmpAutoHighScore(amp)));
+    new POVButton(operatorController, Constants.XBox.LST_POV_E).whileTrue(new AmpAutoHigh(amp));
+    new POVButton(operatorController, Constants.XBox.LST_POV_S).whileTrue(new AmpAutoLow(amp));
+
+    // shooter shifter
+    new JoystickButton(operatorController, Constants.XBox.LST_BTN_LBUMPER).whileTrue(new DoubleExtend(shooterShifter));
+    new JoystickTrigger(operatorController, Constants.XBox.LST_AXS_LTRIGGER).whileTrue(new ShortShifterExtend(shooterShifter));
+    new POVButton(operatorController, Constants.XBox.LST_POV_W).whileTrue(new DoubleRetract(shooterShifter));
   }
 }
