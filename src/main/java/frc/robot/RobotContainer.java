@@ -11,9 +11,6 @@ package frc.robot;
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
-
-package frc.robot;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -30,18 +27,23 @@ import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
-import frc.robot.commands.Amp.index.AutomatedPassToAmp;
-import frc.robot.commands.Amp.setpoints.AmpAutoHigh;
-import frc.robot.commands.Amp.setpoints.AmpAutoLow;
-import frc.robot.commands.Amp.setpoints.AmpAutoMid;
+import frc.robot.commands.Amp.AmpKirbyThenFlies;
+import frc.robot.commands.Amp.PrepAmp;
+import frc.robot.commands.Amp.Software.AmpAutoMid;
+import frc.robot.commands.Amp.Software.AmpManualLower;
+import frc.robot.commands.Amp.AmpOuttake;
+import frc.robot.commands.Amp.AmpAutoHigh;
+import frc.robot.commands.Amp.Software.AmpAutoLow;
+import frc.robot.commands.Amp.Software.AmpZero;
 import frc.robot.commands.Chassis.DriveToPID;
 import frc.robot.commands.Chassis.TeleopDrive;
 import frc.robot.commands.Indexer.AlwaysIndex;
-import frc.robot.commands.Indexer.AndrewIndex;
+import frc.robot.commands.Indexer.AndrewIndexToShoot;
 import frc.robot.commands.Indexer.IndexToBeam;
 import frc.robot.commands.Intake.LimitedSpintake;
 import frc.robot.commands.Indexer.Outtake;
-import frc.robot.commands.Shooter.VelocityShoot;
+import frc.robot.commands.Shooter.ShootMovingSetpoint;
+import frc.robot.commands.Shooter.ShuttleMovingSetpoint;
 import frc.robot.commands.ShooterShifter.DoubleExtend;
 import frc.robot.commands.ShooterShifter.ShortShifterExtend;
 import frc.robot.commands.Auton.*;
@@ -72,6 +74,7 @@ public class RobotContainer {
   private final XboxController operatorController = new XboxController(1);
   private final LEDs robotLEDs;
   private final SendableChooser<Command> autoChooser;
+  private final Amp amp;
 
   public RobotContainer() {
     leftClimber = new Climber(Constants.CAN.climberLeft, Constants.IDs.kLLimitSwitch, Constants.XBox.AXS_RJOYSTICK_Y, false);
@@ -83,6 +86,7 @@ public class RobotContainer {
     intake = new Intake();
     indexer = new Indexer(shooter);
     robotLEDs = new LEDs();
+    amp = new Amp();
 
     // Named commands must be registered before the creation of any PathPlanner Autos or Paths
     // Do this in RobotContainer, after subsystem initialization, but before the creation of any other commands.
@@ -166,8 +170,8 @@ public class RobotContainer {
   public InstantCommand resetIntake() {
     return new IntakeIn(intake);
   }
-  public InstantCommand resetAmp() {
-    return new AmpManualLower(amp);
+  public InstantCommand ampZero() {
+    return new AmpZero(amp);
   }
 
   public void resetOdo() {
@@ -176,7 +180,11 @@ public class RobotContainer {
   public void updateChassisPose() {
     chassis.updateOdometryFromSwerve();
   }
-  
+
+
+  // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
+  //new Trigger(m_exampleSubsystem::exampleCondition).onTrue(new ExampleCommand(m_exampleSubsystem));
+
   // This method defines trigger -> command mappings
   // Triggers created via the Trigger constructor
   // CommandGenericHID subclass for CommandXboxController Xbox
@@ -198,7 +206,7 @@ public class RobotContainer {
     new JoystickTrigger(driverController, Constants.PS5.LST_AXS_RTRIGGER).whileTrue(new LimitedSpintake(intake, indexer));
     new JoystickButton(driverController, Constants.PS5.circle).whileTrue(new AlwaysIndex(indexer));
     new JoystickButton(driverController, Constants.PS5.LST_BTN_RBUMPER).whileTrue(new ToggleIntake(intake));
-    new JoystickButton(driverController, Constants.PS5.x).whileTrue(new Outtake(indexer)); // TODO
+    new JoystickButton(driverController, Constants.PS5.x).whileTrue(new Outtake(indexer));
 
     new JoystickTrigger(driverController, Constants.PS5.LST_AXS_LTRIGGER).whileTrue(new AmpOuttake(amp));
 
@@ -207,47 +215,43 @@ public class RobotContainer {
 
     /*
     ANDREW OPERATOR
-     */
-    // software debugging
-    // new POVButton(operatorController, Constants.XBox.LST_POV_N).whileTrue(new AmpAutoHigh(amp));
-    // new POVButton(operatorController, Constants.XBox.LST_POV_W).whileTrue(new AmpAutoMid(amp));
-    // new POVButton(operatorController, Constants.XBox.LST_POV_S).whileTrue(new AmpAutoLow(amp));
-    //new JoystickButton(operatorController, Constants.XBox.LST_BTN_LBUMPER).whileTrue(new AmpManualLower(amp));
-    //new JoystickButton(operatorController, Constants.XBox.LST_BTN_RBUMPER).whileTrue(new AmpManualLift(amp));
+    */
 
     // indexer
-    new JoystickTrigger(operatorController, Constants.XBox.LST_AXS_RTRIGGER).whileTrue(new AndrewIndex(indexer, shooterShifter, shooter));
-    new JoystickButton(operatorController, Constants.XBox.LST_BTN_Y).whileTrue(new AlwaysIndex(indexer));
-    // break beam - new JoystickButton(operatorController, Constants.XBox.LST_BTN_Y).whileTrue(new IndexToBeam(indexer, shooter));
+
+    new JoystickButton(operatorController, Constants.XBox.BTN_Y).whileTrue(new AlwaysIndex(indexer));
+    new JoystickButton(operatorController, Constants.XBox.BTN_A).whileTrue(new IndexToBeam(indexer, shooterShifter, shooter));
+    new JoystickTrigger(operatorController, Constants.XBox.AXS_RTRIGGER).whileTrue(new AndrewIndexToShoot(indexer, shooterShifter, shooter));
 
     // shooter
-    new JoystickButton(operatorController, Constants.XBox.LST_BTN_RBUMPER).whileTrue(new VelocityShoot(shooter));
-    // shuttle - new JoystickButton(operatorController, Constants.XBox.LST_BTN_RBUMPER).whileTrue(new VelocityShoot(shooter));
+    //new JoystickButton(operatorController, Constants.XBox.BTN_RBUMPER).whileTrue(new ShootMovingSetpoint(shooter));
+    new JoystickButton(operatorController, Constants.XBox.BTN_X).whileTrue(new ShuttleMovingSetpoint(shooter));
 
     // amp
-    new JoystickButton(operatorController, Constants.XBox.LST_BTN_B).whileTrue(new ParallelCommandGroup(new AmpAutoMid(amp), new ShortShifterExtend(shooterShifter)));
-    // TODO below is not real lmao, only gavin has outtake
-    new POVButton(operatorController, Constants.XBox.LST_POV_N).whileTrue(new SequentialCommandGroup(new AutomatedPassToAmp(amp, shooter, indexer, shooterShifter), new AmpAutoHighScore(amp)));
-    new POVButton(operatorController, Constants.XBox.LST_POV_E).whileTrue(new AmpAutoHigh(amp));
-    new POVButton(operatorController, Constants.XBox.LST_POV_S).whileTrue(new AmpAutoLow(amp));
+    new POVButton(operatorController, Constants.XBox.POV_N).whileTrue(
+            new SequentialCommandGroup(new PrepAmp(amp, shooterShifter), new AmpKirbyThenFlies(amp, shooter, shooterShifter, indexer)));
+
+
+    //new JoystickButton(operatorController, Constants.XBox.BTN_B).whileTrue(new ParallelCommandGroup(new AmpAutoMid(amp), new ShortShifterExtend(shooterShifter)));
+    //new POVButton(operatorController, Constants.XBox.POV_N).whileTrue(new SequentialCommandGroup(new AutomatedPassToAmp(amp, shooter, indexer, shooterShifter), new AmpAutoHighScore(amp)));
+    //new POVButton(operatorController, Constants.XBox.POV_E).whileTrue(new AmpAutoHigh(amp));
+    //new POVButton(operatorController, Constants.XBox.POV_S).whileTrue(new AmpAutoLow(amp));
 
     // shooter shifter
-    new JoystickButton(operatorController, Constants.XBox.LST_BTN_LBUMPER).whileTrue(new DoubleExtend(shooterShifter));
-    new JoystickTrigger(operatorController, Constants.XBox.LST_AXS_LTRIGGER).whileTrue(new ShortShifterExtend(shooterShifter));
-    new POVButton(operatorController, Constants.XBox.LST_POV_W).whileTrue(new DoubleRetract(shooterShifter));
+    //new JoystickButton(operatorController, Constants.XBox.BTN_LBUMPER).whileTrue(new DoubleExtend(shooterShifter));
+    new JoystickTrigger(operatorController, Constants.XBox.AXS_LTRIGGER).whileTrue(new ShortShifterExtend(shooterShifter));
+    new POVButton(operatorController, Constants.XBox.POV_W).whileTrue(new DoubleRetract(shooterShifter));
 
 
-    new POVButton(operatorController, Constants.XBox.POV_W).whileTrue(new PitClimberReset(rightClimber));//right
-    new POVButton(operatorController, Constants.XBox.POV_E).whileTrue(new PitClimberReset(leftClimber));//left
+    //software debugging
+    new POVButton(operatorController, Constants.XBox.POV_E).whileTrue(new AmpAutoHigh(amp));
+    //new POVButton(operatorController, Constants.XBox.POV_W).whileTrue(new AmpAutoMid(amp));
+    new POVButton(operatorController, Constants.XBox.POV_S).whileTrue(new AmpAutoLow(amp));
+    new JoystickButton(operatorController, Constants.XBox.BTN_LBUMPER).whileTrue(new AmpManualLower(amp));
+    //new JoystickButton(operatorController, Constants.XBox.LST_BTN_RBUMPER).whileTrue(new AmpManualLift(amp));
 
-    /*
-    //new JoystickButton(driverController, Constants.Buttons.LST_BTN_B).whileTrue(new VelocityShoot(shooter));
-    //new JoystickButton(operatorController, Constants.Buttons.LST_BTN_RBUMPER).whileTrue(new SequentialCommandGroup(new SmartSpintake(intake), new SmartIndex(intake)));
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    /*
-    new Trigger(m_exampleSubsystem::exampleCondition)
-            .onTrue(new ExampleCommand(m_exampleSubsystem));
-    */
+    //new POVButton(operatorController, Constants.XBox.POV_W).whileTrue(new PitClimberReset(rightClimber));//right
+    //new POVButton(operatorController, Constants.XBox.POV_E).whileTrue(new PitClimberReset(leftClimber));//left
   }
 }
 

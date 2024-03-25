@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.Amp.index;
+package frc.robot.commands.Amp.Software;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -41,9 +41,9 @@ public class AutomatedPassToAmp extends Command {
   @Override
   public void execute() {
     if (shifter.getIsShortShifterExtended() && amp.getIsMid()) {
-      shooter.runIndexToAmpSpeed();
+      shooter.runFlywheelsAmpSpeed();
       amp.outtakeAmp();
-      indexer.shooterSpindex();
+      indexer.toShooterSpindex();
     }
     if (shooter.getBeamHasNote() && !hasSeenNote){
       hasSeenNote = true; //note that we saw the note for the first time

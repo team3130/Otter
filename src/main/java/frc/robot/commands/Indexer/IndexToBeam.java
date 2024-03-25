@@ -10,35 +10,33 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.ShooterShifter;
 
 public class IndexToBeam extends Command {
   private final Indexer indexer;
+  private final ShooterShifter shooterShifter;
   private final Shooter shooter;
 
-  private Timer spinUpTime = new Timer();
-
-  public IndexToBeam(Indexer indexer, Shooter shooter) {
+  public IndexToBeam(Indexer indexer,  ShooterShifter shooterShifter, Shooter shooter) {
     this.indexer = indexer;
+    this.shooterShifter = shooterShifter;
     this.shooter = shooter;
-    addRequirements(shooter);
-    addRequirements(indexer);
-
+    addRequirements(indexer, shooterShifter, shooter);
   }
 
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    indexer.indexToBeam();
-
+    if (shooterShifter.getIsShortShifterExtended() || shooterShifter.getIsDoubleExtended()) {
+      indexer.indexToBeam();
+    }
   }
 
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-
-  }
+  public void execute() { }
 
 
   // Called once the command ends or is interrupted.

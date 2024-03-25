@@ -9,12 +9,12 @@ import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.ShooterShifter;
 
-public class AndrewIndex extends Command {
+public class AndrewIndexToShoot extends Command {
   private final Indexer indexer;
   private final ShooterShifter shooterShifter;
   private final Shooter shooter;
 
-  public AndrewIndex(Indexer indexer, ShooterShifter shooterShifter, Shooter shooter) {
+  public AndrewIndexToShoot(Indexer indexer, ShooterShifter shooterShifter, Shooter shooter) {
     this.indexer = indexer;
     this.shooterShifter = shooterShifter;
     this.shooter = shooter;
@@ -31,8 +31,7 @@ public class AndrewIndex extends Command {
   @Override
   public void execute() {
     if (shooter.getFlywheelsAtVelocitySetpoint() && (shooterShifter.getIsShortShifterExtended() || shooterShifter.getIsDoubleExtended())) {
-    if ((shooterShifter.getIsShortShifterExtended() || shooterShifter.getIsDoubleExtended()) && indexer.flywheelVelocitiesReady()) {
-      indexer.shooterSpindex();
+      indexer.toShooterSpindex();
     }
   }
 

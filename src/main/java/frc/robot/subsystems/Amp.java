@@ -4,8 +4,6 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -27,16 +25,15 @@ public class Amp extends SubsystemBase {
   private int encoderMaxTicks = 13600;
   private int highSetpoint = 13500; //drop into amp
   private int midSetpoint = 5465; //pick up from mid shooter
-  private int lowSetpoint = 0;
+  private int lowSetpoint = 60;
   private PIDController ampController;
-  private double P = 0.0013;
+  private double P = 0.00175;
   private double I = 0;
   private double D = 0.00005;
   private boolean hasZeroed = false;
   private boolean isMid = false;
   private boolean isHigh = false;
   private boolean isReadyToScore = false;
-
   public Amp() {
     ampLimit = new DigitalInput(Constants.IDs.ampLimitDIO);
 
@@ -235,6 +232,7 @@ public class Amp extends SubsystemBase {
       builder.addBooleanProperty("is at mid", this::getIsMid, this::setIsMid);
       builder.addBooleanProperty("is at high", this::getIsHigh, this::setIsHigh);
       builder.addBooleanProperty("ready to score", this::getIsReadyToScore, this::setIsReadyToScore);
+
 
     }
   }

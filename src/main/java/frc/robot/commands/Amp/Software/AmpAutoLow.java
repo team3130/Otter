@@ -2,19 +2,19 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.Amp;
+package frc.robot.commands.Amp.Software;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.Amp;
 
 /** An example command that uses an example subsystem. */
-public class AmpAutoHighScore extends InstantCommand {
+public class AmpAutoLow extends InstantCommand {
   private final Amp amp;
 
   /**
    * @param amp The subsystem used by this command.
    */
-  public AmpAutoHighScore(Amp amp) {
+  public AmpAutoLow(Amp amp) {
     this.amp = amp;
     addRequirements(amp);
   }
@@ -23,30 +23,27 @@ public class AmpAutoHighScore extends InstantCommand {
   @Override
   public void initialize() {
     amp.resetController();
-    amp.setIsMid(false);
-    amp.setIsHigh(false);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    amp.moveAmpAtSpeed(amp.runController(amp.getHighSetpoint()));
-    if (amp.isAtSetpointWithDeadband()) {
-      amp.setIsHigh(true);
-      amp.outtakeAmp();
-    }
+    amp.moveAmpAtSpeed(amp.runController(amp.getLowSetpoint()));
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     amp.ampLiftingMotorStop();
-    amp.ampSpinningMotorStop();
+    if (amp.getLimitSwitch()) {
+      amp.resetEncoder();
+      amp.setHasZeroedTrue();
+    }
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (amp.getLiftingEncoderPosition() >= amp.getHighSetpoint()) || (!amp.getHasZeroed()) || !amp.getIsReadyToScore();
+    return (amp.getLimitSwitch());
   }
 }

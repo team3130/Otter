@@ -22,8 +22,6 @@ public class Shooter extends SubsystemBase {
     private double flywheelVolts = 5;
     private double indexToAmpVolts = 2;
     private DigitalInput shooterBeam;
-
-
     private boolean flywheelsAtSetpoints = false;
     private double maxTime = 1.5;
     final VoltageOut topVoltReq = new VoltageOut(0);
@@ -38,8 +36,8 @@ public class Shooter extends SubsystemBase {
     double topVelocitySetpoint = 30;
     double bottomVelocitySetpoint = 30;
 
-    double topSlowVelocitySetpoint = 10;
-    double bottomSlowVelocitySetpoint = 10;
+    double topShuttleVelocitySetpoint = 10;
+    double bottomShuttleVelocitySetpoint = 10;
 
 
     private double topFeedForwardVolt = 0;
@@ -124,7 +122,7 @@ public class Shooter extends SubsystemBase {
         topFlywheel.setControl(topVoltReq.withOutput(flywheelVolts));
         bottomFlywheel.setControl(bottomVoltReq.withOutput(flywheelVolts));
     }
-    public void runIndexToAmpSpeed() {
+    public void runFlywheelsAmpSpeed() {
         topFlywheel.setControl(topVoltReq.withOutput(indexToAmpVolts));
         bottomFlywheel.setControl(bottomVoltReq.withOutput(indexToAmpVolts));
     }
@@ -144,9 +142,9 @@ public class Shooter extends SubsystemBase {
         topFlywheel.setControl(topVelocityRequest.withVelocity(topVelocitySetpoint).withFeedForward(topFeedForwardVolt));
         bottomFlywheel.setControl(bottomVelocityRequest.withVelocity(bottomVelocitySetpoint).withFeedForward(bottomFeedForwardVolt));
     }
-    public void setSlowFlywheelVelocity() {
-        topFlywheel.setControl(topVelocityRequest.withVelocity(topSlowVelocitySetpoint).withFeedForward(topFeedForwardVolt));
-        bottomFlywheel.setControl(bottomVelocityRequest.withVelocity(bottomSlowVelocitySetpoint).withFeedForward(bottomFeedForwardVolt));
+    public void setShuttleFlywheelVelocity() {
+        topFlywheel.setControl(topVelocityRequest.withVelocity(topShuttleVelocitySetpoint).withFeedForward(topFeedForwardVolt));
+        bottomFlywheel.setControl(bottomVelocityRequest.withVelocity(bottomShuttleVelocitySetpoint).withFeedForward(bottomFeedForwardVolt));
     }
     public void setTopFlywheelVelocity(double velo) {
         topFlywheel.setControl(topVelocityRequest.withVelocity(velo).withFeedForward(topFeedForwardVolt));
@@ -227,11 +225,12 @@ public class Shooter extends SubsystemBase {
     public double getBottomFlyVelocityRPS() { return bottomFlywheel.getVelocity().getValue();}
     public double getTopFlyVelocityRPM() { return topFlywheel.getVelocity().getValue() * 60; }
     public double getBottomFlyVelocityRPM() { return bottomFlywheel.getVelocity().getValue() * 60;}
-    public double getTopSlowFlyVelocitySetpoint() { return topSlowVelocitySetpoint; }
-    public double getBottomSlowVelocitySetpoint() { return bottomSlowVelocitySetpoint; }
+    public double getTopShuttleVelocitySetpoint() { return topShuttleVelocitySetpoint; }
+    public double getBottomShuttleVelocitySetpoint() { return bottomShuttleVelocitySetpoint; }
 
-    public void setTopSlowFlyVelocityRPS(double slow) {topSlowVelocitySetpoint = slow;}
-    public void setBottomSlowVelocitySetpoint(double slow) {bottomSlowVelocitySetpoint=slow;}
+    public void setTopShuttleVelocitySetpoint(double slow) { topShuttleVelocitySetpoint = slow; }
+    public void setBottomShuttleVelocitySetpoint(double turtle) { bottomShuttleVelocitySetpoint = turtle; }
+
     public double getTopFlywheelSuppliedVolts() { return topFlywheel.getSupplyVoltage().getValue(); }
     public double getBottomFlywheelSuppliedVolts() { return bottomFlywheel.getSupplyVoltage().getValue(); }
 
@@ -312,6 +311,8 @@ public class Shooter extends SubsystemBase {
 
             builder.addDoubleProperty("Top Velocity Setpoint", this::getTopVelocitySetpoint, this::setTopVelocitySetpoint);
             builder.addDoubleProperty("Bottom Velocity Setpoint", this::getBottomVelocitySetpoint, this::setBottomVelocitySetpoint);
+            builder.addDoubleProperty("Top Shuttle Setpoint", this::getTopShuttleVelocitySetpoint, this::setTopShuttleVelocitySetpoint);
+            builder.addDoubleProperty("Bottom Shuttle Setpoint", this::getBottomShuttleVelocitySetpoint, this::setBottomShuttleVelocitySetpoint);
 
             builder.addDoubleProperty("Top RPM", this::getTopFlyVelocityRPM, null);
             builder.addDoubleProperty("Bottom RPM", this::getBottomFlyVelocityRPM, null);

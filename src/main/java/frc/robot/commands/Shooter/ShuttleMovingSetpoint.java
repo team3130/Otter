@@ -43,8 +43,8 @@ public class ShuttleMovingSetpoint extends Command {
     topStartingPoint = shooter.getTopFlyVelocityRPS(); //momentum in the wheels creates a nonzero starting state
     bottomStartingPoint = shooter.getBottomFlyVelocityRPS();
 
-    topRPSToIncrease = shooter.getTopSlowFlyVelocitySetpoint() - topStartingPoint; //ground left to cover
-    bottomRPSToIncrease = shooter.getBottomSlowVelocitySetpoint() - bottomStartingPoint;
+    topRPSToIncrease = shooter.getTopShuttleVelocitySetpoint() - topStartingPoint; //ground left to cover
+    bottomRPSToIncrease = shooter.getBottomShuttleVelocitySetpoint() - bottomStartingPoint;
 
   }
 
@@ -58,9 +58,9 @@ public class ShuttleMovingSetpoint extends Command {
         shooter.setBottomFlywheelVelocity( bottomStartingPoint + ((timer.get() / shooter.getMaxTime()) * bottomRPSToIncrease));
         // setpoint = how fast you are going now + (% of time used * rps the controller has to cover to setpoint); make sure it is never over setpoint
       } else {
-        shooter.setSlowFlywheelVelocity(); //normal going straight to setpoint, assumes youve hit it previously
+        shooter.setShuttleFlywheelVelocity(); //normal going straight to setpoint, assumes youve hit it previously
       }
-      shooter.checkFlywheelsAtVelocitySetpoint(shooter.getTopSlowFlyVelocitySetpoint(), shooter.getBottomSlowVelocitySetpoint());
+      shooter.checkFlywheelsAtVelocitySetpoint(shooter.getTopShuttleVelocitySetpoint(), shooter.getBottomShuttleVelocitySetpoint());
   }
 
 

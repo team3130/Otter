@@ -1,17 +1,17 @@
 
-package frc.robot.commands.Amp;
+package frc.robot.commands.Amp.Software;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.Amp;
 
 /** An example command that uses an example subsystem. */
-public class AmpManualLower extends InstantCommand {
+public class AmpManualLift extends InstantCommand {
   private final Amp amp;
 
   /**
    * @param amp The subsystem used by this command.
    */
-  public AmpManualLower(Amp amp) {
+  public AmpManualLift(Amp amp) {
     this.amp = amp;
     addRequirements(amp);
   }
@@ -19,7 +19,7 @@ public class AmpManualLower extends InstantCommand {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    amp.manualAmpLowerDown();
+    amp.manualAmpLiftUp();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -30,15 +30,11 @@ public class AmpManualLower extends InstantCommand {
   @Override
   public void end(boolean interrupted) {
     amp.ampLiftingMotorStop();
-    if (amp.getLimitSwitch()) {
-      amp.resetEncoder();
-      amp.setHasZeroedTrue();
-    }
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return amp.getLimitSwitch();
+    return false;//amp.getEncoderPosition() < amp.getEncoderMax() || !amp.getHasZeroed();
   }
 }

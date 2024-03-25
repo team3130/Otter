@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.Amp.setpoints;
+package frc.robot.commands.Amp.Software;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.Amp;
@@ -31,20 +31,20 @@ public class AmpAutoHigh extends InstantCommand {
   @Override
   public void execute() {
     amp.moveAmpAtSpeed(amp.runController(amp.getHighSetpoint()));
+    if (amp.isAtSetpointWithDeadband()) {
+      amp.setIsHigh(true);
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    if (amp.isAtSetpointWithDeadband()) {
-      amp.setIsHigh(true);
-    }
     amp.ampLiftingMotorStop();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (amp.getLiftingEncoderPosition() >= amp.getHighSetpoint()) || (!amp.getHasZeroed());
+    return (amp.getLiftingEncoderPosition() >= amp.getHighSetpoint()) || (!amp.getHasZeroed()) || !amp.getIsReadyToScore();
   }
 }

@@ -42,11 +42,6 @@ public final class Constants {
     public final static int shawtyShifterChannel = 5;
     public final static int longShifterChannel = 6;
 
-    public final static int ampLimitDIO = 4;
-
-    public final static int longShifterChannel = 6;
-    public final static int smallShifterChannel = 5;
-
     public static final int kRLimitSwitch = 3;
     public static final int kLLimitSwitch = 2;
   }

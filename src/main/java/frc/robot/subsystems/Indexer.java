@@ -6,7 +6,6 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -20,7 +19,7 @@ public class Indexer extends SubsystemBase {
   private double spintakeSpeed = 1; // 10
   private double indexToBeamSpeed = 0.45; // 10
 
-  private double shooterSpindexSpeed = 0.7;
+  private double toShooterSpindexSpeed = 0.7;
   private double autoSpintakeSpeed = 1; // 10
   private double autoShooterSpindexSpeed = 1;
   //private SupplyCurrentLimitConfiguration currLimitConfigs = new SupplyCurrentLimitConfiguration();
@@ -61,8 +60,8 @@ public class Indexer extends SubsystemBase {
     indexer.set(outakeSpeed);
   }
 
-  public void shooterSpindex() {
-    indexer.set(shooterSpindexSpeed);
+  public void toShooterSpindex() {
+    indexer.set(toShooterSpindexSpeed);
   }
 
   public void stopIndexer() {
@@ -83,8 +82,8 @@ public class Indexer extends SubsystemBase {
   public double getOutakeSpeed() { return outakeSpeed; }
   public void setIndexerVoltageCompensation(double volts) { indexerVoltageCompensation = volts;}
   public double getIndexerVoltageCompensation() { return indexerVoltageCompensation; }
-  public void setShooterSpindexSpeed(double lol) { shooterSpindexSpeed = lol;}
-  public double getShooterSpindexSpeed() { return shooterSpindexSpeed; }
+  public void setToShooterSpindexSpeed(double lol) { toShooterSpindexSpeed = lol;}
+  public double getToShooterSpindexSpeed() { return toShooterSpindexSpeed; }
 
   public double getIndexerCurrent() { return indexer.getSupplyCurrent();}
 
@@ -93,7 +92,7 @@ public class Indexer extends SubsystemBase {
       builder.setSmartDashboardType("Indexer");
       builder.addDoubleProperty("Spintake speed", this::getSpintakeSpeed, this::setSpintakeSpeed);
       builder.addDoubleProperty("Outtake speed", this::getOutakeSpeed, this::setOutakeSpeed);
-      builder.addDoubleProperty("Shooter Index speed", this::getShooterSpindexSpeed, this::setShooterSpindexSpeed);
+      builder.addDoubleProperty("Shooter Index speed", this::getToShooterSpindexSpeed, this::setToShooterSpindexSpeed);
       builder.addDoubleProperty("Indexer Voltage comp", this::getIndexerVoltageCompensation, this::setIndexerVoltageCompensation);
       builder.addDoubleProperty("indexer current", this::getIndexerCurrent, null);
     }

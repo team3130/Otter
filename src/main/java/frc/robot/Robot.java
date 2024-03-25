@@ -84,7 +84,6 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().cancelAll();
     //CommandScheduler.getInstance().schedule(robotContainer.resetEverything());
     autonomousCommand = robotContainer.pick();
-    // CommandScheduler.getInstance().schedule(robotContainer.shootAuto());
 
   //  autonomousCommand = robotContainer.pick();
     // schedule the autonomous command (example)
@@ -112,6 +111,7 @@ public class Robot extends TimedRobot {
 
     CommandScheduler.getInstance().schedule(robotContainer.resetIntake());
     CommandScheduler.getInstance().schedule(robotContainer.resetShooterShifter());
+    CommandScheduler.getInstance().schedule(robotContainer.ampZero());
 
     //This is so climber command can assume climbers are reset before a match
     //robotContainer.resetClimbers();

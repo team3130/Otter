@@ -1,17 +1,17 @@
 
-package frc.robot.commands.Amp;
+package frc.robot.commands.Amp.Software;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.Amp;
 
 /** An example command that uses an example subsystem. */
-public class AmpZero extends InstantCommand {
+public class AmpManualLower extends InstantCommand {
   private final Amp amp;
 
   /**
    * @param amp The subsystem used by this command.
    */
-  public AmpZero(Amp amp) {
+  public AmpManualLower(Amp amp) {
     this.amp = amp;
     addRequirements(amp);
   }
