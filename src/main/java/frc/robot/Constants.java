@@ -251,35 +251,36 @@ public final class Constants {
 
   public static class XBox {
     // Gamepad Button List
-    public static final int LST_BTN_A = 1;
-    public static final int LST_BTN_B = 2;
-    public static final int LST_BTN_X = 3;
-    public static final int LST_BTN_Y = 4;
-    public static final int LST_BTN_LBUMPER = 5;
-    public static final int LST_BTN_RBUMPER = 6;
-    public static final int LST_BTN_WINDOW = 7;
-    public static final int LST_BTN_MENU = 8;
-    public static final int LST_BTN_LJOYSTICKPRESS = 9;
-    public static final int LST_BTN_RJOYSTICKPRESS = 10;
+    public static final int BTN_A = 1;
+    public static final int BTN_B = 2;
+    public static final int BTN_X = 3;
+    public static final int BTN_Y = 4;
+
+    public static final int BTN_LBUMPER = 5;
+    public static final int BTN_RBUMPER = 6;
+    public static final int BTN_WINDOW = 7;
+    public static final int BTN_MENU = 8;
+    public static final int BTN_LJOYSTICK_PRESS = 9;
+    public static final int BTN_RJOYSTICK_PRESS = 10;
 
     // Gamepad POV List
-    public static final int LST_POV_UNPRESSED = -1;
-    public static final int LST_POV_N = 0;
-    public static final int LST_POV_NE = 45;
-    public static final int LST_POV_E = 90;
-    public static final int LST_POV_SE = 135;
-    public static final int LST_POV_S = 180;
-    public static final int LST_POV_SW = 225;
-    public static final int LST_POV_W = 270;
-    public static final int LST_POV_NW = 315;
+    public static final int POV_UNPRESSED = -1;
+    public static final int POV_N = 0;
+    public static final int POV_NE = 45;
+    public static final int POV_E = 90;
+    public static final int POV_SE = 135;
+    public static final int POV_S = 180;
+    public static final int POV_SW = 225;
+    public static final int POV_W = 270;
+    public static final int POV_NW = 315;
 
     // Gamepad Axis List
-    public static final int LST_AXS_LJOYSTICKX = 0;
-    public static final int LST_AXS_LJOYSTICKY = 1;
-    public static final int LST_AXS_LTRIGGER = 2;
-    public static final int LST_AXS_RTRIGGER = 3;
-    public static final int LST_AXS_RJOYSTICKX = 4;
-    public static final int LST_AXS_RJOYSTICKY = 5;
+    public static final int AXS_LJOYSTICK_X = 0;
+    public static final int AXS_LJOYSTICK_Y = 1;
+    public static final int AXS_LTRIGGER = 2;
+    public static final int AXS_RTRIGGER = 3;
+    public static final int AXS_RJOYSTICK_X = 4;
+    public static final int AXS_RJOYSTICK_Y = 5;
   }
 
 }
