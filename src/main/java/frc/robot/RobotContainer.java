@@ -210,6 +210,7 @@ public class RobotContainer {
 
     // amp
     new JoystickButton(operatorController, Constants.XBox.LST_BTN_B).whileTrue(new ParallelCommandGroup(new AmpAutoMid(amp), new ShortShifterExtend(shooterShifter)));
+    // TODO below is not real lmao, only gavin has outtake
     new POVButton(operatorController, Constants.XBox.LST_POV_N).whileTrue(new SequentialCommandGroup(new AutomatedPassToAmp(amp, shooter, indexer, shooterShifter), new AmpAutoHighScore(amp)));
     new POVButton(operatorController, Constants.XBox.LST_POV_E).whileTrue(new AmpAutoHigh(amp));
     new POVButton(operatorController, Constants.XBox.LST_POV_S).whileTrue(new AmpAutoLow(amp));
