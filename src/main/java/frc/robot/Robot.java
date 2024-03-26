@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.Climber;
@@ -41,6 +42,22 @@ public class Robot extends TimedRobot {
     timer = new Timer();
     timer.reset();
     timer.start();
+    // Set the scheduler to log Shuffleboard events for command initialize, interrupt, finish
+    /*
+    CommandScheduler.getInstance()
+            .onCommandInitialize(
+                    command ->
+                            System.out.println("Command initialized: " + command.getName()));
+    CommandScheduler.getInstance()
+            .onCommandInterrupt(
+                    command ->
+                            System.out.println("Command interrupted: " + command.getName()));
+    CommandScheduler.getInstance()
+            .onCommandFinish(
+                    command ->
+                            System.out.println("Command finished: " + command.getName()));
+
+     */
   }
 
   /**
