@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.Amp.*;
 import frc.robot.commands.Amp.Software.AmpZero;
+import frc.robot.commands.Auto.*;
 import frc.robot.commands.Chassis.DriveToPID;
 import frc.robot.commands.Chassis.TeleopDrive;
 import frc.robot.commands.Climber.ClimberExtend;
@@ -39,7 +40,6 @@ import frc.robot.commands.Indexer.Outtake;
 import frc.robot.commands.Shooter.ShootMovingSetpoint;
 import frc.robot.commands.Shooter.ShuttleMovingSetpoint;
 import frc.robot.commands.ShooterShifter.ShortShifterExtend;
-import frc.robot.commands.Auton.*;
 import frc.robot.commands.ShooterShifter.DoubleRetract;
 import frc.robot.sensors.JoystickTrigger;
 import frc.robot.subsystems.*;
@@ -83,14 +83,12 @@ public class RobotContainer {
 
     // Named commands must be registered before the creation of any PathPlanner Autos or Paths
     // Do this in RobotContainer, after subsystem initialization, but before the creation of any other commands.
-    NamedCommands.registerCommand("Shoot", new AutoShoot(shooter, indexer));
-    NamedCommands.registerCommand("PreloadShoot", new AutoPreloadShoot(shooter, indexer));
-    NamedCommands.registerCommand("Intake", new AutoIntake(intake, indexer));
-    NamedCommands.registerCommand("ShiftDoubleExtend", new AutoDoubleExtend(shooterShifter));
-    NamedCommands.registerCommand("ShiftDoubleRetract", new AutoDoubleRetract(shooterShifter));
-    NamedCommands.registerCommand("ShiftShortExtend", new AutoMidShifter(shooterShifter));
-    NamedCommands.registerCommand("Flywheel", new ShootMovingSetpoint(shooter));
-    NamedCommands.registerCommand("Index", new AutoIndexer(indexer));
+    NamedCommands.registerCommand("FlywheelsMovingSet", new AutoFlywheelMovingSetpoint(shooter));
+    NamedCommands.registerCommand("Indexer", new AutoIndex(indexer));
+    NamedCommands.registerCommand("IntakeLimited", new AutoIntake(intake, indexer));
+    NamedCommands.registerCommand("ShifterDoubleExtend", new AutoDoubleExtend(shooterShifter));
+    NamedCommands.registerCommand("ShifterShortExtend", new AutoShortExtend(shooterShifter));
+    NamedCommands.registerCommand("ShifterRetract", new AutoDoubleRetract(shooterShifter));
 
     configureBindings(); // configure button bindings
     exportShuffleBoardData(); // export ShuffleBoardData
@@ -109,9 +107,12 @@ public class RobotContainer {
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
 
+    /*
     ShuffleboardTab tab = Shuffleboard.getTab("Competition");
     tab.addBoolean("Intake Has Note", intake::getIntakeLimitSwitch).withPosition(0, 0).withSize(13, 5);
     tab.add("AutoChooser", autoChooser).withPosition(4, 5).withSize(4, 1);
+
+     */
   }
 
   /*

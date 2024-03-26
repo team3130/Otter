@@ -1,0 +1,43 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.73,
+      "y": 6.680400169815762
+    },
+    "rotation": -120.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "swn-FlushTurn"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "swn-ampN4p"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "pn-N1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "pn-N2"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}
