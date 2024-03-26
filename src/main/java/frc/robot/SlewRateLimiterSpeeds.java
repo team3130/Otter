@@ -5,8 +5,8 @@ package frc.robot;
 import edu.wpi.first.math.MathSharedStore;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.util.sendable.SendableBuilder;
 
 
 /**
@@ -14,17 +14,14 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
  * 2-dimensional output ramps.
  */
 public class SlewRateLimiterSpeeds {
-    private double m_linearAccRateLimit;
-    private double m_linearDecRateLimit;
-    private double currentRateLimit;
-    private double m_omegaRateLimit;
-    private Translation2d m_prevMove;
-    private double m_prevOmega;
-    private double m_prevTime;
-    private Translation2d prevJoystick;
+    private double linearAccRateLimit;
+    private double linearDecRateLimit;
+    private double omegaRateLimit;
+    private Translation2d prevMove;
+    private double prevOmega;
+    private double prevTime;
     private double deltaNorm;
     private double deltaRotation;
-
 
 
     /**
@@ -32,22 +29,22 @@ public class SlewRateLimiterSpeeds {
      * and an initial value.
      *
      * @param linearAccelerationRateLimit The rate-of-change limit in the linear 2d space, in units per
-     *     second. Must be positive.
-     * @param omegaRateLimit The rate-of-change limit for the angular component, in units per
-     *     second. Must be positive.
-     * @param initialValue The initial value of the input in Chassis Speeds.
+     *                                    second. Must be positive.
+     * @param linearDecelerationRateLimit The rate-of-change deceleration limit in the linear 2d space, in units per
+     *                                    second. Must be positive.
+     * @param omegaLimit                  The rate-of-change limit for the angular component, in units per
+     *                                    second. Must be positive.
+     * @param initialValue                The initial value of the input in Chassis Speeds.
      */
-    public SlewRateLimiterSpeeds(double linearAccelerationRateLimit, double linearDecelerationRateLimit, double omegaRateLimit, ChassisSpeeds initialValue) {
-        m_linearAccRateLimit = linearAccelerationRateLimit;
-        m_linearDecRateLimit = linearDecelerationRateLimit;
-        currentRateLimit = m_linearAccRateLimit;
+    public SlewRateLimiterSpeeds(double linearAccelerationRateLimit, double linearDecelerationRateLimit, double omegaLimit, ChassisSpeeds initialValue) {
+        linearAccRateLimit = linearAccelerationRateLimit;
+        linearDecRateLimit = linearDecelerationRateLimit;
         deltaNorm = 0;
         deltaRotation = 0;
-        prevJoystick = new Translation2d(0,0);
-        m_omegaRateLimit = omegaRateLimit;
-        m_prevMove = new Translation2d(initialValue.vxMetersPerSecond, initialValue.vyMetersPerSecond);
-        m_prevOmega = initialValue.omegaRadiansPerSecond;
-        m_prevTime = MathSharedStore.getTimestamp();
+        omegaRateLimit = omegaLimit;
+        prevMove = new Translation2d(initialValue.vxMetersPerSecond, initialValue.vyMetersPerSecond);
+        prevOmega = initialValue.omegaRadiansPerSecond;
+        prevTime = MathSharedStore.getTimestamp();
     }
 
 
@@ -58,48 +55,76 @@ public class SlewRateLimiterSpeeds {
      * @return The filtered value, which will not change faster than the slew rate.
      */
     public ChassisSpeeds calculate(ChassisSpeeds input) {
+        /** time **/
         double currentTime = MathSharedStore.getTimestamp();
-        double elapsedTime = currentTime - m_prevTime;
-        deltaNorm = new Translation2d(input.vxMetersPerSecond, input.vyMetersPerSecond).getNorm() - m_prevMove.getNorm();
-        deltaRotation =  new Translation2d(input.vxMetersPerSecond, input.vyMetersPerSecond).getAngle().getRadians()- m_prevMove.getAngle().getRadians();
-        double t = (MathUtil.clamp(deltaNorm, m_prevMove.getNorm() - (Constants.Swerve.kMaxDeccelerationDrive * currentTime),
-                m_prevMove.getNorm() + (Constants.Swerve.kMaxAccelerationDrive * currentTime))) / deltaNorm;
+        double elapsedTime = currentTime - prevTime;
 
+        /** norm (r of polar coords)**/
+        double prevNorm = prevMove.getNorm();
         Translation2d inputMove = new Translation2d(input.vxMetersPerSecond, input.vyMetersPerSecond);
-        double wantedNorm = inputMove.minus(m_prevMove).getNorm();
+        double inputNorm = inputMove.getNorm();
 
-        double allowedNorm = MathUtil.clamp(wantedNorm, 0, currentRateLimit * elapsedTime); // clamping neg accel
+        deltaNorm = inputMove.minus(prevMove).getNorm(); //desired change in norm
 
-        m_prevMove = m_prevMove.interpolate(inputMove, allowedNorm/wantedNorm); // t?
-        m_prevOmega = MathUtil.clamp(
-                input.omegaRadiansPerSecond - m_prevOmega,
-                -m_omegaRateLimit * elapsedTime, // acceleration * time = velocity
-                m_omegaRateLimit *elapsedTime);
-        m_prevTime = currentTime;
-        return new ChassisSpeeds(m_prevMove.getX(), m_prevMove.getY(), m_prevOmega);
-    }
-    public  double getCurrentRateLimit(){
-        return currentRateLimit;
-    }
-    public double getM_linearAccRateLimit(){
-        return m_linearAccRateLimit;
-    }
-    public void setM_linearAccRateLimit(double limit){
-        m_linearAccRateLimit = limit;
-    }
-    public double getM_linearDecRateLimit(){
-        return m_linearDecRateLimit;
-    }
-    public void setM_linearDecRateLimit(double limit){
-        m_linearDecRateLimit = limit;
-    }
-    public double getOmega(){
-        return m_omegaRateLimit;
-    }
-    public void setOmega(double limit){
-        m_omegaRateLimit = limit;
+        double allowedChangeInNorm = MathUtil.clamp(deltaNorm, prevNorm - linearDecRateLimit, prevNorm + linearAccRateLimit);
+
+        double allowedNormToDesired = 0;
+        if (deltaNorm > 0) { //dont divide by zero
+            allowedNormToDesired = allowedChangeInNorm / deltaNorm;  //if (1) go all the way to wanted if (0) stay at prev
+        }
+
+        /** angle (theta of polar coords)**/
+        double prevAngle = prevMove.getAngle().getRadians();
+        double inputAngle = inputMove.getAngle().getRadians();
+
+        deltaRotation = inputAngle - prevAngle; //desired change in rotation
+
+        double allowedChangeInRotation = MathUtil.clamp(deltaRotation, prevAngle - linearAccRateLimit, inputAngle - linearAccRateLimit); //allowed change in rotation
+
+        double allowedRotationToDesired = 0;
+        if (deltaRotation > 0) { //dont divide by 0
+            allowedRotationToDesired = allowedChangeInRotation / deltaRotation;
+        }
+
+        double usedT = Math.min(allowedNormToDesired, allowedRotationToDesired); //both are within slice take "more careful" one
+
+        prevMove = prevMove.interpolate(inputMove, usedT); //reassign prevMove, this is what gets used on chassis and is ready for next iteration
+
+        /** omega (angular velocity) **/
+        double inputOmega = input.omegaRadiansPerSecond;
+        double deltaOmega = inputOmega - prevOmega;
+        prevOmega = MathUtil.clamp(
+                deltaOmega,
+                -omegaRateLimit * elapsedTime, // acceleration * time = velocity
+                omegaRateLimit * elapsedTime);
+        prevTime = currentTime;
+
+        return new ChassisSpeeds(prevMove.getX(), prevMove.getY(), prevOmega);
     }
 
+    public double getLinearAccRateLimit() {
+        return linearAccRateLimit;
+    }
+
+    public void setLinearAccRateLimit(double limit) {
+        linearAccRateLimit = limit;
+    }
+
+    public double getLinearDecRateLimit() {
+        return linearDecRateLimit;
+    }
+
+    public void setLinearDecRateLimit(double limit) {
+        linearDecRateLimit = limit;
+    }
+
+    public double getOmega() {
+        return omegaRateLimit;
+    }
+
+    public void setOmega(double limit) {
+        omegaRateLimit = limit;
+    }
 
 
     /**
@@ -108,10 +133,19 @@ public class SlewRateLimiterSpeeds {
      * @param value The value to reset to.
      */
     public void reset(ChassisSpeeds value) {
-        m_prevMove = new Translation2d(value.vxMetersPerSecond, value.vyMetersPerSecond);
-        m_prevOmega = value.omegaRadiansPerSecond;
-        m_prevTime = MathSharedStore.getTimestamp();
+        prevMove = new Translation2d(value.vxMetersPerSecond, value.vyMetersPerSecond);
+        prevOmega = value.omegaRadiansPerSecond;
+        prevTime = MathSharedStore.getTimestamp();
     }
 
+    public void initSendable(SendableBuilder builder) {
+        if (Constants.debugMode) {
+            builder.setSmartDashboardType("Slew");
+            builder.addDoubleProperty("linear acc limit", this::getLinearAccRateLimit, this::setLinearAccRateLimit);
+            builder.addDoubleProperty("linear decc limit", this::getLinearDecRateLimit, this::setLinearDecRateLimit);
+            builder.addDoubleProperty("omega acc limit", this::getOmega, this::setOmega);
+
+        }
+    }
 }
 
