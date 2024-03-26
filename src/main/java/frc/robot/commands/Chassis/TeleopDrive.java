@@ -65,15 +65,11 @@ public class TeleopDrive extends Command {
       // theta the same for both alliances
       theta = -controller.getRawAxis(Constants.PS5.LST_AXS_RJOYSTICKX);
 
-
       // apply dead-band
-      if (Math.abs(x) < Constants.Swerve.kDeadband) {
+      if ( ( (x * x) + (y * y) ) <= (Constants.Swerve.kDeadband * Constants.Swerve.kDeadband)) {
           x = 0;
-      }
-      if (Math.abs(y) < Constants.Swerve.kDeadband) {
-          y = 0;
-      }
-      
+          y = 0;}
+
       // square the inputs
       y = y * Math.abs(y);
       x = x * Math.abs(x);
