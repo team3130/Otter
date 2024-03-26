@@ -65,21 +65,6 @@ public class TeleopDrive extends Command {
       // theta the same for both alliances
       theta = -controller.getRawAxis(Constants.PS5.LST_AXS_RJOYSTICKX);
 
-      /*
-      // angle used for targeting
-      omega = -controller.getRawAxis(Constants.PS5.LST_AXS_RJOYSTICKY);
-
-
-      if (chassis.isTargetingSpeaker(omega, theta)) {
-          chassis.resetTargetSpeakerController();
-          theta = chassis.goToTargetPower();
-      } else if (chassis.isTargetingBackClimb(omega, theta)) {
-          chassis.resetTargetBackClimbController();
-          theta = chassis.goToTargetPower();
-      } else { // normal driving
-          theta = Math.abs(theta) > Constants.Swerve.kDeadband ? theta : 0.0;
-      }
-      */
 
       // apply dead-band
       if (Math.abs(x) < Constants.Swerve.kDeadband) {
@@ -97,8 +82,7 @@ public class TeleopDrive extends Command {
       ChassisSpeeds newSpeeds = accelerationLimiter.calculate(new ChassisSpeeds(
               x     * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond,
               y     * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond,
-              theta * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond / (Constants.Swerve.trackWidth/2.0)
-      ), new Translation2d(x,y));
+              theta * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond / (Constants.Swerve.trackWidth/2.0)));
 
       chassis.teleopDrive(newSpeeds);
   }
