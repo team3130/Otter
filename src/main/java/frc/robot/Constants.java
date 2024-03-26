@@ -183,7 +183,7 @@ public final class Constants {
   public static class SwerveConversions {
     public final static double driveGearRatio = 6.12; // Checked 2/2/24 //6.75  checked 1/19/23
     public final static double steerGearRatio = 21.4; // Checked 2/2/24 //150d/7d = 21.42857  checked 1/19
-    public static final double wheelDiameter = Units.inchesToMeters(3.9);
+    public static final double wheelDiameter = Units.inchesToMeters(3.93);
     public static final double wheelCircumference = wheelDiameter * Math.PI;
     public final static double driveRotToMeters = wheelDiameter * Math.PI * 1/(driveGearRatio); // multiply by
     public static final double steerRotToRads = 1/(steerGearRatio) * Math.PI * 2; // multiply by position

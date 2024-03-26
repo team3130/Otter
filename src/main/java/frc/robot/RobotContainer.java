@@ -36,6 +36,7 @@ import frc.robot.commands.Indexer.AndrewIndexToShoot;
 import frc.robot.commands.Indexer.IndexToBeam;
 import frc.robot.commands.Intake.LimitedSpintake;
 import frc.robot.commands.Indexer.Outtake;
+import frc.robot.commands.Shooter.ShootMovingSetpoint;
 import frc.robot.commands.Shooter.ShuttleMovingSetpoint;
 import frc.robot.commands.ShooterShifter.ShortShifterExtend;
 import frc.robot.commands.Auton.*;
@@ -69,8 +70,8 @@ public class RobotContainer {
   private final Amp amp;
 
   public RobotContainer() {
-    leftClimber = new Climber(Constants.CAN.climberLeft, Constants.IDs.kLLimitSwitch, Constants.XBox.AXS_RJOYSTICK_Y, true);
-    rightClimber = new Climber(Constants.CAN.climberRight, Constants.IDs.kRLimitSwitch, Constants.XBox.AXS_LJOYSTICK_Y, false);
+    leftClimber = new Climber(Constants.CAN.climberLeft, Constants.IDs.kLLimitSwitch, Constants.XBox.AXS_RJOYSTICK_Y, false);
+    rightClimber = new Climber(Constants.CAN.climberRight, Constants.IDs.kRLimitSwitch, Constants.XBox.AXS_LJOYSTICK_Y, true);
 
     shooter = new Shooter();
     shooterShifter = new ShooterShifter();
@@ -88,7 +89,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("ShiftDoubleExtend", new AutoDoubleExtend(shooterShifter));
     NamedCommands.registerCommand("ShiftDoubleRetract", new AutoDoubleRetract(shooterShifter));
     NamedCommands.registerCommand("ShiftShortExtend", new AutoMidShifter(shooterShifter));
-    NamedCommands.registerCommand("Flywheel", new AutoFlywheel(shooter));
+    NamedCommands.registerCommand("Flywheel", new ShootMovingSetpoint(shooter));
     NamedCommands.registerCommand("Index", new AutoIndexer(indexer));
 
     configureBindings(); // configure button bindings
@@ -127,6 +128,7 @@ public class RobotContainer {
   public void exportShuffleBoardData() {
     if (Constants.debugMode) {
       ShuffleboardTab tab = Shuffleboard.getTab("Subsystem Test");
+      tab.add(chassis);
       tab.add(shooter);
       tab.add(intake);
       tab.add(indexer);

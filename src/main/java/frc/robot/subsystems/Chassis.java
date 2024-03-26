@@ -55,9 +55,9 @@ public class Chassis extends SubsystemBase {
     private int fiducialID = 0;
     private PIDController targetController;
     private PIDController simpleDistanceRobotController;
-    private double distanceP = 7;
-    private double distanceI = 0;
-    private double distanceD = 1.25;
+    private double distanceP = 5;
+    private double distanceI = 0.0007;
+    private double distanceD = 1;
 
     private double targetDistanceX = 5;
 
@@ -114,7 +114,7 @@ public class Chassis extends SubsystemBase {
                 this::driveAutonRobotRelative,
                 new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
                         new PIDConstants(7, 0, 0), // Translation PID constants
-                        new PIDConstants(2.9, 0, 0.7), // Rotation PID constants
+                        new PIDConstants(3.5, 0, 0), // Rotation PID constants
                         4.8, // Max module speed, in m/s
                         0.41295, // Drive base radius in meters. Distance from robot center to the furthest module: sqrt(0.584^2 + 0.584^2)/2
                         new ReplanningConfig() // Default path replanning config. See the API for the options here

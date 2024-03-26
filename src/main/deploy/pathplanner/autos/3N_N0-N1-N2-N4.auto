@@ -40,7 +40,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.25
+                        "waitTime": 1.0
                       }
                     },
                     {
@@ -53,6 +53,12 @@
                       "type": "path",
                       "data": {
                         "pathName": "swn-first-N4"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Index"
                       }
                     },
                     {
@@ -71,12 +77,6 @@
                       "type": "path",
                       "data": {
                         "pathName": "swn-N2"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Index"
                       }
                     }
                   ]
