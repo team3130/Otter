@@ -11,7 +11,7 @@ public class Navx {
     private static Navx pInstance;
     private static AHRS navX;
     private static boolean navXPresent;
-    private double angle = 0d;
+    private static double offset = 0d;
 
     // TODO: private static double zeroPitch = Constants.Balance.defaultPitchZero;
 
@@ -56,6 +56,13 @@ public class Navx {
      */
     public static Rotation2d getRotation() {
         return (navXPresent) ? navX.getRotation2d() : new Rotation2d(-1);
+    }
+    public static Rotation2d getRealRotation() {
+        Rotation2d val = new Rotation2d(-1);
+        if (navXPresent) {
+            val = navX.getRotation2d().plus(new Rotation2d(offset));
+        }
+        return val ;
     }
 
     /**
@@ -141,6 +148,12 @@ public class Navx {
     public static double getHeading() {
         return Math.IEEEremainder(getAngle(), 360);
     }
+    public static void setOffset(double set){
+        offset = set;
+    }
+    public double getOffset(){
+        return offset;
+    }
 
     public static boolean getNavxPresent() {
         return navXPresent;
@@ -153,6 +166,8 @@ public class Navx {
     public static void outputToShuffleboard() {
         if (Constants.debugMode) {
             SmartDashboard.putNumber("NavX angle", getRotation().getDegrees());
+            SmartDashboard.putNumber("NavX adjusted angle", getRealRotation().getDegrees());
+
             SmartDashboard.putNumber("NavX Yaw", getYaw());
             SmartDashboard.putNumber("NavX Pitch", getPitch());
             SmartDashboard.putNumber("NavX Roll", getRoll());

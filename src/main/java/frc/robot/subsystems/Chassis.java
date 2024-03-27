@@ -191,7 +191,7 @@ public class Chassis extends SubsystemBase {
 
     // periodic call to update odometry from encoders
     public void updateOdometryFromSwerve() {
-        odometry.updateWithTime(Timer.getFPGATimestamp(), Navx.getRotation(), generatePoses());
+        odometry.updateWithTime(Timer.getFPGATimestamp(), Navx.getRealRotation(), generatePoses());
     }
 
     // Resets odometry: resets relative encoders to what the absolute encoders are, hard reset of odometry object
@@ -507,6 +507,9 @@ public class Chassis extends SubsystemBase {
     public double getHeading() {
         return Math.toRadians(Math.IEEEremainder(Navx.getAngle(), 360));
     }
+    public double getAdjustedHeading() {
+        return Math.toRadians(Math.IEEEremainder(Navx.getRealRotation().getDegrees(), 360));
+    }
 
     public double getTargetP() { return targetP; }
     public double getTargetI() { return targetI; }
@@ -573,6 +576,11 @@ public class Chassis extends SubsystemBase {
 
             builder.addBooleanProperty("fieldRelative", this::getFieldRelative, this::setWhetherFieldOriented);
             builder.addDoubleProperty("Navx", this::getHeading, null);
+            builder.addDoubleProperty("Navx adjusted", this::getAdjustedHeading, null);
+            builder.addDoubleProperty("Navx offset", this:: , null);
+
+
+
             builder.addDoubleProperty("X position", this::getX, null);
             builder.addDoubleProperty("Y position", this::getY, null);
             builder.addDoubleProperty("rotation", this::getYaw, null);
@@ -600,6 +608,7 @@ public class Chassis extends SubsystemBase {
             builder.addDoubleProperty("distance P", this::getDistanceP, this::setDistanceP);
             builder.addDoubleProperty("distance I", this::getDistanceI, this::setDistanceI);
             builder.addDoubleProperty("distance D", this::getDistanceD, this::setDistanceD);
+
         }
     }
 
@@ -615,6 +624,7 @@ public class Chassis extends SubsystemBase {
     // method to reset the robot's odometry to the supplied pose
     public void resetPose(Pose2d newPose) {
         odometry.resetPosition(Navx.getRotation(), generatePoses(), newPose);
+        Navx.setOffset(Navx.getRotation().getRadians());
     }
 
     // ChassisSpeeds supplier in robot relative

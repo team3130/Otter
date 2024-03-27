@@ -42,6 +42,7 @@ import frc.robot.commands.Shooter.ShuttleMovingSetpoint;
 import frc.robot.commands.ShooterShifter.ShortShifterExtend;
 import frc.robot.commands.ShooterShifter.DoubleRetract;
 import frc.robot.sensors.JoystickTrigger;
+import frc.robot.sensors.Navx;
 import frc.robot.subsystems.*;
 import frc.robot.commands.Chassis.ResetOdometryForward;
 import frc.robot.commands.Intake.*;
