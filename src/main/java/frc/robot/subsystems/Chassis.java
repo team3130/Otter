@@ -628,7 +628,7 @@ public class Chassis extends SubsystemBase {
     // method to reset the robot's odometry to the supplied pose
     public void resetPose(Pose2d newPose) {
         odometry.resetPosition(Navx.getRotation(), generatePoses(), newPose);
-        Navx.setOffset(Navx.getRotation().getRadians());
+        Navx.setOffset(odometry.getEstimatedPosition().getRotation().getDegrees());
     }
 
     // ChassisSpeeds supplier in robot relative
