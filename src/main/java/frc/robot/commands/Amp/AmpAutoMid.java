@@ -4,22 +4,19 @@
 
 package frc.robot.commands.Amp;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Amp;
-import frc.robot.subsystems.Indexer;
-import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.ShooterShifter;
 
 /** An example command that uses an example subsystem. */
-public class PrepAmp extends Command {
+public class AmpAutoMid extends Command {
   private final Amp amp;
   private final ShooterShifter shifter;
 
   /**
    * @param amp The subsystem used by this command.
    */
-  public PrepAmp(Amp amp, ShooterShifter shifter) {
+  public AmpAutoMid(Amp amp, ShooterShifter shifter) {
     this.amp = amp;
     this.shifter = shifter;
     addRequirements(amp, shifter);

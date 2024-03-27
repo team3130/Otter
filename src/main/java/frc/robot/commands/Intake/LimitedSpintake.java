@@ -15,7 +15,7 @@ public class LimitedSpintake extends Command {
   public LimitedSpintake(Intake intake, Indexer indexer) {
     this.indexer = indexer;
     this.intake = intake;
-    addRequirements(intake, indexer);
+    addRequirements( indexer);
   }
 
   // Called when the command is initially scheduled.
