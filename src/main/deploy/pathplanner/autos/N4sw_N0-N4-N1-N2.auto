@@ -12,27 +12,59 @@
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "swn-FlushTurn"
+            "name": "ShifterDoubleExtend"
           }
         },
         {
-          "type": "path",
+          "type": "race",
           "data": {
-            "pathName": "swn-ampN4sw"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "swn-N1"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "swn-N2"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "FlywheelsMovingSet"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 1.0
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "swn-FlushTurn"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "swn-ampN4sw"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "swn-N1"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "swn-N2"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
           }
         }
       ]

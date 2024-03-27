@@ -107,12 +107,9 @@ public class RobotContainer {
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
 
-    /*
     ShuffleboardTab tab = Shuffleboard.getTab("Competition");
     tab.addBoolean("Intake Has Note", intake::getIntakeLimitSwitch).withPosition(0, 0).withSize(13, 5);
     tab.add("AutoChooser", autoChooser).withPosition(4, 5).withSize(4, 1);
-
-     */
   }
 
   /*

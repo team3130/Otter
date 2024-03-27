@@ -151,6 +151,10 @@ public class VelocitySwerveModule implements Sendable {
         updateVelocityPID();
         desiredStateVelocity = (state.speedMetersPerSecond);
 
+        if (desiredStateVelocity < 0.001) {
+            steerMotor.setVoltage(0);
+        }
+
         state = SwerveModuleState.optimize(state, getState().angle);
         driveMotor.setControl(driveVelocityRequest.withVelocity((state.speedMetersPerSecond / Constants.SwerveConversions.wheelCircumference) *Constants.SwerveConversions.driveGearRatio));
         steerMotor.setVoltage( Constants.Swerve.maxSteerVoltage * turningPidController.calculate(Math.IEEEremainder(getTurningPositionRadians(), Math.PI * 2), state.angle.getRadians()));
