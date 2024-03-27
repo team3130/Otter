@@ -565,6 +565,10 @@ public class Chassis extends SubsystemBase {
     }
     public void setDistanceD(double lol) { this.distanceD = lol;}
 
+
+    public double getNavOfset(){
+        return navx.getOffset();
+    }
     /**
      * Initializes the data we send on shuffleboard
      * Calls the default init sendable for Subsystem Bases
@@ -577,7 +581,7 @@ public class Chassis extends SubsystemBase {
             builder.addBooleanProperty("fieldRelative", this::getFieldRelative, this::setWhetherFieldOriented);
             builder.addDoubleProperty("Navx", this::getHeading, null);
             builder.addDoubleProperty("Navx adjusted", this::getAdjustedHeading, null);
-            builder.addDoubleProperty("Navx offset", this:: , null);
+            builder.addDoubleProperty("Navx offset", this::getNavOfset , null);
 
 
 
