@@ -7,15 +7,15 @@ package frc.robot.commands.Chassis;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.subsystems.Chassis;
+import frc.robot.subsystems.VelocityChassis;
 
 /**
  * A command to automatically zero all odometry.
  */
 public class ZeroEverything extends InstantCommand {
-  private final Chassis m_chassis;
+  private final VelocityChassis m_chassis;
 
-  public ZeroEverything(Chassis subsystem) {
+  public ZeroEverything(VelocityChassis subsystem) {
     m_chassis = subsystem;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);

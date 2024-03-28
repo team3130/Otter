@@ -5,13 +5,13 @@
 package frc.robot.commands.Chassis;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Chassis;
+import frc.robot.subsystems.VelocityChassis;
 
 /** A command to zero wheels of chassis */
 public class ZeroWheels extends Command {
-  private final Chassis m_chassis;
+  private final VelocityChassis m_chassis;
 
-  public ZeroWheels(Chassis chassis) {
+  public ZeroWheels(VelocityChassis chassis) {
     m_chassis = chassis;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(chassis);

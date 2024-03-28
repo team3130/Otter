@@ -5,18 +5,18 @@
 package frc.robot.commands.Chassis;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Chassis;
+import frc.robot.subsystems.VelocityChassis;
 
 /** An example command that uses an example subsystem. */
 public class FlipDriveOrientation extends Command {
-    private final Chassis chassis;
+    private final VelocityChassis chassis;
 
     /**
      * Creates a new ExampleCommand.
      *
      * @param subsystem The subsystem used by this command.
      */
-    public FlipDriveOrientation(Chassis subsystem) {
+    public FlipDriveOrientation(VelocityChassis subsystem) {
         this.chassis = subsystem;
         addRequirements(subsystem);
     }

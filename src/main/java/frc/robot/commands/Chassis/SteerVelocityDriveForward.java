@@ -7,13 +7,13 @@ package frc.robot.commands.Chassis;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
-import frc.robot.subsystems.Chassis;
+import frc.robot.subsystems.VelocityChassis;
 
 /** A default command to drive in teleop based off the joysticks*/
 public class SteerVelocityDriveForward extends Command {
-  private final Chassis chassis;
+  private final VelocityChassis chassis;
   private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
-  public SteerVelocityDriveForward(Chassis chassis) {
+  public SteerVelocityDriveForward(VelocityChassis chassis) {
     this.chassis = chassis;
 
     // Use addRequirements() here to declare subsystem dependencies.

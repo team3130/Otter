@@ -9,17 +9,17 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants;
-import frc.robot.subsystems.Chassis;
+import frc.robot.subsystems.VelocityChassis;
 
 /**
  * A command to automatically zero all odometry.
  */
 public class DriveToPID extends InstantCommand {
-  private final Chassis m_chassis;
+  private final VelocityChassis m_chassis;
 
   private final SlewRateLimiter xLimiter;
 
-  public DriveToPID(Chassis subsystem) {
+  public DriveToPID(VelocityChassis subsystem) {
     m_chassis = subsystem;
     addRequirements(subsystem);
 

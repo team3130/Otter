@@ -6,12 +6,12 @@ package frc.robot.commands.Chassis;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
-import frc.robot.subsystems.Chassis;
+import frc.robot.subsystems.VelocityChassis;
 
 /** A default command to drive in teleop based off the joysticks*/
 public class DriveVelocityTuning extends Command {
-  private final Chassis chassis;
-  public DriveVelocityTuning(Chassis chassis) {
+  private final VelocityChassis chassis;
+  public DriveVelocityTuning(VelocityChassis chassis) {
     this.chassis = chassis;
     m_requirements.add(chassis);
   }

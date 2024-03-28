@@ -29,7 +29,6 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.Amp.*;
 import frc.robot.commands.Amp.Software.AmpZero;
 import frc.robot.commands.Auto.*;
-import frc.robot.commands.Chassis.DriveToPID;
 import frc.robot.commands.Chassis.TeleopDrive;
 import frc.robot.commands.Climber.ClimberExtend;
 import frc.robot.commands.Climber.PitClimberReset;
@@ -58,6 +57,7 @@ import frc.robot.subsystems.LEDs;
 
 // The robot's subsystems and commands are defined here...
 public class RobotContainer {
+  // private final VelocityChassis velocityChassis;
   private final Chassis chassis;
   private final Intake intake;
   private final Shooter shooter;
