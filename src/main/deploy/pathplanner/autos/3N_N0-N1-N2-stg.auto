@@ -14,7 +14,7 @@
         {
           "type": "named",
           "data": {
-            "name": "ShiftDoubleExtend"
+            "name": "ShifterDoubleExtend"
           }
         },
         {
@@ -24,7 +24,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Flywheel"
+                  "name": "FlywheelsMovingSet"
                 }
               },
               {
@@ -64,7 +64,7 @@
                     {
                       "type": "named",
                       "data": {
-                        "name": "ShiftShortExtend"
+                        "name": "ShifterShortExtend"
                       }
                     },
                     {
@@ -82,7 +82,7 @@
         {
           "type": "named",
           "data": {
-            "name": "ShiftDoubleRetract"
+            "name": "ShifterDoubleRetract"
           }
         }
       ]

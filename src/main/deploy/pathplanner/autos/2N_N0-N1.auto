@@ -14,7 +14,7 @@
         {
           "type": "named",
           "data": {
-            "name": "ShiftDoubleExtend"
+            "name": "ShifterDoubleExtend"
           }
         },
         {
@@ -64,7 +64,7 @@
         {
           "type": "named",
           "data": {
-            "name": "ShiftDoubleRetract"
+            "name": "ShifterDoubleRetract"
           }
         }
       ]

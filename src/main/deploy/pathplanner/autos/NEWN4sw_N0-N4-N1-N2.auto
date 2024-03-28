@@ -87,6 +87,12 @@
                     }
                   ]
                 }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "ShifterDoubleRetract"
+                }
               }
             ]
           }
