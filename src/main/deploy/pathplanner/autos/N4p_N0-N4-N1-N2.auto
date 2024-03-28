@@ -12,27 +12,107 @@
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "swn-FlushTurn"
+            "name": "ShifterDoubleExtend"
           }
         },
         {
-          "type": "path",
+          "type": "race",
           "data": {
-            "pathName": "swn-ampN4p"
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "FlywheelsMovingSet"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "swn-FlushTurn"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 1.2
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Indexer"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "swn-ampN4p"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "ShifterShortExtend"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Indexer"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "pn-N1"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "ShifterShortExtend"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Indexer"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "pn-N2"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "ShifterShortExtend"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Indexer"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
           }
         },
         {
-          "type": "path",
+          "type": "named",
           "data": {
-            "pathName": "pn-N1"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "pn-N2"
+            "name": "ShifterRetract"
           }
         }
       ]

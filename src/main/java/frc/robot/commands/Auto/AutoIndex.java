@@ -15,14 +15,19 @@ import frc.robot.subsystems.Shooter;
 public class AutoIndex extends Command {
   private final Indexer indexer;
   private Timer timer = new Timer();
-  public AutoIndex(Indexer indexer) {
+  private Shooter shooter;
+  private boolean beamHasSeenNote = false;
+  public AutoIndex(Indexer indexer, Shooter shooter) {
     this.indexer = indexer;
+    this.shooter = shooter;
     addRequirements(indexer);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+
+    beamHasSeenNote = false;
     timer.reset();
     timer.start();
     indexer.autoShooterSpindex();
@@ -32,6 +37,9 @@ public class AutoIndex extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    if (shooter.getBeamHasNote() && !beamHasSeenNote) {
+      beamHasSeenNote = true; // break beam sees note for the first time
+    }
   }
 
   // Called once the command ends or is interrupted.
@@ -48,7 +56,7 @@ public class AutoIndex extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (timer.hasElapsed(.75)) {
+    if (timer.hasElapsed(1) || (!shooter.getBeamHasNote() && beamHasSeenNote)) {
       return true;
     } else {
       return false;

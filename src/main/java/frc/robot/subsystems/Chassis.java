@@ -113,7 +113,7 @@ public class Chassis extends SubsystemBase {
                 this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
                 this::driveAutonRobotRelative,
                 new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-                        new PIDConstants(5, 0, 0.6), // Translation PID constants
+                        new PIDConstants(14, 0, 0), // Translation PID constants
                         // 17 0 0.5
                         new PIDConstants(7, 0, 0.5), // Rotation PID constants
                         4.8, // Max module speed, in m/s

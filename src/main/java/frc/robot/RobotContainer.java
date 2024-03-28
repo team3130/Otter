@@ -86,7 +86,7 @@ public class RobotContainer {
     // Named commands must be registered before the creation of any PathPlanner Autos or Paths
     // Do this in RobotContainer, after subsystem initialization, but before the creation of any other commands.
     NamedCommands.registerCommand("FlywheelsMovingSet", new AutoFlywheelMovingSetpoint(shooter));
-    NamedCommands.registerCommand("Indexer", new AutoIndex(indexer));
+    NamedCommands.registerCommand("Indexer", new AutoIndex(indexer, shooter));
     NamedCommands.registerCommand("IntakeLimited", new AutoIntake(intake, indexer));
     NamedCommands.registerCommand("ShifterDoubleExtend", new AutoDoubleExtend(shooterShifter));
     NamedCommands.registerCommand("ShifterShortExtend", new AutoShortExtend(shooterShifter));

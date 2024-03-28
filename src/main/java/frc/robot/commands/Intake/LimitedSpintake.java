@@ -4,6 +4,7 @@
 
 package frc.robot.commands.Intake;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
@@ -11,6 +12,7 @@ import frc.robot.subsystems.Intake;
 public class LimitedSpintake extends Command {
   private final Indexer indexer;
   private final Intake intake;
+  private Timer timer = new Timer();
 
   public LimitedSpintake(Intake intake, Indexer indexer) {
     this.indexer = indexer;
@@ -21,6 +23,8 @@ public class LimitedSpintake extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    timer.reset();
+    timer.start();
     indexer.spintake();
   }
 
@@ -39,7 +43,7 @@ public class LimitedSpintake extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (intake.getIntakeLimitSwitch()) {
+    if ((intake.getIntakeLimitSwitch())) {
       return true;
     } else {
       return false;
