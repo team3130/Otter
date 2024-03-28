@@ -1,0 +1,93 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.72,
+      "y": 6.65
+    },
+    "rotation": -120.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "ShiftDoubleExtend"
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Flywheel"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "swn-FlushTurn"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Index"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "swn-N1"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Index"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "swn-N2-stg"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "ShiftShortExtend"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Index"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ShiftDoubleRetract"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}
