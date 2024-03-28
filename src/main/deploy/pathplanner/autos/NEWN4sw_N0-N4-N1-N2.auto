@@ -40,7 +40,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "swn-FlushTurn"
+                        "pathName": "NEWswn-FlushTurn"
                       }
                     },
                     {
@@ -52,7 +52,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "swn-ampN4sw"
+                        "pathName": "NEWswn-ampN4sw"
                       }
                     },
                     {
@@ -64,7 +64,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "swn-N1"
+                        "pathName": "NEWswn-N1"
                       }
                     },
                     {
@@ -76,7 +76,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "swn-N2"
+                        "pathName": "NEWswn-N2"
                       }
                     },
                     {

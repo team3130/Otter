@@ -34,13 +34,13 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "swn-FlushTurn"
+                        "pathName": "NEWswn-FlushTurn"
                       }
                     },
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.5
+                        "waitTime": 1.2
                       }
                     },
                     {
@@ -52,25 +52,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "swn-ampN4sw"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Indexer"
-                      }
-                    },
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "swn-N1-pod"
-                      }
-                    },
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 0.5
+                        "pathName": "NEWswn-ampN4p"
                       }
                     },
                     {
@@ -88,13 +70,31 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "pn-N2-hand"
+                        "pathName": "NEWpn-N1"
                       }
                     },
                     {
-                      "type": "wait",
+                      "type": "named",
                       "data": {
-                        "waitTime": 0.5
+                        "name": "ShifterShortExtend"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Indexer"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "NEWpn-N2"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "ShifterShortExtend"
                       }
                     },
                     {

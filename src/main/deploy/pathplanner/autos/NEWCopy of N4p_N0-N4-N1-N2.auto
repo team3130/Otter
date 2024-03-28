@@ -34,13 +34,13 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "swn-FlushTurn"
+                        "pathName": "NEWswn-FlushTurn"
                       }
                     },
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 1.2
+                        "waitTime": 0.5
                       }
                     },
                     {
@@ -52,7 +52,25 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "swn-ampN4p"
+                        "pathName": "NEWswn-ampN4sw"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Indexer"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "NEWswn-N1-pod"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.5
                       }
                     },
                     {
@@ -70,31 +88,13 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "pn-N1"
+                        "pathName": "NEWpn-N2-hand"
                       }
                     },
                     {
-                      "type": "named",
+                      "type": "wait",
                       "data": {
-                        "name": "ShifterShortExtend"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Indexer"
-                      }
-                    },
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "pn-N2"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "ShifterShortExtend"
+                        "waitTime": 0.5
                       }
                     },
                     {
