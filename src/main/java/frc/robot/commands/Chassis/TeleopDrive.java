@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj.PS5Controller;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.Chassis;
-import frc.robot.subsystems.VelocityChassis;
 
 /** A default command to drive in teleop based off the joysticks*/
 public class TeleopDrive extends Command {
@@ -67,20 +66,16 @@ public class TeleopDrive extends Command {
       // angle used for targeting
       omega = -controller.getRawAxis(Constants.PS5.AXS_RJOYSTICK_Y);
 
-
-      /*
       if (chassis.isTargetingSpeaker(omega, theta)) {
           chassis.resetTargetSpeakerController();
           theta = chassis.goToTargetPower();
-      } else if (chassis.isTargetingBackClimb(omega, theta)) {
-          chassis.resetTargetBackClimbController();
+      } else if (chassis.isTargetingPodium(omega, theta)) {
+          chassis.resetTargetPodiumController();
           theta = chassis.goToTargetPower();
       } else { // normal driving
-
-       */
           theta = Math.abs(theta) > Constants.Swerve.kDeadband ? theta : 0.0;
           theta = turningLimiter.calculate(theta) * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond;
-
+      }
 
 
       // square the inputs

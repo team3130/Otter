@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.73,
-      "y": 6.68
+      "x": 0.72,
+      "y": 6.65
     },
     "rotation": -120.0
   },
@@ -11,6 +11,12 @@
     "type": "sequential",
     "data": {
       "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "AmpHome"
+          }
+        },
         {
           "type": "named",
           "data": {
@@ -24,7 +30,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "FlywheelsMovingSet"
+                  "name": "Flywheels"
                 }
               },
               {
@@ -32,69 +38,63 @@
                 "data": {
                   "commands": [
                     {
+                      "type": "path",
+                      "data": {
+                        "pathName": "swn-FlushTurn"
+                      }
+                    },
+                    {
                       "type": "wait",
                       "data": {
-                        "waitTime": 1.0
-                      }
-                    },
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "NEWswn-FlushTurn"
+                        "waitTime": 0.2
                       }
                     },
                     {
                       "type": "named",
                       "data": {
-                        "name": "Indexer"
+                        "name": "IndexPreload"
                       }
                     },
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "NEWswn-ampN4sw"
+                        "pathName": "SLOWswn-N4"
                       }
                     },
                     {
                       "type": "named",
                       "data": {
-                        "name": "Indexer"
+                        "name": "Index"
                       }
                     },
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "NEWswn-N1"
+                        "pathName": "swn-N1-podn"
                       }
                     },
                     {
                       "type": "named",
                       "data": {
-                        "name": "Indexer"
+                        "name": "Index"
                       }
                     },
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "NEWswn-N2"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Indexer"
+                        "pathName": "podn-CENTER"
                       }
                     }
                   ]
                 }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "ShifterDoubleRetract"
-                }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ShifterDoubleRetract"
           }
         }
       ]

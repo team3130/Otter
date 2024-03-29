@@ -8,32 +8,28 @@ package frc.robot.commands.Auto;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.Constants;
+import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Shooter;
 
-public class AutoFlywheel extends Command {
-  private final Shooter shooter;
+public class AutoIndexPreload extends Command {
+  private final Indexer indexer;
   private Timer timer = new Timer();
-  double topStartingPoint = 0;
-  double bottomStartingPoint = 0;
-
-  double topRPSToIncrease = 0;
-  double bottomRPSToIncrease = 0;
-  /**
-   * Creates a new ExampleCommand.
-   *
-   * @param shooter  The subsystem used by this command.
-   */
-  public AutoFlywheel(Shooter shooter) {
+  private Shooter shooter;
+  private boolean beamHasSeenNote = false;
+  public AutoIndexPreload(Indexer indexer, Shooter shooter) {
+    this.indexer = indexer;
     this.shooter = shooter;
-    addRequirements(shooter);
+    addRequirements(indexer);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    shooter.setFlywheelVelocity();
+
+    beamHasSeenNote = false;
+    timer.reset();
+    timer.start();
+    indexer.autoShooterSpindex();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -44,12 +40,16 @@ public class AutoFlywheel extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    shooter.stopShooters();
+    indexer.stopIndexer();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    if (timer.hasElapsed(0.4)) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }

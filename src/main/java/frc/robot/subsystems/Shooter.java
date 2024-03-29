@@ -33,8 +33,9 @@ public class Shooter extends SubsystemBase {
     private CurrentLimitsConfigs bottomCurrentConfigs = new CurrentLimitsConfigs();
 
 
-    double topVelocitySetpoint = 30;
-    double bottomVelocitySetpoint = 30;
+    double topVelocitySetpoint = 35;
+    double bottomVelocitySetpoint = 35;
+    double slowBottomVelocitySetpoint = topVelocitySetpoint - 10;
 
     double topShuttleVelocitySetpoint = 10;
     double bottomShuttleVelocitySetpoint = 10;
@@ -142,6 +143,11 @@ public class Shooter extends SubsystemBase {
         topFlywheel.setControl(topVelocityRequest.withVelocity(topVelocitySetpoint).withFeedForward(topFeedForwardVolt));
         bottomFlywheel.setControl(bottomVelocityRequest.withVelocity(bottomVelocitySetpoint).withFeedForward(bottomFeedForwardVolt));
     }
+    public void setFlywheelVelocityBottomOff() {
+        topFlywheel.setControl(topVelocityRequest.withVelocity(topVelocitySetpoint).withFeedForward(topFeedForwardVolt));
+        bottomFlywheel.setControl(bottomVelocityRequest.withVelocity(slowBottomVelocitySetpoint).withFeedForward(bottomFeedForwardVolt));
+    }
+
     public void setShuttleFlywheelVelocity() {
         topFlywheel.setControl(topVelocityRequest.withVelocity(topShuttleVelocitySetpoint).withFeedForward(topFeedForwardVolt));
         bottomFlywheel.setControl(bottomVelocityRequest.withVelocity(bottomShuttleVelocitySetpoint).withFeedForward(bottomFeedForwardVolt));

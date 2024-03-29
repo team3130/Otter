@@ -4,56 +4,40 @@
     {
       "anchor": {
         "x": 1.0,
-        "y": 6.6
+        "y": 6.5
       },
       "prevControl": null,
       "nextControl": {
         "x": 1.0999999999999994,
-        "y": 6.6
+        "y": 6.5
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.28,
-        "y": 7.08
+        "x": 2.583152022769052,
+        "y": 6.962807757169489
       },
       "prevControl": {
-        "x": 1.9877895466209514,
-        "y": 7.08
+        "x": 1.9246624863934438,
+        "y": 6.952735633680046
       },
       "nextControl": {
-        "x": 2.572210453379048,
-        "y": 7.08
+        "x": 2.8741097734675107,
+        "y": 6.967258188396347
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.540491687094027,
-        "y": 7.08
+        "x": 2.4,
+        "y": 6.193490536447265
       },
       "prevControl": {
-        "x": 2.3659101847950534,
-        "y": 7.080000000000003
-      },
-      "nextControl": {
-        "x": 2.7150731893930002,
-        "y": 7.080000000000003
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 1.02,
-        "y": 6.6
-      },
-      "prevControl": {
-        "x": 0.9200000000000004,
-        "y": 6.6
+        "x": 2.3000000000000003,
+        "y": 6.193490536447265
       },
       "nextControl": null,
       "isLocked": false,
@@ -62,12 +46,12 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.75,
+      "waypointRelativePos": 0.4,
       "rotationDegrees": 180.0,
       "rotateFast": false
     },
     {
-      "waypointRelativePos": 2.05,
+      "waypointRelativePos": 1.0499999999999998,
       "rotationDegrees": 180.0,
       "rotateFast": false
     }
@@ -90,6 +74,23 @@
           ]
         }
       }
+    },
+    {
+      "name": "MidShifter",
+      "waypointRelativePos": 0.0,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "ShifterShortExtend"
+              }
+            }
+          ]
+        }
+      }
     }
   ],
   "globalConstraints": {
@@ -100,7 +101,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -140.0,
+    "rotation": -160.0,
     "rotateFast": false
   },
   "reversed": false,

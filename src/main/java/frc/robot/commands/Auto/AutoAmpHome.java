@@ -2,19 +2,19 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.Amp;
+package frc.robot.commands.Auto;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.Amp;
 
 /** An example command that uses an example subsystem. */
-public class AmpHome extends InstantCommand {
+public class AutoAmpHome extends InstantCommand {
   private final Amp amp;
 
   /**
    * @param amp The subsystem used by this command.
    */
-  public AmpHome(Amp amp) {
+  public AutoAmpHome(Amp amp) {
     this.amp = amp;
     addRequirements(amp);
   }

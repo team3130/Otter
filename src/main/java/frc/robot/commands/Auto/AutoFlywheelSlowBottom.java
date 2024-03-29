@@ -8,11 +8,9 @@ package frc.robot.commands.Auto;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.Constants;
 import frc.robot.subsystems.Shooter;
 
-public class AutoFlywheel extends Command {
+public class AutoFlywheelSlowBottom extends Command {
   private final Shooter shooter;
   private Timer timer = new Timer();
   double topStartingPoint = 0;
@@ -25,7 +23,7 @@ public class AutoFlywheel extends Command {
    *
    * @param shooter  The subsystem used by this command.
    */
-  public AutoFlywheel(Shooter shooter) {
+  public AutoFlywheelSlowBottom(Shooter shooter) {
     this.shooter = shooter;
     addRequirements(shooter);
   }
@@ -33,7 +31,7 @@ public class AutoFlywheel extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    shooter.setFlywheelVelocity();
+    shooter.setFlywheelVelocityBottomOff();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

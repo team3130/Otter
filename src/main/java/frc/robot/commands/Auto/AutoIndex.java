@@ -31,32 +31,23 @@ public class AutoIndex extends Command {
     timer.reset();
     timer.start();
     indexer.autoShooterSpindex();
-    System.out.println("Command initialized: Index");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (shooter.getBeamHasNote() && !beamHasSeenNote) {
-      beamHasSeenNote = true; // break beam sees note for the first time
-    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     indexer.stopIndexer();
-
-    if (interrupted) {
-      System.out.println("Command interrupted: Index");
-    }
-    System.out.println("Command finished: Index");
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (timer.hasElapsed(1) || (!shooter.getBeamHasNote() && beamHasSeenNote)) {
+    if (timer.hasElapsed(0.75)) {
       return true;
     } else {
       return false;

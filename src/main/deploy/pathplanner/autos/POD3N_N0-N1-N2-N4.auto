@@ -14,6 +14,12 @@
         {
           "type": "named",
           "data": {
+            "name": "AmpHome"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "ShifterDoubleExtend"
           }
         },
@@ -24,7 +30,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "FlywheelsMovingSet"
+                  "name": "Flywheels"
                 }
               },
               {
@@ -38,15 +44,9 @@
                       }
                     },
                     {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 1.2
-                      }
-                    },
-                    {
                       "type": "named",
                       "data": {
-                        "name": "Index"
+                        "name": "IndexPreload"
                       }
                     },
                     {
@@ -64,7 +64,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "swn-N1"
+                        "pathName": "swn-N1-podn"
                       }
                     },
                     {
@@ -76,7 +76,13 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "swn-N2"
+                        "pathName": "podn-N2-podn"
+                      }
+                    },
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.75
                       }
                     },
                     {
