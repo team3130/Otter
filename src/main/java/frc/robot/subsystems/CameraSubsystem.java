@@ -24,7 +24,7 @@ import java.util.ArrayList;
 
 
 public class CameraSubsystem extends SubsystemBase {
-  protected PhotonCamera camera = new PhotonCamera("cam");
+  protected PhotonCamera camera = new PhotonCamera("3130cam");
   private static final ShuffleboardTab tab = Shuffleboard.getTab("PhotonCamera");
 
   private PhotonTrackedTarget correctTarget =new PhotonTrackedTarget(0,0,0, 0, -1,
@@ -131,6 +131,12 @@ public class CameraSubsystem extends SubsystemBase {
   public void setFaceTargetP(double p) { faceTargetP = p;}
   public void setFaceTargetI(double i) { faceTargetI = i;}
   public void setFaceTargetD(double d) { faceTargetD = d;}
+  public double getGoalDist(){
+    return getGoalDist();
+  }
+  public void setGoalDist(double dist){
+     goalDistance =dist;
+  }
 
   // This method will be called once per scheduler run
   @Override
@@ -154,6 +160,10 @@ public class CameraSubsystem extends SubsystemBase {
     if (Constants.debugMode) {
       builder.setSmartDashboardType("Camera");
       builder.addDoubleProperty("Face Target P", this::getFaceTargetP, this::setFaceTargetP);
+      builder.addDoubleProperty("Target Yaw", this::getTargetYaw, null);
+      builder.addDoubleProperty("Target Dist", this::getDistanceToTarget, null);
+      builder.addDoubleProperty("Ideal Dist", this::getGoalDist, this::setGoalDist);
+
       builder.addDoubleProperty("Face Target I", this::getFaceTargetI, this::setFaceTargetI);
       builder.addDoubleProperty("Face Target D", this::getFaceTargetD, this::setFaceTargetD);
       builder.addBooleanProperty("At Distance", this::atShootingDistance, null);

@@ -5,6 +5,7 @@
 package frc.robot.commands.Indexer;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.CameraSubsystem;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.ShooterShifter;
@@ -14,7 +15,7 @@ public class AndrewIndexToShoot extends Command {
   private final ShooterShifter shooterShifter;
   private final Shooter shooter;
 
-  public AndrewIndexToShoot(Indexer indexer, ShooterShifter shooterShifter, Shooter shooter) {
+  public AndrewIndexToShoot(Indexer indexer, ShooterShifter shooterShifter, Shooter shooter, CameraSubsystem camera) {
     this.indexer = indexer;
     this.shooterShifter = shooterShifter;
     this.shooter = shooter;
@@ -44,10 +45,6 @@ public class AndrewIndexToShoot extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (!indexer.flywheelVelocitiesReady()) {
-      return true;
-    } else {
       return false;
-    }
   }
 }

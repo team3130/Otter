@@ -76,7 +76,11 @@ public class TeleopDrive extends Command {
           theta = chassis.goToTargetPower();
 
            */
-      } else if (chassis.isTargetingPodium(omega, theta)) {
+      } else if (chassis.isTargetingAmp(omega, theta)){
+          chassis.resetTargetAmpController();
+          theta = chassis.goToTargetPower();
+      }
+      else if (chassis.isTargetingPodium(omega, theta)) {
           chassis.resetTargetPodiumController();
           theta = chassis.goToTargetPower();
       } else { // normal driving
