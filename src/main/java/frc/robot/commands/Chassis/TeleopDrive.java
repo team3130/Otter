@@ -9,20 +9,22 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PS5Controller;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
+import frc.robot.subsystems.CameraSubsystem;
 import frc.robot.subsystems.Chassis;
 
 /** A default command to drive in teleop based off the joysticks*/
 public class TeleopDrive extends Command {
   private final Chassis chassis;
   private final PS5Controller controller;
-
+  private final CameraSubsystem camera;
   private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
   private double y;
   private double x;
   private double theta;
-  public TeleopDrive(Chassis chassis, PS5Controller PS5controller) {
+  public TeleopDrive(Chassis chassis, PS5Controller PS5controller, CameraSubsystem camera) {
     this.chassis = chassis;
     this.controller = PS5controller;
+    this.camera = camera;
 
     // Use addRequirements() here to declare subsystem dependencies.
     m_requirements.add(chassis);
@@ -67,8 +69,13 @@ public class TeleopDrive extends Command {
       omega = -controller.getRawAxis(Constants.PS5.AXS_RJOYSTICK_Y);
 
       if (chassis.isTargetingSpeaker(omega, theta)) {
+          camera.resetFaceTargetController();
+          theta = camera.goToFaceTargetPower();
+          /*
           chassis.resetTargetSpeakerController();
           theta = chassis.goToTargetPower();
+
+           */
       } else if (chassis.isTargetingPodium(omega, theta)) {
           chassis.resetTargetPodiumController();
           theta = chassis.goToTargetPower();
@@ -115,4 +122,5 @@ public class TeleopDrive extends Command {
   public boolean isFinished() {
     return false;
   }
+
 }

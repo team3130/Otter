@@ -68,6 +68,7 @@ public class RobotContainer {
   private final PS5Controller driverController = new PS5Controller(0);
   private final XboxController operatorController = new XboxController(1);
   private final LEDs robotLEDs;
+  private final CameraSubsystem camera;
   private final SendableChooser<Command> autoChooser;
   private final Amp amp;
 
@@ -81,6 +82,7 @@ public class RobotContainer {
     intake = new Intake();
     indexer = new Indexer(shooter);
     robotLEDs = new LEDs();
+    camera = new CameraSubsystem();
     amp = new Amp();
 
     // Named commands must be registered before the creation of any PathPlanner Autos or Paths
@@ -101,7 +103,7 @@ public class RobotContainer {
     exportShuffleBoardData(); // export ShuffleBoardData
 
     // Default commands running in the background when other commands not scheduled
-    chassis.setDefaultCommand(new TeleopDrive(chassis, driverController));
+    chassis.setDefaultCommand(new TeleopDrive(chassis, driverController, camera));
 
     leftClimber.setDefaultCommand(new ClimberExtend(leftClimber, operatorController));
     rightClimber.setDefaultCommand(new ClimberExtend(rightClimber, operatorController));
@@ -115,8 +117,10 @@ public class RobotContainer {
     SmartDashboard.putData("Auto Chooser", autoChooser);
 
     ShuffleboardTab tab = Shuffleboard.getTab("Competition");
-    tab.addBoolean("Intake Has Note", intake::getIntakeLimitSwitch).withPosition(0, 0).withSize(13, 5);
+    tab.addBoolean("Intake Has Note", intake::getIntakeLimitSwitch).withPosition(0, 0).withSize(5, 5);
+    tab.addBoolean("Shooting Distance", camera::atShootingDistance).withPosition(6, 0).withSize(5, 5);
     tab.add("AutoChooser", autoChooser).withPosition(4, 5).withSize(4, 1);
+
   }
 
   /*

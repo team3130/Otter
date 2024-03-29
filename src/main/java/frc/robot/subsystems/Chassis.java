@@ -12,6 +12,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -146,6 +147,13 @@ public class Chassis extends SubsystemBase {
             setTeleopModuleStates(kinematics.toSwerveModuleStates(new ChassisSpeeds(x, y, theta)));
         }
     }
+
+    /*
+    public void driveTranslation2D(Translation2d idk, double theta) {
+        setTeleopModuleStates(kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(x, y, theta, getRotation2d())));
+    }
+
+     */
 
     // Flip-flops between field relative and bot relative swerve drive
     public void flipFieldRelative() {
@@ -518,7 +526,10 @@ public class Chassis extends SubsystemBase {
     // Gets the max speed field that we read thus far on this vm instance of rio
     public double getMaxSpeedRead() { return maxSpeedRead; }
 
-    public String getOdometry() { return odometry.getEstimatedPosition().toString(); }
+    public String getStringOdometry() { return odometry.getEstimatedPosition().toString(); }
+    public SwerveDrivePoseEstimator getOdometry() {
+        return odometry;
+    }
 
     /**
      * Initializes the data we send on shuffleboard
@@ -535,7 +546,7 @@ public class Chassis extends SubsystemBase {
             builder.addDoubleProperty("Y position", this::getY, null);
             builder.addDoubleProperty("rotation", this::getYaw, null);
             builder.addDoubleProperty("max speed read", this::getMaxSpeedRead, null);
-            builder.addStringProperty("odometry pose2d", this::getOdometry, null);
+            builder.addStringProperty("odometry pose2d", this::getStringOdometry, null);
             builder.addDoubleProperty("target P", this::getTargetP, this::setTargetP);
             builder.addDoubleProperty("target I", this::getTargetI, this::setTargetI);
             builder.addDoubleProperty("target D", this::getTargetD, this::setTargetD);
