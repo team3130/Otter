@@ -87,6 +87,8 @@ public class RobotContainer {
     // Do this in RobotContainer, after subsystem initialization, but before the creation of any other commands.
     NamedCommands.registerCommand("FlywheelsMovingSet", new AutoFlywheelMovingSetpoint(shooter));
     NamedCommands.registerCommand("Flywheels", new AutoFlywheel(shooter));
+    NamedCommands.registerCommand("FlywheelShuttle", new AutoFlywheelShuttle(shooter));
+
     NamedCommands.registerCommand("Index", new AutoIndex(indexer, shooter));
     NamedCommands.registerCommand("IndexPreload", new AutoIndexPreload(indexer, shooter));
     NamedCommands.registerCommand("Intake", new AutoIntake(intake, indexer));

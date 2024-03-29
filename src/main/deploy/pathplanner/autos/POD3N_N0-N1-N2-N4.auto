@@ -44,6 +44,12 @@
                       }
                     },
                     {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.75
+                      }
+                    },
+                    {
                       "type": "named",
                       "data": {
                         "name": "IndexPreload"
@@ -64,7 +70,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "swn-N1-podn"
+                        "pathName": "swn-N1-podnPOD"
                       }
                     },
                     {

@@ -37,8 +37,8 @@ public class Shooter extends SubsystemBase {
     double bottomVelocitySetpoint = 35;
     double slowBottomVelocitySetpoint = topVelocitySetpoint - 10;
 
-    double topShuttleVelocitySetpoint = 10;
-    double bottomShuttleVelocitySetpoint = 10;
+    double topShuttleVelocitySetpoint = 20;
+    double bottomShuttleVelocitySetpoint = 20;
 
 
     private double topFeedForwardVolt = 0;

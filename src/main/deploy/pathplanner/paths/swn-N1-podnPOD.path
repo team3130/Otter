@@ -3,41 +3,41 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.3,
-        "y": 6.2
+        "x": 0.9,
+        "y": 6.4
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.4,
-        "y": 6.2
+        "x": 0.9999999999999994,
+        "y": 6.4
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.6,
-        "y": 6.018203068434607
+        "x": 2.5,
+        "y": 6.962807757169489
       },
       "prevControl": {
-        "x": 2.4913201416355117,
-        "y": 6.1860979414530375
+        "x": 1.8415104636243917,
+        "y": 6.952735633680046
       },
       "nextControl": {
-        "x": 2.713465151461739,
-        "y": 5.842915600421947
+        "x": 2.7909577506984586,
+        "y": 6.967258188396347
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.6,
-        "y": 5.589722591070332
+        "x": 2.3,
+        "y": 6.2
       },
       "prevControl": {
-        "x": 2.5500000000000003,
-        "y": 5.589722591070332
+        "x": 2.2,
+        "y": 6.2
       },
       "nextControl": null,
       "isLocked": false,
@@ -46,8 +46,13 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.85,
-      "rotationDegrees": 90.0,
+      "waypointRelativePos": 0.4,
+      "rotationDegrees": 180.0,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 1.0499999999999998,
+      "rotationDegrees": 180.0,
       "rotateFast": false
     }
   ],
@@ -57,13 +62,30 @@
       "name": "Intake",
       "waypointRelativePos": 0.0,
       "command": {
-        "type": "parallel",
+        "type": "sequential",
         "data": {
           "commands": [
             {
               "type": "named",
               "data": {
                 "name": "Intake"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "MidShifter",
+      "waypointRelativePos": 0.0,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "ShifterShortExtend"
               }
             }
           ]
@@ -79,7 +101,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0,
+    "rotation": -160.0,
     "rotateFast": false
   },
   "reversed": false,

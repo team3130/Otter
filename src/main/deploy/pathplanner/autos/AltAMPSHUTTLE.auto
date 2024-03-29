@@ -54,11 +54,37 @@
                       "data": {
                         "name": "IndexPreload"
                       }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "FlywheelShuttle"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "ShifterShortExtend"
+                      }
                     },
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "SLOWswn-N4"
+                        "pathName": "Shuttleswn-N4"
                       }
                     },
                     {
@@ -70,7 +96,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "swn-N1-podnCENTER"
+                        "pathName": "Shuttle-N5"
                       }
                     },
                     {
@@ -78,11 +104,37 @@
                       "data": {
                         "name": "Index"
                       }
-                    },
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "race",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Flywheels"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "podn-CENTER"
+                        "pathName": "Shuttle-N6"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Index"
                       }
                     }
                   ]
