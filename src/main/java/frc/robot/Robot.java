@@ -20,9 +20,6 @@ public class Robot extends TimedRobot {
   private RobotContainer robotContainer;
   private Timer timer;
 
-  private RobotContainer m_robotContainer;
-  private boolean haveResetManually = false;
-
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -36,22 +33,6 @@ public class Robot extends TimedRobot {
     timer = new Timer();
     timer.reset();
     timer.start();
-    // Set the scheduler to log Shuffleboard events for command initialize, interrupt, finish
-    /*
-    CommandScheduler.getInstance()
-            .onCommandInitialize(
-                    command ->
-                            System.out.println("Command initialized: " + command.getName()));
-    CommandScheduler.getInstance()
-            .onCommandInterrupt(
-                    command ->
-                            System.out.println("Command interrupted: " + command.getName()));
-    CommandScheduler.getInstance()
-            .onCommandFinish(
-                    command ->
-                            System.out.println("Command finished: " + command.getName()));
-
-     */
   }
 
   /**
@@ -79,7 +60,6 @@ public class Robot extends TimedRobot {
     }
 
     robotContainer.LEDPeriodicRobot();
-    //RobotContainer.getAlliancePeriodic();
   }
 
 
@@ -94,16 +74,12 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     CommandScheduler.getInstance().cancelAll();
-    //CommandScheduler.getInstance().schedule(robotContainer.resetEverything());
     autonomousCommand = robotContainer.pick();
 
-  //  autonomousCommand = robotContainer.pick();
-    // schedule the autonomous command (example)
     if (autonomousCommand != null) {
       //CommandScheduler.getInstance().schedule(robotContainer.getAutonomousCommand());
       autonomousCommand.schedule();
     }
-    //robotContainer.checkDSUpdate();
   }
 
   /** This function is called periodically during autonomous. */
@@ -121,8 +97,8 @@ public class Robot extends TimedRobot {
     }
     //robotContainer.periodic();
 
-    //CommandScheduler.getInstance().schedule(robotContainer.resetIntake());
-    //CommandScheduler.getInstance().schedule(robotContainer.resetShooterShifter());
+    CommandScheduler.getInstance().schedule(robotContainer.resetIntake());
+    CommandScheduler.getInstance().schedule(robotContainer.resetShooterShifter());
 
     //This is so climber command can assume climbers are reset before a match
     //robotContainer.resetClimbers();
