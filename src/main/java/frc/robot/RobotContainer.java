@@ -59,10 +59,10 @@ import frc.robot.subsystems.LEDs;
 public class RobotContainer {
   // private final VelocityChassis velocityChassis;
   private final Chassis chassis;
-  private final Intake intake;
+  //private final Intake intake;
   private final Shooter shooter;
   private final Indexer indexer;
-  private final ShooterShifter shooterShifter;
+  //private final ShooterShifter shooterShifter;
   private final Climber leftClimber;
   private final Climber rightClimber;
   private final PS5Controller driverController = new PS5Controller(0);
@@ -77,9 +77,9 @@ public class RobotContainer {
     rightClimber = new Climber(Constants.CAN.climberRight, Constants.IDs.kRLimitSwitch, Constants.XBox.AXS_LJOYSTICK_Y, true);
 
     shooter = new Shooter();
-    shooterShifter = new ShooterShifter();
+    //shooterShifter = new ShooterShifter();
     chassis = new Chassis();
-    intake = new Intake();
+    //intake = new Intake();
     indexer = new Indexer(shooter);
     robotLEDs = new LEDs();
     camera = new CameraSubsystem();
@@ -93,10 +93,10 @@ public class RobotContainer {
 
     NamedCommands.registerCommand("Index", new AutoIndex(indexer, shooter));
     NamedCommands.registerCommand("IndexPreload", new AutoIndexPreload(indexer, shooter));
-    NamedCommands.registerCommand("Intake", new AutoIntake(intake, indexer));
-    NamedCommands.registerCommand("ShifterDoubleExtend", new AutoDoubleExtend(shooterShifter));
-    NamedCommands.registerCommand("ShifterShortExtend", new AutoShortExtend(shooterShifter));
-    NamedCommands.registerCommand("ShifterDoubleRetract", new AutoDoubleRetract(shooterShifter));
+    //NamedCommands.registerCommand("Intake", new AutoIntake(intake, indexer));
+    //NamedCommands.registerCommand("ShifterDoubleExtend", new AutoDoubleExtend(shooterShifter));
+   // NamedCommands.registerCommand("ShifterShortExtend", new AutoShortExtend(shooterShifter));
+    //NamedCommands.registerCommand("ShifterDoubleRetract", new AutoDoubleRetract(shooterShifter));
     NamedCommands.registerCommand("AmpHome", new AutoAmpHome(amp));
 
     configureBindings(); // configure button bindings
@@ -117,7 +117,7 @@ public class RobotContainer {
     SmartDashboard.putData("Auto Chooser", autoChooser);
 
     ShuffleboardTab tab = Shuffleboard.getTab("Competition");
-    tab.addBoolean("Intake Has Note", intake::getIntakeLimitSwitch).withPosition(0, 0).withSize(5, 5);
+    //tab.addBoolean("Intake Has Note", intake::getIntakeLimitSwitch).withPosition(0, 0).withSize(5, 5);
     tab.addBoolean("Shooting Distance", camera::atShootingDistance).withPosition(6, 0).withSize(5, 5);
     tab.add("AutoChooser", autoChooser).withPosition(4, 5).withSize(4, 1);
 
@@ -139,7 +139,7 @@ public class RobotContainer {
       ShuffleboardTab tab = Shuffleboard.getTab("Subsystem Test");
       tab.add(chassis);
       tab.add(shooter);
-      tab.add(intake);
+      //tab.add(intake);
       tab.add(indexer);
       tab.add(amp);
       tab.add(rightClimber);
@@ -150,11 +150,12 @@ public class RobotContainer {
   }
 
   public void LEDPeriodic() {
+    /*
     if (shooterShifter.getIsDoubleExtended()) {
       robotLEDs.redRobot();
     } else if (intake.getIntakeLimitSwitch() ) {
       robotLEDs.purpleRobot();
-    } else if (leftClimber.getClimbDone() && rightClimber.getClimbDone()) {
+    } else */if (leftClimber.getClimbDone() && rightClimber.getClimbDone()) {
       robotLEDs.movingRainbow();
     } else {
       robotLEDs.yellowRobot();
@@ -170,12 +171,14 @@ public class RobotContainer {
     rightClimber.setIsClimberReset(true);
   }
 
-  public InstantCommand resetShooterShifter() {
+  /*public InstantCommand resetShooterShifter() {
     return new DoubleRetract(shooterShifter);
   }
   public InstantCommand resetIntake() {
     return new IntakeIn(intake);
   }
+
+   */
   public InstantCommand ampZero() {
     return new AmpZero(amp);
   }
@@ -209,9 +212,9 @@ public class RobotContainer {
     new POVButton(driverController, Constants.PS5.POV_N).whileTrue(new ResetOdometryForward(chassis));
 
     // intake / indexer
-    new JoystickTrigger(driverController, Constants.PS5.AXS_RTRIGGER).whileTrue(new LimitedSpintake(intake, indexer));
+    //new JoystickTrigger(driverController, Constants.PS5.AXS_RTRIGGER).whileTrue(new LimitedSpintake(intake, indexer));
     new JoystickButton(driverController, Constants.PS5.BTN_CIRCLE).whileTrue(new AlwaysIndex(indexer));
-    new JoystickButton(driverController, Constants.PS5.BTN_RBUMPER).whileTrue(new ToggleIntake(intake));
+    //new JoystickButton(driverController, Constants.PS5.BTN_RBUMPER).whileTrue(new ToggleIntake(intake));
     new JoystickButton(driverController, Constants.PS5.BTN_X).whileTrue(new Outtake(indexer));
 
     new JoystickTrigger(driverController, Constants.PS5.AXS_LTRIGGER).whileTrue(new AmpOuttake(amp));
@@ -226,8 +229,8 @@ public class RobotContainer {
     // indexer
 
     new JoystickButton(operatorController, Constants.XBox.BTN_Y).whileTrue(new AlwaysIndex(indexer));
-    new JoystickButton(operatorController, Constants.XBox.BTN_A).whileTrue(new IndexToBeam(indexer, shooterShifter, shooter));
-    new JoystickTrigger(operatorController, Constants.XBox.AXS_RTRIGGER).whileTrue(new AndrewIndexToShoot(indexer, shooterShifter, shooter));
+    //new JoystickButton(operatorController, Constants.XBox.BTN_A).whileTrue(new IndexToBeam(indexer, shooterShifter, shooter));
+    //new JoystickTrigger(operatorController, Constants.XBox.AXS_RTRIGGER).whileTrue(new AndrewIndexToShoot(indexer, shooterShifter, shooter, camera));
 
     // shooter
     new JoystickButton(operatorController, Constants.XBox.BTN_RBUMPER).whileTrue(new ShootMovingSetpoint(shooter));
@@ -235,12 +238,12 @@ public class RobotContainer {
 
     // amp
     new POVButton(operatorController, Constants.XBox.POV_S).whileTrue(new AmpHome(amp));
-    new POVButton(operatorController, Constants.XBox.POV_N).whileTrue(new SequentialCommandGroup( new AmpAutoMid(amp, shooterShifter), new AmpKirbyThenFlies(amp, shooter, shooterShifter, indexer)));
+    //new POVButton(operatorController, Constants.XBox.POV_N).whileTrue(new SequentialCommandGroup( new AmpAutoMid(amp, shooterShifter), new AmpKirbyThenFlies(amp, shooter, shooterShifter, indexer)));
 
     // shooter shifter
-    new JoystickButton(operatorController, Constants.XBox.BTN_LBUMPER).whileTrue(new DoubleExtend(shooterShifter));
-    new JoystickTrigger(operatorController, Constants.XBox.AXS_LTRIGGER).whileTrue(new ShortShifterExtend(shooterShifter));
-    new POVButton(operatorController, Constants.XBox.POV_W).whileTrue(new DoubleRetract(shooterShifter));
+    //new JoystickButton(operatorController, Constants.XBox.BTN_LBUMPER).whileTrue(new DoubleExtend(shooterShifter));
+    //new JoystickTrigger(operatorController, Constants.XBox.AXS_LTRIGGER).whileTrue(new ShortShifterExtend(shooterShifter));
+    //new POVButton(operatorController, Constants.XBox.POV_W).whileTrue(new DoubleRetract(shooterShifter));
 
 
     //software debugging

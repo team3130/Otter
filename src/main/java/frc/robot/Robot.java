@@ -126,8 +126,8 @@ public class Robot extends TimedRobot {
     }
     //robotContainer.periodic();
 
-    CommandScheduler.getInstance().schedule(robotContainer.resetIntake());
-    CommandScheduler.getInstance().schedule(robotContainer.resetShooterShifter());
+    //CommandScheduler.getInstance().schedule(robotContainer.resetIntake());
+    //CommandScheduler.getInstance().schedule(robotContainer.resetShooterShifter());
     CommandScheduler.getInstance().schedule(robotContainer.ampZero());
 
     //This is so climber command can assume climbers are reset before a match

@@ -34,10 +34,8 @@ public class CameraSubsystem extends SubsystemBase {
   private int fiducialID = 0;
 
   // TODO ambiguity;
-  private int redCenterSpeakerTargetFiducialID = Constants.AprilTags.speakerTargetRedFiducialID;
-  private int blueSpeakerTargetFiducialID = Constants.AprilTags.speakerTargetBlueFiducialID;
   private PIDController faceTargetController;
-  private double faceTargetP = 10d;
+  private double faceTargetP = 0.24;
   private double faceTargetI = 0d;
   private double faceTargetD = 0d;
   private double goalDistance = 5;
@@ -84,7 +82,7 @@ public class CameraSubsystem extends SubsystemBase {
               Constants.AprilTags.CAMERA_HEIGHT_METERS,
               Constants.AprilTags.TARGET_HEIGHT_METERS,
               Constants.AprilTags.CAMERA_PITCH_RADIANS,
-              Units.degreesToRadians(correctTarget.getPitch())
+              Units.degreesToRadians(-correctTarget.getPitch())
       );
     } else {
       return -400d;
@@ -119,10 +117,7 @@ public class CameraSubsystem extends SubsystemBase {
     return (camera != null &&
             camera.getLatestResult() != null &&
             camera.getLatestResult().hasTargets() &&
-            correctTarget != null &&
-            correctTarget.getYaw() != -400d &&
-            correctTarget.getPitch() != -400d &&
-            correctTarget.getFiducialId() != -1);
+            correctTarget != null);
   }
 
   public double getFaceTargetP() { return faceTargetP;}
@@ -131,11 +126,14 @@ public class CameraSubsystem extends SubsystemBase {
   public void setFaceTargetP(double p) { faceTargetP = p;}
   public void setFaceTargetI(double i) { faceTargetI = i;}
   public void setFaceTargetD(double d) { faceTargetD = d;}
-  public double getGoalDist(){
-    return getGoalDist();
-  }
+  //public double getGoalDist(){
+    //return getGoalDist();
+  //}
   public void setGoalDist(double dist){
      goalDistance =dist;
+  }
+  public double getFiducialID(){
+    return fiducialID;
   }
 
   // This method will be called once per scheduler run
@@ -146,7 +144,8 @@ public class CameraSubsystem extends SubsystemBase {
     hasTarget = result.hasTargets();
     int i =0;
     while (result.getTargets().size() > i && weAreUp() && resultTimestamp != currentTimestamp) {
-      if (result.getTargets().get(i).getFiducialId() == Constants.AprilTags.speakerTargetRedFiducialID || result.getTargets().get(i).getFiducialId() == Constants.AprilTags.speakerTargetRedFiducialID) {
+      if (result.getTargets().get(i).getFiducialId() == Constants.AprilTags.speakerTargetRedFiducialID ||
+              result.getTargets().get(i).getFiducialId() == Constants.AprilTags.speakerTargetRedFiducialID) {
         fiducialID = result.getTargets().get(i).getFiducialId();
         setCurrentTag(result.getTargets().get(i));
         currentTimestamp = resultTimestamp;
@@ -162,11 +161,12 @@ public class CameraSubsystem extends SubsystemBase {
       builder.addDoubleProperty("Face Target P", this::getFaceTargetP, this::setFaceTargetP);
       builder.addDoubleProperty("Target Yaw", this::getTargetYaw, null);
       builder.addDoubleProperty("Target Dist", this::getDistanceToTarget, null);
-      builder.addDoubleProperty("Ideal Dist", this::getGoalDist, this::setGoalDist);
+      //builder.addDoubleProperty("Ideal Dist", this::getGoalDist, this::setGoalDist);
 
       builder.addDoubleProperty("Face Target I", this::getFaceTargetI, this::setFaceTargetI);
       builder.addDoubleProperty("Face Target D", this::getFaceTargetD, this::setFaceTargetD);
       builder.addBooleanProperty("At Distance", this::atShootingDistance, null);
+      builder.addDoubleProperty("Fidcuacial ID", this::getFiducialID, null);
     }
   }
 

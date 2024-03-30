@@ -48,11 +48,11 @@ public final class Constants {
 
 
   public static class AprilTags {
-    public static final double TARGET_HEIGHT_METERS = Units.feetToMeters(0);
+    public static final double TARGET_HEIGHT_METERS = Units.inchesToMeters(56.375);
       // Constants such as camera and target height stored. Change per robot and goal!
-    public static final double  CAMERA_HEIGHT_METERS = Units.inchesToMeters(0);
+    public static final double  CAMERA_HEIGHT_METERS = Units.inchesToMeters(14.9);
     // Angle between horizontal and the camera.
-    public static final double CAMERA_PITCH_RADIANS = Units.degreesToRadians(0);
+    public static final double CAMERA_PITCH_RADIANS = Units.degreesToRadians(16.55);
     public static double kTargetPitch = Units.inchesToMeters(0);
     // How far from the target we want to be
     final double GOAL_RANGE_METERS = Units.feetToMeters(3);
