@@ -32,7 +32,6 @@ public class AmpManualLower extends InstantCommand {
     amp.ampLiftingMotorStop();
     if (amp.getLimitSwitch()) {
       amp.resetEncoder();
-      amp.setHasZeroedTrue();
     }
   }
 
