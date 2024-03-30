@@ -24,7 +24,7 @@ public class Amp extends SubsystemBase {
   private double outtakeAmpSpeed = -1;
   private int encoderMaxTicks = 13600;
   private int highSetpoint = 13500; //drop into amp
-  private int midSetpoint = 5465; //pick up from mid shooter
+  private int midSetpoint =2980; // new mid 4845; //pick up from mid shooter
   private int lowSetpoint = 60;
   private PIDController ampController;
   private double P = 0.00175;
@@ -34,6 +34,7 @@ public class Amp extends SubsystemBase {
   private boolean isMid = false;
   private boolean isHigh = false;
   private boolean isReadyToScore = false;
+  private boolean beamHasSeenNote = false;
   public Amp() {
     ampLimit = new DigitalInput(Constants.IDs.ampLimitDIO);
 
@@ -68,6 +69,9 @@ public class Amp extends SubsystemBase {
 
     ampController = new PIDController(P, I, D);
   }
+
+  public boolean beamHasSeenNote() { return beamHasSeenNote;}
+  public void setBeamHasSeenNote(boolean lol) { beamHasSeenNote = lol;}
 
   public boolean getIsReadyToScore() {
     return isReadyToScore;

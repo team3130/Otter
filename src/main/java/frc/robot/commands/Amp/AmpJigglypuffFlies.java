@@ -5,23 +5,25 @@
 package frc.robot.commands.Amp;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.*;
+import frc.robot.subsystems.Amp;
+import frc.robot.subsystems.Indexer;
+import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.ShooterShifter;
 
 /** the amp has nom-ed a note like kirby and is able to fly **/
-public class AmpKirbyThenFlies extends Command {
+public class AmpJigglypuffFlies extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final Amp amp;
   private final Shooter shooter;
   private final ShooterShifter shooterShifter;
   private final Indexer indexer;
-  private boolean beamHasSeenNote = false;
 
   /**
    * Creates a new ExampleCommand.
    *
    * @param amp The subsystem used by this command.
    */
-  public AmpKirbyThenFlies(Amp amp, Shooter shooter, ShooterShifter shooterShifter, Indexer indexer) {
+  public AmpJigglypuffFlies(Amp amp, Shooter shooter, ShooterShifter shooterShifter, Indexer indexer) {
     this.amp = amp;
     this.shooter = shooter;
     this.shooterShifter = shooterShifter;
@@ -32,24 +34,15 @@ public class AmpKirbyThenFlies extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    beamHasSeenNote = false;
     amp.resetController();
+
+    amp.outtakeAmp();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (shooterShifter.getIsShortShifterExtended() && amp.getIsMid()) {
-      shooter.runFlywheelsAmpSpeed();
-      amp.outtakeAmp();
-      indexer.toShooterSpindex();
-    }
-
-    if (shooter.getBeamHasNote() && !beamHasSeenNote) {
-      beamHasSeenNote = true; // break beam sees note for the first time
-    }
-
-    if (!shooter.getBeamHasNote() && beamHasSeenNote) { // when amp nom-ed note
+    if (!shooter.getBeamHasNote() && amp.beamHasSeenNote()) { // when amp nom-ed note
       shooter.stopShooters();
       indexer.stopIndexer();
       amp.ampSpinningMotorStop();

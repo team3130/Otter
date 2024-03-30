@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.Amp.*;
+import frc.robot.commands.Amp.Software.AmpManualLift;
 import frc.robot.commands.Amp.Software.AmpZero;
 import frc.robot.commands.Amp.Software.AutoAmpZero;
 import frc.robot.commands.Auto.*;
@@ -287,10 +288,11 @@ public class RobotContainer {
     new JoystickButton(operatorController, Constants.XBox.BTN_X).whileTrue(new ShuttleMovingSetpoint(shooter));
 
     // amp
-    new POVButton(operatorController, Constants.XBox.POV_N).whileTrue(new SequentialCommandGroup( new AmpAutoMid(amp, shooterShifter), new AmpKirbyThenFlies(amp, shooter, shooterShifter, indexer)));
-    new POVButton(operatorController, Constants.XBox.POV_E).whileTrue(new AmpAutoHigh(amp));
-    new POVButton(operatorController, Constants.XBox.POV_S).whileTrue(new AmpHome(amp));
-    new JoystickButton(operatorController, Constants.XBox.BTN_B).whileTrue(new AmpZero(amp));
+    new POVButton(operatorController, Constants.XBox.POV_N).whileTrue(new SequentialCommandGroup( new AmpAutoMid(amp, shooterShifter),
+            new AmpJigglypuffPreFlies(amp, shooter, shooterShifter, indexer), new AmpJigglypuffPreFlies(amp, shooter, shooterShifter, indexer)));
+    new POVButton(operatorController, Constants.XBox.POV_E).whileTrue(new AmpManualLift(amp));
+    new JoystickButton(operatorController, Constants.XBox.BTN_B).whileTrue(new AmpHome(amp));
+    new POVButton(operatorController, Constants.XBox.POV_S).whileTrue(new AmpZero(amp));
 
     // shooter shifter
     new JoystickButton(operatorController, Constants.XBox.BTN_LBUMPER).whileTrue(new DoubleExtend(shooterShifter));

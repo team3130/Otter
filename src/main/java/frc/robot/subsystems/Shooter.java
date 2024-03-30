@@ -20,7 +20,7 @@ public class Shooter extends SubsystemBase {
     private final TalonFX topFlywheel; // we should probably change these names once we learn more
     private final TalonFX bottomFlywheel; // we should probably change these names once we learn more
     private double flywheelVolts = 5;
-    private double indexToAmpVolts = 2;
+    private double flywheelsToAmpVolts = 1;
     private DigitalInput shooterBeam;
     private boolean flywheelsAtSetpoints = false;
     private double maxTime = 1;
@@ -124,8 +124,8 @@ public class Shooter extends SubsystemBase {
         bottomFlywheel.setControl(bottomVoltReq.withOutput(flywheelVolts));
     }
     public void runFlywheelsAmpSpeed() {
-        topFlywheel.setControl(topVoltReq.withOutput(indexToAmpVolts));
-        bottomFlywheel.setControl(bottomVoltReq.withOutput(indexToAmpVolts));
+        topFlywheel.setControl(topVoltReq.withOutput(flywheelsToAmpVolts));
+        bottomFlywheel.setControl(bottomVoltReq.withOutput(flywheelsToAmpVolts));
     }
 
     public void stopShooters() {
@@ -254,8 +254,9 @@ public class Shooter extends SubsystemBase {
     public double getFlywheelRampTime() { return this.getFlywheelVolts();}
     public double getFlywheelVolts(){ return flywheelVolts;}
     public void setFlywheelVolts(double volt){flywheelVolts = volt;}
-    public double getIndexToAmpVolts(){ return indexToAmpVolts;}
-    public void setIndexToAmpVolts(double volt){indexToAmpVolts = volt;}
+    public double getFlywheelsToAmpVolts(){ return flywheelsToAmpVolts;}
+    public void setFlywheelsToAmpVolts(double volt){
+        flywheelsToAmpVolts = volt;}
 
     public double getSlot0_kS() { return slot0_kS; }
     public double getSlot0_kV() { return slot0_kV; }
@@ -307,7 +308,7 @@ public class Shooter extends SubsystemBase {
             builder.addDoubleProperty("top current", this::getTopCurrent, null);
             builder.addDoubleProperty("bottom current", this::getBottomCurrent, null);
             builder.addDoubleProperty("Shooter Volts", this::getFlywheelVolts, this::setFlywheelVolts);
-            builder.addDoubleProperty("Index To Amp Volts", this::getIndexToAmpVolts, this::setIndexToAmpVolts);
+            builder.addDoubleProperty("Index To Amp Volts", this::getFlywheelsToAmpVolts, this::setFlywheelsToAmpVolts);
             builder.addBooleanProperty("Shooter Beam", this::getBeamHasNote, null);
 
             builder.addDoubleProperty("shooter volts", this::getFlywheelVolts, this::setFlywheelVolts);
