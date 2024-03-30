@@ -38,7 +38,7 @@ public class CameraSubsystem extends SubsystemBase {
   private double faceTargetP = 0.24;
   private double faceTargetI = 0d;
   private double faceTargetD = 0d;
-  private double goalDistance = 5;
+  private double goalDistanceMeters = 3.505;
 
   private Chassis chassis;
 
@@ -90,7 +90,7 @@ public class CameraSubsystem extends SubsystemBase {
   }
 
   public boolean atShootingDistance() {
-    if ((Math.abs(getDistanceToTarget() - goalDistance) < 0.3) && weAreUp()) {
+    if ((Math.abs(getDistanceToTarget() - goalDistanceMeters) < 0.2) && weAreUp()) {
       return true;
     } else {
       return false;
@@ -130,7 +130,7 @@ public class CameraSubsystem extends SubsystemBase {
     //return getGoalDist();
   //}
   public void setGoalDist(double dist){
-     goalDistance =dist;
+     goalDistanceMeters =dist;
   }
   public double getFiducialID(){
     return fiducialID;

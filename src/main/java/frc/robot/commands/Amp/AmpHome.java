@@ -11,6 +11,7 @@ import frc.robot.subsystems.Amp;
 public class AmpHome extends InstantCommand {
   private final Amp amp;
 
+
   /**
    * @param amp The subsystem used by this command.
    */
@@ -41,10 +42,6 @@ public class AmpHome extends InstantCommand {
   @Override
   public void end(boolean interrupted) {
     amp.ampLiftingMotorStop();
-    if (amp.getLimitSwitch()) {
-      amp.resetEncoder();
-      amp.setHasZeroedTrue();
-    }
   }
 
   // Returns true when the command should end.

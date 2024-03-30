@@ -20,9 +20,7 @@ public class PitClimberReset extends Command {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        if (Constants.pitMode) {
-            climber.setClimberSpeed(-0.7);
-        }
+        climber.setClimberSpeed(-0.7);
     }
 
     // Called every time the scheduler runs while the command is scheduled.

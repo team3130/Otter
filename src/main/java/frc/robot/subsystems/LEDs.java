@@ -7,94 +7,178 @@ package frc.robot.subsystems;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
-import edu.wpi.first.wpilibj.shuffleboard.ComplexWidget;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class LEDs extends SubsystemBase {
-  AddressableLED shooterLEDs;
-  private final int LEDLength = 23;
+  AddressableLED LEDs;
+  private final int LEDLength = 42;
   private int rainbowFirstPixelHue = 20;
   private long shuffleboardTest;
   private final int pwmPort = 0;
 
-  AddressableLEDBuffer shooterBuffer;
+  AddressableLEDBuffer buffer;
   //private ComplexWidget whiteLEDs;
 
   public LEDs() {
-    shooterLEDs = new AddressableLED(pwmPort); // PWM Port
-    shooterBuffer = new AddressableLEDBuffer(LEDLength);
-    shooterLEDs.setLength(shooterBuffer.getLength());
-    shooterLEDs.setData(shooterBuffer);
-    shooterLEDs.start();
+    LEDs = new AddressableLED(pwmPort); // PWM Port
+    buffer = new AddressableLEDBuffer(LEDLength);
+    LEDs.setLength(buffer.getLength());
+    LEDs.setData(buffer);
+    LEDs.start();
     // whiteLEDs = Shuffleboard.getTab("LEDs").add("White LEDs", new WhiteLEDs(this));
   }
 
-  public void yellowRobot() {
-    for (var i = 0; i < shooterBuffer.getLength(); i++) {
-      shooterBuffer.setHSV(i, Constants.LEDColors.yellowHSV, 255, 200);
+  public void setBackClimbers(int color) {
+    if (color == -10) {
+      // For every pixel
+      for (var i = 0; i < buffer.getLength(); i++) {
+        // Calculate the hue - hue is easier for rainbows because the color
+        // shape is a circle so only one value needs to precess
+        final var hue = (rainbowFirstPixelHue + (i * 180 / buffer.getLength())) % 180;
+        buffer.setHSV(i, hue, 255, 128);
+      }
+      // Increase by to make the rainbow "move"
+      rainbowFirstPixelHue += 3;
+      // Check bounds
+      rainbowFirstPixelHue %= 180;
+    } else {
+      for (var i = 0; i < 5; i++) {
+        buffer.setHSV(i, color, 255, 200);
+      }
+      for (var i = 37; i < 42; i++) {
+        buffer.setHSV(i, color, 255, 200);
+      }
     }
-    shooterLEDs.setData(shooterBuffer);
+    LEDs.setData(buffer);
   }
 
-  public void purpleRobot() {
-    for (var i = 0; i < shooterBuffer.getLength(); i++) {
-      shooterBuffer.setHSV(i, Constants.LEDColors.purpleHSV, 255, 200);
+  public void setFrontClimbers(int color) {
+    if (color == -10) {
+      // For every pixel
+      for (var i = 0; i < buffer.getLength(); i++) {
+        // Calculate the hue - hue is easier for rainbows because the color
+        // shape is a circle so only one value needs to precess
+        final var hue = (rainbowFirstPixelHue + (i * 180 / buffer.getLength())) % 180;
+        buffer.setHSV(i, hue, 255, 128);
+      }
+      // Increase by to make the rainbow "move"
+      rainbowFirstPixelHue += 3;
+      // Check bounds
+      rainbowFirstPixelHue %= 180;
+    } else {
+      for (var i = 5; i < 10; i++) {
+        buffer.setHSV(i, color, 255, 200);
+      }
+      for (var i = 32; i < 37; i++) {
+        buffer.setHSV(i, color, 255, 200);
+      }
     }
-    shooterLEDs.setData(shooterBuffer);
+    LEDs.setData(buffer);
+  }
+
+  public void setSidebars(int color) {
+    if (color == -10) {
+      // For every pixel
+      for (var i = 0; i < buffer.getLength(); i++) {
+        // Calculate the hue - hue is easier for rainbows because the color
+        // shape is a circle so only one value needs to precess
+        final var hue = (rainbowFirstPixelHue + (i * 180 / buffer.getLength())) % 180;
+        buffer.setHSV(i, hue, 255, 128);
+      }
+      // Increase by to make the rainbow "move"
+      rainbowFirstPixelHue += 3;
+      // Check bounds
+      rainbowFirstPixelHue %= 180;
+    } else {
+      for (var i = 10; i < 18; i++) {
+        buffer.setHSV(i, color, 255, 200);
+      }
+      for (var i = 24; i < 32; i++) {
+        buffer.setHSV(i, color, 255, 200);
+      }
+    }
+    LEDs.setData(buffer);
+  }
+
+  public void setBar(int color) {
+    if (color == -10) {
+      // For every pixel
+      for (var i = 0; i < buffer.getLength(); i++) {
+        // Calculate the hue - hue is easier for rainbows because the color
+        // shape is a circle so only one value needs to precess
+        final var hue = (rainbowFirstPixelHue + (i * 180 / buffer.getLength())) % 180;
+        buffer.setHSV(i, hue, 255, 128);
+      }
+      // Increase by to make the rainbow "move"
+      rainbowFirstPixelHue += 3;
+      // Check bounds
+      rainbowFirstPixelHue %= 180;
+    } else {
+      for (var i = 18; i < 24; i++) {
+        buffer.setHSV(i, color, 255, 200);
+      }
+    }
+    LEDs.setData(buffer);
+  }
+
+  public void greenRobot() {
+    for (var i = 0; i < buffer.getLength(); i++) {
+      buffer.setHSV(i, Constants.LEDColors.lightGreenHSV, 255, 200);
+    }
+    LEDs.setData(buffer);
   }
 
   public void redRobot() {
-    for (var i = 0; i < shooterBuffer.getLength(); i++) {
-      shooterBuffer.setHSV(i, Constants.LEDColors.redHSV, 255, 200);
+    for (var i = 0; i < buffer.getLength(); i++) {
+      buffer.setHSV(i, Constants.LEDColors.redHSV, 255, 200);
     }
-    shooterLEDs.setData(shooterBuffer);
+    LEDs.setData(buffer);
   }
 
   public void movingRainbow() {
     // For every pixel
-    for (var i = 0; i < shooterBuffer.getLength(); i++) {
+    for (var i = 0; i < buffer.getLength(); i++) {
       // Calculate the hue - hue is easier for rainbows because the color
       // shape is a circle so only one value needs to precess
-      final var hue = (rainbowFirstPixelHue + (i * 180 / shooterBuffer.getLength())) % 180;
-      shooterBuffer.setHSV(i, hue, 255, 128);
+      final var hue = (rainbowFirstPixelHue + (i * 180 / buffer.getLength())) % 180;
+      buffer.setHSV(i, hue, 255, 128);
     }
     // Increase by to make the rainbow "move"
     rainbowFirstPixelHue += 3;
     // Check bounds
     rainbowFirstPixelHue %= 180;
-    shooterLEDs.setData(shooterBuffer);
+    LEDs.setData(buffer);
   }
 
-
   public void white() {
-    for (var i = 0; i < shooterBuffer.getLength(); i++) {
-      shooterBuffer.setLED(i, Color.kFloralWhite);
+    for (var i = 0; i < buffer.getLength(); i++) {
+      buffer.setLED(i, Color.kFloralWhite);
     }
-    shooterLEDs.setData(shooterBuffer);
+    LEDs.setData(buffer);
   }
 
   public void staticRainbow() {
     // For every pixel
-    for (var i = 0; i < shooterBuffer.getLength(); i++) {
+    for (var i = 0; i < buffer.getLength(); i++) {
       // Calculate the hue - hue is easier for rainbows because the color
       // shape is a circle so only one value needs to precess
-      final var hue = (rainbowFirstPixelHue + (i * 180 / shooterBuffer.getLength())) % 180;
-      shooterBuffer.setHSV(i, hue, 255, 200);
+      final var hue = (rainbowFirstPixelHue + (i * 180 / buffer.getLength())) % 180;
+      buffer.setHSV(i, hue, 255, 200);
     }
     // Increase by to make the rainbow "move"
     rainbowFirstPixelHue += 3;
     // Check bounds
     rainbowFirstPixelHue %= 180;
-    shooterLEDs.setData(shooterBuffer);
+    LEDs.setData(buffer);
   }
 
   public void shuffleColor() {
-    for (var i = 0; i < shooterBuffer.getLength(); i++) {
-      shooterBuffer.setHSV(i, getShuffleboardTest(), 255, 200);
+    for (var i = 0; i < buffer.getLength(); i++) {
+      buffer.setHSV(i, getShuffleboardTest(), 255, 200);
     }
-    shooterLEDs.setData(shooterBuffer);
+    LEDs.setData(buffer);
   }
 
 
