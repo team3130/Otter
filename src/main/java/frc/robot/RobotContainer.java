@@ -293,6 +293,7 @@ public class RobotContainer {
     new JoystickButton(operatorController, Constants.XBox.BTN_RBUMPER).whileTrue(new ShootMovingSetpoint(shooter));
     new JoystickButton(operatorController, Constants.XBox.BTN_X).whileTrue(new ShuttleMovingSetpoint(shooter));
 
+    // amp
     new POVButton(operatorController, Constants.XBox.POV_N).whileTrue(new AmpAutoMid(amp, shooterShifter));
     new POVButton(operatorController, Constants.XBox.POV_E).whileTrue(new AmpAutoHigh(amp));
     new POVButton(operatorController, Constants.XBox.POV_S).whileTrue(new AmpHome(amp));
