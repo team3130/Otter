@@ -141,7 +141,6 @@ public class CameraSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     PhotonPipelineResult result = camera.getLatestResult();
-    double resultTimestamp = result.getTimestampSeconds();
     int i = 0;
     while (result.getTargets().size() > i && result.getTargets() != null && hasTarget() && result.getTargets().get(i).getFiducialId() != -1) {
       if (result.getTargets().get(i).getFiducialId() == 4 || result.getTargets().get(i).getFiducialId() == 7) {
