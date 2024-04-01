@@ -142,11 +142,14 @@ public class CameraSubsystem extends SubsystemBase {
   public void periodic() {
     if (camera != null) {
       PhotonPipelineResult result = camera.getLatestResult();
+      double resultTimestamp = result.getTimestampSeconds();
+
       int i = 0;
-      while (result.getTargets() != null && result.getTargets().get(i).getFiducialId() != -1 && result.hasTargets() && result.getTargets().size() > i) {
+      while (resultTimestamp != currentTimestamp && result.getTargets() != null && result.getTargets().get(i).getFiducialId() != -1 && result.hasTargets() && result.getTargets().size() > i) {
         if (result.getTargets().get(i).getFiducialId() == 4 || result.getTargets().get(i).getFiducialId() == 7) {
           fiducialID = result.getTargets().get(i).getFiducialId();
           setCurrentTag(result.getTargets().get(i));
+          currentTimestamp = resultTimestamp;
         }
         i++;
       }
