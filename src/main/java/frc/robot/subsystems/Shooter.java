@@ -16,6 +16,8 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
+import static java.lang.Math.abs;
+
 public class Shooter extends SubsystemBase {
     private final TalonFX topFlywheel; // we should probably change these names once we learn more
     private final TalonFX bottomFlywheel; // we should probably change these names once we learn more
@@ -39,6 +41,9 @@ public class Shooter extends SubsystemBase {
 
     double topShuttleVelocitySetpoint = 20;
     double bottomShuttleVelocitySetpoint = 20;
+
+    private boolean tryingToShootNotShuttle = false;
+    private boolean tryingToShuttle = false;
 
 
     private double topFeedForwardVolt = 0;
@@ -169,7 +174,7 @@ public class Shooter extends SubsystemBase {
         }
     }
     public void checkFlywheelsAtVelocitySetpoint(double topsetpoint, double bottomsetpoint){
-        flywheelsAtSetpoints = (Math.abs( getTopFlyVelocityRPS() - topsetpoint) < 2 && Math.abs( getBottomFlyVelocityRPS() - bottomsetpoint) < 2);
+        flywheelsAtSetpoints = (abs( getTopFlyVelocityRPS() - topsetpoint) < 2 && abs( getBottomFlyVelocityRPS() - bottomsetpoint) < 2);
     }
     public boolean getFlywheelsAtVelocitySetpoint(){
         return flywheelsAtSetpoints;
@@ -229,6 +234,34 @@ public class Shooter extends SubsystemBase {
 
     public double getTopFlyVelocityRPS() { return topFlywheel.getVelocity().getValue(); }
     public double getBottomFlyVelocityRPS() { return bottomFlywheel.getVelocity().getValue();}
+    public boolean getFlywheelAtVelocityRaw() {
+        if (getTryingToShootNotShuttle() &&
+                (Math.abs(getTopFlyVelocityRPS() - topVelocitySetpoint) < 2) && ((Math.abs(getBottomFlyVelocityRPS() - bottomVelocitySetpoint) < 2))) {
+            return true;
+        } else if (getTryingToShuttle() &&
+                (Math.abs(getTopFlyVelocityRPS() - topShuttleVelocitySetpoint) < 2) && ((Math.abs(getBottomFlyVelocityRPS() - bottomShuttleVelocitySetpoint) < 2))) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean getTryingToShootNotShuttle() {
+        return tryingToShootNotShuttle;
+    }
+
+    public void setTryingToShootNotShuttle(boolean lol) {
+        tryingToShootNotShuttle = lol;
+    }
+
+    public boolean getTryingToShuttle() {
+        return tryingToShuttle;
+    }
+
+    public void setTryingToShuttle(boolean lol) {
+        tryingToShuttle = lol;
+    }
+
     public double getTopFlyVelocityRPM() { return topFlywheel.getVelocity().getValue() * 60; }
     public double getBottomFlyVelocityRPM() { return bottomFlywheel.getVelocity().getValue() * 60;}
     public double getTopShuttleVelocitySetpoint() { return topShuttleVelocitySetpoint; }

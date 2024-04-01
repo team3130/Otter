@@ -39,6 +39,7 @@ public class TeleopDrive extends Command {
    */
   @Override
   public void initialize() {
+      chassis.setIsFaceTargetingLEDs(false);
   }
 
   /**
@@ -68,18 +69,14 @@ public class TeleopDrive extends Command {
       // angle used for targeting
       omega = -controller.getRawAxis(Constants.PS5.AXS_RJOYSTICK_Y);
 
-      if (controller.getTriangleButton())
-      /*.isTargetingSpeaker(omega, theta)*/ {
+      if (chassis.isTargetingSpeaker(omega, theta)) {
           camera.resetFaceTargetController();
           theta = -camera.goToFaceTargetPower();
-          /*
-          chassis.resetTargetSpeakerController();
-          theta = chassis.goToTargetPower();
-
-           */
+          chassis.setIsFaceTargetingLEDs(true);
       } else if (chassis.isTargetingAmp(omega, theta)){
           chassis.resetTargetAmpController();
           theta = chassis.goToTargetPower();
+          chassis.setIsFaceTargetingLEDs(false);
       /*
       else if (chassis.isTargetingPodium(omega, theta)) {
           chassis.resetTargetPodiumController();
@@ -87,6 +84,7 @@ public class TeleopDrive extends Command {
 
        */
       } else { // normal driving
+          chassis.setIsFaceTargetingLEDs(false);
           theta = Math.abs(theta) > Constants.Swerve.kDeadband ? theta : 0.0;
           theta = turningLimiter.calculate(theta) * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond;
       }

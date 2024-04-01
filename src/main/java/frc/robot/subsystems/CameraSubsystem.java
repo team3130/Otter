@@ -38,9 +38,7 @@ public class CameraSubsystem extends SubsystemBase {
   private double faceTargetP = 0.24;
   private double faceTargetI = 0d;
   private double faceTargetD = 0d;
-  private double goalDistanceMeters = 3.505;
-
-  private Chassis chassis;
+  private double goalDistanceMeters = 2.474;
 
 
   private Translation2d robotToTarget;
@@ -90,7 +88,15 @@ public class CameraSubsystem extends SubsystemBase {
   }
 
   public boolean atShootingDistance() {
-    if ((Math.abs(getDistanceToTarget() - goalDistanceMeters) < 0.2) && weAreUp()) {
+    if ((Math.abs(getDistanceToTarget() - goalDistanceMeters) < 0.1) && weAreUp()) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  public boolean attemptingToShootDistance() {
+    if ((Math.abs(getDistanceToTarget() - goalDistanceMeters) < 2) && weAreUp()) {
       return true;
     } else {
       return false;
@@ -117,7 +123,12 @@ public class CameraSubsystem extends SubsystemBase {
     return (camera != null &&
             camera.getLatestResult() != null &&
             camera.getLatestResult().hasTargets() &&
-            correctTarget != null);
+            correctTarget != null
+    );
+  }
+
+  public double getGoalDistanceMeters() {
+    return goalDistanceMeters;
   }
 
   public double getFaceTargetP() { return faceTargetP;}

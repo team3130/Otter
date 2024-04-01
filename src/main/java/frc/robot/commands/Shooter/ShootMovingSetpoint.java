@@ -33,6 +33,8 @@ public class ShootMovingSetpoint extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    shooter.setTryingToShootNotShuttle(true);
+    shooter.setTryingToShuttle(false);
     timer.reset();
     timer.start();
     if (Constants.debugMode) {
@@ -71,6 +73,7 @@ public class ShootMovingSetpoint extends Command {
   public void end(boolean interrupted) {
     shooter.stopShooters();
     timer.stop();
+    shooter.setTryingToShootNotShuttle(false);
   }
 
 

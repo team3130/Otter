@@ -47,6 +47,7 @@ public class Chassis extends SubsystemBase {
     private double targetP = 10d;
     private double targetI = 0.2;
     private double targetD = 0.8;
+    private boolean isFaceTargetingLEDs = false;
     private boolean isTargetingSpeaker = false;
     private boolean isTargetingAmp = false;
     private boolean isTargetingSpeakerAmpSide = false;
@@ -326,7 +327,6 @@ public class Chassis extends SubsystemBase {
         }
     }
 
-    // if the right joystick is pushed up, trying to target = true
     public boolean isTargetingSpeaker(double omega, double theta) {
         if (omega < -0.5 && Math.abs(theta) < 0.5) {
             isTargetingSpeaker = true;
@@ -335,6 +335,14 @@ public class Chassis extends SubsystemBase {
             isTargetingSpeaker = false;
             return false;
         }
+    }
+
+    public boolean getIsFaceTargetingLED() {
+        return isFaceTargetingLEDs;
+    }
+
+    public void setIsFaceTargetingLEDs(boolean lol) {
+        isFaceTargetingLEDs = lol;
     }
 
     public boolean isTargetingPodium(double omega, double theta) {
