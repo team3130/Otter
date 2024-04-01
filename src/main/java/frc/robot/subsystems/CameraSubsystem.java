@@ -137,18 +137,16 @@ public class CameraSubsystem extends SubsystemBase {
   }
 
   // This method will be called once per scheduler run
+
   @Override
   public void periodic() {
     PhotonPipelineResult result = camera.getLatestResult();
     double resultTimestamp = result.getTimestampSeconds();
-    hasTarget = result.hasTargets();
-    int i =0;
-    while (result.getTargets().size() > i && weAreUp() && resultTimestamp != currentTimestamp) {
-      if (result.getTargets().get(i).getFiducialId() == Constants.AprilTags.speakerTargetRedFiducialID ||
-              result.getTargets().get(i).getFiducialId() == Constants.AprilTags.speakerTargetRedFiducialID) {
+    int i = 0;
+    while (result.getTargets().size() > i && result.getTargets() != null && hasTarget() && result.getTargets().get(i).getFiducialId() != -1) {
+      if (result.getTargets().get(i).getFiducialId() == 4 || result.getTargets().get(i).getFiducialId() == 7) {
         fiducialID = result.getTargets().get(i).getFiducialId();
         setCurrentTag(result.getTargets().get(i));
-        currentTimestamp = resultTimestamp;
       }
       i++;
     }
