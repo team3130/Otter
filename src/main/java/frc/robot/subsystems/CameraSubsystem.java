@@ -140,14 +140,16 @@ public class CameraSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    PhotonPipelineResult result = camera.getLatestResult();
-    int i = 0;
-    while (result.getTargets().size() > i && result.getTargets() != null && hasTarget() && result.getTargets().get(i).getFiducialId() != -1) {
-      if (result.getTargets().get(i).getFiducialId() == 4 || result.getTargets().get(i).getFiducialId() == 7) {
-        fiducialID = result.getTargets().get(i).getFiducialId();
-        setCurrentTag(result.getTargets().get(i));
+    if (camera != null) {
+      PhotonPipelineResult result = camera.getLatestResult();
+      int i = 0;
+      while (result.getTargets() != null && result.getTargets().get(i).getFiducialId() != -1 && result.hasTargets() && result.getTargets().size() > i) {
+        if (result.getTargets().get(i).getFiducialId() == 4 || result.getTargets().get(i).getFiducialId() == 7) {
+          fiducialID = result.getTargets().get(i).getFiducialId();
+          setCurrentTag(result.getTargets().get(i));
+        }
+        i++;
       }
-      i++;
     }
   }
 
