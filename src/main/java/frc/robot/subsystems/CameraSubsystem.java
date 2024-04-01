@@ -140,18 +140,21 @@ public class CameraSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    if (camera != null) {
+    if (camera != null && camera.getLatestResult() != null) { //camera exists
       PhotonPipelineResult result = camera.getLatestResult();
       double resultTimestamp = result.getTimestampSeconds();
-
-      int i = 0;
-      while (resultTimestamp != currentTimestamp && result.getTargets() != null && result.getTargets().get(i).getFiducialId() != -1 && result.hasTargets() && result.getTargets().size() > i) {
-        if (result.getTargets().get(i).getFiducialId() == 4 || result.getTargets().get(i).getFiducialId() == 7) {
-          fiducialID = result.getTargets().get(i).getFiducialId();
-          setCurrentTag(result.getTargets().get(i));
-          currentTimestamp = resultTimestamp;
+      int i = 0; //start on 0th target
+      if (resultTimestamp != currentTimestamp && result.hasTargets() && result.getTargets() != null && result.getTargets().get(i).getFiducialId() != -1 ) {
+        //not checking the same picture multiple times, null pointer fear...
+        while (result.getTargets().size() > i) { //iterate through array of targets
+          if (result.getTargets().get(i).getFiducialId() == 4 || result.getTargets().get(i).getFiducialId() == 7) { //red or blue speaker
+            fiducialID = result.getTargets().get(i).getFiducialId(); //shuffleboard check
+            setCurrentTag(result.getTargets().get(i)); //set target used for everything
+            currentTimestamp = resultTimestamp; //reset timestamp
+          }
+          i++; //move to next target
         }
-        i++;
+
       }
     }
   }
