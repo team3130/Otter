@@ -47,7 +47,7 @@ public class AutoIndex extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (timer.hasElapsed(0.75)) {
+    if (timer.hasElapsed(1)) {
       return true;
     } else {
       return false;

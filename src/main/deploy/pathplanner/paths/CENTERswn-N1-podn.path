@@ -3,28 +3,28 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.0,
-        "y": 6.5
+        "x": 0.75,
+        "y": 6.1
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.0999999999999994,
-        "y": 6.5
+        "x": 0.8499999999999994,
+        "y": 6.1
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.583152022769052,
+        "x": 2.48,
         "y": 6.962807757169489
       },
       "prevControl": {
-        "x": 1.9246624863934438,
+        "x": 1.8215104636243917,
         "y": 6.952735633680046
       },
       "nextControl": {
-        "x": 2.8741097734675107,
+        "x": 2.7709577506984586,
         "y": 6.967258188396347
       },
       "isLocked": false,
@@ -69,23 +69,6 @@
               "type": "named",
               "data": {
                 "name": "Intake"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "name": "MidShifter",
-      "waypointRelativePos": 0.0,
-      "command": {
-        "type": "parallel",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "ShifterShortExtend"
               }
             }
           ]

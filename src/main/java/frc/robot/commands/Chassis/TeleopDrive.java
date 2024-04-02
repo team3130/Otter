@@ -39,7 +39,7 @@ public class TeleopDrive extends Command {
    */
   @Override
   public void initialize() {
-      chassis.setIsFaceTargetingLEDs(false);
+
   }
 
   /**
@@ -76,15 +76,7 @@ public class TeleopDrive extends Command {
       } else if (chassis.isTargetingAmp(omega, theta)){
           chassis.resetTargetAmpController();
           theta = chassis.goToTargetPower();
-          chassis.setIsFaceTargetingLEDs(false);
-      /*
-      else if (chassis.isTargetingPodium(omega, theta)) {
-          chassis.resetTargetPodiumController();
-          theta = chassis.goToTargetPower();
-
-       */
       } else { // normal driving
-          chassis.setIsFaceTargetingLEDs(false);
           theta = Math.abs(theta) > Constants.Swerve.kDeadband ? theta : 0.0;
           theta = turningLimiter.calculate(theta) * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond;
       }

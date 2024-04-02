@@ -84,7 +84,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "Shuttleswn-N4"
+                        "pathName": "AMPSHUTTLE-N4"
                       }
                     },
                     {
@@ -96,7 +96,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "Shuttle-N5"
+                        "pathName": "AMPSHUTTLE-N5"
                       }
                     },
                     {
@@ -128,7 +128,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "Shuttle-N6"
+                        "pathName": "AMPSHUTTLEScore-N6"
                       }
                     },
                     {

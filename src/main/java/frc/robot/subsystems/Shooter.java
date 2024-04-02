@@ -236,10 +236,10 @@ public class Shooter extends SubsystemBase {
     public double getBottomFlyVelocityRPS() { return bottomFlywheel.getVelocity().getValue();}
     public boolean getFlywheelAtVelocityRaw() {
         if (getTryingToShootNotShuttle() &&
-                (Math.abs(getTopFlyVelocityRPS() - topVelocitySetpoint) < 2) && ((Math.abs(getBottomFlyVelocityRPS() - bottomVelocitySetpoint) < 2))) {
+                (Math.abs(getTopFlyVelocityRPS() - topVelocitySetpoint) < 1) && ((Math.abs(getBottomFlyVelocityRPS() - bottomVelocitySetpoint) < 1))) {
             return true;
         } else if (getTryingToShuttle() &&
-                (Math.abs(getTopFlyVelocityRPS() - topShuttleVelocitySetpoint) < 2) && ((Math.abs(getBottomFlyVelocityRPS() - bottomShuttleVelocitySetpoint) < 2))) {
+                (Math.abs(getTopFlyVelocityRPS() - topShuttleVelocitySetpoint) < 1) && ((Math.abs(getBottomFlyVelocityRPS() - bottomShuttleVelocitySetpoint) < 1))) {
             return true;
         } else {
             return false;

@@ -187,7 +187,7 @@ public class RobotContainer {
       robotLEDs.setSidebars(Constants.LEDColors.darkGreenHSV);
     } else if (shooterShifter.getIsDoubleExtended() || (!amp.getIsHigh() && !amp.getLimitSwitch())) {
       robotLEDs.setSidebars(Constants.LEDColors.redHSV);
-    } else if (camera.atFaceTargetSetpoint() && chassis.getIsFaceTargetingLED()) {
+    } else if (camera.isAtYawSetpointLEDs()) {
       robotLEDs.setSidebars(Constants.LEDColors.lightGreenHSV);
     } else if (intake.getIntakeLimitSwitch()) {
       robotLEDs.setSidebars(Constants.LEDColors.purpleHSV);

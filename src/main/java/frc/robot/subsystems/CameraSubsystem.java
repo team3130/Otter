@@ -32,13 +32,14 @@ public class CameraSubsystem extends SubsystemBase {
   private boolean hasTarget;
   double currentTimestamp = 0;
   private int fiducialID = 0;
+  private double faceTargetSetpoint = 0.02;
 
   // TODO ambiguity;
   private PIDController faceTargetController;
   private double faceTargetP = 0.24;
   private double faceTargetI = 0d;
   private double faceTargetD = 0d;
-  private double goalDistanceMeters = 2.474;
+  private double goalDistanceMeters = 2.38;
 
 
   private Translation2d robotToTarget;
@@ -63,9 +64,15 @@ public class CameraSubsystem extends SubsystemBase {
     return faceTargetController.atSetpoint();
   }
 
+  public boolean isAtYawSetpointLEDs() {
+    return weAreUp() && (Math.abs(getTargetYaw() - faceTargetSetpoint) >= Math.toRadians(1.0));
+
+
+  }
+
   public double goToFaceTargetPower() {
     if (weAreUp()) {
-      return faceTargetController.calculate(getTargetYaw(), 0);
+      return faceTargetController.calculate(getTargetYaw(), faceTargetSetpoint);
     } else {
       return 0;
     }
