@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
@@ -54,6 +55,18 @@ public class SwerveModule implements Sendable {
 
         absoluteEncoderOffset = Constants.SwerveEncoderOffsets.kCANCoderOffsets[side];
         this.side =side;
+        
+        driveMotor.getConfigurator().apply((new CurrentLimitsConfigs().withSupplyCurrentLimitEnable(true).
+                withSupplyCurrentThreshold(40).withSupplyTimeThreshold(0)), 0.01);
+
+        steerMotor.getConfigurator().apply((new CurrentLimitsConfigs().withSupplyCurrentLimitEnable(true).
+                withSupplyCurrentThreshold(20).withSupplyTimeThreshold(0)), 0.01);
+
+        driveMotor.getConfigurator().apply((new CurrentLimitsConfigs().withStatorCurrentLimitEnable(true).
+                withStatorCurrentLimit(40).withSupplyTimeThreshold(0)), 0.01);
+
+        steerMotor.getConfigurator().apply((new CurrentLimitsConfigs().withStatorCurrentLimitEnable(true).
+                withStatorCurrentLimit(20).withSupplyTimeThreshold(0)), 0.01);
 
 
         resetEncoders();
