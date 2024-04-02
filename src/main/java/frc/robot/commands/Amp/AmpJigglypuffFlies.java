@@ -35,11 +35,18 @@ public class AmpJigglypuffFlies extends Command {
   @Override
   public void initialize() {
     amp.resetController();
+    shooterShifter.doubleRetract();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    if (shooterShifter.getIsDoubleRetracted() && amp.getIsMid()) {
+      shooter.runFlywheelsAmpSpeed();
+      amp.outtakeAmp();
+      indexer.toShooterSpindex();
+    }
+
     if (!shooter.getBeamHasNote() && amp.beamHasSeenNote()) { // when amp nom-ed note
       // fly up to high
       amp.moveAmpAtSpeed(amp.runController(amp.getHighSetpoint()));

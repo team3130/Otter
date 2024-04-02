@@ -34,34 +34,41 @@ public class AmpJigglypuffPrepLow extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    shooterShifter.doubleRetract();
+    shooterShifter.extendShortShifter();
     amp.setBeamHasSeenNote(false);
     amp.resetController();
+    amp.setIsMid(false);
+    amp.setIsHigh(false);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (shooterShifter.getIsDoubleRetracted() && amp.getIsMid()) {
-      shooter.runFlywheelsAmpSpeed();
+    if (shooterShifter.getIsShortShifterExtended()) {
       indexer.indexToBeam();
-      amp.outtakeAmp();
     }
+    if (shooter.getBeamHasNote() && !amp.beamHasSeenNote()) {
+      amp.setBeamHasSeenNote(true); // break beam sees note for the first time
+      shooterShifter.doubleRetract();
+    }
+    if (shooterShifter.getIsDoubleRetracted() && amp.beamHasSeenNote()) {
+      amp.moveAmpAtSpeed(amp.runController(amp.getExperimentalLowSetpoint()));
+    }
+
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    shooter.stopShooters();
-    indexer.stopIndexer();
-    if (shooter.getBeamHasNote() && !amp.beamHasSeenNote()) {
-      amp.setBeamHasSeenNote(true); // break beam sees note for the first time
+    amp.ampLiftingMotorStop();
+    if (amp.isAtSetpointWithDeadband()) {
+      amp.setIsMid(true);
     }
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (shooter.getBeamHasNote() && !amp.beamHasSeenNote()) || (!amp.getHasZeroed());
+    return (!amp.getHasZeroed() || amp.isAtSetpoint());
   }
 }
