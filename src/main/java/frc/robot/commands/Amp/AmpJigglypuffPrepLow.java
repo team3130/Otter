@@ -11,7 +11,7 @@ import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.ShooterShifter;
 
 /** the amp has nom-ed a note like kirby and is able to fly **/
-public class AmpJigglypuffPreFlies extends Command {
+public class AmpJigglypuffPrepLow extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final Amp amp;
   private final Shooter shooter;
@@ -23,7 +23,7 @@ public class AmpJigglypuffPreFlies extends Command {
    *
    * @param amp The subsystem used by this command.
    */
-  public AmpJigglypuffPreFlies(Amp amp, Shooter shooter, ShooterShifter shooterShifter, Indexer indexer) {
+  public AmpJigglypuffPrepLow(Amp amp, Shooter shooter, ShooterShifter shooterShifter, Indexer indexer) {
     this.amp = amp;
     this.shooter = shooter;
     this.shooterShifter = shooterShifter;
@@ -34,6 +34,7 @@ public class AmpJigglypuffPreFlies extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    shooterShifter.doubleRetract();
     amp.setBeamHasSeenNote(false);
     amp.resetController();
   }
@@ -41,21 +42,20 @@ public class AmpJigglypuffPreFlies extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (shooterShifter.getIsShortShifterExtended() && amp.getIsMid()) {
+    if (shooterShifter.getIsDoubleRetracted() && amp.getIsMid()) {
       shooter.runFlywheelsAmpSpeed();
       indexer.indexToBeam();
+      amp.outtakeAmp();
     }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    amp.ampLiftingMotorStop();
     shooter.stopShooters();
     indexer.stopIndexer();
     if (shooter.getBeamHasNote() && !amp.beamHasSeenNote()) {
       amp.setBeamHasSeenNote(true); // break beam sees note for the first time
-      shooterShifter.doubleRetract();
     }
   }
 

@@ -35,17 +35,12 @@ public class AmpJigglypuffFlies extends Command {
   @Override
   public void initialize() {
     amp.resetController();
-
-    amp.outtakeAmp();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     if (!shooter.getBeamHasNote() && amp.beamHasSeenNote()) { // when amp nom-ed note
-      shooter.stopShooters();
-      indexer.stopIndexer();
-      amp.ampSpinningMotorStop();
       // fly up to high
       amp.moveAmpAtSpeed(amp.runController(amp.getHighSetpoint()));
       if (amp.isAtSetpointWithDeadband()) {
@@ -58,9 +53,6 @@ public class AmpJigglypuffFlies extends Command {
   @Override
   public void end(boolean interrupted) {
     amp.ampLiftingMotorStop();
-    amp.ampSpinningMotorStop();
-    shooter.stopShooters();
-    indexer.stopIndexer();
   }
 
   // Returns true when the command should end.

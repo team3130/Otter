@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.*;
 
 /** the amp has nom-ed a note like kirby and is able to fly **/
-public class AmpKirbyThenFlies extends Command {
+public class AmpKirbyFlies extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final Amp amp;
   private final Shooter shooter;
@@ -21,7 +21,7 @@ public class AmpKirbyThenFlies extends Command {
    *
    * @param amp The subsystem used by this command.
    */
-  public AmpKirbyThenFlies(Amp amp, Shooter shooter, ShooterShifter shooterShifter, Indexer indexer) {
+  public AmpKirbyFlies(Amp amp, Shooter shooter, ShooterShifter shooterShifter, Indexer indexer) {
     this.amp = amp;
     this.shooter = shooter;
     this.shooterShifter = shooterShifter;

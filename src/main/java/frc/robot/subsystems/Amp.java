@@ -26,6 +26,7 @@ public class Amp extends SubsystemBase {
   private int highSetpoint = 13500; //drop into amp
   private int midSetpoint =2980; // new mid 4845; //pick up from mid shooter
   private int lowSetpoint = 60;
+  private int aboveStageHeight = 2000;
   private PIDController ampController;
   private double P = 0.00175;
   private double I = 0;
@@ -208,6 +209,10 @@ public class Amp extends SubsystemBase {
   public boolean getIsMid() { return isMid; }
   public void setIsHigh(boolean high) { isHigh = high; }
   public void setIsMid(boolean mid) { isMid = mid; }
+
+  public boolean ampIsAboveHeightForStage() {
+    return getLiftingEncoderPosition() > aboveStageHeight;
+  }
 
 
   @Override

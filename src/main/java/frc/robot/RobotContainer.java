@@ -155,7 +155,7 @@ public class RobotContainer {
   public void LEDPeriodicBackClimbers() {
       if (amp.getIsHigh()) {
         robotLEDs.setBackClimbers(Constants.LEDColors.darkGreenHSV);
-      } else if (shooterShifter.getIsDoubleExtended() || (!amp.getIsHigh() && !amp.getLimitSwitch())) {
+      } else if (shooterShifter.getIsDoubleExtended() || (!amp.getIsHigh() && amp.ampIsAboveHeightForStage())) {
         robotLEDs.setBackClimbers(Constants.LEDColors.redHSV);
       } else if (intake.getIntakeLimitSwitch()) {
         robotLEDs.setBackClimbers(Constants.LEDColors.purpleHSV);

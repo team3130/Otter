@@ -9,14 +9,14 @@ import frc.robot.subsystems.Amp;
 import frc.robot.subsystems.ShooterShifter;
 
 /** An example command that uses an example subsystem. */
-public class AmpAutoMid extends Command {
+public class AmpKirbyPrepMid extends Command {
   private final Amp amp;
   private final ShooterShifter shifter;
 
   /**
    * @param amp The subsystem used by this command.
    */
-  public AmpAutoMid(Amp amp, ShooterShifter shifter) {
+  public AmpKirbyPrepMid(Amp amp, ShooterShifter shifter) {
     this.amp = amp;
     this.shifter = shifter;
     addRequirements(amp, shifter);
@@ -25,6 +25,7 @@ public class AmpAutoMid extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    shifter.extendShortShifter();
     amp.resetController();
     amp.setIsMid(false);
     amp.setIsHigh(false);
