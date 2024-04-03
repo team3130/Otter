@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.72,
-      "y": 6.65
+      "x": 1.3074487833435935,
+      "y": 5.570246205735591
     },
-    "rotation": -120.0
+    "rotation": 180.0
   },
   "command": {
     "type": "sequential",
@@ -18,13 +18,13 @@
           }
         },
         {
-          "type": "race",
+          "type": "deadline",
           "data": {
             "commands": [
               {
                 "type": "named",
                 "data": {
-                  "name": "Flywheel"
+                  "name": "Flywheels"
                 }
               },
               {
@@ -32,9 +32,9 @@
                 "data": {
                   "commands": [
                     {
-                      "type": "path",
+                      "type": "wait",
                       "data": {
-                        "pathName": "swn-FlushTurn"
+                        "waitTime": 0.6
                       }
                     },
                     {
@@ -46,7 +46,31 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "swn-N1"
+                        "pathName": "ggswm-N2"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Index"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "ggswm-N3"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Index"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "swm-N1"
                       }
                     },
                     {
