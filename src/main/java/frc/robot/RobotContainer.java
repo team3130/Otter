@@ -21,13 +21,13 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.Amp.*;
-import frc.robot.commands.Amp.Software.AmpManualLift;
 import frc.robot.commands.Amp.Software.AmpZero;
 import frc.robot.commands.Amp.Software.AutoAmpZero;
 import frc.robot.commands.Auto.*;
@@ -146,7 +146,8 @@ public class RobotContainer {
       robotLEDs.movingRainbow();
     } else {
       LEDPeriodicBackClimbers();
-      LEDPeriodicFrontClimbers();
+      LEDPeriodicBottomFrontClimbers();
+      LEDPeriodicTopFrontClimbers();
       LEDPeriodicSidebars();
       LEDPeriodicBar();
     }
@@ -166,26 +167,42 @@ public class RobotContainer {
       }
   }
 
-  public void LEDPeriodicFrontClimbers() {
+  public void LEDPeriodicBottomFrontClimbers() {
     if (amp.getIsHigh()) {
-      robotLEDs.setFrontClimbers(Constants.LEDColors.darkGreenHSV);
-    } else if (shooterShifter.getIsDoubleExtended() || (!amp.getIsHigh() && !amp.getLimitSwitch())) {
-      robotLEDs.setFrontClimbers(Constants.LEDColors.redHSV);
+      robotLEDs.setBottomFrontClimbers(Constants.LEDColors.darkGreenHSV);
+    } else if (shooterShifter.getIsDoubleExtended() || (!amp.getIsHigh() && amp.ampIsAboveHeightForStage())) {
+      robotLEDs.setBottomFrontClimbers(Constants.LEDColors.redHSV);
     } else if (shooter.getFlywheelAtVelocityRaw()) {
-      robotLEDs.setFrontClimbers(Constants.LEDColors.lightGreenHSV);
+      robotLEDs.setBottomFrontClimbers(Constants.LEDColors.lightGreenHSV);
     } else if (intake.getIntakeLimitSwitch()) {
-      robotLEDs.setFrontClimbers(Constants.LEDColors.purpleHSV);
+      robotLEDs.setBottomFrontClimbers(Constants.LEDColors.purpleHSV);
     } else if (rightClimber.getClimbDone() && rightClimber.getClimbDone()){
-      robotLEDs.setFrontClimbers(-10);
+      robotLEDs.setBottomFrontClimbers(-10);
     } else {
-      robotLEDs.setFrontClimbers(Constants.LEDColors.yellowHSV);
+      robotLEDs.setBottomFrontClimbers(Constants.LEDColors.yellowHSV);
+    }
+  }
+
+  public void LEDPeriodicTopFrontClimbers() {
+    if (amp.getIsHigh()) {
+      robotLEDs.setTopFrontClimbers(Constants.LEDColors.darkGreenHSV);
+    } else if (shooterShifter.getIsDoubleExtended() || (!amp.getIsHigh() && amp.ampIsAboveHeightForStage())) {
+      robotLEDs.setTopFrontClimbers(Constants.LEDColors.redHSV);
+    } else if (shooter.getBeamHasNote()) {
+      robotLEDs.setTopFrontClimbers(-20);
+    } else if (intake.getIntakeLimitSwitch()) {
+      robotLEDs.setTopFrontClimbers(Constants.LEDColors.purpleHSV);
+    } else if (rightClimber.getClimbDone() && rightClimber.getClimbDone()){
+      robotLEDs.setTopFrontClimbers(-10);
+    } else {
+      robotLEDs.setTopFrontClimbers(Constants.LEDColors.yellowHSV);
     }
   }
 
   public void LEDPeriodicSidebars() {
     if (amp.getIsHigh()) {
       robotLEDs.setSidebars(Constants.LEDColors.darkGreenHSV);
-    } else if (shooterShifter.getIsDoubleExtended() || (!amp.getIsHigh() && !amp.getLimitSwitch())) {
+    } else if (shooterShifter.getIsDoubleExtended() || (!amp.getIsHigh() && amp.ampIsAboveHeightForStage())) {
       robotLEDs.setSidebars(Constants.LEDColors.redHSV);
     } else if (camera.isAtYawSetpointLEDs()) {
       robotLEDs.setSidebars(Constants.LEDColors.lightGreenHSV);
@@ -201,13 +218,13 @@ public class RobotContainer {
   public void LEDPeriodicBar() {
       if (amp.getIsHigh()) {
         robotLEDs.setBar(Constants.LEDColors.darkGreenHSV);
-      } else if (shooterShifter.getIsDoubleExtended() || (!amp.getIsHigh() && !amp.getLimitSwitch())) {
+      } else if (shooterShifter.getIsDoubleExtended() || (!amp.getIsHigh() && amp.ampIsAboveHeightForStage())) {
         robotLEDs.setBar(Constants.LEDColors.redHSV);
       } else if (camera.atShootingDistance()) {
         robotLEDs.setBar(Constants.LEDColors.lightGreenHSV);
       } else if (camera.attemptingToShootDistance()) {
         if (camera.getDistanceToTarget() < camera.getGoalDistanceMeters()) {
-          robotLEDs.setBar(Constants.LEDColors.pinkHSV);
+          robotLEDs.setBar(Constants.LEDColors.lightBlueHSV);
         } else {
           robotLEDs.setBar(Constants.LEDColors.orangeHSV);
         }
@@ -275,6 +292,7 @@ public class RobotContainer {
     new JoystickButton(driverController, Constants.PS5.BTN_RBUMPER).whileTrue(new ToggleIntake(intake));
 
     new JoystickTrigger(driverController, Constants.PS5.AXS_LTRIGGER).whileTrue(new AmpOuttake(amp));
+    new JoystickButton(driverController, Constants.PS5.BTN_SQUARE).whileTrue(new AmpIntake(amp));
 
     // software testing
     //new JoystickButton(driverController, Constants.PS5.BTN_TRIANGLE).whileTrue(new DriveToPID(chassis));
@@ -294,9 +312,9 @@ public class RobotContainer {
     new JoystickButton(operatorController, Constants.XBox.BTN_X).whileTrue(new ShuttleMovingSetpoint(shooter));
 
     // amp
-    new POVButton(operatorController, Constants.XBox.POV_N).whileTrue(new AmpAutoMid(amp, shooterShifter));
+    new POVButton(operatorController, Constants.XBox.POV_N).whileTrue(new SequentialCommandGroup(new AmpKirbyPrepMid(amp, shooterShifter), new AmpKirbyFlies(amp, shooter, shooterShifter, indexer)));
     new POVButton(operatorController, Constants.XBox.POV_E).whileTrue(new AmpAutoHigh(amp));
-    new POVButton(operatorController, Constants.XBox.POV_S).whileTrue(new AmpHome(amp));
+    new POVButton(operatorController, Constants.XBox.POV_S).onTrue(new AmpHome(amp));
     new JoystickButton(operatorController, Constants.XBox.BTN_B).whileTrue(new AmpZero(amp));
 
     // shooter shifter
@@ -307,7 +325,6 @@ public class RobotContainer {
 
     //software debugging
     if (Constants.debugMode) {
-      new POVButton(operatorController, Constants.XBox.POV_S).whileTrue(new AmpZero(amp));
       //new POVButton(operatorController, Constants.XBox.POV_W).whileTrue(new AmpAutoMid(amp));
       //new POVButton(operatorController, Constants.XBox.POV_S).whileTrue(new AmpAutoLow(amp));
       //new JoystickButton(operatorController, Constants.XBox.LST_BTN_RBUMPER).whileTrue(new AmpManualLift(amp));

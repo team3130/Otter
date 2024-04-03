@@ -39,7 +39,7 @@ public class CameraSubsystem extends SubsystemBase {
   private double faceTargetP = 0.24;
   private double faceTargetI = 0d;
   private double faceTargetD = 0d;
-  private double goalDistanceMeters = 2.38;
+  private double goalDistanceMeters = 2.79;
 
 
   private Translation2d robotToTarget;
@@ -65,9 +65,7 @@ public class CameraSubsystem extends SubsystemBase {
   }
 
   public boolean isAtYawSetpointLEDs() {
-    return weAreUp() && (Math.abs(getTargetYaw() - faceTargetSetpoint) >= Math.toRadians(1.0));
-
-
+    return weAreUp() && (Math.abs(getTargetYaw() - faceTargetSetpoint) <= Math.toRadians(1));
   }
 
   public double goToFaceTargetPower() {
@@ -95,7 +93,7 @@ public class CameraSubsystem extends SubsystemBase {
   }
 
   public boolean atShootingDistance() {
-    if ((Math.abs(getDistanceToTarget() - goalDistanceMeters) < 0.1) && weAreUp()) {
+    if ((((goalDistanceMeters - 0.15) <= getDistanceToTarget() && getDistanceToTarget() <= (goalDistanceMeters + 0.08))) && weAreUp()) {
       return true;
     } else {
       return false;

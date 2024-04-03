@@ -21,7 +21,7 @@ public class IndexToBeam extends Command {
     this.indexer = indexer;
     this.shooterShifter = shooterShifter;
     this.shooter = shooter;
-    addRequirements(indexer, shooterShifter, shooter);
+    addRequirements(indexer, shooterShifter);
   }
 
 

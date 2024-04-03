@@ -7,6 +7,7 @@ package frc.robot.commands.Chassis;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PS5Controller;
+import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.CameraSubsystem;
@@ -73,8 +74,17 @@ public class TeleopDrive extends Command {
           camera.resetFaceTargetController();
           theta = -camera.goToFaceTargetPower();
           chassis.setIsFaceTargetingLEDs(true);
-      } else if (chassis.isTargetingAmp(omega, theta)){
+      } else if (chassis.isTargetingAmp(omega, theta)) {
           chassis.resetTargetAmpController();
+          theta = chassis.goToTargetPower();
+      } else if (controller.getPOV() == Constants.PS5.POV_S) {
+          chassis.resetTargetBackClimbController();
+          theta = chassis.goToTargetPower();
+      } else if (controller.getPOV() == Constants.PS5.POV_E) {
+          chassis.resetTargetClimbRightSide();
+          theta = chassis.goToTargetPower();
+      } else if (controller.getPOV() == Constants.PS5.POV_W) {
+          chassis.resetTargetClimbLeftSide();
           theta = chassis.goToTargetPower();
       } else { // normal driving
           theta = Math.abs(theta) > Constants.Swerve.kDeadband ? theta : 0.0;

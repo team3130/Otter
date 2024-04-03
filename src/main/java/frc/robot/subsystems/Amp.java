@@ -18,15 +18,17 @@ public class Amp extends SubsystemBase {
   private final DigitalInput ampLimit;
   private final WPI_TalonSRX ampLiftingMotor;
   private final WPI_TalonSRX ampSpinningMotor;
-  private double intakeAmpSpeed = 1;
+  private double intakeAmpSpeed = 0.3;
   private double ampLiftSpeed = 0.5;
   private double ampLowerSpeed = -0.5;
+
+  private double ampLowerFastSpeed = -0.9;
   private double outtakeAmpSpeed = -1;
   private int encoderMaxTicks = 13600;
   private int highSetpoint = 13500; //drop into amp
-  private int midSetpoint =2980; // new mid 4845; //pick up from mid shooter
+  private int midSetpoint = 6593; //pick up from mid shooter
   private int lowSetpoint = 60;
-  private int aboveStageHeight = 2000;
+  private int aboveStageHeight = 5000;
   private int experimentalLowSetpoint = 200;
   private PIDController ampController;
   private double P = 0.00175;
@@ -186,6 +188,10 @@ public class Amp extends SubsystemBase {
   }
   public void manualAmpLowerDown(){
     ampLiftingMotor.set(ampLowerSpeed);
+  }
+
+  public void ampLowerFast(){
+    ampLiftingMotor.set(ampLowerFastSpeed);
   }
 
   public double getP(){

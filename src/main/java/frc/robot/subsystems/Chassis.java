@@ -99,6 +99,8 @@ public class Chassis extends SubsystemBase {
         }
         //n_fieldOrriented = Shuffleboard.getTab("Chassis").add("field orriented", false).getEntry();
         targetController = new PIDController(targetP, targetI, targetD);
+        targetController.enableContinuousInput(-Math.PI, Math.PI);
+        targetController.setTolerance(Math.toRadians(1.0));
 
 
         AutoBuilder.configureHolonomic(
@@ -359,11 +361,11 @@ public class Chassis extends SubsystemBase {
         return targetController.calculate(getRotation2d().getRadians());
     }
 
-    public void resetTargetSpeakerController() {
+    public void resetTargetJoystickSpeakerController() {
         targetController.reset();
-        targetController.enableContinuousInput(-Math.PI, Math.PI);
-        targetController.setTolerance(Math.toRadians(1.0));
-        targetController.setPID(targetP, targetI, targetD);
+        if (Constants.debugMode) {
+            targetController.setPID(targetP, targetI, targetD);
+        }
 
         if (isTargetingSpeaker) {
             if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
@@ -376,24 +378,38 @@ public class Chassis extends SubsystemBase {
 
     public void resetTargetBackClimbController() {
         targetController.reset();
-        targetController.enableContinuousInput(-Math.PI, Math.PI);
-        targetController.setTolerance(Math.toRadians(1.0));
-        targetController.setPID(targetP, targetI, targetD);
-
-        if (isTargetingBackClimb) {
-            if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
-                targetController.setSetpoint(Math.toRadians(0));
-            } else {
-                targetController.setSetpoint(Math.toRadians(180));
-            }
+        if (Constants.debugMode) {
+            targetController.setPID(targetP, targetI, targetD);
         }
+
+        if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+            targetController.setSetpoint(Math.toRadians(0));
+        } else {
+            targetController.setSetpoint(Math.toRadians(180));
+        }
+    }
+
+    public void resetTargetClimbRightSide() {
+        targetController.reset();
+        if (Constants.debugMode) {
+            targetController.setPID(targetP, targetI, targetD);
+        }
+        targetController.setSetpoint(Math.toRadians(240));
+    }
+
+    public void resetTargetClimbLeftSide() {
+        targetController.reset();
+        if (Constants.debugMode) {
+            targetController.setPID(targetP, targetI, targetD);
+        }
+        targetController.setSetpoint(Math.toRadians(120));
     }
 
     public void resetTargetSpeaker_AmpSideController() {
         targetController.reset();
-        targetController.enableContinuousInput(-Math.PI, Math.PI);
-        targetController.setTolerance(Math.toRadians(1.0));
-        targetController.setPID(targetP, targetI, targetD);
+        if (Constants.debugMode) {
+            targetController.setPID(targetP, targetI, targetD);
+        }
 
         if (isTargetingSpeakerAmpSide) {
             if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
@@ -406,9 +422,9 @@ public class Chassis extends SubsystemBase {
 
     public void resetTargetSpeaker_SourceSideController() {
         targetController.reset();
-        targetController.enableContinuousInput(-Math.PI, Math.PI);
-        targetController.setTolerance(Math.toRadians(1.0));
-        targetController.setPID(targetP, targetI, targetD);
+        if (Constants.debugMode) {
+            targetController.setPID(targetP, targetI, targetD);
+        }
 
         if (isTargetingSpeakerSourceSide) {
             if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
@@ -419,11 +435,12 @@ public class Chassis extends SubsystemBase {
         }
     }
 
+
     public void resetTargetStage_AmpSideController() {
         targetController.reset();
-        targetController.enableContinuousInput(-Math.PI, Math.PI);
-        targetController.setTolerance(Math.toRadians(1.0));
-        targetController.setPID(targetP, targetI, targetD);
+        if (Constants.debugMode) {
+            targetController.setPID(targetP, targetI, targetD);
+        }
 
         if (isTargetingStageAmpSide) {
             if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
@@ -436,9 +453,9 @@ public class Chassis extends SubsystemBase {
 
     public void resetTargetStage_SourceSideController() {
         targetController.reset();
-        targetController.enableContinuousInput(-Math.PI, Math.PI);
-        targetController.setTolerance(Math.toRadians(1.0));
-        targetController.setPID(targetP, targetI, targetD);
+        if (Constants.debugMode) {
+            targetController.setPID(targetP, targetI, targetD);
+        }
 
         if (isTargetingStageSourceSide) {
             if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
@@ -451,9 +468,9 @@ public class Chassis extends SubsystemBase {
 
     public void resetTargetAmpController() {
         targetController.reset();
-        targetController.enableContinuousInput(-Math.PI, Math.PI);
-        targetController.setTolerance(Math.toRadians(1.0));
-        targetController.setPID(targetP, targetI, targetD);
+        if (Constants.debugMode) {
+            targetController.setPID(targetP, targetI, targetD);
+        }
         if (isTargetingAmp) {
             targetController.setSetpoint(Math.toRadians(90));
         }
@@ -462,9 +479,9 @@ public class Chassis extends SubsystemBase {
 
     public void resetTargetPodiumController() {
         targetController.reset();
-        targetController.enableContinuousInput(-Math.PI, Math.PI);
-        targetController.setTolerance(Math.toRadians(1.0));
-        targetController.setPID(targetP, targetI, targetD);
+        if (Constants.debugMode) {
+            targetController.setPID(targetP, targetI, targetD);
+        }
 
             if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
                 targetController.setSetpoint(Math.toRadians(159.9));

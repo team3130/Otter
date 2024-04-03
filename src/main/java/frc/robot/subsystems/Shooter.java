@@ -25,7 +25,7 @@ public class Shooter extends SubsystemBase {
     private double flywheelsToAmpVolts = 1;
     private DigitalInput shooterBeam;
     private boolean flywheelsAtSetpoints = false;
-    private double maxTime = 1;
+    private double maxTime = 0.5;
     final VoltageOut topVoltReq = new VoltageOut(0);
     final VoltageOut bottomVoltReq = new VoltageOut(0);
     final VelocityVoltage topVelocityRequest = new VelocityVoltage(0).withSlot(0);
