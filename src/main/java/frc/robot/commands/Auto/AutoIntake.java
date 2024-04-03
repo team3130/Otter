@@ -34,7 +34,7 @@ public class AutoIntake extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (timer.hasElapsed(1)) {
+    if (timer.hasElapsed(0.7)) {
       indexer.autoSpintake();
     }
   }
@@ -53,7 +53,7 @@ public class AutoIntake extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if ((intake.getIntakeLimitSwitch() && timer.hasElapsed(0.75)) || timer.hasElapsed(3)) {
+    if ((intake.getIntakeLimitSwitch() && timer.hasElapsed(0.9)) || timer.hasElapsed(3)) {
       return true;
     } else {
       return false;
