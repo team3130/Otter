@@ -29,7 +29,6 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.Amp.*;
 import frc.robot.commands.Amp.Software.AmpZero;
-import frc.robot.commands.Amp.Software.AutoAmpZero;
 import frc.robot.commands.Auto.*;
 import frc.robot.commands.Chassis.TeleopDrive;
 import frc.robot.commands.Climber.ClimberExtend;
@@ -252,6 +251,8 @@ public class RobotContainer {
   public InstantCommand resetIntake() {
     return new IntakeIn(intake);
   }
+
+  public Command resetAmp() { return  new AmpZero(amp); }
 
   public InstantCommand ampZero() {
     return new AmpZero(amp);

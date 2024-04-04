@@ -1,5 +1,5 @@
 
-package frc.robot.commands.Amp.Software;
+package frc.robot.commands.Auto;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Timer;

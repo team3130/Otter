@@ -8,7 +8,7 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 
-/** A default command to drive in teleop based off the joysticks*/
+/** A default command to drive in teleop based off the joysticks
 public class SteerVelocityDriveForward extends Command {
   private final VelocityChassis chassis;
   private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
@@ -25,7 +25,7 @@ public class SteerVelocityDriveForward extends Command {
 
   /**
    * Called when the scheduler first schedules the command
-   */
+
   @Override
   public void initialize() {
   }
@@ -34,7 +34,7 @@ public class SteerVelocityDriveForward extends Command {
    * Called periodically while the default command is being ran and is not actively interrupted.
    * Takes the Joysticks inputs, applies a slew rate limit on it in meters per second which makes the input whooshier.
    * Inverts controls if we are on the red alliance because april tags give us an absolute position of the field
-   */
+
   @Override
   public void execute() {
     double x = xLimiter.calculate(2);
@@ -47,7 +47,7 @@ public class SteerVelocityDriveForward extends Command {
    * Called when the command is over.
    * Stops the chassis modules
    * @param interrupted whether the command was interrupted/canceled
-   */
+
   @Override
   public void end(boolean interrupted) {
     chassis.stopModules();
@@ -55,9 +55,10 @@ public class SteerVelocityDriveForward extends Command {
 
   /**
    * @return false. Never is finished.
-   */
+
   @Override
   public boolean isFinished() {
     return false;
   }
 }
+ */

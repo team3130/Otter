@@ -99,6 +99,7 @@ public class Robot extends TimedRobot {
 
     CommandScheduler.getInstance().schedule(robotContainer.resetIntake());
     CommandScheduler.getInstance().schedule(robotContainer.resetShooterShifter());
+    CommandScheduler.getInstance().schedule(robotContainer.resetAmp());
 
     //This is so climber command can assume climbers are reset before a match
     //robotContainer.resetClimbers();
