@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 
 /**
  * A command to automatically zero all odometry.
- */
+
 public class ZeroEverything extends InstantCommand {
   private final VelocityChassis m_chassis;
 
@@ -25,4 +25,4 @@ public class ZeroEverything extends InstantCommand {
   public void initialize() {
     m_chassis.resetOdometry(new Pose2d(0, 0, new Rotation2d()));
   }
-}
+} */

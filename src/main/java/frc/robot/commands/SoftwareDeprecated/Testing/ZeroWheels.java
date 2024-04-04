@@ -6,8 +6,7 @@ package frc.robot.commands.SoftwareDeprecated.Testing;
 
 import edu.wpi.first.wpilibj2.command.Command;
 
-/** A command to zero wheels of chassis */
-public class ZeroWheels extends Command {
+/** A command to zero wheels of chassis public class ZeroWheels extends Command {
   private final VelocityChassis m_chassis;
 
   public ZeroWheels(VelocityChassis chassis) {
@@ -18,7 +17,7 @@ public class ZeroWheels extends Command {
 
   /**
    * Called when the scheduler starts the command
-   */
+
   @Override
   public void initialize() {
   }
@@ -33,7 +32,7 @@ public class ZeroWheels extends Command {
    * Called when the scheduler ends the command.
    * Stops the chassis motors
    * @param interrupted whether the command was interrupted/canceled
-   */
+
   @Override
   public void end(boolean interrupted) {
     m_chassis.stopModules();
@@ -41,9 +40,9 @@ public class ZeroWheels extends Command {
 
   /**
    * @return if the wheel PID controller is done. AKA are wheels zero-ed
-   */
+
   @Override
   public boolean isFinished() {
     return m_chassis.turnToAnglePIDIsFinished();
   }
-}
+} */
