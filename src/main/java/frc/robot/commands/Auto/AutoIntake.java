@@ -53,7 +53,7 @@ public class AutoIntake extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if ((intake.getIntakeLimitSwitch() && timer.hasElapsed(0.9)) || timer.hasElapsed(3)) {
+    if ((intake.getIntakeLimitSwitch() && timer.hasElapsed(0.8)) || timer.hasElapsed(3)) {
       return true;
     } else {
       return false;

@@ -46,7 +46,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "ggswm-N2"
+                        "pathName": "bluered-swm-N2"
                       }
                     },
                     {
@@ -58,7 +58,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "ggswm-N3"
+                        "pathName": "blue-ggswm-N3"
                       }
                     },
                     {
@@ -70,7 +70,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "swm-N1"
+                        "pathName": "blue-swm-N1"
                       }
                     },
                     {
