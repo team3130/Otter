@@ -7,7 +7,6 @@ package frc.robot.commands.SoftwareDeprecated.Testing;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
-import frc.robot.subsystems.VelocityChassis;
 
 /** A default command to drive in teleop based off the joysticks*/
 public class SteerVelocityDriveBacky extends Command {

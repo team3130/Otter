@@ -39,16 +39,6 @@ public class AmpKirbyFlies extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (shooterShifter.getIsShortShifterExtended() && amp.getIsMid()) {
-      shooter.runFlywheelsAmpSpeed();
-      amp.outtakeAmp();
-      indexer.toShooterSpindex();
-    }
-
-    if (shooter.getBeamHasNote() && !beamHasSeenNote) {
-      beamHasSeenNote = true; // break beam sees note for the first time
-    }
-
     if (!shooter.getBeamHasNote() && beamHasSeenNote) { // when amp nom-ed note
       shooter.stopShooters();
       indexer.stopIndexer();
@@ -58,7 +48,16 @@ public class AmpKirbyFlies extends Command {
       if (amp.isAtSetpointWithDeadband()) {
         amp.setIsHigh(true);
       }
+    } else if (shooterShifter.getIsShortShifterExtended() && amp.getIsMid()) {
+        shooter.runFlywheelsAmpSpeed();
+        amp.outtakeAmp();
+        indexer.toShooterSpindex();
+      }
+
+    if (shooter.getBeamHasNote() && !beamHasSeenNote) {
+      beamHasSeenNote = true; // break beam sees note for the first time
     }
+
   }
 
   // Called once the command ends or is interrupted.

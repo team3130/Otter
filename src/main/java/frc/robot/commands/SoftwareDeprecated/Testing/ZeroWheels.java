@@ -5,7 +5,6 @@
 package frc.robot.commands.SoftwareDeprecated.Testing;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.VelocityChassis;
 
 /** A command to zero wheels of chassis */
 public class ZeroWheels extends Command {
