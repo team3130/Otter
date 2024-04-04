@@ -394,7 +394,11 @@ public class Chassis extends SubsystemBase {
         if (Constants.debugMode) {
             targetController.setPID(targetP, targetI, targetD);
         }
-        targetController.setSetpoint(Math.toRadians(240));
+        if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+            targetController.setSetpoint(Math.toRadians(240));
+        } else {
+            targetController.setSetpoint(Math.toRadians(300));
+        }
     }
 
     public void resetTargetClimbLeftSide() {
@@ -402,7 +406,11 @@ public class Chassis extends SubsystemBase {
         if (Constants.debugMode) {
             targetController.setPID(targetP, targetI, targetD);
         }
-        targetController.setSetpoint(Math.toRadians(120));
+        if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+            targetController.setSetpoint(Math.toRadians(120));
+        } else {
+            targetController.setSetpoint(Math.toRadians(60));
+        }
     }
 
     public void resetTargetSpeaker_AmpSideController() {

@@ -332,8 +332,8 @@ public class RobotContainer {
     }
 
     if (Constants.pitMode) {
-      new JoystickButton(driverController, Constants.XBox.BTN_WINDOW).whileTrue(new PitClimberReset(rightClimber));//right
-      new JoystickButton(driverController, Constants.XBox.BTN_MENU).whileTrue(new PitClimberReset(leftClimber));//left
+      new JoystickButton(operatorController, Constants.XBox.BTN_WINDOW).whileTrue(new PitClimberReset(rightClimber));//right
+      new JoystickButton(operatorController, Constants.XBox.BTN_MENU).whileTrue(new PitClimberReset(leftClimber));//left
     }
   }
 }
