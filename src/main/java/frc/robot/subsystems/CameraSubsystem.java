@@ -39,7 +39,7 @@ public class CameraSubsystem extends SubsystemBase {
   private double faceTargetP = 0.24;
   private double faceTargetI = 0d;
   private double faceTargetD = 0d;
-  private double goalDistanceMeters = 2.79;
+  private double goalDistanceMeters = 3.138; // 2.79;
 
 
   private Translation2d robotToTarget;
