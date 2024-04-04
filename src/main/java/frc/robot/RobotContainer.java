@@ -315,12 +315,12 @@ public class RobotContainer {
     new POVButton(operatorController, Constants.XBox.POV_N).whileTrue(new SequentialCommandGroup(new AmpKirbyPrepMid(amp, shooterShifter), new AmpKirbyFlies(amp, shooter, shooterShifter, indexer)));
     new POVButton(operatorController, Constants.XBox.POV_E).whileTrue(new AmpAutoHigh(amp));
     new POVButton(operatorController, Constants.XBox.POV_S).onTrue(new AmpHome(amp));
-    new JoystickButton(operatorController, Constants.XBox.BTN_B).whileTrue(new AmpZero(amp));
+    new POVButton(operatorController, Constants.XBox.POV_W).whileTrue(new AmpZero(amp));
 
     // shooter shifter
     new JoystickButton(operatorController, Constants.XBox.BTN_LBUMPER).whileTrue(new ShortShifterExtend(shooterShifter));
     new JoystickTrigger(operatorController, Constants.XBox.AXS_LTRIGGER).whileTrue(new DoubleExtend(shooterShifter));
-    new POVButton(operatorController, Constants.XBox.POV_W).whileTrue(new DoubleRetract(shooterShifter));
+    new JoystickButton(operatorController, Constants.XBox.BTN_B).whileTrue(new DoubleRetract(shooterShifter));
 
 
     //software debugging
@@ -330,7 +330,7 @@ public class RobotContainer {
       //new JoystickButton(operatorController, Constants.XBox.LST_BTN_RBUMPER).whileTrue(new AmpManualLift(amp));
     }
 
-    if (Constants.pitMode) {
+    if (false) { //????
       new POVButton(operatorController, Constants.XBox.POV_W).whileTrue(new PitClimberReset(rightClimber));//right
       new POVButton(operatorController, Constants.XBox.POV_E).whileTrue(new PitClimberReset(leftClimber));//left
     }

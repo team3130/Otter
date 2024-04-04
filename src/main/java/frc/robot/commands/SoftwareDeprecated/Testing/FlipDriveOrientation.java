@@ -5,7 +5,6 @@
 package frc.robot.commands.SoftwareDeprecated.Testing;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.VelocityChassis;
 
 /** An example command that uses an example subsystem. */
 public class FlipDriveOrientation extends Command {
