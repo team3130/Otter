@@ -68,10 +68,10 @@ public class LEDs extends SubsystemBase {
       // Check bounds
       rainbowFirstPixelHue %= 180;
     } else {
-      for (var i = 5; i < 8; i++) {
+      for (var i = 8; i < 10; i++) {
         buffer.setHSV(i, color, 255, 200);
       }
-      for (var i = 32; i < 35; i++) {
+      for (var i = 35; i < 37; i++) {
         buffer.setHSV(i, color, 255, 200);
       }
     }
@@ -80,10 +80,10 @@ public class LEDs extends SubsystemBase {
 
   public void setTopFrontClimbers(int color) {
     if (color == -20) {
-      for (var i = 8; i < 10; i++) {
+      for (var i = 5; i < 8; i++) {
         buffer.setLED(i, Color.kFloralWhite);
       }
-      for (var i = 35; i < 37; i++) {
+      for (var i = 32; i < 35; i++) {
         buffer.setLED(i, Color.kFloralWhite);
       }
     } else if (color == -10) {
@@ -99,10 +99,10 @@ public class LEDs extends SubsystemBase {
       // Check bounds
       rainbowFirstPixelHue %= 180;
     } else {
-      for (var i = 8; i < 10; i++) {
+      for (var i = 5; i < 8; i++) {
         buffer.setHSV(i, color, 255, 200);
       }
-      for (var i = 35; i < 37; i++) {
+      for (var i = 32; i < 35; i++) {
         buffer.setHSV(i, color, 255, 200);
       }
     }

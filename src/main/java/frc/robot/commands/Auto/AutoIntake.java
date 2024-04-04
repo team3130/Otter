@@ -28,7 +28,6 @@ public class AutoIntake extends Command {
     intake.intakeDown();
     timer.reset();
     timer.start();
-    System.out.println("Command initialized: Intake " );
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -42,10 +41,6 @@ public class AutoIntake extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    if (interrupted) {
-      System.out.println("Command interrupted: Intake");
-    }
-    System.out.println("Command finished: Intake");
     indexer.stopIndexer();
     intake.intakeUp();
   }
