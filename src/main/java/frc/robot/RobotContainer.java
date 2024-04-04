@@ -312,7 +312,7 @@ public class RobotContainer {
     new JoystickButton(operatorController, Constants.XBox.BTN_X).whileTrue(new ShuttleMovingSetpoint(shooter));
 
     // amp
-    new POVButton(operatorController, Constants.XBox.POV_N).whileTrue(new SequentialCommandGroup(new AmpKirbyPrepMid(amp, shooterShifter), new AmpKirbyFlies(amp, shooter, shooterShifter, indexer)));
+    //new POVButton(operatorController, Constants.XBox.POV_N).whileTrue(new SequentialCommandGroup(new AmpKirbyPrepMid(amp, shooterShifter), new AmpKirbyFlies(amp, shooter, shooterShifter, indexer)));
     new POVButton(operatorController, Constants.XBox.POV_E).whileTrue(new AmpAutoHigh(amp));
     new POVButton(operatorController, Constants.XBox.POV_S).onTrue(new AmpHome(amp));
     new JoystickButton(operatorController, Constants.XBox.BTN_B).whileTrue(new AmpZero(amp));
