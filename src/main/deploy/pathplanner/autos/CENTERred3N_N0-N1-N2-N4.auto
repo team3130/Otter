@@ -18,6 +18,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "ShifterDoubleExtend"
+          }
+        },
+        {
           "type": "race",
           "data": {
             "commands": [
@@ -64,7 +70,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "CENTERswn-N1-podn"
+                        "pathName": "CENTERredswn-N1-podn"
                       }
                     },
                     {
@@ -83,6 +89,12 @@
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ShifterDoubleRetract"
           }
         }
       ]
