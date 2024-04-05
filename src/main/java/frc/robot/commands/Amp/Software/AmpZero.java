@@ -10,6 +10,7 @@ import frc.robot.subsystems.Amp;
 public class AmpZero extends InstantCommand {
   private final Amp amp;
   private Timer timer = new Timer();
+  private boolean raising = false;
   /**
    * @param amp The subsystem used by this command.
    */
@@ -24,26 +25,31 @@ public class AmpZero extends InstantCommand {
     amp.manualAmpLowerDown();
     timer.reset();
     timer.start();
+    raising = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    if (amp.getLimitSwitch()) {
+      amp.resetEncoder();
+      amp.setHasZeroedTrue();
+    }
+    if (amp.getHasZeroed()) {
+      amp.manualAmpLiftUp();
+      raising = true;
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     amp.ampLiftingMotorStop();
-    if (amp.getLimitSwitch()) {
-      amp.resetEncoder();
-      amp.setHasZeroedTrue();
-    }
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return amp.getLimitSwitch() || timer.hasElapsed(5);
+    return (raising && amp.getLiftingEncoderPosition() >= 500) || timer.hasElapsed(7);
   }
 }

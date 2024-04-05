@@ -28,6 +28,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.Amp.*;
+import frc.robot.commands.Amp.Software.AmpManualLift;
 import frc.robot.commands.Amp.Software.AmpZero;
 import frc.robot.commands.Auto.*;
 import frc.robot.commands.Chassis.TeleopDrive;
@@ -304,12 +305,12 @@ public class RobotContainer {
     // amp
     new POVButton(operatorController, Constants.XBox.POV_N).whileTrue(new SequentialCommandGroup(new AmpKirbyPrepMid(amp, shooterShifter), new AmpKirbyFlies(amp, shooter, shooterShifter, indexer)));
     new POVButton(operatorController, Constants.XBox.POV_E).whileTrue(new AmpAutoHigh(amp));
-    new POVButton(operatorController, Constants.XBox.POV_S).onTrue(new AmpHome(amp));
+    new POVButton(operatorController, Constants.XBox.POV_S).onTrue(new AmpPIDHome(amp));
     new POVButton(operatorController, Constants.XBox.POV_W).whileTrue(new AmpZero(amp));
 
     // shooter shifter
-    new JoystickButton(operatorController, Constants.XBox.BTN_LBUMPER).whileTrue(new ShortShifterExtend(shooterShifter));
-    new JoystickTrigger(operatorController, Constants.XBox.AXS_LTRIGGER).whileTrue(new DoubleExtend(shooterShifter));
+    new JoystickTrigger(operatorController, Constants.XBox.AXS_LTRIGGER).whileTrue(new ShortShifterExtend(shooterShifter));
+    new JoystickButton(operatorController, Constants.XBox.BTN_LBUMPER).whileTrue(new DoubleExtend(shooterShifter));
     new JoystickButton(operatorController, Constants.XBox.BTN_B).whileTrue(new DoubleRetract(shooterShifter));
 
 

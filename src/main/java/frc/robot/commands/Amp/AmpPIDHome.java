@@ -32,9 +32,10 @@ public class AmpPIDHome extends InstantCommand {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    amp.moveAmpAtSpeed(amp.runController(amp.getLowSetpoint()));
-    if (amp.isAtSetpoint() && !amp.getLimitSwitch()) {
-      amp.manualAmpLowerDown();
+    if (amp.getLiftingEncoderPosition() >= 3000) {
+      amp.ampLowerFast();
+    } else {
+      amp.moveAmpAtSpeed(amp.runController(amp.getLowSetpoint()));
     }
   }
 
@@ -47,6 +48,6 @@ public class AmpPIDHome extends InstantCommand {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return (amp.getLimitSwitch() && !amp.getHasZeroed());
+    return (amp.isAtSetpoint() && !amp.getHasZeroed());
   }
 }
