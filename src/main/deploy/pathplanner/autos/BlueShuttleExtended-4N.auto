@@ -84,7 +84,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "AMPSHUTTLE-N4"
+                        "pathName": "BlueShuttle-N4"
                       }
                     },
                     {
@@ -96,7 +96,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "AMPSHUTTLE-N5"
+                        "pathName": "BlueShuttleExtended-N5"
                       }
                     },
                     {
