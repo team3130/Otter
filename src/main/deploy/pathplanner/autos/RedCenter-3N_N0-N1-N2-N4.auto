@@ -58,7 +58,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "SLOWswn-N4-subwoofer"
+                        "pathName": "RedCenter-N4"
                       }
                     },
                     {
@@ -70,7 +70,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "CENTERredswn-N1-podn"
+                        "pathName": "RedCenter-N1"
                       }
                     },
                     {
@@ -82,7 +82,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "CENTER-N6"
+                        "pathName": "RedCenter-N6"
                       }
                     }
                   ]
