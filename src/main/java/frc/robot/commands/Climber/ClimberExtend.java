@@ -21,7 +21,9 @@ public class ClimberExtend extends Command {
 
     // Called when the command is initially scheduled.
     @Override
-    public void initialize() {}
+    public void initialize() {
+        climber.setIsClimberReset(true);
+    }
 
     // Called every time the scheduler runs while the command is scheduled.
     @Override
@@ -30,7 +32,7 @@ public class ClimberExtend extends Command {
         double power = -xboxController.getRawAxis(climber.getJoystick());
         power = power * Math.abs(power);
 
-        if (!climber.brokeLimit()) { // if climber goes up, climber is not reset
+        if (!climber.brokeLimit()) { // if climber not at limit, climber is not reset
             climber.setIsClimberReset(false);
         }
 
@@ -57,6 +59,6 @@ public class ClimberExtend extends Command {
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        return false;
+        return climber.getClimbDone();
     }
 }

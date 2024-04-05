@@ -158,8 +158,6 @@ public class RobotContainer {
         robotLEDs.setBackClimbers(Constants.LEDColors.redHSV);
       } else if (intake.getIntakeLimitSwitch()) {
         robotLEDs.setBackClimbers(Constants.LEDColors.purpleHSV);
-      } else if (rightClimber.getClimbDone() && rightClimber.getClimbDone()){
-        robotLEDs.setBackClimbers(-10);
       } else {
         robotLEDs.setBackClimbers(Constants.LEDColors.yellowHSV);
       }
@@ -174,8 +172,6 @@ public class RobotContainer {
       robotLEDs.setBottomFrontClimbers(Constants.LEDColors.lightGreenHSV);
     } else if (intake.getIntakeLimitSwitch()) {
       robotLEDs.setBottomFrontClimbers(Constants.LEDColors.purpleHSV);
-    } else if (rightClimber.getClimbDone() && rightClimber.getClimbDone()){
-      robotLEDs.setBottomFrontClimbers(-10);
     } else {
       robotLEDs.setBottomFrontClimbers(Constants.LEDColors.yellowHSV);
     }
@@ -190,8 +186,6 @@ public class RobotContainer {
       robotLEDs.setTopFrontClimbers(-20);
     } else if (intake.getIntakeLimitSwitch()) {
       robotLEDs.setTopFrontClimbers(Constants.LEDColors.purpleHSV);
-    } else if (rightClimber.getClimbDone() && rightClimber.getClimbDone()){
-      robotLEDs.setTopFrontClimbers(-10);
     } else {
       robotLEDs.setTopFrontClimbers(Constants.LEDColors.yellowHSV);
     }
@@ -206,8 +200,6 @@ public class RobotContainer {
       robotLEDs.setSidebars(Constants.LEDColors.lightGreenHSV);
     } else if (intake.getIntakeLimitSwitch()) {
       robotLEDs.setSidebars(Constants.LEDColors.purpleHSV);
-    } else if (rightClimber.getClimbDone() && rightClimber.getClimbDone()){
-      robotLEDs.setSidebars(-10);
     } else {
       robotLEDs.setSidebars(Constants.LEDColors.yellowHSV);
     }
@@ -228,8 +220,6 @@ public class RobotContainer {
         }
       } else if (intake.getIntakeLimitSwitch()) {
         robotLEDs.setBar(Constants.LEDColors.purpleHSV);
-      } else if (rightClimber.getClimbDone() && rightClimber.getClimbDone()) {
-        robotLEDs.setBar(-10);
       } else {
         robotLEDs.setBar(Constants.LEDColors.yellowHSV);
       }

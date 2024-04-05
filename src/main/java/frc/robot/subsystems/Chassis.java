@@ -397,7 +397,7 @@ public class Chassis extends SubsystemBase {
         if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
             targetController.setSetpoint(Math.toRadians(240));
         } else {
-            targetController.setSetpoint(Math.toRadians(300));
+            targetController.setSetpoint(Math.toRadians(60));
         }
     }
 
@@ -409,7 +409,7 @@ public class Chassis extends SubsystemBase {
         if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
             targetController.setSetpoint(Math.toRadians(120));
         } else {
-            targetController.setSetpoint(Math.toRadians(60));
+            targetController.setSetpoint(Math.toRadians(300));
         }
     }
 
