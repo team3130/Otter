@@ -249,8 +249,6 @@ public class Amp extends SubsystemBase {
       builder.addBooleanProperty("is at mid", this::getIsMid, this::setIsMid);
       builder.addBooleanProperty("is at high", this::getIsHigh, this::setIsHigh);
       builder.addBooleanProperty("ready to score", this::getIsReadyToScore, this::setIsReadyToScore);
-
-
     }
   }
 }
