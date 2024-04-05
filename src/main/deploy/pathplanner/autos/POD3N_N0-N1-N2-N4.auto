@@ -58,7 +58,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "swn-N4"
+                        "pathName": "OLD-swn-N4"
                       }
                     },
                     {
@@ -70,7 +70,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "swn-N1-podnPOD"
+                        "pathName": "PODswn-N1"
                       }
                     },
                     {
@@ -82,7 +82,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "podn-N2-podn"
+                        "pathName": "PODn-N2"
                       }
                     },
                     {
