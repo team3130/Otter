@@ -48,7 +48,7 @@ public final class Constants {
 
 
   public static class AprilTags {
-    public static final double TARGET_HEIGHT_METERS = Units.inchesToMeters(56.375);
+    public static final double TARGET_HEIGHT_METERS = Units.inchesToMeters(57.5);
       // Constants such as camera and target height stored. Change per robot and goal!
     public static final double  CAMERA_HEIGHT_METERS = Units.inchesToMeters(14.9);
     // Angle between horizontal and the camera.

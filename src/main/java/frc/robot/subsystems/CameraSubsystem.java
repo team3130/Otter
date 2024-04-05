@@ -39,7 +39,10 @@ public class CameraSubsystem extends SubsystemBase {
   private double faceTargetP = 0.24;
   private double faceTargetI = 0d;
   private double faceTargetD = 0d;
-  private double goalDistanceMeters = 3.138; // 2.79;
+  private double goalDistanceMeters = 3.857;
+  // at home: 3.138;
+  // at comp calibration with target height at 56.375: blue - 3.641, red 3.77
+  // at comp calibration with target height at 57.5: red - 3.857
 
 
   private Translation2d robotToTarget;
@@ -161,7 +164,7 @@ public class CameraSubsystem extends SubsystemBase {
     int i =0;
     while (result.getTargets().size() > i && weAreUp() && resultTimestamp != currentTimestamp) {
       if (result.getTargets().get(i).getFiducialId() == Constants.AprilTags.speakerTargetRedFiducialID ||
-              result.getTargets().get(i).getFiducialId() == Constants.AprilTags.speakerTargetRedFiducialID) {
+              result.getTargets().get(i).getFiducialId() == Constants.AprilTags.speakerTargetBlueFiducialID) {
         fiducialID = result.getTargets().get(i).getFiducialId();
         setCurrentTag(result.getTargets().get(i));
         currentTimestamp = resultTimestamp;
