@@ -130,12 +130,6 @@
                       "data": {
                         "pathName": "AMPSHUTTLEScore-N6"
                       }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Index"
-                      }
                     }
                   ]
                 }
