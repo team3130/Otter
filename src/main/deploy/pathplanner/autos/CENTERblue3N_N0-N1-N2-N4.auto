@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.73,
-      "y": 6.680400169815762
+      "x": 0.72,
+      "y": 6.65
     },
     "rotation": -120.0
   },
@@ -11,6 +11,12 @@
     "type": "sequential",
     "data": {
       "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "AmpHome"
+          }
+        },
         {
           "type": "named",
           "data": {
@@ -24,7 +30,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "FlywheelsMovingSet"
+                  "name": "Flywheels"
                 }
               },
               {
@@ -34,13 +40,25 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "NEWswn-FlushTurn"
+                        "pathName": "swn-FlushTurn"
                       }
                     },
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 1.2
+                        "waitTime": 0.2
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "IndexPreload"
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "SLOWswn-N4-subwoofer"
                       }
                     },
                     {
@@ -52,13 +70,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "NEWswn-ampN4p"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "ShifterShortExtend"
+                        "pathName": "CENTERredswn-N1-podn"
                       }
                     },
                     {
@@ -70,37 +82,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "NEWpn-N1"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "ShifterShortExtend"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Index"
-                      }
-                    },
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "NEWpn-N2"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "ShifterShortExtend"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Index"
+                        "pathName": "CENTER-N6"
                       }
                     }
                   ]
