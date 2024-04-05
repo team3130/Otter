@@ -14,7 +14,7 @@ import frc.robot.Constants;
 public class Indexer extends SubsystemBase {
   private final WPI_TalonSRX indexer;
   private final Shooter shooter;
-  private double indexerVoltageCompensation = 10;
+  private double indexerVoltageCompensation = 12;
   private double outakeSpeed = -1;
   private double spintakeSpeed = 1; // 10
   private double indexToBeamSpeed = 0.6; // 10
