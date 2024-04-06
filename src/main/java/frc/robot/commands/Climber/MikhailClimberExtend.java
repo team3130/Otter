@@ -44,6 +44,7 @@ public class MikhailClimberExtend extends Command {
 
         if (climber.getClimberIsClimbing() && climber.brokeLimit() && !climber.getIsClimberReset()) {
             climber.setClimbDone(true);
+            power = 0;
         }
 
         climber.setClimberSpeed(power);
