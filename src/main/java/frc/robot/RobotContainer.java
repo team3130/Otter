@@ -133,7 +133,7 @@ public class RobotContainer {
       tab.add(intake);
       tab.add(indexer);
       tab.add(amp);
-      tab.add(rightClimber);
+      tab.add(leftClimber);
       tab.add(camera);
 
       chassis.exportSwerveModData(Shuffleboard.getTab("Swerve Modules"));

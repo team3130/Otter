@@ -19,6 +19,7 @@ public class Climber extends SubsystemBase {
     private final WPI_TalonSRX climberMotor;
     private int joystickUsed;
     private boolean isClimberReset;
+    private boolean climberIsClimbing = false;
     private boolean inverteds;
 
     private boolean climbDone = false;
@@ -47,6 +48,14 @@ public class Climber extends SubsystemBase {
     }
     public void setClimbDone(boolean valid){
         climbDone = valid;
+    }
+
+    public boolean getClimberIsClimbing() {
+        return climberIsClimbing;
+    }
+
+    public void setClimberIsClimbing(boolean clim) {
+        climberIsClimbing = clim;
     }
 
     // sets speed of right arm
@@ -101,7 +110,7 @@ public class Climber extends SubsystemBase {
             builder.addDoubleProperty("checking speed", this::getPitCheckingSpeed, this::setPitCheckingSpeed);
             builder.addBooleanProperty("Climber is reset", this::getIsClimberReset, null);
             builder.addBooleanProperty("climb done", this::getClimbDone, null);
-
+            builder.addBooleanProperty("Climber climbing", this::getClimberIsClimbing, null);
         }
     }
 
