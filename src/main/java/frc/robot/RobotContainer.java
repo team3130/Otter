@@ -33,6 +33,7 @@ import frc.robot.commands.Amp.Software.AmpZero;
 import frc.robot.commands.Auto.*;
 import frc.robot.commands.Chassis.TeleopDrive;
 import frc.robot.commands.Climber.ClimberExtend;
+import frc.robot.commands.Climber.ClimberUnlimited;
 import frc.robot.commands.Climber.MikhailClimberExtend;
 import frc.robot.commands.Climber.PitClimberReset;
 import frc.robot.commands.Indexer.AlwaysIndex;
@@ -109,8 +110,8 @@ public class RobotContainer {
     // Default commands running in the background when other commands not scheduled
     chassis.setDefaultCommand(new TeleopDrive(chassis, driverController, camera));
 
-    leftClimber.setDefaultCommand(new MikhailClimberExtend(leftClimber, operatorController));
-    rightClimber.setDefaultCommand(new MikhailClimberExtend(rightClimber, operatorController));
+    leftClimber.setDefaultCommand(new ClimberUnlimited(leftClimber, operatorController));
+    rightClimber.setDefaultCommand(new ClimberUnlimited(rightClimber, operatorController));
 
     //this.isFieldMirrored = new SendableChooser<>();
     //ally = DriverStation.getAlliance();
