@@ -123,8 +123,12 @@ public class RobotContainer {
 
     ShuffleboardTab tab = Shuffleboard.getTab("Competition");
     tab.addBoolean("Intake Has Note", intake::getIntakeLimitSwitch).withPosition(0, 0).withSize(6, 5);
-    tab.addBoolean("Shooting Distance", camera::atShootingDistance).withPosition(6, 0).withSize(5, 5);
+    tab.addBoolean("Climbers done", this::climbersAreDone).withPosition(6, 0).withSize(5, 5);
     tab.add("AutoChooser", autoChooser).withPosition(4, 5).withSize(4, 1);
+  }
+
+  public boolean climbersAreDone() {
+    return leftClimber.brokeLimit() && rightClimber.brokeLimit();
   }
 
   public void exportShuffleBoardData() {
@@ -305,10 +309,10 @@ public class RobotContainer {
     new JoystickButton(operatorController, Constants.XBox.BTN_X).whileTrue(new ShuttleMovingSetpoint(shooter));
 
     // amp
-    new POVButton(operatorController, Constants.XBox.POV_N).whileTrue(new SequentialCommandGroup(new AmpKirbyPrepMid(amp, shooterShifter), new AmpKirbyFlies(amp, shooter, shooterShifter, indexer)));
-    new POVButton(operatorController, Constants.XBox.POV_E).whileTrue(new AmpAutoHigh(amp));
-    new POVButton(operatorController, Constants.XBox.POV_S).onTrue(new AmpPIDHome(amp));
-    new POVButton(operatorController, Constants.XBox.POV_W).whileTrue(new AmpZero(amp));
+    //new POVButton(operatorController, Constants.XBox.POV_N).whileTrue(new SequentialCommandGroup(new AmpKirbyPrepMid(amp, shooterShifter), new AmpKirbyFlies(amp, shooter, shooterShifter, indexer)));
+    //new POVButton(operatorController, Constants.XBox.POV_E).whileTrue(new AmpAutoHigh(amp));
+    //new POVButton(operatorController, Constants.XBox.POV_S).onTrue(new AmpPIDHome(amp));
+    //new POVButton(operatorController, Constants.XBox.POV_W).whileTrue(new AmpZero(amp));
 
     // shooter shifter
     new JoystickTrigger(operatorController, Constants.XBox.AXS_LTRIGGER).whileTrue(new ShortShifterExtend(shooterShifter));
