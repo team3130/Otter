@@ -81,10 +81,10 @@ public class TeleopDrive extends Command {
           chassis.resetTargetBackClimbController();
           theta = chassis.goToTargetPower();
       } else if (controller.getPOV() == Constants.PS5.POV_E) {
-          chassis.resetTargetClimbRightSide();
+          chassis.resetAutoFlushTurnAmpSide();
           theta = chassis.goToTargetPower();
       } else if (controller.getPOV() == Constants.PS5.POV_W) {
-          chassis.resetTargetClimbLeftSide();
+          chassis.resetAutoFlushTurnSourceSide();
           theta = chassis.goToTargetPower();
       } else { // normal driving
           theta = Math.abs(theta) > Constants.Swerve.kDeadband ? theta : 0.0;
