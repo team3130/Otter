@@ -29,6 +29,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.Amp.*;
 import frc.robot.commands.Amp.Software.AmpManualLift;
+import frc.robot.commands.Amp.Software.AmpManualLower;
 import frc.robot.commands.Amp.Software.AmpZero;
 import frc.robot.commands.Auto.*;
 import frc.robot.commands.Chassis.TeleopDrive;
@@ -79,7 +80,7 @@ public class RobotContainer {
 
   public RobotContainer() {
     leftClimber = new Climber(Constants.CAN.climberLeft, Constants.IDs.kLLimitSwitch, Constants.XBox.AXS_RJOYSTICK_Y, false);
-    rightClimber = new Climber(Constants.CAN.climberRight, Constants.IDs.kRLimitSwitch, Constants.XBox.AXS_LJOYSTICK_Y, true);
+    rightClimber = new Climber(Constants.CAN.climberRight, Constants.IDs.kRLimitSwitch, Constants.XBox.AXS_LJOYSTICK_Y, false);
 
     shooter = new Shooter();
     shooterShifter = new ShooterShifter();
@@ -124,7 +125,12 @@ public class RobotContainer {
 
     ShuffleboardTab tab = Shuffleboard.getTab("Competition");
     tab.addBoolean("Intake Has Note", intake::getIntakeLimitSwitch).withPosition(0, 0).withSize(6, 5);
-    tab.addBoolean("Climbers done", this::climbersAreDone).withPosition(6, 0).withSize(5, 5);
+    tab.addBoolean("At Distance", camera::atShootingDistance).withPosition(6, 0).withSize(2, 2);
+    tab.addBoolean("At Angle", camera::isAtYawSetpointLEDs).withPosition(8, 0).withSize(2, 2);
+    tab.addBoolean("Flywheel Speed", shooter::getFlywheelAtVelocityRaw).withPosition(6, 2).withSize(3, 2);
+    tab.addBoolean("Climbers", this::climbersAreDone).withPosition(9, 2).withSize(2, 2);
+    tab.addDouble("Distance #", camera::getDistanceToTarget).withPosition(6, 4).withSize(1, 1);
+
     tab.add("AutoChooser", autoChooser).withPosition(4, 5).withSize(4, 1);
   }
 
@@ -310,10 +316,10 @@ public class RobotContainer {
     new JoystickButton(operatorController, Constants.XBox.BTN_X).whileTrue(new ShuttleMovingSetpoint(shooter));
 
     // amp
-    //new POVButton(operatorController, Constants.XBox.POV_N).whileTrue(new SequentialCommandGroup(new AmpKirbyPrepMid(amp, shooterShifter), new AmpKirbyFlies(amp, shooter, shooterShifter, indexer)));
-    //new POVButton(operatorController, Constants.XBox.POV_E).whileTrue(new AmpAutoHigh(amp));
-    //new POVButton(operatorController, Constants.XBox.POV_S).onTrue(new AmpPIDHome(amp));
-    //new POVButton(operatorController, Constants.XBox.POV_W).whileTrue(new AmpZero(amp));
+    new POVButton(operatorController, Constants.XBox.POV_N).whileTrue(new SequentialCommandGroup(new AmpKirbyPrepMid(amp, shooterShifter), new AmpKirbyFlies(amp, shooter, shooterShifter, indexer)));
+    new POVButton(operatorController, Constants.XBox.POV_E).whileTrue(new AmpAutoHigh(amp));
+    new POVButton(operatorController, Constants.XBox.POV_S).onTrue(new AmpPIDHome(amp));
+    new POVButton(operatorController, Constants.XBox.POV_W).whileTrue(new AmpZero(amp));
 
     // shooter shifter
     new JoystickTrigger(operatorController, Constants.XBox.AXS_LTRIGGER).whileTrue(new ShortShifterExtend(shooterShifter));
