@@ -103,6 +103,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("ShifterShortExtend", new AutoShortExtend(shooterShifter));
     NamedCommands.registerCommand("ShifterDoubleRetract", new AutoDoubleRetract(shooterShifter));
     NamedCommands.registerCommand("AmpHome", new AutoAmpZero(amp));
+    NamedCommands.registerCommand("Outtake", new AutoOuttake(indexer, intake));
 
     configureBindings(); // configure button bindings
     exportShuffleBoardData(); // export ShuffleBoardData

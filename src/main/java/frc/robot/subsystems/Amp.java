@@ -39,6 +39,8 @@ public class Amp extends SubsystemBase {
   private boolean isHigh = false;
   private boolean isReadyToScore = false;
   private boolean beamHasSeenNote = false;
+
+  private double jankyAmpMultiplier = 1.2;
   public Amp() {
     ampLimit = new DigitalInput(Constants.IDs.ampLimitDIO);
 
@@ -95,6 +97,14 @@ public class Amp extends SubsystemBase {
   public void resetController(){
     ampController.setTolerance(100);
     ampController.setPID(P, I, D);
+  }
+
+  public double getJankyAmpMultiplier() {
+    return jankyAmpMultiplier;
+  }
+
+  public void setJankyAmpMultiplier(double what) {
+    jankyAmpMultiplier = what;
   }
 
   public int getHighSetpoint(){
@@ -249,6 +259,8 @@ public class Amp extends SubsystemBase {
       builder.addBooleanProperty("is at mid", this::getIsMid, this::setIsMid);
       builder.addBooleanProperty("is at high", this::getIsHigh, this::setIsHigh);
       builder.addBooleanProperty("ready to score", this::getIsReadyToScore, this::setIsReadyToScore);
+
+      builder.addDoubleProperty("janky", this::getJankyAmpMultiplier, this::setJankyAmpMultiplier);
     }
   }
 }

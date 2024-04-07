@@ -8,29 +8,27 @@ package frc.robot.commands.Auto;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.Indexer;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 
-public class AutoIndex extends Command {
+public class AutoOuttake extends Command {
   private final Indexer indexer;
+  private final Intake intake;
   private Timer timer = new Timer();
-  private Shooter shooter;
-  private boolean beamHasSeenNote = false;
-  public AutoIndex(Indexer indexer, Shooter shooter) {
+  public AutoOuttake(Indexer indexer, Intake intake) {
     this.indexer = indexer;
-    this.shooter = shooter;
+    this.intake = intake;
     addRequirements(indexer);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-
-    beamHasSeenNote = false;
     timer.reset();
     timer.start();
-    indexer.autoShooterSpindex();
+    intake.intakeDown();
+    indexer.outtake();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -42,15 +40,12 @@ public class AutoIndex extends Command {
   @Override
   public void end(boolean interrupted) {
     indexer.stopIndexer();
+    intake.intakeUp();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (timer.hasElapsed(1)) {
-      return true;
-    } else {
-      return false;
-    }
+    return false;
   }
 }
