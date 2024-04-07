@@ -13,7 +13,7 @@ import frc.robot.Constants;
 
 public class LEDs extends SubsystemBase {
   AddressableLED LEDs;
-  private final int LEDLength = 42;
+  private final int LEDLength = 37;
   private int rainbowFirstPixelHue = 20;
   private long shuffleboardTest;
   private final int pwmPort = 0;
@@ -31,20 +31,23 @@ public class LEDs extends SubsystemBase {
   }
 
   public void setBackClimbers(int color) {
+    /*
     for (var i = 0; i < 5; i++) {
       buffer.setHSV(i, color, 255, 200);
     }
-    for (var i = 37; i < 42; i++) {
+    
+     */
+    for (var i = 32; i < 37; i++) {
       buffer.setHSV(i, color, 255, 200);
     }
     LEDs.setData(buffer);
   }
 
   public void setBottomFrontClimbers(int color) {
-    for (var i = 7; i < 10; i++) {
+    for (var i = 2; i < 5; i++) {
       buffer.setHSV(i, color, 255, 200);
     }
-    for (var i = 32; i < 35; i++) {
+    for (var i = 27; i < 30; i++) {
       buffer.setHSV(i, color, 255, 200);
     }
     LEDs.setData(buffer);
@@ -52,17 +55,17 @@ public class LEDs extends SubsystemBase {
 
   public void setTopFrontClimbers(int color) {
     if (color == -20) {
-      for (var i = 5; i < 7; i++) {
+      for (var i = 0; i < 2; i++) {
         buffer.setLED(i, Color.kFloralWhite);
       }
-      for (var i = 35; i < 37; i++) {
+      for (var i = 30; i < 32; i++) {
         buffer.setLED(i, Color.kFloralWhite);
       }
     } else {
-      for (var i = 5; i < 7; i++) {
+      for (var i = 0; i < 2; i++) {
         buffer.setHSV(i, color, 255, 200);
       }
-      for (var i = 35; i < 37; i++) {
+      for (var i = 30; i < 32; i++) {
         buffer.setHSV(i, color, 255, 200);
       }
     }
@@ -70,17 +73,17 @@ public class LEDs extends SubsystemBase {
   }
 
   public void setSidebars(int color) {
-    for (var i = 10; i < 18; i++) {
+    for (var i = 5; i < 13; i++) {
       buffer.setHSV(i, color, 255, 200);
     }
-    for (var i = 24; i < 32; i++) {
+    for (var i = 19; i < 27; i++) {
       buffer.setHSV(i, color, 255, 200);
     }
     LEDs.setData(buffer);
   }
 
   public void setBar(int color) {
-    for (var i = 18; i < 24; i++) {
+    for (var i = 13; i < 19; i++) {
       buffer.setHSV(i, color, 255, 200);
     }
     LEDs.setData(buffer);
