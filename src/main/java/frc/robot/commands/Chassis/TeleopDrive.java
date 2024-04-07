@@ -70,9 +70,9 @@ public class TeleopDrive extends Command {
       // angle used for targeting
       omega = -controller.getRawAxis(Constants.PS5.AXS_RJOYSTICK_Y);
 
-      if (chassis.isTargetingSpeaker(omega, theta)) {
-          camera.resetFaceTargetController();
-          theta = -camera.goToFaceTargetPower();
+      if (chassis.isTargetingPodium(omega, theta)) {
+          chassis.resetTargetPodiumController();
+          theta = chassis.goToTargetPower();
           chassis.setIsFaceTargetingLEDs(true);
       } else if (chassis.isTargetingAmp(omega, theta)) {
           chassis.resetTargetAmpController();

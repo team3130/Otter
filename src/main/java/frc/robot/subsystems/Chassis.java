@@ -348,11 +348,11 @@ public class Chassis extends SubsystemBase {
     }
 
     public boolean isTargetingPodium(double omega, double theta) {
-        if (omega > 0.5 && Math.abs(theta) < 0.5) {
-            isTargetingPodium = true;
+        if (omega < -0.5 && Math.abs(theta) < 0.5) {
+            isTargetingSpeaker = true;
             return true;
         } else {
-            isTargetingPodium = false;
+            isTargetingSpeaker = false;
             return false;
         }
     }
