@@ -376,6 +376,30 @@ public class Chassis extends SubsystemBase {
         }
     }
 
+    public void resetAutoFlushTurnAmpSide() {
+        targetController.reset();
+        if (Constants.debugMode) {
+            targetController.setPID(targetP, targetI, targetD);
+        }
+        if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+            targetController.setSetpoint(Math.toRadians(220));
+        } else {
+            targetController.setSetpoint(Math.toRadians(-40));
+        }
+    }
+
+    public void resetAutoFlushTurnSourceSide() {
+        targetController.reset();
+        if (Constants.debugMode) {
+            targetController.setPID(targetP, targetI, targetD);
+        }
+        if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == DriverStation.Alliance.Blue) {
+            targetController.setSetpoint(Math.toRadians(140));
+        } else {
+            targetController.setSetpoint(Math.toRadians(40));
+        }
+    }
+
     public void resetTargetBackClimbController() {
         targetController.reset();
         if (Constants.debugMode) {
