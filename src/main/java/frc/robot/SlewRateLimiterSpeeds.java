@@ -64,12 +64,12 @@ public class SlewRateLimiterSpeeds {
         Translation2d inputMove = new Translation2d(input.vxMetersPerSecond, input.vyMetersPerSecond);
         double inputNorm = inputMove.getNorm();
 
-        deltaNorm = inputMove.minus(prevMove).getNorm(); //desired change in norm
+        deltaNorm = inputNorm- prevNorm; //desired change in norm
 
-        double allowedChangeInNorm = MathUtil.clamp(deltaNorm, prevNorm - linearDecRateLimit, prevNorm + linearAccRateLimit);
+        double allowedChangeInNorm = MathUtil.clamp(deltaNorm,  linearDecRateLimit*elapsedTime,  linearAccRateLimit*elapsedTime);
 
         double allowedNormToDesired = 0;
-        if (deltaNorm > 0) { //dont divide by zero
+        if (Math.abs(deltaNorm) > 0) { //dont divide by zero
             allowedNormToDesired = allowedChangeInNorm / deltaNorm;  //if (1) go all the way to wanted if (0) stay at prev
         }
 
@@ -79,10 +79,10 @@ public class SlewRateLimiterSpeeds {
 
         deltaRotation = inputAngle - prevAngle; //desired change in rotation
 
-        double allowedChangeInRotation = MathUtil.clamp(deltaRotation, prevAngle - linearAccRateLimit, inputAngle - linearAccRateLimit); //allowed change in rotation
+        double allowedChangeInRotation = MathUtil.clamp(deltaRotation,  -omegaRateLimit*elapsedTime, +omegaRateLimit*elapsedTime); //allowed change in rotation
 
         double allowedRotationToDesired = 0;
-        if (deltaRotation > 0) { //dont divide by 0
+        if (Math.abs(deltaRotation) > 0) { //dont divide by 0
             allowedRotationToDesired = allowedChangeInRotation / deltaRotation;
         }
 
