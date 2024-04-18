@@ -31,7 +31,7 @@ public class SlewRateLimiterSpeeds {
      * @param linearAccelerationRateLimit The rate-of-change limit in the linear 2d space, in units per
      *                                    second. Must be positive.
      * @param linearDecelerationRateLimit The rate-of-change deceleration limit in the linear 2d space, in units per
-     *                                    second. Must be positive.
+     *                                    second. Must be negative.
      * @param omegaLimit                  The rate-of-change limit for the angular component, in units per
      *                                    second. Must be positive.
      * @param initialValue                The initial value of the input in Chassis Speeds.
