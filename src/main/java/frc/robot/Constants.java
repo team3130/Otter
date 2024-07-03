@@ -19,7 +19,7 @@ import edu.wpi.first.math.util.Units;
 @SuppressWarnings("ALL")
 public final class Constants {
   public static final boolean debugMode = false;
-  public static final boolean pitMode = false;
+  public static final boolean pitMode = false; 
 
   public static class CAN {
     public final static int PCM = 1;
