@@ -4,36 +4,59 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
-public class ExampleSubsystem extends SubsystemBase {
+public class NewAmp extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
-  public ExampleSubsystem() {}
 
-  /**
-   * Example command factory method.
-   *
-   * @return a command
-   */
-  public Command exampleMethodCommand() {
-    // Inline construction of command goes here.
-    // Subsystem::RunOnce implicitly requires `this` subsystem.
-    return runOnce(
-        () -> {
-          /* one-time action goes here */
-        });
+  private final WPI_TalonSRX trackMotor; //motor for amp going up and down
+  private final WPI_TalonSRX wheelMotor; //motor for amp wheels to turn (wheels at end of amp where note is)
+  private final DigitalInput ampLimit; //limit switch on bottom of amp track
+
+  //speeds
+  private final double trackMotorSpeed = 0.1;
+  private final double wheelMotorSpeed = 0.1;
+  public NewAmp() {
+    //initializing motors to variables
+    trackMotor = new WPI_TalonSRX(Constants.CAN.ampLiftMotor);
+    wheelMotor = new WPI_TalonSRX(Constants.CAN.ampSpinMotor);
+
+    //factory default for both motors
+    trackMotor.configFactoryDefault();
+    wheelMotor.configFactoryDefault();
+
+    //sets brake mode (when no input then motors brake)
+    trackMotor.setNeutralMode(NeutralMode.Brake);
+    wheelMotor.setNeutralMode(NeutralMode.Brake);
+
+    //setting motors inverted
+    trackMotor.setInverted(false);
+    wheelMotor.setInverted(false);
+
+    //sensors
+    trackMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);
+    ampLimit = new DigitalInput(Constants.IDs.ampLimitDIO);
   }
 
-  /**
-   * An example method querying a boolean state of the subsystem (for example, a digital sensor).
-   *
-   * @return value of some boolean subsystem state, such as a digital sensor.
-   */
-  public boolean exampleCondition() {
-    // Query some boolean state, such as a digital sensor.
-    return false;
+  public void ampIntake(){
+    wheelMotor.set(ControlMode.PercentOutput, wheelMotorSpeed);
   }
+  public void ampOuttake(){
+    wheelMotor.set(ControlMode.PercentOutput, -wheelMotorSpeed);
+  }
+  public void wheelMotorStop(){
+    wheelMotor.set(ControlMode.PercentOutput, 0);
+  }
+
+
+
 
   @Override
   public void periodic() {
