@@ -59,6 +59,7 @@ public class NewAmp extends SubsystemBase {
   public void trackMotorStop() {trackMotor.set(ControlMode.PercentOutput, 0);}
 
 
+
   //getters
   public double getTrackMotorSpeed(){
     return trackMotorSpeed;
