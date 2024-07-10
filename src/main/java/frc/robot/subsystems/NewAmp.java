@@ -23,6 +23,8 @@ public class NewAmp extends SubsystemBase {
   //speeds
   private final double trackMotorSpeed = 0.1;
   private final double wheelMotorSpeed = 0.1;
+
+  private boolean ampZeroed = false;
   public NewAmp() {
     //initializing motors to variables
     trackMotor = new WPI_TalonSRX(Constants.CAN.ampLiftMotor);
@@ -54,6 +56,25 @@ public class NewAmp extends SubsystemBase {
   public void wheelMotorStop(){
     wheelMotor.set(ControlMode.PercentOutput, 0);
   }
+  public void trackMotorStop() {trackMotor.set(ControlMode.PercentOutput, 0);}
+
+
+  //getters
+  public double getTrackMotorSpeed(){
+    return trackMotorSpeed;
+  }
+  public double getWheelMotorSpeed(){
+    return wheelMotorSpeed;
+  }
+  public boolean isAmpZeroed(){
+    return ampZeroed;
+  }
+
+  //setters
+  public void setAmpZeroed(boolean newAmpZeroed){
+    ampZeroed = newAmpZeroed;
+  }
+
 
 
 
