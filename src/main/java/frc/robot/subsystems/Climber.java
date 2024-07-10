@@ -13,7 +13,6 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import frc.robot.Constants;
 
 public class Climber extends SubsystemBase {
-    private double currentMax = 0.0;
     private double pitCheckingSpeed = -0.5;
     private final DigitalInput limitSwitch;
     private final WPI_TalonSRX climberMotor;
@@ -71,19 +70,6 @@ public class Climber extends SubsystemBase {
     public void stop() {
         climberMotor.set(ControlMode.PercentOutput, 0);
     }
-
-    // returns the amount of current the motor is using
-    public double getMotorCurrent() {
-        return climberMotor.getSupplyCurrent();
-    }
-
-    public double getCurrentMax() {
-        return currentMax;
-    }
-
-    public void setCurrentMax(double current) {
-        currentMax = current;
-    }
     public int getJoystick() {
         return joystickUsed;
     }
@@ -106,7 +92,6 @@ public class Climber extends SubsystemBase {
     public void initSendable(SendableBuilder builder) {
         if (Constants.debugMode) {
             builder.addBooleanProperty("Limit hit", this::brokeLimit, null);
-            builder.addDoubleProperty("currentMaxRight", this::getCurrentMax, this::setCurrentMax);
             builder.addDoubleProperty("checking speed", this::getPitCheckingSpeed, this::setPitCheckingSpeed);
             builder.addBooleanProperty("Climber is reset", this::getIsClimberReset, null);
             builder.addBooleanProperty("climb done", this::getClimbDone, null);
