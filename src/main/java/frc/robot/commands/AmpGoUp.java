@@ -33,7 +33,9 @@ public class AmpGoUp extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    amp.trackMotorUp();
+    if (amp.getAmpLocation() >= amp.getMaxEncoderLimit()){
+      amp.trackMotorUp();
+    }
   }
 
   // Called once the command ends or is interrupted.

@@ -27,10 +27,12 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
-import frc.robot.commands.Amp.*;
-import frc.robot.commands.Amp.Software.AmpManualLift;
-import frc.robot.commands.Amp.Software.AmpManualLower;
-import frc.robot.commands.Amp.Software.AmpZero;
+//import frc.robot.commands.Amp.;
+//import frc.robot.commands.Amp.Software.AmpManualLift;
+//import frc.robot.commands.Amp.Software.AmpManualLower;
+//import frc.robot.commands.Amp.Software.AmpZero;
+import frc.robot.commands.AmpGoUp;
+import frc.robot.subsystems.NewAmp;
 import frc.robot.commands.Auto.*;
 import frc.robot.commands.Chassis.TeleopDrive;
 import frc.robot.commands.Climber.ClimberExtend;
@@ -76,7 +78,8 @@ public class RobotContainer {
   private final LEDs robotLEDs;
   private final CameraSubsystem camera;
   private final SendableChooser<Command> autoChooser;
-  private final Amp amp;
+  //private final Amp amp;
+  private final NewAmp newAmp;
 
   public RobotContainer() {
     leftClimber = new Climber(Constants.CAN.climberLeft, Constants.IDs.kLLimitSwitch, Constants.XBox.AXS_RJOYSTICK_Y, false);
@@ -89,7 +92,8 @@ public class RobotContainer {
     indexer = new Indexer(shooter);
     robotLEDs = new LEDs();
     camera = new CameraSubsystem();
-    amp = new Amp();
+    //amp = new Amp();
+    newAmp = new NewAmp();
 
     // Named commands must be registered before the creation of any PathPlanner Autos or Paths
     // Do this in RobotContainer, after subsystem initialization, but before the creation of any other commands.
@@ -103,7 +107,7 @@ public class RobotContainer {
     NamedCommands.registerCommand("ShifterDoubleExtend", new AutoDoubleExtend(shooterShifter));
     NamedCommands.registerCommand("ShifterShortExtend", new AutoShortExtend(shooterShifter));
     NamedCommands.registerCommand("ShifterDoubleRetract", new AutoDoubleRetract(shooterShifter));
-    NamedCommands.registerCommand("AmpHome", new AutoAmpZero(amp));
+    //NamedCommands.registerCommand("AmpHome", new AutoAmpZero(amp));
     NamedCommands.registerCommand("Outtake", new AutoOuttake(indexer, intake));
 
     configureBindings(); // configure button bindings
@@ -145,7 +149,7 @@ public class RobotContainer {
       tab.add(shooter);
       tab.add(intake);
       tab.add(indexer);
-      tab.add(amp);
+      //tab.add(amp);
       tab.add(rightClimber);
       tab.add(camera);
 
@@ -157,15 +161,16 @@ public class RobotContainer {
     if (rightClimber.getClimbDone() && leftClimber.getClimbDone()) {
       robotLEDs.movingRainbow();
     } else {
-      LEDPeriodicBackClimbers();
+    /*  LEDPeriodicBackClimbers();
       LEDPeriodicBottomFrontClimbers();
       LEDPeriodicTopFrontClimbers();
       LEDPeriodicSidebars();
       LEDPeriodicBar();
+     */
     }
   }
 
-  public void LEDPeriodicBackClimbers() {
+  /*public void LEDPeriodicBackClimbers() {
       if (amp.getIsHigh()) {
         robotLEDs.setBackClimbers(Constants.LEDColors.darkGreenHSV);
       } else if (shooterShifter.getIsDoubleExtended() || (!amp.getIsHigh() && amp.ampIsAboveHeightForStage())) {
@@ -238,7 +243,7 @@ public class RobotContainer {
         robotLEDs.setBar(Constants.LEDColors.yellowHSV);
       }
   }
-
+*/
   public Command pick() {
     return autoChooser.getSelected();
   }
@@ -255,12 +260,12 @@ public class RobotContainer {
     return new IntakeIn(intake);
   }
 
-  public Command resetAmp() { return  new AmpZero(amp); }
+  //public Command resetAmp() { return  new AmpZero(amp); }
 
-  public InstantCommand ampZero() {
+  /*public InstantCommand ampZero() {
     return new AmpZero(amp);
   }
-
+*/
   public void resetOdo() {
     chassis.resetOdometry(new Pose2d(0, 0, new Rotation2d()));
   }
@@ -295,8 +300,8 @@ public class RobotContainer {
     new JoystickButton(driverController, Constants.PS5.BTN_X).whileTrue(new Outtake(indexer));
     new JoystickButton(driverController, Constants.PS5.BTN_RBUMPER).whileTrue(new ToggleIntake(intake));
 
-    new JoystickTrigger(driverController, Constants.PS5.AXS_LTRIGGER).whileTrue(new AmpOuttake(amp));
-    new JoystickButton(driverController, Constants.PS5.BTN_SQUARE).whileTrue(new AmpIntake(amp));
+    //new JoystickTrigger(driverController, Constants.PS5.AXS_LTRIGGER).whileTrue(new AmpOuttake(amp));
+    //new JoystickButton(driverController, Constants.PS5.BTN_SQUARE).whileTrue(new AmpIntake(amp));
 
     // software testing
     //new JoystickButton(driverController, Constants.PS5.BTN_TRIANGLE).whileTrue(new DriveToPID(chassis));
@@ -316,10 +321,11 @@ public class RobotContainer {
     new JoystickButton(operatorController, Constants.XBox.BTN_X).whileTrue(new ShuttleMovingSetpoint(shooter));
 
     // amp
-    new POVButton(operatorController, Constants.XBox.POV_N).whileTrue(new SequentialCommandGroup(new AmpKirbyPrepMid(amp, shooterShifter), new AmpKirbyFlies(amp, shooter, shooterShifter, indexer)));
-    new POVButton(operatorController, Constants.XBox.POV_E).whileTrue(new AmpAutoHigh(amp));
-    new POVButton(operatorController, Constants.XBox.POV_S).onTrue(new AmpPIDHome(amp));
-    new POVButton(operatorController, Constants.XBox.POV_W).whileTrue(new AmpZero(amp));
+    //new POVButton(operatorController, Constants.XBox.POV_N).whileTrue(new SequentialCommandGroup(new AmpKirbyPrepMid(amp, shooterShifter), new AmpKirbyFlies(amp, shooter, shooterShifter, indexer)));
+    //new POVButton(operatorController, Constants.XBox.POV_E).whileTrue(new AmpAutoHigh(amp));
+    //new POVButton(operatorController, Constants.XBox.POV_S).onTrue(new AmpPIDHome(amp));
+    new POVButton(operatorController, Constants.XBox.POV_S).whileTrue(new AmpGoUp(newAmp));
+    //new POVButton(operatorController, Constants.XBox.POV_W).whileTrue(new AmpZero(amp));
 
     // shooter shifter
     new JoystickTrigger(operatorController, Constants.XBox.AXS_LTRIGGER).whileTrue(new ShortShifterExtend(shooterShifter));

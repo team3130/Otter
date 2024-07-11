@@ -35,7 +35,7 @@ public class NewAmp extends SubsystemBase {
   private final int lowSetpoint = 0;
 
   private boolean ampZeroed = false;
-  private final int maxEncoder = 20000;
+  private final int maxEncoderLimit = 20000;
   public NewAmp() {
     //initializing motors to variables
     trackMotor = new WPI_TalonSRX(Constants.CAN.ampLiftMotor);
@@ -105,10 +105,10 @@ public class NewAmp extends SubsystemBase {
     return ampZeroed;
   }
   public boolean getAmpLimit(){return !ampLimit.get();}
+  public int getMaxEncoderLimit(){ return maxEncoderLimit;}
   public double getHighSetpoint(){return highSetpoint;}
   public double getMidSetpoint(){return midSetpoint;}
   public double getLowSetpoint(){return lowSetpoint;}
-  
   public double getP(){return P;}
   public double getI(){return I;}
   public double getD(){return D;}

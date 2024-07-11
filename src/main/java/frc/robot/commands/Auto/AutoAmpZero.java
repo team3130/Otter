@@ -4,16 +4,16 @@ package frc.robot.commands.Auto;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.subsystems.Amp;
+//import frc.robot.subsystems.Amp;
 
 /** An example command that uses an example subsystem. */
-public class AutoAmpZero extends InstantCommand {
+/*public class AutoAmpZero extends InstantCommand {
   private final Amp amp;
-  private Timer timer = new Timer();
+  private Timer timer = new Timer();*/
   /**
    * @param amp The subsystem used by this command.
    */
-  public AutoAmpZero(Amp amp) {
+  /*public AutoAmpZero(Amp amp) {
     this.amp = amp;
     addRequirements(amp);
   }
@@ -47,3 +47,4 @@ public class AutoAmpZero extends InstantCommand {
     return amp.getLimitSwitch() || timer.hasElapsed(5);
   }
 }
+*/
