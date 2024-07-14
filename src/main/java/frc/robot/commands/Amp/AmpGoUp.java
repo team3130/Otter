@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.Amp;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ExampleSubsystem;
@@ -27,24 +27,24 @@ public class AmpGoUp extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    amp.resetAmpEncoder();
+    amp.resetAmpController();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (amp.getAmpLocation() >= amp.getMaxEncoderLimit()){
-      amp.trackMotorUp();
-    }
+    amp.trackMotorUp();
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    amp.trackMotorStop();
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return amp.getAmpLocation() <= amp.getMaxEncoderLimit();
   }
 }
