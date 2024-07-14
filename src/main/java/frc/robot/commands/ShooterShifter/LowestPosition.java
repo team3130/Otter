@@ -5,11 +5,12 @@
 package frc.robot.commands.ShooterShifter;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.NewShooterShifter;
 
 /** An example command that uses an example subsystem. */
-public class LowestPosition extends Command {
+public class LowestPosition extends InstantCommand {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final NewShooterShifter shooterShifter;
 

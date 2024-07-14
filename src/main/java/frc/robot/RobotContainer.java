@@ -30,23 +30,25 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 //import frc.robot.commands.Amp.Software.AmpManualLower;
 //import frc.robot.commands.Amp.Software.AmpZero;
 import frc.robot.commands.Amp.AmpGoUp;
+import frc.robot.commands.Amp.AmpZero;
+import frc.robot.commands.ShooterShifter.LowestPosition;
 import frc.robot.subsystems.NewAmp;
 import frc.robot.commands.Auto.*;
 import frc.robot.commands.Chassis.TeleopDrive;
 import frc.robot.commands.Climber.ClimberUnlimited;
 import frc.robot.commands.Climber.PitClimberReset;
 import frc.robot.commands.Indexer.AlwaysIndex;
-import frc.robot.commands.Indexer.AndrewIndexToShoot;
-import frc.robot.commands.Indexer.IndexToBeam;
+//import frc.robot.commands.Indexer.AndrewIndexToShoot;
+//import frc.robot.commands.Indexer.IndexToBeam;
 import frc.robot.commands.Indexer.Outtake;
 import frc.robot.commands.Intake.IntakeIn;
 import frc.robot.commands.Intake.LimitedSpintake;
 import frc.robot.commands.Intake.ToggleIntake;
 import frc.robot.commands.Shooter.ShootMovingSetpoint;
 import frc.robot.commands.Shooter.ShuttleMovingSetpoint;
-import frc.robot.commands.ShooterShifter.DoubleExtend;
-import frc.robot.commands.ShooterShifter.DoubleRetract;
-import frc.robot.commands.ShooterShifter.ShortShifterExtend;
+//import frc.robot.commands.ShooterShifter.DoubleExtend;
+//import frc.robot.commands.ShooterShifter.DoubleRetract;
+//import frc.robot.commands.ShooterShifter.ShortShifterExtend;
 import frc.robot.sensors.JoystickTrigger;
 import frc.robot.subsystems.*;
 import frc.robot.commands.Chassis.ResetOdometryForward;
@@ -66,7 +68,8 @@ public class RobotContainer {
   private final Intake intake;
   private final Shooter shooter;
   private final Indexer indexer;
-  private final ShooterShifter shooterShifter;
+  //private final ShooterShifter shooterShifter;
+  private final NewShooterShifter newShooterShifter;
   private final Climber leftClimber;
   private final Climber rightClimber;
   private final PS5Controller driverController = new PS5Controller(0);
@@ -82,7 +85,8 @@ public class RobotContainer {
     rightClimber = new Climber(Constants.CAN.climberRight, Constants.IDs.kRLimitSwitch, Constants.XBox.AXS_LJOYSTICK_Y, false);
 
     shooter = new Shooter();
-    shooterShifter = new ShooterShifter();
+    //shooterShifter = new ShooterShifter();
+    newShooterShifter = new NewShooterShifter();
     chassis = new Chassis();
     intake = new Intake();
     indexer = new Indexer(shooter);
@@ -100,9 +104,9 @@ public class RobotContainer {
     NamedCommands.registerCommand("Index", new AutoIndex(indexer, shooter));
     NamedCommands.registerCommand("IndexPreload", new AutoIndexPreload(indexer, shooter));
     NamedCommands.registerCommand("Intake", new AutoIntake(intake, indexer));
-    NamedCommands.registerCommand("ShifterDoubleExtend", new AutoDoubleExtend(shooterShifter));
-    NamedCommands.registerCommand("ShifterShortExtend", new AutoShortExtend(shooterShifter));
-    NamedCommands.registerCommand("ShifterDoubleRetract", new AutoDoubleRetract(shooterShifter));
+    //NamedCommands.registerCommand("ShifterDoubleExtend", new AutoDoubleExtend(shooterShifter));
+    //NamedCommands.registerCommand("ShifterShortExtend", new AutoShortExtend(shooterShifter));
+    //NamedCommands.registerCommand("ShifterDoubleRetract", new AutoDoubleRetract(shooterShifter));
     //NamedCommands.registerCommand("AmpHome", new AutoAmpZero(amp));
     NamedCommands.registerCommand("Outtake", new AutoOuttake(indexer, intake));
 
@@ -250,13 +254,14 @@ public class RobotContainer {
   }
 
   public InstantCommand resetShooterShifter() {
-    return new DoubleRetract(shooterShifter);
+    return new LowestPosition(newShooterShifter);
   }
+
   public InstantCommand resetIntake() {
     return new IntakeIn(intake);
   }
 
-  //public Command resetAmp() { return  new AmpZero(amp); }
+  public Command resetAmp() { return  new AmpZero(newAmp); }
 
   /*public InstantCommand ampZero() {
     return new AmpZero(amp);
@@ -309,8 +314,8 @@ public class RobotContainer {
     // indexer
 
     new JoystickButton(operatorController, Constants.XBox.BTN_Y).whileTrue(new AlwaysIndex(indexer));
-    new JoystickButton(operatorController, Constants.XBox.BTN_A).whileTrue(new IndexToBeam(indexer, shooterShifter, shooter));
-    new JoystickTrigger(operatorController, Constants.XBox.AXS_RTRIGGER).whileTrue(new AndrewIndexToShoot(indexer, shooterShifter, shooter, camera));
+    //new JoystickButton(operatorController, Constants.XBox.BTN_A).whileTrue(new IndexToBeam(indexer, shooterShifter, shooter));
+    //new JoystickTrigger(operatorController, Constants.XBox.AXS_RTRIGGER).whileTrue(new AndrewIndexToShoot(indexer, shooterShifter, shooter, camera));
 
     // shooter
     new JoystickButton(operatorController, Constants.XBox.BTN_RBUMPER).whileTrue(new ShootMovingSetpoint(shooter));
@@ -324,9 +329,9 @@ public class RobotContainer {
     //new POVButton(operatorController, Constants.XBox.POV_W).whileTrue(new AmpZero(amp));
 
     // shooter shifter
-    new JoystickTrigger(operatorController, Constants.XBox.AXS_LTRIGGER).whileTrue(new ShortShifterExtend(shooterShifter));
-    new JoystickButton(operatorController, Constants.XBox.BTN_LBUMPER).whileTrue(new DoubleExtend(shooterShifter));
-    new JoystickButton(operatorController, Constants.XBox.BTN_B).whileTrue(new DoubleRetract(shooterShifter));
+    //new JoystickTrigger(operatorController, Constants.XBox.AXS_LTRIGGER).whileTrue(new ShortShifterExtend(shooterShifter));
+    //new JoystickButton(operatorController, Constants.XBox.BTN_LBUMPER).whileTrue(new DoubleExtend(shooterShifter));
+    //new JoystickButton(operatorController, Constants.XBox.BTN_B).whileTrue(new DoubleRetract(shooterShifter));
 
 
     //software debugging
