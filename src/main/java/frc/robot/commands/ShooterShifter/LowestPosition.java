@@ -4,29 +4,35 @@
 
 package frc.robot.commands.ShooterShifter;
 
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.subsystems.ShooterShifter;
+import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.NewShooterShifter;
 
 /** An example command that uses an example subsystem. */
-public class LongShifterExtend extends InstantCommand {
-  private final ShooterShifter shooterShifter;
+public class LowestPosition extends Command {
+  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
+  private final NewShooterShifter shooterShifter;
 
-  public LongShifterExtend(ShooterShifter shifter) {
-    shooterShifter = shifter;
-    addRequirements(shifter);
+  /**
+   * Creates a new ExampleCommand.
+   *
+   * @param shooterShifter The subsystem used by this command.
+   */
+  public LowestPosition(NewShooterShifter shooterShifter) {
+    this.shooterShifter = shooterShifter;
+    // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(shooterShifter);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-
+    shooterShifter.goLowPosition();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    shooterShifter.extendLongShifter();
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override
