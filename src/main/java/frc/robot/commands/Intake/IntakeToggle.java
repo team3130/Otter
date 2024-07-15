@@ -2,39 +2,40 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.Indexer;
+package frc.robot.commands.Intake;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Indexer;
+import frc.robot.subsystems.NewIntake;
 
-public class Outtake extends Command {
+/** An example command that uses an example subsystem. */
+public class IntakeToggle extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final Indexer indexer;
-  private final Timer timer = new Timer();
+  private final NewIntake intake;
 
-  public Outtake(Indexer indexer) {
-    this.indexer = indexer;
-    addRequirements(indexer);
+  /**
+   * Creates a new ExampleCommand.
+   *
+   * @param intake The subsystem used by this command.
+   */
+  public IntakeToggle(NewIntake intake) {
+    this.intake = intake;
+    // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(intake);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    indexer.outtake();
+    intake.toggleIntake();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    indexer.stopIndexer();
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override

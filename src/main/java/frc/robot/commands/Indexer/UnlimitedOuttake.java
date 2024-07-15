@@ -4,42 +4,32 @@
 
 package frc.robot.commands.Indexer;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.NewIndexer;
-import frc.robot.subsystems.NewShooterShifter;
-import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.NewIndexer;
 
-/** An example command that uses an example subsystem. */
-public class IndexToBeam extends Command {
+public class UnlimitedOuttake extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final NewIndexer indexer;
-  private final NewShooterShifter shooterShifter;
-  private final Shooter shooter;
+  private final Timer timer = new Timer();
 
-  /**
-   * Creates a new ExampleCommand.
-   *
-   * @param indexer The subsystem used by this command.
-   */
-  public IndexToBeam(NewIndexer indexer, NewShooterShifter shooterShifter, Shooter shooter) {
+  public UnlimitedOuttake(NewIndexer indexer) {
     this.indexer = indexer;
-    this.shooterShifter = shooterShifter;
-    this.shooter = shooter;
-    // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(indexer);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if (shooterShifter.getLowPosition() || shooterShifter.getHighPosition()){
-      indexer.spinIntake();
-    }
+    indexer.spinOuttake();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+
+  }
 
   // Called once the command ends or is interrupted.
   @Override
@@ -50,6 +40,6 @@ public class IndexToBeam extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return shooter.getBeamHasNote();
+    return false;
   }
 }

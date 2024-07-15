@@ -29,27 +29,24 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 //import frc.robot.commands.Amp.Software.AmpManualLift;
 //import frc.robot.commands.Amp.Software.AmpManualLower;
 //import frc.robot.commands.Amp.Software.AmpZero;
-import frc.robot.commands.Amp.AmpGoUp;
-import frc.robot.commands.Amp.AmpZero;
+import frc.robot.commands.Amp.*;
+import frc.robot.commands.Indexer.UnlimitedOuttake;
+import frc.robot.commands.Intake.IntakeIn;
+import frc.robot.commands.Indexer.UnlimitedSpintake;
 import frc.robot.commands.ShooterShifter.LowestPosition;
 import frc.robot.subsystems.NewAmp;
 import frc.robot.commands.Auto.*;
 import frc.robot.commands.Chassis.TeleopDrive;
 import frc.robot.commands.Climber.ClimberUnlimited;
 import frc.robot.commands.Climber.PitClimberReset;
-import frc.robot.commands.Indexer.AlwaysIndex;
 //import frc.robot.commands.Indexer.AndrewIndexToShoot;
 //import frc.robot.commands.Indexer.IndexToBeam;
-import frc.robot.commands.Indexer.Outtake;
-import frc.robot.commands.Intake.IntakeIn;
-import frc.robot.commands.Intake.LimitedSpintake;
-import frc.robot.commands.Intake.ToggleIntake;
+import frc.robot.commands.Indexer.UnlimitedOuttake;
 import frc.robot.commands.Shooter.ShootMovingSetpoint;
 import frc.robot.commands.Shooter.ShuttleMovingSetpoint;
 //import frc.robot.commands.ShooterShifter.DoubleExtend;
 //import frc.robot.commands.ShooterShifter.DoubleRetract;
 //import frc.robot.commands.ShooterShifter.ShortShifterExtend;
-import frc.robot.sensors.JoystickTrigger;
 import frc.robot.subsystems.*;
 import frc.robot.commands.Chassis.ResetOdometryForward;
 import frc.robot.subsystems.LEDs;
@@ -65,9 +62,11 @@ import frc.robot.subsystems.LEDs;
 public class RobotContainer {
   // private final VelocityChassis velocityChassis;
   private final Chassis chassis;
-  private final Intake intake;
+  //private final Intake intake;
+  private final NewIntake intake;
   private final Shooter shooter;
-  private final Indexer indexer;
+  //private final Indexer indexer;
+  private final NewIndexer indexer;
   //private final ShooterShifter shooterShifter;
   private final NewShooterShifter newShooterShifter;
   private final Climber leftClimber;
@@ -88,8 +87,10 @@ public class RobotContainer {
     //shooterShifter = new ShooterShifter();
     newShooterShifter = new NewShooterShifter();
     chassis = new Chassis();
-    intake = new Intake();
-    indexer = new Indexer(shooter);
+    //intake = new Intake();
+    intake = new NewIntake();
+    //indexer = new Indexer(shooter);
+    indexer = new NewIndexer(shooter);
     robotLEDs = new LEDs();
     camera = new CameraSubsystem();
     //amp = new Amp();
@@ -101,14 +102,14 @@ public class RobotContainer {
     NamedCommands.registerCommand("Flywheels", new AutoFlywheel(shooter));
     NamedCommands.registerCommand("FlywheelShuttle", new AutoFlywheelShuttle(shooter));
 
-    NamedCommands.registerCommand("Index", new AutoIndex(indexer, shooter));
-    NamedCommands.registerCommand("IndexPreload", new AutoIndexPreload(indexer, shooter));
-    NamedCommands.registerCommand("Intake", new AutoIntake(intake, indexer));
+    //NamedCommands.registerCommand("Index", new AutoIndex(indexer, shooter));
+    //NamedCommands.registerCommand("IndexPreload", new AutoIndexPreload(indexer, shooter));
+    //NamedCommands.registerCommand("Intake", new AutoIntake(intake, indexer));
     //NamedCommands.registerCommand("ShifterDoubleExtend", new AutoDoubleExtend(shooterShifter));
     //NamedCommands.registerCommand("ShifterShortExtend", new AutoShortExtend(shooterShifter));
     //NamedCommands.registerCommand("ShifterDoubleRetract", new AutoDoubleRetract(shooterShifter));
     //NamedCommands.registerCommand("AmpHome", new AutoAmpZero(amp));
-    NamedCommands.registerCommand("Outtake", new AutoOuttake(indexer, intake));
+    //NamedCommands.registerCommand("Outtake", new AutoOuttake(indexer, intake));
 
     configureBindings(); // configure button bindings
     exportShuffleBoardData(); // export ShuffleBoardData
@@ -128,7 +129,7 @@ public class RobotContainer {
     SmartDashboard.putData("Auto Chooser", autoChooser);
 
     ShuffleboardTab tab = Shuffleboard.getTab("Competition");
-    tab.addBoolean("Intake Has Note", intake::getIntakeLimitSwitch).withPosition(0, 0).withSize(6, 5);
+    tab.addBoolean("Intake Has Note", intake::getIntakeLimit).withPosition(0, 0).withSize(6, 5);
     tab.addBoolean("At Distance", camera::atShootingDistance).withPosition(6, 0).withSize(2, 2);
     tab.addBoolean("At Angle", camera::isAtYawSetpointLEDs).withPosition(8, 0).withSize(2, 2);
     tab.addBoolean("Flywheel Speed", shooter::getFlywheelAtVelocityRaw).withPosition(6, 2).withSize(3, 2);
@@ -296,10 +297,10 @@ public class RobotContainer {
     new POVButton(driverController, Constants.PS5.POV_N).whileTrue(new ResetOdometryForward(chassis));
 
     // intake / indexer
-    new JoystickTrigger(driverController, Constants.PS5.AXS_RTRIGGER).whileTrue(new LimitedSpintake(intake, indexer));
-    new JoystickButton(driverController, Constants.PS5.BTN_CIRCLE).whileTrue(new AlwaysIndex(indexer));
-    new JoystickButton(driverController, Constants.PS5.BTN_X).whileTrue(new Outtake(indexer));
-    new JoystickButton(driverController, Constants.PS5.BTN_RBUMPER).whileTrue(new ToggleIntake(intake));
+    //new JoystickTrigger(driverController, Constants.PS5.AXS_RTRIGGER).whileTrue(new LimitedSpintake(intake, indexer));
+    new JoystickButton(driverController, Constants.PS5.BTN_CIRCLE).whileTrue(new UnlimitedSpintake(indexer));
+    new JoystickButton(driverController, Constants.PS5.BTN_X).whileTrue(new UnlimitedOuttake(indexer));
+    //new JoystickButton(driverController, Constants.PS5.BTN_RBUMPER).whileTrue(new ToggleIntake(intake));
 
     //new JoystickTrigger(driverController, Constants.PS5.AXS_LTRIGGER).whileTrue(new AmpOuttake(amp));
     //new JoystickButton(driverController, Constants.PS5.BTN_SQUARE).whileTrue(new AmpIntake(amp));
@@ -313,7 +314,7 @@ public class RobotContainer {
 
     // indexer
 
-    new JoystickButton(operatorController, Constants.XBox.BTN_Y).whileTrue(new AlwaysIndex(indexer));
+    new JoystickButton(operatorController, Constants.XBox.BTN_Y).whileTrue(new UnlimitedSpintake(indexer));
     //new JoystickButton(operatorController, Constants.XBox.BTN_A).whileTrue(new IndexToBeam(indexer, shooterShifter, shooter));
     //new JoystickTrigger(operatorController, Constants.XBox.AXS_RTRIGGER).whileTrue(new AndrewIndexToShoot(indexer, shooterShifter, shooter, camera));
 
@@ -325,8 +326,11 @@ public class RobotContainer {
     //new POVButton(operatorController, Constants.XBox.POV_N).whileTrue(new SequentialCommandGroup(new AmpKirbyPrepMid(amp, shooterShifter), new AmpKirbyFlies(amp, shooter, shooterShifter, indexer)));
     //new POVButton(operatorController, Constants.XBox.POV_E).whileTrue(new AmpAutoHigh(amp));
     //new POVButton(operatorController, Constants.XBox.POV_S).onTrue(new AmpPIDHome(amp));
-    new POVButton(operatorController, Constants.XBox.POV_S).whileTrue(new AmpGoUp(newAmp));
     //new POVButton(operatorController, Constants.XBox.POV_W).whileTrue(new AmpZero(amp));
+    new POVButton(operatorController, Constants.XBox.POV_N).whileTrue(new AmpGoUp(newAmp));
+    new POVButton(operatorController, Constants.XBox.POV_S).whileTrue(new AmpGoDown(newAmp));
+    new POVButton(operatorController, Constants.XBox.POV_E).whileTrue(new AmpOuttake(newAmp));
+    new POVButton(operatorController, Constants.XBox.POV_W).whileTrue(new AmpIntake(newAmp));
 
     // shooter shifter
     //new JoystickTrigger(operatorController, Constants.XBox.AXS_LTRIGGER).whileTrue(new ShortShifterExtend(shooterShifter));

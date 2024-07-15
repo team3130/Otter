@@ -10,7 +10,7 @@ import frc.robot.subsystems.NewAmp;
 public class AmpZero extends InstantCommand {
   private final NewAmp amp;
   private Timer timer = new Timer();
-  private boolean raising = false;
+  private boolean raising = false; //used
   /**
    * @param amp The subsystem used by this command.
    */
@@ -53,3 +53,9 @@ public class AmpZero extends InstantCommand {
     return (raising && amp.getAmpLocation() >= 500) || timer.hasElapsed(7);
   }
 }
+/*
+(raising && amp.getAmpLocation() >= 500) is used in order to say that the amp should only raise until
+the amp is at 500 ticks and then stop, and it needs to be raised because otherwise it will press on the
+pi. the timer is used as a fail-safe in which after 7 seconds pass the amp will stop automatically just
+in case the limit switch decided not to work
+ */
