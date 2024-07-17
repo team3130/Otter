@@ -26,18 +26,20 @@ public class AmpGoDown extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() { amp.resetAmpController();}
+  public void initialize() { amp.trackMotorDown();}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    amp.trackMotorDown();
+
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
     amp.trackMotorStop();
+    amp.setAmpZeroed(true);
+    amp.resetAmpEncoder();
   }
 
   // Returns true when the command should end.

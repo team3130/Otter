@@ -9,7 +9,10 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -26,7 +29,8 @@ public class NewAmp extends SubsystemBase {
   private double D = 0.0;
 
   //speeds
-  private final double trackMotorSpeed = 0.1;
+  private final double trackMotorSpeedUp = 0.3;
+  private final double trackMotorSpeedDown = -0.1;
   private final double wheelMotorSpeed = 0.1;
 
   //setpoints
@@ -50,7 +54,7 @@ public class NewAmp extends SubsystemBase {
     wheelMotor.setNeutralMode(NeutralMode.Brake);
 
     //setting motors inverted
-    trackMotor.setInverted(false);
+    trackMotor.setInverted(true);
     wheelMotor.setInverted(false);
 
     //sensors
@@ -73,8 +77,8 @@ public class NewAmp extends SubsystemBase {
   }
 
   //Track Motor basic commands
-  public void trackMotorUp(){trackMotor.set(ControlMode.PercentOutput, trackMotorSpeed);}
-  public void trackMotorDown(){trackMotor.set(ControlMode.PercentOutput, -trackMotorSpeed);}
+  public void trackMotorUp(){trackMotor.set(ControlMode.PercentOutput, trackMotorSpeedUp);}
+  public void trackMotorDown(){trackMotor.set(ControlMode.PercentOutput, trackMotorSpeedDown);}
   public void trackMotorStop() {trackMotor.set(ControlMode.PercentOutput, 0);}
 
   public void ampLimitReached(){
@@ -95,9 +99,10 @@ public class NewAmp extends SubsystemBase {
   }
 
   //getters
-  public double getTrackMotorSpeed(){
-    return trackMotorSpeed;
+  public double getTrackMotorSpeedUp(){
+    return trackMotorSpeedUp;
   }
+  public double getTrackMotorSpeedDown(){ return trackMotorSpeedDown;}
   public double getWheelMotorSpeed(){
     return wheelMotorSpeed;
   }
@@ -112,7 +117,7 @@ public class NewAmp extends SubsystemBase {
   public double getP(){return P;}
   public double getI(){return I;}
   public double getD(){return D;}
-  public double getAmpLocation(){return trackMotor.getSelectedSensorPosition();}
+  public double getAmpLocation(){return -trackMotor.getSelectedSensorPosition();}
   public boolean isAtSetpoint(){return ampPIDController.atSetpoint();}
 
   //setters
@@ -129,8 +134,18 @@ public class NewAmp extends SubsystemBase {
     D = newD;
   }
 
-
-
+  public void initSendable(SendableBuilder builder) {
+    if (Constants.debugMode) {
+      builder.setSmartDashboardType("Amp");
+      builder.addDoubleProperty("Amp Location", this::getAmpLocation, null);
+      builder.addBooleanProperty("Amp Zeroed", this::isAmpZeroed, this::setAmpZeroed);
+      builder.addBooleanProperty("At Setpoint", this::isAtSetpoint, null);
+      builder.addBooleanProperty("Limit Switch", this::getAmpLimit, null);
+      builder.addDoubleProperty("P", this::getP, this::setP);
+      builder.addDoubleProperty("I", this::getI, this::setI);
+      builder.addDoubleProperty("D", this::getD, this::setD);
+    }
+  }
 
 
 

@@ -27,13 +27,14 @@ public class AmpGoUp extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    amp.resetAmpController();
+    amp.trackMotorUp();
+    System.out.println("calling up command");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    amp.trackMotorUp();
+
   }
 
   // Called once the command ends or is interrupted.
@@ -45,6 +46,7 @@ public class AmpGoUp extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return amp.getAmpLocation() <= amp.getMaxEncoderLimit();
+    //return amp.getAmpLocation() <= amp.getMaxEncoderLimit();
+    return false;
   }
 }
