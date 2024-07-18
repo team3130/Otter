@@ -30,7 +30,7 @@ public class NewAmp extends SubsystemBase {
 
   //speeds
   private final double trackMotorSpeedUp = 0.3;
-  private final double trackMotorSpeedDown = -0.1;
+  private final double trackMotorSpeedDown = -0.2;
   private final double wheelMotorSpeed = 0.1;
 
   //setpoints
@@ -39,7 +39,8 @@ public class NewAmp extends SubsystemBase {
   private final int lowSetpoint = 0;
 
   private boolean ampZeroed = false;
-  private final int maxEncoderLimit = 20000;
+  private final int maxEncoderLimit = 13600;
+  private final int minEncoderLimit = 750;
   public NewAmp() {
     //initializing motors to variables
     trackMotor = new WPI_TalonSRX(Constants.CAN.ampLiftMotor);
@@ -111,6 +112,7 @@ public class NewAmp extends SubsystemBase {
   }
   public boolean getAmpLimit(){return !ampLimit.get();}
   public int getMaxEncoderLimit(){ return maxEncoderLimit;}
+  public int getMinEncoderLimit(){ return minEncoderLimit;}
   public double getHighSetpoint(){return highSetpoint;}
   public double getMidSetpoint(){return midSetpoint;}
   public double getLowSetpoint(){return lowSetpoint;}

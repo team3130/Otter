@@ -38,13 +38,11 @@ public class AmpGoDown extends Command {
   @Override
   public void end(boolean interrupted) {
     amp.trackMotorStop();
-    amp.setAmpZeroed(true);
-    amp.resetAmpEncoder();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return amp.getAmpLimit();
+    return amp.getAmpLocation() <= amp.getMinEncoderLimit();
   }
 }

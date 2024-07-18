@@ -1,27 +1,21 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.commands.Amp;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.ExampleSubsystem;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.NewAmp;
 
 /** An example command that uses an example subsystem. */
-public class AmpZero extends Command {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
+public class AmpZeroInstant extends InstantCommand {
   private final NewAmp amp;
-  private boolean raising = false;
-
+  private Timer timer = new Timer();
+  private boolean raising = false; //used
   /**
-   * Creates a new ExampleCommand.
-   *
    * @param amp The subsystem used by this command.
    */
-  public AmpZero(NewAmp amp) {
+  public AmpZeroInstant(NewAmp amp) {
     this.amp = amp;
-    // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(amp);
   }
 
@@ -29,17 +23,19 @@ public class AmpZero extends Command {
   @Override
   public void initialize() {
     amp.trackMotorDown();
+    timer.reset();
+    timer.start();
+    raising = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(amp.getAmpLimit()){
-      amp.trackMotorStop();
-      amp.setAmpZeroed(true);
+    if (amp.getAmpLimit()) {
       amp.resetAmpEncoder();
+      amp.setAmpZeroed(true);
     }
-    if(amp.isAmpZeroed()){
+    if (amp.isAmpZeroed()) {
       amp.trackMotorUp();
       raising = true;
     }
@@ -54,6 +50,13 @@ public class AmpZero extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return amp.getAmpLocation() <= 500;
+
+    return (raising && amp.getAmpLocation() >= 500) || timer.hasElapsed(7);
   }
 }
+/*
+(raising && amp.getAmpLocation() >= 500) is used in order to say that the amp should only raise until
+the amp is at 500 ticks and then stop, and it needs to be raised because otherwise it will press on the
+pi. the timer is used as a fail-safe in which after 7 seconds pass the amp will stop automatically just
+in case the limit switch decided not to work
+ */

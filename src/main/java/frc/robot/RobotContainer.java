@@ -34,6 +34,8 @@ import frc.robot.commands.Indexer.UnlimitedOuttake;
 import frc.robot.commands.Intake.IntakeIn;
 import frc.robot.commands.Indexer.UnlimitedSpintake;
 import frc.robot.commands.ShooterShifter.LowestPosition;
+import frc.robot.commands.ShooterShifter.ShortExtended;
+import frc.robot.sensors.JoystickTrigger;
 import frc.robot.subsystems.NewAmp;
 import frc.robot.commands.Auto.*;
 import frc.robot.commands.Chassis.TeleopDrive;
@@ -262,7 +264,7 @@ public class RobotContainer {
     return new IntakeIn(intake);
   }
 
-  public Command resetAmp() { return  new AmpZero(newAmp); }
+  public Command resetAmp() { return  new AmpZeroInstant(newAmp); }
 
   /*public InstantCommand ampZero() {
     return new AmpZero(amp);
@@ -329,12 +331,12 @@ public class RobotContainer {
     //new POVButton(operatorController, Constants.XBox.POV_W).whileTrue(new AmpZero(amp));
     new POVButton(operatorController, Constants.XBox.POV_N).whileTrue(new AmpGoUp(newAmp));
     new POVButton(operatorController, Constants.XBox.POV_S).whileTrue(new AmpGoDown(newAmp));
-    new POVButton(operatorController, Constants.XBox.POV_E).whileTrue(new AmpOuttake(newAmp));
+    //new POVButton(operatorController, Constants.XBox.POV_E).whileTrue(new AmpOuttake(newAmp));
     new POVButton(operatorController, Constants.XBox.POV_W).whileTrue(new AmpIntake(newAmp));
-    new POVButton(operatorController,Constants.XBox.BTN_A).whileTrue(new AmpZero(newAmp));
+    new POVButton(operatorController,Constants.XBox.POV_E).whileTrue(new AmpZero(newAmp));
 
     // shooter shifter
-    //new JoystickTrigger(operatorController, Constants.XBox.AXS_LTRIGGER).whileTrue(new ShortShifterExtend(shooterShifter));
+    new JoystickTrigger(operatorController, Constants.XBox.AXS_LTRIGGER).whileTrue(new ShortExtended(newShooterShifter));
     //new JoystickButton(operatorController, Constants.XBox.BTN_LBUMPER).whileTrue(new DoubleExtend(shooterShifter));
     //new JoystickButton(operatorController, Constants.XBox.BTN_B).whileTrue(new DoubleRetract(shooterShifter));
 
