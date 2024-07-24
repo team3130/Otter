@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class NewShooterShifter extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
@@ -18,8 +19,8 @@ public class NewShooterShifter extends SubsystemBase {
   private boolean longPosition = false;
   private boolean highPosition = false;
   public NewShooterShifter() {
-    shortShifter = new Solenoid(PneumaticsModuleType.CTREPCM, 5);
-    longShifter = new Solenoid(PneumaticsModuleType.CTREPCM, 6);
+    shortShifter = new Solenoid(Constants.CAN.PCM, PneumaticsModuleType.CTREPCM, Constants.IDs.shawtyShifterChannel);
+    longShifter = new Solenoid(Constants.CAN.PCM, PneumaticsModuleType.CTREPCM, Constants.IDs.longShifterChannel);
   }
 
   public void goLowPosition(){

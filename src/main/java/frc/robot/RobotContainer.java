@@ -30,9 +30,12 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 //import frc.robot.commands.Amp.Software.AmpManualLower;
 //import frc.robot.commands.Amp.Software.AmpZero;
 import frc.robot.commands.Amp.*;
+import frc.robot.commands.Indexer.IndexToBeam;
 import frc.robot.commands.Indexer.UnlimitedOuttake;
 import frc.robot.commands.Intake.IntakeIn;
 import frc.robot.commands.Indexer.UnlimitedSpintake;
+import frc.robot.commands.Intake.IntakeToggle;
+import frc.robot.commands.ShooterShifter.HighPosition;
 import frc.robot.commands.ShooterShifter.LowestPosition;
 import frc.robot.commands.ShooterShifter.ShortExtended;
 import frc.robot.sensors.JoystickTrigger;
@@ -302,7 +305,7 @@ public class RobotContainer {
     //new JoystickTrigger(driverController, Constants.PS5.AXS_RTRIGGER).whileTrue(new LimitedSpintake(intake, indexer));
     new JoystickButton(driverController, Constants.PS5.BTN_CIRCLE).whileTrue(new UnlimitedSpintake(indexer));
     new JoystickButton(driverController, Constants.PS5.BTN_X).whileTrue(new UnlimitedOuttake(indexer));
-    //new JoystickButton(driverController, Constants.PS5.BTN_RBUMPER).whileTrue(new ToggleIntake(intake));
+    new JoystickButton(driverController, Constants.PS5.BTN_RBUMPER).whileTrue(new IntakeToggle(intake));
 
     //new JoystickTrigger(driverController, Constants.PS5.AXS_LTRIGGER).whileTrue(new AmpOuttake(amp));
     //new JoystickButton(driverController, Constants.PS5.BTN_SQUARE).whileTrue(new AmpIntake(amp));
@@ -317,7 +320,7 @@ public class RobotContainer {
     // indexer
 
     new JoystickButton(operatorController, Constants.XBox.BTN_Y).whileTrue(new UnlimitedSpintake(indexer));
-    //new JoystickButton(operatorController, Constants.XBox.BTN_A).whileTrue(new IndexToBeam(indexer, shooterShifter, shooter));
+    new JoystickButton(operatorController, Constants.XBox.BTN_A).whileTrue(new IndexToBeam(indexer, newShooterShifter, shooter));
     //new JoystickTrigger(operatorController, Constants.XBox.AXS_RTRIGGER).whileTrue(new AndrewIndexToShoot(indexer, shooterShifter, shooter, camera));
 
     // shooter
@@ -331,13 +334,12 @@ public class RobotContainer {
     //new POVButton(operatorController, Constants.XBox.POV_W).whileTrue(new AmpZero(amp));
     new POVButton(operatorController, Constants.XBox.POV_N).whileTrue(new AmpGoUp(newAmp));
     new POVButton(operatorController, Constants.XBox.POV_S).whileTrue(new AmpGoDown(newAmp));
-    //new POVButton(operatorController, Constants.XBox.POV_E).whileTrue(new AmpOuttake(newAmp));
     new POVButton(operatorController, Constants.XBox.POV_W).whileTrue(new AmpIntake(newAmp));
-    new POVButton(operatorController,Constants.XBox.POV_E).whileTrue(new AmpZero(newAmp));
+    new POVButton(operatorController,Constants.XBox.POV_E).whileTrue(new AmpOuttake(newAmp));
 
     // shooter shifter
     new JoystickTrigger(operatorController, Constants.XBox.AXS_LTRIGGER).whileTrue(new ShortExtended(newShooterShifter));
-    //new JoystickButton(operatorController, Constants.XBox.BTN_LBUMPER).whileTrue(new DoubleExtend(shooterShifter));
+    new JoystickButton(operatorController, Constants.XBox.BTN_LBUMPER).whileTrue(new HighPosition(newShooterShifter));
     //new JoystickButton(operatorController, Constants.XBox.BTN_B).whileTrue(new DoubleRetract(shooterShifter));
 
 

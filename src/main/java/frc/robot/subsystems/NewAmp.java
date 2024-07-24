@@ -31,12 +31,12 @@ public class NewAmp extends SubsystemBase {
   //speeds
   private final double trackMotorSpeedUp = 0.3;
   private final double trackMotorSpeedDown = -0.2;
-  private final double wheelMotorSpeed = 0.1;
+  private final double wheelMotorSpeed = 0.5;
 
   //setpoints
-  private final int highSetpoint = 0;
-  private final int midSetpoint = 0;
-  private final int lowSetpoint = 0;
+  private final int highSetpoint = 12600;
+  private final int midSetpoint = 8040;
+  private final int lowSetpoint = 750;
 
   private boolean ampZeroed = false;
   private final int maxEncoderLimit = 13600;
@@ -56,7 +56,7 @@ public class NewAmp extends SubsystemBase {
 
     //setting motors inverted
     trackMotor.setInverted(true);
-    wheelMotor.setInverted(false);
+    wheelMotor.setInverted(true);
 
     //sensors
     trackMotor.configSelectedFeedbackSensor(FeedbackDevice.QuadEncoder);

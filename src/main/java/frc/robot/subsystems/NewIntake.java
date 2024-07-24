@@ -16,7 +16,7 @@ public class NewIntake extends SubsystemBase {
   private final Solenoid intakeSolenoid;
   private final DigitalInput intakeLimit;
   public NewIntake() {
-    intakeSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, Constants.IDs.intakePNMChannel);
+    intakeSolenoid = new Solenoid(Constants.CAN.PCM, PneumaticsModuleType.CTREPCM, Constants.IDs.intakePNMChannel);
     intakeLimit = new DigitalInput(Constants.IDs.intakeLimitDIO);
   }
 

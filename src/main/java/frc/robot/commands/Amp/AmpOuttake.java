@@ -26,17 +26,19 @@ public class AmpOuttake extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() { amp.resetAmpController(); }
+  public void initialize() {amp.ampOuttake();}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    amp.ampOuttake();
+
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    amp.wheelMotorStop();
+  }
 
   // Returns true when the command should end.
   @Override
