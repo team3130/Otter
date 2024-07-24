@@ -27,7 +27,7 @@ public class AmpMidSetpoint extends Command {
   @Override
   public void initialize() {
     amp.resetAmpEncoder();
-    amp.runAmpController(amp.getMidSetpoint());
+    amp.moveAmpAtSpeed(amp.runAmpController(amp.getMidSetpoint()));
   }
 
   // Called every time the scheduler runs while the command is scheduled.

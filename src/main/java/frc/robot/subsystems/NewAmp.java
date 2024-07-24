@@ -92,6 +92,7 @@ public class NewAmp extends SubsystemBase {
   public void resetAmpEncoder(){
     trackMotor.setSelectedSensorPosition(0);
   }
+  public void moveAmpAtSpeed(double speed){ trackMotor.set(ControlMode.PercentOutput, speed); }
 
   //getters
   public double getTrackMotorSpeedUp(){
