@@ -82,12 +82,6 @@ public class NewAmp extends SubsystemBase {
   public void trackMotorDown(){trackMotor.set(ControlMode.PercentOutput, trackMotorSpeedDown);}
   public void trackMotorStop() {trackMotor.set(ControlMode.PercentOutput, 0);}
 
-  public void ampLimitReached(){
-    if(getAmpLimit()){
-      trackMotorStop();
-      resetAmpEncoder();
-    }
-  }
   public void resetAmpController(){
     ampPIDController.setTolerance(100);
     ampPIDController.setPID(P,I,D);
