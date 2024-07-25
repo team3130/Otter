@@ -26,13 +26,14 @@ public class AmpMidSetpoint extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    amp.resetAmpEncoder();
-    amp.moveAmpAtSpeed(amp.runAmpController(amp.getMidSetpoint()));
+    amp.resetAmpController();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    amp.moveAmpAtSpeed(amp.runAmpController(amp.getMidSetpoint()));
+  }
 
   // Called once the command ends or is interrupted.
   @Override

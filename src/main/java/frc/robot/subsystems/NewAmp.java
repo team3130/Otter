@@ -24,9 +24,11 @@ public class NewAmp extends SubsystemBase {
   private final WPI_TalonSRX wheelMotor; //motor for amp wheels to turn (wheels at end of amp where note is)
   private final DigitalInput ampLimit; //limit switch on bottom of amp track
   private PIDController ampPIDController; //pid controller for amp
-  private double P = 0.0;
-  private double I = 0.0;
-  private double D = 0.0;
+
+  //idk why but pid in shuffleboard and in intellij different so this might not be the best but good enough
+  private double P = 0.00022;
+  private double I = 0.00000032;
+  private double D = 0.00001;
 
   //speeds
   private final double trackMotorSpeedUp = 0.3;
@@ -35,7 +37,7 @@ public class NewAmp extends SubsystemBase {
 
   //setpoints
   private final int highSetpoint = 12600;
-  private final int midSetpoint = 8040;
+  private final int midSetpoint = 7600;
   private final int lowSetpoint = 750;
 
   private boolean ampZeroed = false;
@@ -86,8 +88,8 @@ public class NewAmp extends SubsystemBase {
     ampPIDController.setTolerance(100);
     ampPIDController.setPID(P,I,D);
   }
-  public void runAmpController(double setpoint){
-    ampPIDController.calculate(getAmpLocation(), setpoint);
+  public double runAmpController(double setpoint){
+    return ampPIDController.calculate(getAmpLocation(), setpoint);
   }
   public void resetAmpEncoder(){
     trackMotor.setSelectedSensorPosition(0);

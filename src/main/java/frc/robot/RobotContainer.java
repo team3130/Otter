@@ -334,8 +334,8 @@ public class RobotContainer {
     //new POVButton(operatorController, Constants.XBox.POV_W).whileTrue(new AmpZero(amp));
     new POVButton(operatorController, Constants.XBox.POV_N).whileTrue(new AmpGoUp(newAmp));
     new POVButton(operatorController, Constants.XBox.POV_S).whileTrue(new AmpGoDown(newAmp));
-    new POVButton(operatorController, Constants.XBox.POV_W).whileTrue(new AmpIntake(newAmp));
-    //new POVButton(operatorController,Constants.XBox.POV_E).whileTrue(new AmpOuttake(newAmp));
+    //new POVButton(operatorController, Constants.XBox.POV_W).whileTrue(new AmpIntake(newAmp));
+    new POVButton(operatorController,Constants.XBox.POV_W).whileTrue(new AmpOuttake(newAmp));
     new POVButton(operatorController, Constants.XBox.POV_E).whileTrue(new AmpMidSetpoint(newAmp));
 
     // shooter shifter
