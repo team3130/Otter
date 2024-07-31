@@ -1,10 +1,13 @@
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
-/*
+
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.Slot1Configs;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -23,6 +26,25 @@ public class NewShooter extends SubsystemBase {
   private final VoltageOut voltRequestBottomBar = new VoltageOut(0);
   private final VelocityVoltage topVelocityRequest = new VelocityVoltage(0).withSlot(0);
   private final VelocityVoltage bottomVelocityRequest = new VelocityVoltage(0).withSlot(1);
+  private CurrentLimitsConfigs topCurrentConfigs = new CurrentLimitsConfigs();
+  private CurrentLimitsConfigs bottomCurrentConfigs = new CurrentLimitsConfigs();
+
+  private double topVelocity = 0.0;
+  private double bottomVelocity = 0.0;
+
+  private double topShuttleVelocity = 0.0;
+  private double bottomShuttleVelocity = 0.0;
+
+  private boolean tryingToShoot = false;
+  private boolean tryingToShuttle = false;
+
+  Slot0Configs slot0Configs; //holds all the pid values (gains) for top flywheel
+  private double kS = 0.0;
+  private double kV = 0.0;
+  private double kP = 0.0;
+  private double kI = 0.0;
+  
+  Slot1Configs slot1Configs; //bottom flywheel gains
   public NewShooter() {
     topShooterBar = new WPI_TalonSRX(Constants.CAN.shooterTopFlywheel);
     bottomShooterBar = new WPI_TalonSRX(Constants.CAN.shooterBottomFlywheel);
@@ -41,4 +63,3 @@ public class NewShooter extends SubsystemBase {
   }
 }
 
- */
