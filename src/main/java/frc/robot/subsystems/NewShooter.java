@@ -8,16 +8,19 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.Slot1Configs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class NewShooter extends SubsystemBase {
-  private final WPI_TalonSRX topShooterBar;
-  private final WPI_TalonSRX bottomShooterBar;
+  private final TalonFX topShooterBar;
+  private final TalonFX bottomShooterBar;
   private double shooterVolts = 5;
   private double shooterToAmpVolts = 1;
   private final DigitalInput shooterBeam;
@@ -39,17 +42,138 @@ public class NewShooter extends SubsystemBase {
   private boolean tryingToShuttle = false;
 
   Slot0Configs slot0Configs; //holds all the pid values (gains) for top flywheel
-  private double kS = 0.0;
-  private double kV = 0.0;
-  private double kP = 0.0;
-  private double kI = 0.0;
-  
+  private double slot0_kS = 0.0;
+  private double slot0_kV = 0.0;
+  private double slot0_kP = 0.0;
+  private double slot0_kI = 0.0;
+  private double slot0_kD = 0.0;
+
   Slot1Configs slot1Configs; //bottom flywheel gains
+  private double slot1_kS = 0.0;
+  private double slot1_kV = 0.0;
+  private double slot1_kP = 0.0;
+  private double slot1_kI = 0.0;
+  private double slot1_kD = 0.0;
+
   public NewShooter() {
-    topShooterBar = new WPI_TalonSRX(Constants.CAN.shooterTopFlywheel);
-    bottomShooterBar = new WPI_TalonSRX(Constants.CAN.shooterBottomFlywheel);
+    topShooterBar = new TalonFX(Constants.CAN.shooterTopFlywheel);
+    bottomShooterBar = new TalonFX(Constants.CAN.shooterBottomFlywheel);
     shooterBeam = new DigitalInput(Constants.IDs.shooterBeamDIO);
+
+    topShooterBar.getConfigurator().apply(new TalonFXConfiguration());
+    bottomShooterBar.getConfigurator().apply(new TalonFXConfiguration());
+
+    topShooterBar.setNeutralMode(NeutralModeValue.Coast);
+    bottomShooterBar.setNeutralMode(NeutralModeValue.Coast);
+
+    topShooterBar.setInverted(false);
+    bottomShooterBar.setInverted(false);
+
+    topShooterBar.getConfigurator().apply(topCurrentConfigs.withSupplyCurrentLimit(40));
+    bottomShooterBar.getConfigurator().apply(bottomCurrentConfigs.withSupplyCurrentLimit(40));
+
+    slot0Configs = new Slot0Configs();
+    slot1Configs = new Slot1Configs();
+
+    slot0Configs.kS = slot0_kS;
+    slot0Configs.kV = slot0_kV;
+    slot0Configs.kP = slot0_kP;
+    slot0Configs.kI = slot0_kI;
+    slot0Configs.kD = slot0_kD;
+
+    slot1Configs.kS = slot1_kS;
+    slot1Configs.kV = slot1_kV;
+    slot1Configs.kP = slot1_kP;
+    slot1Configs.kI = slot1_kI;
+    slot1Configs.kD = slot1_kD;
+
+    topShooterBar.getConfigurator().apply(slot0Configs);
+    bottomShooterBar.getConfigurator().apply(slot1Configs);
   }
+
+  public void runShooter(){
+    topShooterBar.setControl(voltRequestTopBar.withOutput(shooterVolts));
+    bottomShooterBar.setControl(voltRequestBottomBar.withOutput(shooterVolts));
+  }
+  public void runShooterToAmp(){
+    topShooterBar.setControl(voltRequestTopBar.withOutput(shooterToAmpVolts));
+    topShooterBar.setControl(voltRequestBottomBar.withOutput(shooterToAmpVolts));
+  }
+  public void stopShooter(){
+    topShooterBar.setControl(voltRequestTopBar.withOutput(0));
+    bottomShooterBar.setControl(voltRequestBottomBar.withOutput(0));
+  }
+  public void configureShooterConfigs(){
+    topShooterBar.getConfigurator().apply(slot0Configs);
+    bottomShooterBar.getConfigurator().apply(slot1Configs);
+  }
+  public void updateShooterPID(){
+    slot0Configs.kS = slot0_kS;
+    slot0Configs.kV = slot0_kV;
+    slot0Configs.kP = slot0_kP;
+    slot0Configs.kI = slot0_kI;
+    slot0Configs.kD = slot0_kD;
+
+    slot1Configs.kS = slot1_kS;
+    slot1Configs.kV = slot1_kV;
+    slot1Configs.kP = slot1_kP;
+    slot1Configs.kI = slot1_kI;
+    slot1Configs.kD = slot1_kD;
+  }
+  public void setShooterVelocity(){
+    topShooterBar.setControl(topVelocityRequest.withVelocity(topVelocity));
+    bottomShooterBar.setControl(bottomVelocityRequest.withVelocity(bottomVelocity));
+  }
+  public void setShuttleShooterVelocity(){
+    topShooterBar.setControl(topVelocityRequest.withVelocity(topShuttleVelocity));
+    topShooterBar.setControl(bottomVelocityRequest.withVelocity(bottomShuttleVelocity));
+  }
+
+  //getters
+  public boolean getShooterBeam(){return shooterBeam.get();}
+  public double getSlot0_kS(){return slot0_kS;}
+  public double getSlot0_kV(){return slot0_kV;}
+  public double getSlot0_kP(){return slot0_kP;}
+  public double getSlot0_kI(){return slot0_kI;}
+  public double getSlot0_kD(){return slot0_kD;}
+  public double getSlot1_kS(){return slot1_kS;}
+  public double getSlot1_kV(){return slot1_kV;}
+  public double getSlot1_kP(){return slot1_kP;}
+  public double getSlot1_kI(){return slot1_kI;}
+  public double getSlot1_kD(){return slot1_kD;}
+
+  //setters
+  public void setSlot0_kS(double value){
+    slot0_kS = value;
+  }
+  public void setSlot0_kV(double value){
+    slot0_kV = value;
+  }
+  public void setSlot0_kP(double value){
+    slot0_kP = value;
+  }
+  public void setSlot0_kI(double value){
+    slot0_kI = value;
+  }
+  public void setSlot0_kD(double value){
+    slot0_kD = value;
+  }
+  public void setSlot1_kS(double value){
+    slot1_kS = value;
+  }
+  public void setSlot1_kV(double value){
+    slot1_kV = value;
+  }
+  public void setSlot1_kP(double value){
+    slot1_kP = value;
+  }
+  public void setSlot1_kI(double value){
+    slot1_kI = value;
+  }
+  public void setSlot1_kD(double value){
+    slot1_kD = value;
+  }
+
 
 
   @Override
