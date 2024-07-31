@@ -13,10 +13,13 @@ import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+
+import static java.lang.Math.abs;
 
 public class NewShooter extends SubsystemBase {
   private final TalonFX topShooterBar;
@@ -24,7 +27,7 @@ public class NewShooter extends SubsystemBase {
   private double shooterVolts = 5;
   private double shooterToAmpVolts = 1;
   private final DigitalInput shooterBeam;
-  private boolean flywheelsReachedSpeed = false;
+  private boolean shooterReachedSpeed = false;
   private final VoltageOut voltRequestTopBar = new VoltageOut(0);
   private final VoltageOut voltRequestBottomBar = new VoltageOut(0);
   private final VelocityVoltage topVelocityRequest = new VelocityVoltage(0).withSlot(0);
@@ -32,14 +35,16 @@ public class NewShooter extends SubsystemBase {
   private CurrentLimitsConfigs topCurrentConfigs = new CurrentLimitsConfigs();
   private CurrentLimitsConfigs bottomCurrentConfigs = new CurrentLimitsConfigs();
 
-  private double topVelocity = 0.0;
-  private double bottomVelocity = 0.0;
+  private double topTargetVelocity = 0.0;
+  private double bottomTargetVelocity = 0.0;
 
-  private double topShuttleVelocity = 0.0;
-  private double bottomShuttleVelocity = 0.0;
+  private double topTargetShuttleVelocity = 0.0;
+  private double bottomTargetShuttleVelocity = 0.0;
 
   private boolean tryingToShoot = false;
   private boolean tryingToShuttle = false;
+
+  private double maxTime = 1;
 
   Slot0Configs slot0Configs; //holds all the pid values (gains) for top flywheel
   private double slot0_kS = 0.0;
@@ -120,13 +125,47 @@ public class NewShooter extends SubsystemBase {
     slot1Configs.kI = slot1_kI;
     slot1Configs.kD = slot1_kD;
   }
+  public void checkShooterAtSetpoint(){
+    if (isTryingToShoot()){
+      boolean reached = Math.abs(topTargetVelocity - getTopShooterVelocity()) < 2 && Math.abs(bottomTargetVelocity - getBottomShooterVelocity()) < 2;
+      setShooterReachedSpeed(reached);
+    }
+    else if(isTryingToShuttle()){
+      boolean reached = Math.abs(topTargetShuttleVelocity - getTopShooterVelocity()) < 2 && Math.abs(bottomTargetShuttleVelocity - getBottomShooterVelocity()) < 2;
+      setShooterReachedSpeed(reached);
+    }
+  }
   public void setShooterVelocity(){
-    topShooterBar.setControl(topVelocityRequest.withVelocity(topVelocity));
-    bottomShooterBar.setControl(bottomVelocityRequest.withVelocity(bottomVelocity));
+    topShooterBar.setControl(topVelocityRequest.withVelocity(topTargetVelocity));
+    bottomShooterBar.setControl(bottomVelocityRequest.withVelocity(bottomTargetVelocity));
   }
   public void setShuttleShooterVelocity(){
-    topShooterBar.setControl(topVelocityRequest.withVelocity(topShuttleVelocity));
-    topShooterBar.setControl(bottomVelocityRequest.withVelocity(bottomShuttleVelocity));
+    topShooterBar.setControl(topVelocityRequest.withVelocity(topTargetShuttleVelocity));
+    topShooterBar.setControl(bottomVelocityRequest.withVelocity(bottomTargetShuttleVelocity));
+  }
+  public void setTopShooterVelocity(double value){
+    topShooterBar.setControl(topVelocityRequest.withVelocity(value));
+  }
+  public double getTopShooterVelocity(){
+    return topShooterBar.getVelocity().getValue();
+  }
+  public void setBottomShooterVelocity(double value){
+    bottomShooterBar.setControl(bottomVelocityRequest.withVelocity(value));
+  }
+  public double getBottomShooterVelocity(){
+    return bottomShooterBar.getVelocity().getValue();
+  }
+  public void setShooterWithMomentum(double currentTime){ //this is shoot with moving setpoint
+    double timePercent = currentTime/maxTime; //percentage of time
+    if (timePercent < 1){ //check to make sure you are not using more than 100% of setpoint
+      double topShooterRemaining = topTargetVelocity - getTopShooterVelocity(); //way to go from starting to target velocity
+      double bottomShooterRemaining = bottomTargetVelocity - getBottomShooterVelocity();
+      setTopShooterVelocity(getTopShooterVelocity() + (timePercent * topShooterRemaining)); //makes setpoints gradually increase as timer increases
+      setBottomShooterVelocity(getBottomShooterVelocity() + (timePercent * bottomShooterRemaining)); //bottom and top are different in case of different starting points
+    }
+    else {
+      setShooterVelocity();
+    }
   }
 
   //getters
@@ -141,6 +180,16 @@ public class NewShooter extends SubsystemBase {
   public double getSlot1_kP(){return slot1_kP;}
   public double getSlot1_kI(){return slot1_kI;}
   public double getSlot1_kD(){return slot1_kD;}
+  public double getMaxTime(){return maxTime;}
+  public boolean HasShooterReachedSpeed(){return shooterReachedSpeed;}
+  public boolean isTryingToShoot(){return tryingToShoot;}
+  public boolean isTryingToShuttle(){return tryingToShuttle;}
+  public double getShooterVolts(){return shooterVolts;}
+  public double getShooterToAmpVolts(){return shooterToAmpVolts;}
+  public double getTopTargetVelocity(){return topTargetVelocity;}
+  public double getBottomTargetVelocity(){return bottomTargetVelocity;}
+  public double getTopTargetShuttleVelocity(){return topTargetShuttleVelocity;}
+  public double getBottomTargetShuttleVelocity(){return bottomTargetShuttleVelocity;}
 
   //setters
   public void setSlot0_kS(double value){
@@ -173,7 +222,65 @@ public class NewShooter extends SubsystemBase {
   public void setSlot1_kD(double value){
     slot1_kD = value;
   }
+  public void setMaxTime(double value){
+    maxTime = value;
+  }
+  public void setShooterReachedSpeed(boolean value){
+    shooterReachedSpeed = value;
+  }
+  public void setTryingToShoot(boolean value){
+    tryingToShoot = value;
+  }
+  public void setTryingToShuttle(boolean value){
+    tryingToShuttle = value;
+  }
+  public void setShooterVolts(double value){
+    shooterVolts = value;
+  }
+  public void setShooterToAmpVolts(double value){
+    shooterToAmpVolts = value;
+  }
+  public void setTopTargetVelocity(double value){
+    topTargetVelocity = value;
+  }
+  public void setBottomTargetVelocity(double value){
+    bottomTargetVelocity = value;
+  }
+  public void setTopTargetShuttleVelocity(double value){
+    topTargetShuttleVelocity = value;
+  }
+  public void setBottomTargetShuttleVelocity(double value){
+    bottomTargetShuttleVelocity = value;
+  }
+  public void initSendable(SendableBuilder builder){
+    if (Constants.debugMode){
+      builder.setSmartDashboardType("Shooter");
 
+      builder.addBooleanProperty("Shooter Beam", this::getShooterBeam, null);
+      builder.addBooleanProperty("Has Reached Speed", this::HasShooterReachedSpeed, this::setShooterReachedSpeed);
+      builder.addBooleanProperty("Trying to Shoot", this::isTryingToShoot, this::setTryingToShoot);
+      builder.addBooleanProperty("Trying to Shuttle", this::isTryingToShuttle, this::setTryingToShuttle);
+
+      builder.addDoubleProperty("Shooter Volts", this::getShooterVolts, this::setShooterVolts);
+      builder.addDoubleProperty("Shooter to Amp Volts", this::getShooterToAmpVolts, this::setShooterToAmpVolts);
+      builder.addDoubleProperty("Top Target Velocity", this::getTopTargetVelocity, this::setTopTargetVelocity);
+      builder.addDoubleProperty("Bottom Target Velocity", this::getBottomTargetVelocity, this::setBottomTargetVelocity);
+      builder.addDoubleProperty("Top Shuttling Target Velocity", this::getTopTargetShuttleVelocity, this::setTopTargetShuttleVelocity);
+      builder.addDoubleProperty("Bottom Shuttling target Velocity", this::getBottomTargetShuttleVelocity, this::setBottomTargetShuttleVelocity);
+
+      builder.addDoubleProperty("Top S", this::getSlot0_kS, this::setSlot0_kS);
+      builder.addDoubleProperty("Top V", this::getSlot0_kV, this::setSlot0_kV);
+      builder.addDoubleProperty("Top P", this::getSlot0_kP, this::setSlot0_kP);
+      builder.addDoubleProperty("Top I", this::getSlot0_kI, this::setSlot0_kI);
+      builder.addDoubleProperty("Top D", this::getSlot0_kD, this::setSlot0_kD);
+
+      builder.addDoubleProperty("Bottom S", this::getSlot1_kS, this::setSlot1_kS);
+      builder.addDoubleProperty("Bottom V", this::getSlot1_kV, this::setSlot1_kV);
+      builder.addDoubleProperty("Bottom P", this::getSlot1_kP, this::setSlot1_kP);
+      builder.addDoubleProperty("Bottom I", this::getSlot1_kI, this::setSlot1_kI);
+      builder.addDoubleProperty("Bottom D", this::getSlot1_kD, this::setSlot1_kD);
+    }
+  }
 
 
   @Override
