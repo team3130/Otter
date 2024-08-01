@@ -9,10 +9,11 @@ package frc.robot.commands.Shooter;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
-import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.NewShooter;
+//import frc.robot.subsystems.Shooter;
 
 public class ShuttleMovingSetpoint extends Command {
-  private final Shooter shooter;
+  private final NewShooter shooter;
   private Timer timer = new Timer();
   double topStartingPoint = 0;
   double bottomStartingPoint = 0;
@@ -24,7 +25,7 @@ public class ShuttleMovingSetpoint extends Command {
    *
    * @param shooter  The subsystem used by this command.
    */
-  public ShuttleMovingSetpoint(Shooter shooter) {
+  public ShuttleMovingSetpoint(NewShooter shooter) {
     this.shooter = shooter;
     addRequirements(shooter);
   }
@@ -34,21 +35,14 @@ public class ShuttleMovingSetpoint extends Command {
   @Override
   public void initialize() {
     shooter.setTryingToShuttle(true);
-    shooter.setTryingToShootNotShuttle(false);
+    shooter.setTryingToShoot(false);
 
     timer.reset();
     timer.start();
     if (Constants.debugMode) {
-      shooter.updatePIDValues();
+      shooter.updateShooterPID();
     }
-    shooter.configureVelocitySlots();
-
-    topStartingPoint = shooter.getTopFlyVelocityRPS(); //momentum in the wheels creates a nonzero starting state
-    bottomStartingPoint = shooter.getBottomFlyVelocityRPS();
-
-    topRPSToIncrease = shooter.getTopShuttleVelocitySetpoint() - topStartingPoint; //ground left to cover
-    bottomRPSToIncrease = shooter.getBottomShuttleVelocitySetpoint() - bottomStartingPoint;
-
+    shooter.configureShooterConfigs();
   }
 
 
@@ -56,14 +50,8 @@ public class ShuttleMovingSetpoint extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-      if ((timer.get() / shooter.getMaxTime()) < 1) { // make sure you are not applying >100% of setpoint before incrementing
-        shooter.setTopFlywheelVelocity( topStartingPoint + ((timer.get() / shooter.getMaxTime()) * topRPSToIncrease));
-        shooter.setBottomFlywheelVelocity( bottomStartingPoint + ((timer.get() / shooter.getMaxTime()) * bottomRPSToIncrease));
-        // setpoint = how fast you are going now + (% of time used * rps the controller has to cover to setpoint); make sure it is never over setpoint
-      } else {
-        shooter.setShuttleFlywheelVelocity(); //normal going straight to setpoint, assumes youve hit it previously
-      }
-      shooter.checkFlywheelsAtVelocitySetpoint(shooter.getTopShuttleVelocitySetpoint(), shooter.getBottomShuttleVelocitySetpoint());
+    shooter.setShooterWithMomentum(timer.get());
+    shooter.checkShooterAtSetpoint();
   }
 
 
@@ -71,7 +59,7 @@ public class ShuttleMovingSetpoint extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    shooter.stopShooters();
+    shooter.stopShooter();
     timer.stop();
     shooter.setTryingToShuttle(false);
   }

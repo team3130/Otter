@@ -7,21 +7,21 @@ package frc.robot.commands.Indexer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.NewIndexer;
 import frc.robot.subsystems.NewShooterShifter;
-import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.NewShooter;
 
 /** An example command that uses an example subsystem. */
 public class IndexToBeam extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final NewIndexer indexer;
   private final NewShooterShifter shooterShifter;
-  private final Shooter shooter;
+  private final NewShooter shooter;
 
   /**
    * Creates a new ExampleCommand.
    *
    * @param indexer The subsystem used by this command.
    */
-  public IndexToBeam(NewIndexer indexer, NewShooterShifter shooterShifter, Shooter shooter) {
+  public IndexToBeam(NewIndexer indexer, NewShooterShifter shooterShifter, NewShooter shooter) {
     this.indexer = indexer;
     this.shooterShifter = shooterShifter;
     this.shooter = shooter;
@@ -50,6 +50,6 @@ public class IndexToBeam extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return shooter.getBeamHasNote();
+    return shooter.getShooterBeam();
   }
 }

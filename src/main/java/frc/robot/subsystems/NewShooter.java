@@ -1,7 +1,7 @@
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
-/*
+
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
@@ -24,7 +24,7 @@ import static java.lang.Math.abs;
 public class NewShooter extends SubsystemBase {
   private final TalonFX topShooterBar;
   private final TalonFX bottomShooterBar;
-  private double shooterVolts = 5;
+  private double shooterVolts = 4;
   private double shooterToAmpVolts = 1;
   private final DigitalInput shooterBeam;
   private boolean shooterReachedSpeed = false;
@@ -169,7 +169,7 @@ public class NewShooter extends SubsystemBase {
   }
 
   //getters
-  public boolean getShooterBeam(){return shooterBeam.get();}
+  public boolean getShooterBeam(){return !shooterBeam.get();}
   public double getSlot0_kS(){return slot0_kS;}
   public double getSlot0_kV(){return slot0_kV;}
   public double getSlot0_kP(){return slot0_kP;}
@@ -181,7 +181,7 @@ public class NewShooter extends SubsystemBase {
   public double getSlot1_kI(){return slot1_kI;}
   public double getSlot1_kD(){return slot1_kD;}
   public double getMaxTime(){return maxTime;}
-  public boolean HasShooterReachedSpeed(){return shooterReachedSpeed;}
+  public boolean hasShooterReachedSpeed(){return shooterReachedSpeed;}
   public boolean isTryingToShoot(){return tryingToShoot;}
   public boolean isTryingToShuttle(){return tryingToShuttle;}
   public double getShooterVolts(){return shooterVolts;}
@@ -254,10 +254,10 @@ public class NewShooter extends SubsystemBase {
   }
   public void initSendable(SendableBuilder builder){
     if (Constants.debugMode){
-      builder.setSmartDashboardType("Shooter");
+      builder.setSmartDashboardType("New Shooter");
 
       builder.addBooleanProperty("Shooter Beam", this::getShooterBeam, null);
-      builder.addBooleanProperty("Has Reached Speed", this::HasShooterReachedSpeed, this::setShooterReachedSpeed);
+      builder.addBooleanProperty("Has Reached Speed", this::hasShooterReachedSpeed, this::setShooterReachedSpeed);
       builder.addBooleanProperty("Trying to Shoot", this::isTryingToShoot, this::setTryingToShoot);
       builder.addBooleanProperty("Trying to Shuttle", this::isTryingToShuttle, this::setTryingToShuttle);
 
@@ -267,6 +267,8 @@ public class NewShooter extends SubsystemBase {
       builder.addDoubleProperty("Bottom Target Velocity", this::getBottomTargetVelocity, this::setBottomTargetVelocity);
       builder.addDoubleProperty("Top Shuttling Target Velocity", this::getTopTargetShuttleVelocity, this::setTopTargetShuttleVelocity);
       builder.addDoubleProperty("Bottom Shuttling target Velocity", this::getBottomTargetShuttleVelocity, this::setBottomTargetShuttleVelocity);
+      builder.addDoubleProperty("Top Shooter Velocity", this::getTopShooterVelocity, null);
+      builder.addDoubleProperty("Bottom Shooter Velocity", this::getBottomShooterVelocity, null);
 
       builder.addDoubleProperty("Top S", this::getSlot0_kS, this::setSlot0_kS);
       builder.addDoubleProperty("Top V", this::getSlot0_kV, this::setSlot0_kV);
@@ -294,4 +296,3 @@ public class NewShooter extends SubsystemBase {
   }
 }
 
-*/

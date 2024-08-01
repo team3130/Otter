@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-
+/*
 package frc.robot.commands.Auto;
 
 
@@ -25,6 +25,7 @@ public class AutoFlywheelMovingSetpoint extends Command {
    *
    * @param shooter  The subsystem used by this command.
    */
+/*
   public AutoFlywheelMovingSetpoint(Shooter shooter) {
     this.shooter = shooter;
     addRequirements(shooter);
@@ -87,3 +88,5 @@ public class AutoFlywheelMovingSetpoint extends Command {
     return false;
   }
 }
+
+ */

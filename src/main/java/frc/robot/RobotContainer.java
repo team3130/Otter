@@ -35,6 +35,7 @@ import frc.robot.commands.Indexer.UnlimitedOuttake;
 import frc.robot.commands.Intake.IntakeIn;
 import frc.robot.commands.Indexer.UnlimitedSpintake;
 import frc.robot.commands.Intake.IntakeToggle;
+import frc.robot.commands.Shooter.OnlyShoot;
 import frc.robot.commands.ShooterShifter.HighPosition;
 import frc.robot.commands.ShooterShifter.LowestPosition;
 import frc.robot.commands.ShooterShifter.ShortExtended;
@@ -69,7 +70,8 @@ public class RobotContainer {
   private final Chassis chassis;
   //private final Intake intake;
   private final NewIntake intake;
-  private final Shooter shooter;
+  //private final Shooter shooter;
+  private final NewShooter shooter;
   //private final Indexer indexer;
   private final NewIndexer indexer;
   //private final ShooterShifter shooterShifter;
@@ -88,7 +90,8 @@ public class RobotContainer {
     leftClimber = new Climber(Constants.CAN.climberLeft, Constants.IDs.kLLimitSwitch, Constants.XBox.AXS_RJOYSTICK_Y, false);
     rightClimber = new Climber(Constants.CAN.climberRight, Constants.IDs.kRLimitSwitch, Constants.XBox.AXS_LJOYSTICK_Y, false);
 
-    shooter = new Shooter();
+    //shooter = new Shooter();
+    shooter = new NewShooter();
     //shooterShifter = new ShooterShifter();
     newShooterShifter = new NewShooterShifter();
     chassis = new Chassis();
@@ -103,9 +106,9 @@ public class RobotContainer {
 
     // Named commands must be registered before the creation of any PathPlanner Autos or Paths
     // Do this in RobotContainer, after subsystem initialization, but before the creation of any other commands.
-    NamedCommands.registerCommand("FlywheelsMovingSet", new AutoFlywheelMovingSetpoint(shooter));
-    NamedCommands.registerCommand("Flywheels", new AutoFlywheel(shooter));
-    NamedCommands.registerCommand("FlywheelShuttle", new AutoFlywheelShuttle(shooter));
+    //NamedCommands.registerCommand("FlywheelsMovingSet", new AutoFlywheelMovingSetpoint(shooter));
+    //NamedCommands.registerCommand("Flywheels", new AutoFlywheel(shooter));
+    //NamedCommands.registerCommand("FlywheelShuttle", new AutoFlywheelShuttle(shooter));
 
     //NamedCommands.registerCommand("Index", new AutoIndex(indexer, shooter));
     //NamedCommands.registerCommand("IndexPreload", new AutoIndexPreload(indexer, shooter));
@@ -137,7 +140,7 @@ public class RobotContainer {
     tab.addBoolean("Intake Has Note", intake::getIntakeLimit).withPosition(0, 0).withSize(6, 5);
     tab.addBoolean("At Distance", camera::atShootingDistance).withPosition(6, 0).withSize(2, 2);
     tab.addBoolean("At Angle", camera::isAtYawSetpointLEDs).withPosition(8, 0).withSize(2, 2);
-    tab.addBoolean("Flywheel Speed", shooter::getFlywheelAtVelocityRaw).withPosition(6, 2).withSize(3, 2);
+    tab.addBoolean("Flywheel Speed", shooter::hasShooterReachedSpeed).withPosition(6, 2).withSize(3, 2);
     tab.addBoolean("Climbers", this::climbersAreDone).withPosition(9, 2).withSize(2, 2);
     tab.addDouble("Distance #", camera::getDistanceToTarget).withPosition(6, 4).withSize(1, 1);
 
@@ -324,8 +327,9 @@ public class RobotContainer {
     //new JoystickTrigger(operatorController, Constants.XBox.AXS_RTRIGGER).whileTrue(new AndrewIndexToShoot(indexer, shooterShifter, shooter, camera));
 
     // shooter
-    new JoystickButton(operatorController, Constants.XBox.BTN_RBUMPER).whileTrue(new ShootMovingSetpoint(shooter));
-    new JoystickButton(operatorController, Constants.XBox.BTN_X).whileTrue(new ShuttleMovingSetpoint(shooter));
+    //new JoystickButton(operatorController, Constants.XBox.BTN_RBUMPER).whileTrue(new ShootMovingSetpoint(shooter));
+    //new JoystickButton(operatorController, Constants.XBox.BTN_X).whileTrue(new ShuttleMovingSetpoint(shooter));
+    new JoystickButton(operatorController, Constants.XBox.BTN_X).whileTrue(new OnlyShoot(shooter));
 
     // amp
     //new POVButton(operatorController, Constants.XBox.POV_N).whileTrue(new SequentialCommandGroup(new AmpKirbyPrepMid(amp, shooterShifter), new AmpKirbyFlies(amp, shooter, shooterShifter, indexer)));

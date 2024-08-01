@@ -1,7 +1,7 @@
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
-
+/*
 package frc.robot.commands.Indexer;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -10,7 +10,6 @@ import frc.robot.subsystems.NewIndexer;
 import frc.robot.subsystems.NewShooterShifter;
 import frc.robot.subsystems.Shooter;
 
-/** An example command that uses an example subsystem. */
 public class AndrewIndexToShoot extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final NewIndexer indexer;
@@ -22,6 +21,7 @@ public class AndrewIndexToShoot extends Command {
    *
    * @param indexer The subsystem used by this command.
    */
+/*
   public AndrewIndexToShoot(NewIndexer indexer, NewShooterShifter shooterShifter, Shooter shooter) {
     this.indexer = indexer;
     this.shooterShifter = shooterShifter;
@@ -54,3 +54,5 @@ public class AndrewIndexToShoot extends Command {
     return false;
   }
 }
+
+ */

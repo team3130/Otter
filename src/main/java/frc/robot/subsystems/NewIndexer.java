@@ -13,12 +13,12 @@ import frc.robot.Constants;
 
 public class NewIndexer extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
-  private final Shooter shooter;
+  private final NewShooter shooter;
   private final WPI_TalonSRX indexer;
   private double indexerVoltageCompensation = 12;
   private double intakeSpeed = 1;
 
-  public NewIndexer(Shooter shooter) {
+  public NewIndexer(NewShooter shooter) {
     this.shooter = shooter;
 
     indexer = new WPI_TalonSRX(Constants.CAN.intakeIndexer); //defining indexer

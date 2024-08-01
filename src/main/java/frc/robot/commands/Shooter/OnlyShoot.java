@@ -5,12 +5,13 @@
 package frc.robot.commands.Shooter;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.NewShooter;
+//import frc.robot.subsystems.Shooter;
 
 public class OnlyShoot extends Command {
-  private final Shooter shooter;
+  private final NewShooter shooter;
 
-  public OnlyShoot(Shooter shooter) {
+  public OnlyShoot(NewShooter shooter) {
     this.shooter = shooter;
     addRequirements(shooter);
   }
@@ -24,13 +25,13 @@ public class OnlyShoot extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    shooter.runShooterFlywheels();
+    shooter.runShooter();
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    shooter.stopShooters();
+    shooter.stopShooter();
   }
 
   // Returns true when the command should end.
