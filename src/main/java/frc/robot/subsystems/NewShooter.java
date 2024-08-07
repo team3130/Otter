@@ -24,7 +24,7 @@ import static java.lang.Math.abs;
 public class NewShooter extends SubsystemBase {
   private final TalonFX topShooterBar;
   private final TalonFX bottomShooterBar;
-  private double shooterVolts = 4;
+  private double shooterVolts = 5;
   private double shooterToAmpVolts = 1;
   private final DigitalInput shooterBeam;
   private boolean shooterReachedSpeed = false;
@@ -35,11 +35,11 @@ public class NewShooter extends SubsystemBase {
   private CurrentLimitsConfigs topCurrentConfigs = new CurrentLimitsConfigs();
   private CurrentLimitsConfigs bottomCurrentConfigs = new CurrentLimitsConfigs();
 
-  private double topTargetVelocity = 0.0;
-  private double bottomTargetVelocity = 0.0;
+  private double topTargetVelocity = 35;
+  private double bottomTargetVelocity = 35;
 
-  private double topTargetShuttleVelocity = 0.0;
-  private double bottomTargetShuttleVelocity = 0.0;
+  private double topTargetShuttleVelocity = 20;
+  private double bottomTargetShuttleVelocity = 20;
 
   private boolean tryingToShoot = false;
   private boolean tryingToShuttle = false;
@@ -71,8 +71,8 @@ public class NewShooter extends SubsystemBase {
     topShooterBar.setNeutralMode(NeutralModeValue.Coast);
     bottomShooterBar.setNeutralMode(NeutralModeValue.Coast);
 
-    topShooterBar.setInverted(false);
-    bottomShooterBar.setInverted(false);
+    topShooterBar.setInverted(true);
+    bottomShooterBar.setInverted(true);
 
     topShooterBar.getConfigurator().apply(topCurrentConfigs.withSupplyCurrentLimit(40));
     bottomShooterBar.getConfigurator().apply(bottomCurrentConfigs.withSupplyCurrentLimit(40));

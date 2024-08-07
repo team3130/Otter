@@ -36,6 +36,7 @@ import frc.robot.commands.Intake.IntakeIn;
 import frc.robot.commands.Indexer.UnlimitedSpintake;
 import frc.robot.commands.Intake.IntakeToggle;
 import frc.robot.commands.Shooter.OnlyShoot;
+import frc.robot.commands.Shooter.VelocityShoot;
 import frc.robot.commands.ShooterShifter.HighPosition;
 import frc.robot.commands.ShooterShifter.LowestPosition;
 import frc.robot.commands.ShooterShifter.ShortExtended;
@@ -329,7 +330,8 @@ public class RobotContainer {
     // shooter
     //new JoystickButton(operatorController, Constants.XBox.BTN_RBUMPER).whileTrue(new ShootMovingSetpoint(shooter));
     //new JoystickButton(operatorController, Constants.XBox.BTN_X).whileTrue(new ShuttleMovingSetpoint(shooter));
-    new JoystickButton(operatorController, Constants.XBox.BTN_X).whileTrue(new OnlyShoot(shooter));
+    new JoystickButton(operatorController, Constants.XBox.BTN_X).whileTrue(new ShootMovingSetpoint(shooter));
+    new JoystickButton(operatorController, Constants.XBox.BTN_RBUMPER).whileTrue(new OnlyShoot(shooter));
 
     // amp
     //new POVButton(operatorController, Constants.XBox.POV_N).whileTrue(new SequentialCommandGroup(new AmpKirbyPrepMid(amp, shooterShifter), new AmpKirbyFlies(amp, shooter, shooterShifter, indexer)));

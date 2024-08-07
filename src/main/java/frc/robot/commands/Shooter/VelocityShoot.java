@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.NewShooter;
+import org.w3c.dom.ls.LSOutput;
 
 public class VelocityShoot extends Command {
   private final NewShooter shooter;
@@ -30,15 +31,20 @@ public class VelocityShoot extends Command {
   public void initialize() {
     if (Constants.debugMode) {
       shooter.updateShooterPID();
+      shooter.configureShooterConfigs();
     }
+    shooter.setTryingToShoot(true);
+    System.out.println("velocity shoot");
     shooter.setShooterVelocity();
   }
+
 
 
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    shooter.checkShooterAtSetpoint();
   }
 
 
@@ -46,6 +52,7 @@ public class VelocityShoot extends Command {
   @Override
   public void end(boolean interrupted) {
     shooter.stopShooter();
+    shooter.setTryingToShoot(false);
   }
 
 

@@ -32,7 +32,7 @@ public class NewAmp extends SubsystemBase {
 
   //speeds
   private final double trackMotorSpeedUp = 0.3;
-  private final double trackMotorSpeedDown = -0.2;
+  private final double trackMotorSpeedDown = -0.1;
   private final double wheelMotorSpeed = 0.5;
 
   //setpoints
