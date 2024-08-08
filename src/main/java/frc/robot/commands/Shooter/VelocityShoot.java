@@ -34,7 +34,6 @@ public class VelocityShoot extends Command {
       shooter.configureShooterConfigs();
     }
     shooter.setTryingToShoot(true);
-    System.out.println("velocity shoot");
     shooter.setShooterVelocity();
   }
 

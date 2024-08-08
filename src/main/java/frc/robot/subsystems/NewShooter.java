@@ -44,19 +44,21 @@ public class NewShooter extends SubsystemBase {
   private boolean tryingToShoot = false;
   private boolean tryingToShuttle = false;
 
-  private double maxTime = 1;
+  private double maxTime = 0.5;
+
+
 
   Slot0Configs slot0Configs; //holds all the pid values (gains) for top flywheel
   private double slot0_kS = 0.0;
-  private double slot0_kV = 0.0;
-  private double slot0_kP = 0.0;
+  private double slot0_kV = 0.12;
+  private double slot0_kP = 0.01;
   private double slot0_kI = 0.0;
   private double slot0_kD = 0.0;
 
   Slot1Configs slot1Configs; //bottom flywheel gains
   private double slot1_kS = 0.0;
-  private double slot1_kV = 0.0;
-  private double slot1_kP = 0.0;
+  private double slot1_kV = 0.117;
+  private double slot1_kP = 0.01;
   private double slot1_kI = 0.0;
   private double slot1_kD = 0.0;
 

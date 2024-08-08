@@ -63,6 +63,7 @@ public class ShootMovingSetpoint extends Command {
     shooter.stopShooter();
     timer.stop();
     shooter.setTryingToShoot(false);
+    shooter.setShooterReachedSpeed(false);
   }
 
 
