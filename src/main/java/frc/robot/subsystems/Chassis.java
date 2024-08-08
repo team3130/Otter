@@ -47,7 +47,7 @@ public class Chassis extends SubsystemBase {
     private double targetP = 10d;
     private double targetI = 0.2;
     private double targetD = 0.8;
-    private boolean isFaceTargetingLEDs = false;
+    private boolean isFaceTargetingLEDs = false; //is facing the target
     private boolean isTargetingSpeaker = false;
     private boolean isTargetingAmp = false;
     private boolean isTargetingSpeakerAmpSide = false;
