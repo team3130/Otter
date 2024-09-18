@@ -12,7 +12,6 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -198,10 +197,10 @@ public class Chassis extends SubsystemBase {
 
     // If the PID controllers of the Swerve Modules are done, returning whether the wheels are zeroed/PID controllers finished
     public boolean turnToAnglePIDIsFinished() {
-        return modules[Constants.SwerveModules.one].PIDisDone() &&
-                modules[Constants.SwerveModules.two].PIDisDone() &&
-                modules[Constants.SwerveModules.three].PIDisDone() &&
-                modules[Constants.SwerveModules.four].PIDisDone();
+        return modules[Constants.SwerveModules.one].turningPIDisDone() &&
+                modules[Constants.SwerveModules.two].turningPIDisDone() &&
+                modules[Constants.SwerveModules.three].turningPIDisDone() &&
+                modules[Constants.SwerveModules.four].turningPIDisDone();
     }
 
     // Generates the position of the swerve modules, retuning the position
@@ -260,12 +259,28 @@ public class Chassis extends SubsystemBase {
         modules[Constants.SwerveModules.four].setAutonDesiredState(desiredStates[Constants.SwerveModules.four]);
     }
 
+    public void setTeleopModuleStatesVelo(SwerveModuleState[] desiredStates) {
+        SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
+
+        modules[Constants.SwerveModules.one].setTeleopDesiredStateVelo(desiredStates[Constants.SwerveModules.one]);
+        modules[Constants.SwerveModules.two].setTeleopDesiredStateVelo(desiredStates[Constants.SwerveModules.two]);
+        modules[Constants.SwerveModules.three].setTeleopDesiredStateVelo(desiredStates[Constants.SwerveModules.three]);
+        modules[Constants.SwerveModules.four].setTeleopDesiredStateVelo(desiredStates[Constants.SwerveModules.four]);
+    }
+
 
 
     // Spins the wheels to an angle
     public void turnToAngle(double setpoint) {
         for (SwerveModule module : modules) {
             module.turnToAngle(setpoint);
+        }
+    }
+
+    //Spins the wheels at a velocity
+    public void driveAtVelocity(double setpoint) {
+        for (SwerveModule module : modules) {
+            module.driveAtVelocity(setpoint);
         }
     }
 
@@ -543,12 +558,12 @@ public class Chassis extends SubsystemBase {
 
     // gets the kP values for each module
     public double getPValuesForSwerveModules() {
-        return modules[0].getPValue();
+        return modules[0].getTurningPValue();
     }
 
     // gets the kD values for each module
     public double getDValuesForSwerveModules() {
-        return modules[0].getDValue();
+        return modules[0].getTurningDValue();
     }
 
     // returns the heading the NavX is reading, returning the rotation of the robot in radians

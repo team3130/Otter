@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
@@ -27,7 +28,16 @@ public class SwerveModule implements Sendable {
     private final int side; // the side that the bot is on
     final VoltageOut steerMotorVoltRequest = new VoltageOut(0);
     final VoltageOut driveMotorVoltRequest = new VoltageOut(0);
-    final VelocityVoltage driveMotorVeloVoltRequest = new VelocityVoltage(0);
+    final VelocityVoltage driveMotorVeloVoltRequest = new VelocityVoltage(0).withSlot(0);
+
+    Slot0Configs slot0Configs;
+    private double slot0_kS = 0;
+    private double slot0_kV = 0;
+    private double slot0_kA = 0;
+    private double slot0_kP = 0;
+    private double slot0_kI = 0;
+    private double slot0_kD = 0;
+
 
     //private double steeringVoltage = 4d;
     //private double drivingVoltage = 10d;
@@ -57,7 +67,17 @@ public class SwerveModule implements Sendable {
 
         absoluteEncoderOffset = Constants.SwerveEncoderOffsets.kCANCoderOffsets[side];
         this.side =side;
-        
+
+        slot0Configs = new Slot0Configs();
+
+        slot0Configs.kS = slot0_kS; // Add 0.05 V output to overcome static friction
+        slot0Configs.kV = slot0_kV; // 1/(rps) - A velocity target of 1 rps results in 0.12 V output
+        slot0Configs.kP = slot0_kP; // 1/rps - An error of 1 rps results in 0.11 V output
+        slot0Configs.kI = slot0_kI; // 1/rot - output per unit of integrated error in velocity (output/rotation)
+        slot0Configs.kD = slot0_kD; // output per unit of error derivative in velocity (output/ (rps/s))
+
+        driveMotor.getConfigurator().apply(slot0Configs);
+
         driveMotor.getConfigurator().apply((new CurrentLimitsConfigs().withSupplyCurrentLimitEnable(true).
                 withSupplyCurrentThreshold(40).withSupplyTimeThreshold(0)), 0.01);
 
@@ -188,6 +208,25 @@ public class SwerveModule implements Sendable {
         steerMotor.setVoltage(4d * turningPidController.calculate(Math.IEEEremainder(getTurningPositionRadians(), Math.PI * 2), state.angle.getRadians()));
     }
 
+    public void setTeleopDesiredStateVelo(SwerveModuleState state){
+        // dead-band
+        if (Math.abs(state.speedMetersPerSecond) < 0.001) {
+            stop();
+            return;
+        }
+
+        // max turn is 90 degrees optimization
+        state = SwerveModuleState.optimize(state, getState().angle);
+        // set velocity to speed from state for drive motor
+        driveMotor.setControl(driveMotorVeloVoltRequest.withVelocity(state.speedMetersPerSecond));
+        // set the steering motor based off the output of the PID controller
+        steerMotor.setVoltage(Constants.Swerve.maxSteerVoltage * turningPidController.calculate(Math.IEEEremainder(getTurningPositionRadians(), Math.PI * 2), state.angle.getRadians()));
+    }
+
+    public void driveAtVelocity(double velocity){
+        driveMotor.setControl(driveMotorVeloVoltRequest.withVelocity(velocity));
+    }
+
     /**
      * Turns the motors to an angle
      * @param setpoint in radians
@@ -210,27 +249,27 @@ public class SwerveModule implements Sendable {
      * Whether the pid controller is at the set point.
      * @return whether pid is done
      */
-    public boolean PIDisDone() {
+    public boolean turningPIDisDone() {
         return turningPidController.atSetpoint();
     }
 
-    public void setPValue(double newP) {
+    public void setTurningPValue(double newP) {
         turningPidController.setP(newP);
     }
-    public void setDValue(double newD) {
+    public void setTurningDValue(double newD) {
         turningPidController.setD(newD);
     }
-    public void setIValue(double newI) {
+    public void setTurningIValue(double newI) {
         turningPidController.setI(newI);
     }
 
-    public double getPValue() {
+    public double getTurningPValue() {
         return turningPidController.getP();
     }
-    public double getIValue() {
+    public double getTurningIValue() {
         return turningPidController.getI();
     }
-    public double getDValue() {
+    public double getTurningDValue() {
         return turningPidController.getD();
     }
 
@@ -298,9 +337,9 @@ public class SwerveModule implements Sendable {
 /*        builder.addDoubleProperty("Steer velocity", this::getTurningVelocity, null);
         builder.addDoubleProperty("Steer relative", this::getRelativePositionDegrees, null);
         */
-            builder.addDoubleProperty("Swerve P " + getRealSide(), this::getPValue, this::setPValue);
-            builder.addDoubleProperty("Swerve I " + getRealSide(), this::getIValue, this::setIValue);
-            builder.addDoubleProperty("Swerve D " + getRealSide(), this::getDValue, this::setDValue);
+            builder.addDoubleProperty("Swerve P " + getRealSide(), this::getTurningPValue, this::setTurningPValue);
+            builder.addDoubleProperty("Swerve I " + getRealSide(), this::getTurningIValue, this::setTurningIValue);
+            builder.addDoubleProperty("Swerve D " + getRealSide(), this::getTurningDValue, this::setTurningDValue);
         }
     }
 
