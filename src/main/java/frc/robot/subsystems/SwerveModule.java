@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -26,6 +27,7 @@ public class SwerveModule implements Sendable {
     private final int side; // the side that the bot is on
     final VoltageOut steerMotorVoltRequest = new VoltageOut(0);
     final VoltageOut driveMotorVoltRequest = new VoltageOut(0);
+    final VelocityVoltage driveMotorVeloVoltRequest = new VelocityVoltage(0);
 
     //private double steeringVoltage = 4d;
     //private double drivingVoltage = 10d;
