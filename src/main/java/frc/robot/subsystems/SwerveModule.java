@@ -314,6 +314,19 @@ public class SwerveModule implements Sendable {
     public double getModuleSteeringSupplyCurrent() { return steerMotor.getSupplyCurrent().getValue();}
     public double getModuleDrivingSupplyCurrent() { return driveMotor.getSupplyCurrent().getValue();}
 
+    public double getSlot0_kV() { return slot0_kV;}
+    public double getSlot0_kA() { return slot0_kA;}
+    public double getSlot0_kP() { return slot0_kP;}
+    public double getSlot0_kI() { return slot0_kI;}
+    public double getSlot0_kD() { return slot0_kD;}
+
+    public void setSlot0_kV(double value) { slot0_kV = value;}
+    public void setSlot0_kA(double value) { slot0_kA = value;}
+    public void setSlot0_kP(double value) { slot0_kP = value;}
+    public void setSlot0_kI(double value) { slot0_kI = value;}
+    public void setSlot0_kD(double value) { slot0_kD = value;}
+
+
     /**
      * Builds the sendable for shuffleboard
      * @param builder sendable builder
@@ -322,7 +335,7 @@ public class SwerveModule implements Sendable {
     public void initSendable(SendableBuilder builder) {
         if (Constants.debugMode) {
             builder.setSmartDashboardType("Swerve Module " + (getRealSide()));
-            // builder.addDoubleProperty("Drive velocity", this::getDriveVelocity, null);
+            builder.addDoubleProperty("Drive velocity", this::getDriveVelocity, null);
             builder.addDoubleProperty("Steer position", this::getSteerRotations, null);
             builder.addDoubleProperty("Drive position", this::getDrivePosition, null);
             builder.addDoubleProperty("Absolute encoder position", this::getAbsoluteEncoderRads, null);
@@ -340,6 +353,12 @@ public class SwerveModule implements Sendable {
             builder.addDoubleProperty("Swerve P " + getRealSide(), this::getTurningPValue, this::setTurningPValue);
             builder.addDoubleProperty("Swerve I " + getRealSide(), this::getTurningIValue, this::setTurningIValue);
             builder.addDoubleProperty("Swerve D " + getRealSide(), this::getTurningDValue, this::setTurningDValue);
+
+            builder.addDoubleProperty("Velo V " + getRealSide(), this::getSlot0_kV, this::setSlot0_kV);
+            builder.addDoubleProperty("Velo A " + getRealSide(), this::getSlot0_kA, this::setSlot0_kA);
+            builder.addDoubleProperty("Velo P " + getRealSide(), this::getSlot0_kP, this::setSlot0_kP);
+            builder.addDoubleProperty("Velo I " + getRealSide(), this::getSlot0_kI, this::setSlot0_kI);
+            builder.addDoubleProperty("Velo D " + getRealSide(), this::getSlot0_kD, this::setSlot0_kD);
         }
     }
 

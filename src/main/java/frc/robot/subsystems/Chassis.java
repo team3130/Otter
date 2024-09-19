@@ -28,6 +28,9 @@ import frc.robot.sensors.Navx;
 
 import java.util.Arrays;
 
+import static frc.robot.Constants.SwerveConversions.driveRotToMeters;
+import static frc.robot.Constants.SwerveConversions.driveRotToMetersPerSecond;
+
 /**
  * Chassis is the drivetrain subsystem of our bot. Our physical chassis is a swerve drive,
  * so we use wpilib SwerveDriveKinematics and SwerveDrivePoseEstimator as opposed to Differential Drive objects
@@ -280,7 +283,7 @@ public class Chassis extends SubsystemBase {
     //Spins the wheels at a velocity
     public void driveAtVelocity(double setpoint) {
         for (SwerveModule module : modules) {
-            module.driveAtVelocity(setpoint);
+            module.driveAtVelocity(setpoint * driveRotToMetersPerSecond);
         }
     }
 

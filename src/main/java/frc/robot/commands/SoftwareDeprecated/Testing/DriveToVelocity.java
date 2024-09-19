@@ -13,7 +13,7 @@ import frc.robot.subsystems.ExampleSubsystem;
 public class DriveToVelocity extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final Chassis chassis;
-  private final double velocity = 0;
+  private final double velocity = 10;
   /**
    * Creates a new ExampleCommand.
    *
@@ -27,14 +27,16 @@ public class DriveToVelocity extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    if (Constants.debugMode){
+      chassis.driveAtVelocity(velocity);
+    }
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (Constants.debugMode){
-      chassis.driveAtVelocity(velocity);
-    }
+
   }
 
   // Called once the command ends or is interrupted.
