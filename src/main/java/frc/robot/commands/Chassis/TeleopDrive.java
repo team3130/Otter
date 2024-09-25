@@ -18,7 +18,7 @@ public class TeleopDrive extends Command {
   private final Chassis chassis;
   private final PS5Controller controller;
   private final CameraSubsystem camera;
-  private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
+  private final SlewRateLimiter thetaLimiter;
   private double y;
   private double x;
   private double theta;
@@ -30,9 +30,7 @@ public class TeleopDrive extends Command {
     // Use addRequirements() here to declare subsystem dependencies.
     m_requirements.add(chassis);
 
-    xLimiter = new SlewRateLimiter(Constants.Swerve.kMaxAccelerationDrive);
-    yLimiter = new SlewRateLimiter(Constants.Swerve.kMaxAccelerationDrive);
-    turningLimiter = new SlewRateLimiter(Constants.Swerve.kMaxAccelerationAngularDrive);
+    thetaLimiter = new SlewRateLimiter(Constants.Swerve.kMaxThetaChange);
   }
 
   /**
@@ -106,6 +104,7 @@ public class TeleopDrive extends Command {
       // apply slew rate limiter which also converts to m/s and rad.s
       x = xLimiter.calculate(x * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
       y = yLimiter.calculate(y * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
+
 
       chassis.teleopDrive(x, y, theta); //uses either driving or targeting inputs for theta
   }
