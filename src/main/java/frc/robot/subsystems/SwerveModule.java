@@ -224,6 +224,7 @@ public class SwerveModule implements Sendable {
     }
 
     public void driveAtVelocity(double velocity){
+        updatePIDValues();
         driveMotor.setControl(driveMotorVeloVoltRequest.withVelocity(velocity));
     }
 
@@ -313,6 +314,14 @@ public class SwerveModule implements Sendable {
 
     public double getModuleSteeringSupplyCurrent() { return steerMotor.getSupplyCurrent().getValue();}
     public double getModuleDrivingSupplyCurrent() { return driveMotor.getSupplyCurrent().getValue();}
+    public void updatePIDValues() {
+        slot0Configs.kS = slot0_kS; // Add 0.05 V output to overcome static friction
+        slot0Configs.kV = slot0_kV; // 1/(rps) - A velocity target of 1 rps results in 0.12 V output
+        slot0Configs.kP = slot0_kP; // 1/rps - An error of 1 rps results in 0.11 V output
+        slot0Configs.kI = slot0_kI; // 1/rot - output per unit of integrated error in velocity (output/rotation)
+        slot0Configs.kD = slot0_kD; // output per unit of error derivative in velocity (output/ (rps/s))
+        driveMotor.getConfigurator().apply(slot0Configs);
+    }
 
     public double getSlot0_kV() { return slot0_kV;}
     public double getSlot0_kA() { return slot0_kA;}

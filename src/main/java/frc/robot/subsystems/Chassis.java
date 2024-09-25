@@ -147,9 +147,9 @@ public class Chassis extends SubsystemBase {
      */
     public void teleopDrive(double x, double y, double theta, boolean fieldRelative) {
         if (fieldRelative) {
-            setTeleopModuleStates(kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(x, y, theta, getRotation2d())));
+            setTeleopModuleStatesVelo(kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(x, y, theta, getRotation2d())));
         } else {
-            setTeleopModuleStates(kinematics.toSwerveModuleStates(new ChassisSpeeds(x, y, theta)));
+            setTeleopModuleStatesVelo(kinematics.toSwerveModuleStates(new ChassisSpeeds(x, y, theta)));
         }
     }
 

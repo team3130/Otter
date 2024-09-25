@@ -13,7 +13,7 @@ import frc.robot.subsystems.ExampleSubsystem;
 public class DriveToVelocity extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final Chassis chassis;
-  private final double velocity = 10;
+  private final double velocity = 3;
   /**
    * Creates a new ExampleCommand.
    *
@@ -29,7 +29,8 @@ public class DriveToVelocity extends Command {
   @Override
   public void initialize() {
     if (Constants.debugMode){
-      chassis.driveAtVelocity(velocity);
+      chassis.turnToAngle(0);
+
     }
   }
 
