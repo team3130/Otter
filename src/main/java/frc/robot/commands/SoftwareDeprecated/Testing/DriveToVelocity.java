@@ -29,8 +29,7 @@ public class DriveToVelocity extends Command {
   @Override
   public void initialize() {
     if (Constants.debugMode){
-      chassis.turnToAngle(0);
-
+      chassis.teleopDrive(0.5,0,0);
     }
   }
 
