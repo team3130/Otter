@@ -214,6 +214,7 @@ public class SwerveModule implements Sendable {
             stop();
             return;
         }
+        updatePIDValues(); //mostly for testing
 
         // max turn is 90 degrees optimization
         state = SwerveModuleState.optimize(state, getState().angle);
