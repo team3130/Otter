@@ -109,8 +109,8 @@ public class TeleopDrive extends Command {
       Translation2d ghostTurn = changeInDirectionLimiter.calculate(joystick);
 
       // apply slew rate limiter which also converts to m/s and rad.s
-      x = ghostTurn.getX();
-      y = ghostTurn.getY();
+      x = ghostTurn.getX() * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond;
+      y = ghostTurn.getY() * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond;
 
 
       chassis.teleopDrive(x, y, theta); //uses either driving or targeting inputs for theta

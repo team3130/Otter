@@ -81,6 +81,8 @@ public final class Constants {
     public static double maxSteerVoltage = 4d;
     public static double maxDriveVoltage = 10d;
 
+    public final static double kMaxAccelerationDrive = 5;
+
     public static double tuningDesiredVelocity = 2d;
     public static double kMaxThetaChange = 1;
 
