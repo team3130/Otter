@@ -27,8 +27,7 @@ public class ThetaLimiter {
             double diffTheta = Math.abs(desiredState.getAngle().minus(prevState.getAngle()).getRadians());
             if (diffTheta > 0 && diffTheta > allowedAngle) {
                 double t = allowedAngle / diffTheta;
-                ghostTheta = prevState.getAngle().interpolate(ghostTheta, t);
-                ghostStick = new Translation2d(ghostStick.getNorm(), ghostTheta);
+                ghostStick = prevState.interpolate(desiredState, t);
             }
         }
         prevState = ghostStick;
