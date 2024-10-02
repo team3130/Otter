@@ -118,7 +118,7 @@ public class SwerveModule implements Sendable {
 
     // gets the velocity of the drive motor in m/s
     public double getDriveVelocity() {
-        return driveMotor.getVelocity().getValue() * Constants.SwerveConversions.driveRotToMeters * 10d;
+        return driveMotor.getVelocity().getValue() * Constants.SwerveConversions.driveRotToMeters;
     }
 
     // gets the speed at which the steering motor turns in radians per second
