@@ -1,36 +1,38 @@
 package frc.robot.commands.Chassis;
 
 import edu.wpi.first.math.MathSharedStore;
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 
 public class ThetaLimiter {
     private double prevTime;
     private final double magvalue = .5;
-    private double posOmegaLimit;
-    private double negOmegaLimit;
-    public Rotation2d ghostTheta;
-    private Rotation2d prevTheta;
+    private final double posOmegaLimit;
+    private Translation2d prevState;
 
-    public ThetaLimiter(double limitConstant, Rotation2d joyStick){
+    public ThetaLimiter(double limitConstant, Translation2d joyStick){
         posOmegaLimit = limitConstant;
-        negOmegaLimit = -limitConstant;
-        prevTheta = joyStick;
+        prevState = joyStick;
         prevTime = MathSharedStore.getTimestamp();
     }
-    public Rotation2d calculate(Rotation2d desiredTheta, double magnitude) {
+    public Translation2d calculate(Translation2d desiredState) {
+        double magnitude = desiredState.getNorm();
         double currentTime = MathSharedStore.getTimestamp();
         double elapsedTime = currentTime - prevTime;
-        ghostTheta = desiredTheta;
-        if (magnitude > posOmegaLimit * elapsedTime / Math.PI) {
+        Translation2d ghostStick = desiredState;
+        Rotation2d ghostTheta = desiredState.getAngle();
+        double minMagValue = posOmegaLimit / Math.PI;
+        if (magnitude > minMagValue) {
             double allowedAngle = posOmegaLimit * elapsedTime / magnitude;
-            double diffTheta = Math.abs(desiredTheta.minus(prevTheta).getRadians());
-            if (diffTheta > 0) {
+            double diffTheta = Math.abs(desiredState.getAngle().minus(prevState.getAngle()).getRadians());
+            if (diffTheta > 0 && diffTheta > allowedAngle) {
                 double t = allowedAngle / diffTheta;
-                ghostTheta = prevTheta.interpolate(desiredTheta, t);
+                ghostTheta = prevState.getAngle().interpolate(ghostTheta, t);
+                ghostStick = new Translation2d(ghostStick.getNorm(), ghostTheta);
             }
         }
-        prevTheta = ghostTheta;
-        return ghostTheta;
+        prevState = ghostStick;
+        prevTime = currentTime;
+        return prevState;
     }
 }
