@@ -28,15 +28,14 @@ public class DriveToVelocity extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if (Constants.debugMode){
-      chassis.teleopDrive(1,0,0);
-    }
+      chassis.turnToAngle(0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
+
   @Override
   public void execute() {
-
+      chassis.teleopDrive(3,0,0, false);
   }
 
   // Called once the command ends or is interrupted.
