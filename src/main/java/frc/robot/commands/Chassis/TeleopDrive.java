@@ -10,6 +10,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PS5Controller;
 import edu.wpi.first.wpilibj.event.EventLoop;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.CameraSubsystem;
@@ -134,6 +136,10 @@ public class TeleopDrive extends Command {
   @Override
   public boolean isFinished() {
     return false;
+  }
+
+  public ThetaLimiter getThetaLimiter(){
+      return changeInDirectionLimiter;
   }
 
 }
