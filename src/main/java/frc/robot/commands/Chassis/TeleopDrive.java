@@ -5,9 +5,13 @@
 package frc.robot.commands.Chassis;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PS5Controller;
 import edu.wpi.first.wpilibj.event.EventLoop;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.CameraSubsystem;
@@ -18,7 +22,9 @@ public class TeleopDrive extends Command {
   private final Chassis chassis;
   private final PS5Controller controller;
   private final CameraSubsystem camera;
-  private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
+
+  private final SlewRateLimiter turninglimiter;
+  private final ThetaLimiter changeInDirectionLimiter;
   private double y;
   private double x;
   private double theta;
@@ -30,9 +36,8 @@ public class TeleopDrive extends Command {
     // Use addRequirements() here to declare subsystem dependencies.
     m_requirements.add(chassis);
 
-    xLimiter = new SlewRateLimiter(Constants.Swerve.kMaxAccelerationDrive);
-    yLimiter = new SlewRateLimiter(Constants.Swerve.kMaxAccelerationDrive);
-    turningLimiter = new SlewRateLimiter(Constants.Swerve.kMaxAccelerationAngularDrive);
+    changeInDirectionLimiter = new ThetaLimiter(Constants.Swerve.kMaxThetaChange, new Translation2d());
+    turninglimiter = new SlewRateLimiter(Constants.Swerve.kMaxAccelerationAngularDrive);
   }
 
   /**
@@ -88,7 +93,7 @@ public class TeleopDrive extends Command {
           theta = chassis.goToTargetPower();
       } else { // normal driving
           theta = Math.abs(theta) > Constants.Swerve.kDeadband ? theta : 0.0;
-          theta = turningLimiter.calculate(theta) * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond;
+          theta = turninglimiter.calculate(theta) * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond;
       }
 
 
@@ -102,10 +107,13 @@ public class TeleopDrive extends Command {
           y = 0;}
       // apply dead-band
 
+      Translation2d joystick = new Translation2d(x, y);
+      Translation2d ghostTurn = changeInDirectionLimiter.calculate(joystick);
 
       // apply slew rate limiter which also converts to m/s and rad.s
-      x = xLimiter.calculate(x * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
-      y = yLimiter.calculate(y * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond);
+      x = ghostTurn.getX() * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond;
+      y = ghostTurn.getY() * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond;
+
 
       chassis.teleopDrive(x, y, theta); //uses either driving or targeting inputs for theta
   }
@@ -128,6 +136,10 @@ public class TeleopDrive extends Command {
   @Override
   public boolean isFinished() {
     return false;
+  }
+
+  public ThetaLimiter getThetaLimiter(){
+      return changeInDirectionLimiter;
   }
 
 }
