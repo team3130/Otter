@@ -296,7 +296,16 @@ public class SwerveModule implements Sendable {
         return real;
     }
     public double getSteerRotations(){
-        return steerMotor.getPosition().getValue();
+        return steerMotor.getPosition().getValue(); //rotation as expressed from 0 to 21.47...
+    }
+    public double getSteerRotationsActual(){
+        double rotations = steerMotor.getPosition().getValue()/Constants.SwerveConversions.steerGearRatio; //rotation as expressed from 0 to 1
+        double rotationsInDegrees = (rotations * 360);
+        //double degreedivison = ( rotationsInDegrees % 360)+ 180;
+        //while((360.0 < rotationsInDegrees) ||(rotationsInDegrees < 360.0)) {
+        //    rotationsInDegrees = (steerMotor.getPosition().getValue() / Constants.SwerveConversions.steerGearRatio) - 360; //rotation as expressed from 0 to 1
+        //}
+        return rotationsInDegrees;
     }
 
 
@@ -347,6 +356,7 @@ public class SwerveModule implements Sendable {
             builder.setSmartDashboardType("Swerve Module " + (getRealSide()));
             builder.addDoubleProperty("Drive velocity", this::getDriveVelocity, null);
             builder.addDoubleProperty("Steer position", this::getSteerRotations, null);
+            builder.addDoubleProperty("Steer position as a figure of rotations", this::getSteerRotationsActual, null);
             builder.addDoubleProperty("Drive position", this::getDrivePosition, null);
             builder.addDoubleProperty("Absolute encoder position", this::getAbsoluteEncoderRads, null);
             builder.addDoubleProperty("Constant Steering voltage", this::getSwerveSteeringVoltage, this::setSwerveSteeringVoltage);

@@ -49,7 +49,8 @@ import frc.robot.commands.Shooter.ShuttleMovingSetpoint;
 import frc.robot.commands.ShooterShifter.DoubleExtend;
 import frc.robot.commands.ShooterShifter.DoubleRetract;
 import frc.robot.commands.ShooterShifter.ShortShifterExtend;
-import frc.robot.commands.SoftwareDeprecated.Testing.DriveToVelocity;
+//import frc.robot.commands.SoftwareDeprecated.Testing.DriveToVelocity;
+import frc.robot.commands.SoftwareDeprecated.Testing.TurnToAngle;
 import frc.robot.sensors.JoystickTrigger;
 import frc.robot.subsystems.*;
 import frc.robot.commands.Chassis.ResetOdometryForward;
@@ -289,8 +290,8 @@ public class RobotContainer {
     GAVIN DRIVER - Note: check Teleop button bindings in TeleopDrive
      */
     new POVButton(driverController, Constants.PS5.POV_N).whileTrue(new ResetOdometryForward(chassis));
-    new POVButton(driverController, Constants.PS5.POV_S).whileTrue(new DriveToVelocity(chassis));
-
+    //new POVButton(driverController, Constants.PS5.POV_S).whileTrue(new DriveToVelocity(chassis));
+    new POVButton(driverController, Constants.PS5.POV_S).whileTrue(new TurnToAngle(chassis));
     // intake / indexer
     new JoystickTrigger(driverController, Constants.PS5.AXS_RTRIGGER).whileTrue(new LimitedSpintake(intake, indexer));
     new JoystickButton(driverController, Constants.PS5.BTN_CIRCLE).whileTrue(new AlwaysIndex(indexer));
