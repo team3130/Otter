@@ -301,11 +301,20 @@ public class SwerveModule implements Sendable {
     public double getSteerRotationsActual(){
         double rotations = steerMotor.getPosition().getValue()/Constants.SwerveConversions.steerGearRatio; //rotation as expressed from 0 to 1
         double rotationsInDegrees = (rotations * 360);
-        //double degreedivison = ( rotationsInDegrees % 360)+ 180;
-        //while((360.0 < rotationsInDegrees) ||(rotationsInDegrees < 360.0)) {
-        //    rotationsInDegrees = (steerMotor.getPosition().getValue() / Constants.SwerveConversions.steerGearRatio) - 360; //rotation as expressed from 0 to 1
-        //}
         return rotationsInDegrees;
+    }
+    public double getSteerRotationsActualInRange(){
+        double rotations = steerMotor.getPosition().getValue()/Constants.SwerveConversions.steerGearRatio; //One rotation is 0 to 1
+        double degrees = rotations * 360;
+        if ((Math.abs(degrees) % 360) == 0 && rotations != 0) { //if degrees is a multiple of 360, then represent as either 360 or -360 respectively
+            if (degrees > 0) {
+                return degrees - ((rotations - 1) * 360);
+            } else {
+                return degrees + ((-rotations - 1) * 360);
+            }
+        } else { //return value from -360 to 360
+            return degrees % 360;
+        }
     }
 
 
