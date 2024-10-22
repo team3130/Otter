@@ -5,13 +5,9 @@
 package frc.robot.commands.Chassis;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PS5Controller;
-import edu.wpi.first.wpilibj.event.EventLoop;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.CameraSubsystem;
@@ -23,7 +19,7 @@ public class TeleopDrive extends Command {
   private final PS5Controller controller;
   private final CameraSubsystem camera;
 
-  private final SlewRateLimiter turninglimiter;
+  private final SlewRateLimiter turningLimiter;
   private final ThetaLimiter changeInDirectionLimiter;
   private double y;
   private double x;
@@ -37,7 +33,7 @@ public class TeleopDrive extends Command {
     m_requirements.add(chassis);
 
     changeInDirectionLimiter = new ThetaLimiter(Constants.Swerve.kMaxThetaChange, new Translation2d());
-    turninglimiter = new SlewRateLimiter(Constants.Swerve.kMaxAccelerationAngularDrive);
+    turningLimiter = new SlewRateLimiter(Constants.Swerve.kMaxAccelerationAngularDrive);
   }
 
   /**
@@ -93,7 +89,7 @@ public class TeleopDrive extends Command {
           theta = chassis.goToTargetPower();
       } else { // normal driving
           theta = Math.abs(theta) > Constants.Swerve.kDeadband ? theta : 0.0;
-          theta = turninglimiter.calculate(theta) * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond;
+          theta = turningLimiter.calculate(theta) * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond;
       }
 
 
