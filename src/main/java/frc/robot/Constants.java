@@ -78,7 +78,7 @@ public final class Constants {
    *  bottom left,
    */
   public static class Swerve {
-    public static double maxSteerVoltage = 4d;
+    public static double maxSteerVoltage = 10d;
     public static double maxDriveVoltage = 10d;
 
     public static double tuningDesiredVelocity = 2d;
