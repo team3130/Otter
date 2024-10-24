@@ -1,6 +1,7 @@
 package frc.robot.commands.Chassis;
 
 import edu.wpi.first.math.MathSharedStore;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.util.sendable.Sendable;
@@ -16,9 +17,11 @@ public class ThetaLimiter implements Sendable {
     private double prevTime;
     private double posOmegaLimit;
     private Translation2d prevState;
+    public double posMagLimit;
 
-    public ThetaLimiter(double limitConstant, Translation2d joyStick){
+    public ThetaLimiter(double limitConstant, double posMagLimit, Translation2d joyStick){
         posOmegaLimit = limitConstant;
+        this.posMagLimit = posMagLimit;
         prevState = joyStick;
         prevTime = MathSharedStore.getTimestamp();
 
@@ -41,10 +44,8 @@ public class ThetaLimiter implements Sendable {
                 ghostStick = prevState.interpolate(desiredState, t);
             }
         }
-        if (desiredState.getNorm() > prevState.getNorm()){
-
-        }
-
+        var magLimiter = new SlewRateLimiter(posMagLimit, -50, prevState.getNorm());
+        ghostStick = new Translation2d(magLimiter.calculate(magnitude), ghostStick.getAngle());
         prevState = ghostStick;
         prevTime = currentTime;
         return prevState;
@@ -56,8 +57,18 @@ public class ThetaLimiter implements Sendable {
     public void setPosOmegaLimit(double posOmegaLimit) {
         this.posOmegaLimit = posOmegaLimit;
     }
+
+    public double getPosMagLimit() {
+        return posMagLimit;
+    }
+
+    public void setPosMagLimit(double posMagLimit) {
+        this.posMagLimit = posMagLimit;
+    }
     @Override public void initSendable(SendableBuilder builder) {
         builder.setSmartDashboardType("thetaLimiter");
         builder.addDoubleProperty("thetaLimit", this::getPosOmegaLimit, this::setPosOmegaLimit);
-        }
+        builder.addDoubleProperty("posMagLimit", this::getPosMagLimit, this::setPosMagLimit);
+
+    }
 }

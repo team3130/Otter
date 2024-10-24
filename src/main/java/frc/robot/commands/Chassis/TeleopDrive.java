@@ -32,7 +32,7 @@ public class TeleopDrive extends Command {
     // Use addRequirements() here to declare subsystem dependencies.
     m_requirements.add(chassis);
 
-    changeInDirectionLimiter = new ThetaLimiter(Constants.Swerve.kMaxThetaChange, new Translation2d());
+    changeInDirectionLimiter = new ThetaLimiter(Constants.Swerve.kMaxThetaChange, .1, new Translation2d());
     turningLimiter = new SlewRateLimiter(Constants.Swerve.kMaxAccelerationAngularDrive);
   }
 
