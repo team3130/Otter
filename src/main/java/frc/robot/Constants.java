@@ -18,7 +18,7 @@ import edu.wpi.first.math.util.Units;
  */
 @SuppressWarnings("ALL")
 public final class Constants {
-  public static final boolean debugMode = false;
+  public static final boolean debugMode = true;
   public static final boolean pitMode = false; 
 
   public static class CAN {
@@ -78,7 +78,7 @@ public final class Constants {
    *  bottom left,
    */
   public static class Swerve {
-    public static double maxSteerVoltage = 4d;
+    public static double maxSteerVoltage = 8d;
     public static double maxDriveVoltage = 10d;
 
     public final static double kMaxAccelerationDrive = 5;

@@ -41,6 +41,10 @@ public class ThetaLimiter implements Sendable {
                 ghostStick = prevState.interpolate(desiredState, t);
             }
         }
+        if (desiredState.getNorm() > prevState.getNorm()){
+
+        }
+
         prevState = ghostStick;
         prevTime = currentTime;
         return prevState;
