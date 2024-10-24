@@ -18,7 +18,7 @@ import edu.wpi.first.math.util.Units;
  */
 @SuppressWarnings("ALL")
 public final class Constants {
-  public static final boolean debugMode = false;
+  public static final boolean debugMode = true;
   public static final boolean pitMode = false; 
 
   public static class CAN {
@@ -78,10 +78,13 @@ public final class Constants {
    *  bottom left,
    */
   public static class Swerve {
-    public static double maxSteerVoltage = 4d;
+    public static double maxSteerVoltage = 8d;
     public static double maxDriveVoltage = 10d;
 
+    public final static double kMaxAccelerationDrive = 5;
+
     public static double tuningDesiredVelocity = 2d;
+    public static double kMaxThetaChange = 2.5;
 
 
 
@@ -135,7 +138,6 @@ public final class Constants {
     // 4.8 max speed, 5 acceleration, drops to 9.6
     public final static double kPhysicalMaxSpeedMetersPerSecond = 4.8;
     public final static double kDeadband = 0.055;
-    public final static double kMaxAccelerationDrive = 5;
     public final static double kMaxAccelerationAngularDrive = 4.0*Math.PI;
 
     public final static double kP_FrontRight = 1.35;
