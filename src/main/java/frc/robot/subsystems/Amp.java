@@ -25,8 +25,8 @@ public class Amp extends SubsystemBase {
   private double ampLowerFastSpeed = -0.9;
   private double outtakeAmpSpeed = -1;
   private int encoderMaxTicks = 13600; //not accurate rn
-  private int highSetpoint = 14400; //drop into amp   last value: 13600
-  private int midSetpoint = 7600; //pick up from mid shooter  last value:6800
+  private int highSetpoint = 15400; //drop into amp   last value: 13600
+  private int midSetpoint = 8600; //pick up from mid shooter  last value:6800
   private int lowSetpoint = 1550; //last value: 750
   private int aboveStageHeight = 5000;
   private int experimentalLowSetpoint = 200;
