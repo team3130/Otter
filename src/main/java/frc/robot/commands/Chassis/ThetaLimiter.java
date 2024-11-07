@@ -15,6 +15,7 @@ import java.util.function.DoubleSupplier;
 
 public class ThetaLimiter implements Sendable {
     private double prevTime;
+    private double prevMag;
     private double posOmegaLimit;
     private Translation2d prevState;
     public double posMagLimit;
@@ -24,6 +25,7 @@ public class ThetaLimiter implements Sendable {
         this.posMagLimit = posMagLimit;
         prevState = joyStick;
         prevTime = MathSharedStore.getTimestamp();
+        prevMag = 0;
 
         String name = this.getClass().getSimpleName();
         name = name.substring(name.lastIndexOf('.') + 1);
@@ -44,8 +46,11 @@ public class ThetaLimiter implements Sendable {
                 ghostStick = prevState.interpolate(desiredState, t);
             }
         }
-        var magLimiter = new SlewRateLimiter(posMagLimit, -50, prevState.getNorm());
-        ghostStick = new Translation2d(magLimiter.calculate(magnitude), ghostStick.getAngle());
+        if (prevMag - magnitude > posMagLimit * elapsedTime) {
+            magnitude = posMagLimit * elapsedTime;
+        }
+        ghostStick = new Translation2d(magnitude, ghostStick.getAngle());
+        prevMag = magnitude;
         prevState = ghostStick;
         prevTime = currentTime;
         return prevState;
