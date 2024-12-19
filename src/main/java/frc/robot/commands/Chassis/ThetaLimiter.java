@@ -46,7 +46,7 @@ public class ThetaLimiter implements Sendable {
             }
         }
         if (magnitude - prevMag > posMagLimit * elapsedTime) {
-            magnitude = posMagLimit * elapsedTime;
+            magnitude = prevMag + posMagLimit * elapsedTime;
         }
         ghostStick = new Translation2d(magnitude, ghostStick.getAngle());
         prevState = ghostStick;
