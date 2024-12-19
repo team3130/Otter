@@ -15,7 +15,6 @@ import java.util.function.DoubleSupplier;
 
 public class ThetaLimiter implements Sendable {
     private double prevTime;
-    private double prevMag;
     private double posOmegaLimit;
     private Translation2d prevState;
     public double posMagLimit;
@@ -25,7 +24,6 @@ public class ThetaLimiter implements Sendable {
         this.posMagLimit = posMagLimit;
         prevState = joyStick;
         prevTime = MathSharedStore.getTimestamp();
-        prevMag = 0;
 
         String name = this.getClass().getSimpleName();
         name = name.substring(name.lastIndexOf('.') + 1);
@@ -34,11 +32,12 @@ public class ThetaLimiter implements Sendable {
 
     public Translation2d calculate(Translation2d desiredState) {
         double magnitude = desiredState.getNorm();
+        double prevMag = prevState.getNorm();
         double currentTime = MathSharedStore.getTimestamp();
         double elapsedTime = currentTime - prevTime;
         Translation2d ghostStick = desiredState;
         double minMagValue = posOmegaLimit / Math.PI;
-        if (magnitude > minMagValue) {
+        if (prevMag > minMagValue) {
             double allowedAngle = posOmegaLimit * elapsedTime / magnitude;
             double diffTheta = Math.abs(desiredState.getAngle().minus(prevState.getAngle()).getRadians());
             if (diffTheta > allowedAngle) {
@@ -46,11 +45,10 @@ public class ThetaLimiter implements Sendable {
                 ghostStick = prevState.interpolate(desiredState, t);
             }
         }
-        if (prevMag - magnitude > posMagLimit * elapsedTime) {
+        if (magnitude - prevMag > posMagLimit * elapsedTime) {
             magnitude = posMagLimit * elapsedTime;
         }
         ghostStick = new Translation2d(magnitude, ghostStick.getAngle());
-        prevMag = magnitude;
         prevState = ghostStick;
         prevTime = currentTime;
         return prevState;
