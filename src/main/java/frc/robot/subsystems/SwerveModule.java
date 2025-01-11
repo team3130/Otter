@@ -86,7 +86,6 @@ public class SwerveModule implements Sendable {
     // returns the position of the steering motor radians
     public Rotation2d getTurningPosition() {
         // return steerMotor.getPosition().getValue() * Constants.Conversions.SteerRotToRads;
-
         return new Rotation2d(steerMotor.getPosition().getValue() * Constants.SwerveConversions.steerRotToRads);
     }
 

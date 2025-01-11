@@ -47,47 +47,11 @@
                       "data": {
                         "name": "IndexPreload"
                       }
-                    },
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "BlueCenter-N4"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Index"
-                      }
-                    },
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "BlueCenter-N1"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Index"
-                      }
-                    },
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "BlueCenter-N6"
-                      }
                     }
                   ]
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "ShifterDoubleRetract"
           }
         }
       ]

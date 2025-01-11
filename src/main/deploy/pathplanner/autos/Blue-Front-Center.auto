@@ -31,15 +31,9 @@
                 "data": {
                   "commands": [
                     {
-                      "type": "path",
-                      "data": {
-                        "pathName": "swn-FlushTurn"
-                      }
-                    },
-                    {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.2
+                        "waitTime": 0.8
                       }
                     },
                     {
@@ -51,7 +45,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "BlueCenter-N4"
+                        "pathName": "bluered-swm-N2"
                       }
                     },
                     {
@@ -63,7 +57,13 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "BlueCenter-N1"
+                        "pathName": "blue-swm-N7"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "ShifterShortExtend"
                       }
                     },
                     {
@@ -75,19 +75,19 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "BlueCenter-N6"
+                        "pathName": "blue-swn-N8"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Index"
                       }
                     }
                   ]
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "ShifterDoubleRetract"
           }
         }
       ]
