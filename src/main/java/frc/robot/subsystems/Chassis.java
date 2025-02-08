@@ -637,9 +637,7 @@ public class Chassis extends SubsystemBase {
     }
 
     // ChassisSpeeds supplier in robot relative
-    public ChassisSpeeds getRobotRelativeSpeeds() {
-        return kinematics.toChassisSpeeds(getModuleStates());
-    }
+    public ChassisSpeeds getRobotRelativeSpeeds() { return kinematics.toChassisSpeeds(getModuleStates()); }
 
     // passes the x y omega ChassisSpeeds supplied by PathPlanner to driveAuton()
     public void driveAutonRobotRelative(ChassisSpeeds speeds){

@@ -4,12 +4,14 @@ import edu.wpi.first.math.MathSharedStore;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.Constants;
+import frc.robot.subsystems.Chassis;
 
 import java.util.function.DoubleSupplier;
 
@@ -31,6 +33,10 @@ public class ThetaLimiter implements Sendable {
     }
 
     public Translation2d calculate(Translation2d desiredState) {
+        ChassisSpeeds chassisSpeeds = new Chassis().getRobotRelativeSpeeds();
+        double[] currentLinearSpeeds = {chassisSpeeds.vxMetersPerSecond, chassisSpeeds.vyMetersPerSecond};
+        double currentAngularSpeed = chassisSpeeds.omegaRadiansPerSecond;
+
         double magnitude = desiredState.getNorm();
         double prevMag = prevState.getNorm();
         double currentTime = MathSharedStore.getTimestamp();
