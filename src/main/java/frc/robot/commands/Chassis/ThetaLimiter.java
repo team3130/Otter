@@ -20,6 +20,10 @@ public class ThetaLimiter implements Sendable {
     private double posOmegaLimit;
     private Translation2d prevState;
     public double posMagLimit;
+    public static final double massConstant = 65;
+    public static final double maxLinearEnergyConstant = 8;
+    public static final double maxRotationalEnergyConstant = 8;
+    public static final double maxCentripetalAcceleration = 8;
 
     public ThetaLimiter(double limitConstant, double posMagLimit, Translation2d joyStick){
         posOmegaLimit = limitConstant;
@@ -32,32 +36,40 @@ public class ThetaLimiter implements Sendable {
         SendableRegistry.addLW(this, name, name);
     }
 
-    public Translation2d calculate(Translation2d desiredState) {
+    public Translation2d calculateLinear(Translation2d desiredState) {
+        
         ChassisSpeeds chassisSpeeds = new Chassis().getRobotRelativeSpeeds();
         double[] currentLinearSpeeds = {chassisSpeeds.vxMetersPerSecond, chassisSpeeds.vyMetersPerSecond};
-        double currentAngularSpeed = chassisSpeeds.omegaRadiansPerSecond;
+        double[] desiredLinearSpeeds = {desiredState.getX(), desiredState.getY()};
 
-        double magnitude = desiredState.getNorm();
-        double prevMag = prevState.getNorm();
-        double currentTime = MathSharedStore.getTimestamp();
-        double elapsedTime = currentTime - prevTime;
-        Translation2d ghostStick = desiredState;
-        double minMagValue = posOmegaLimit / Math.PI;
-        if (prevMag > minMagValue) {
-            double allowedAngle = posOmegaLimit * elapsedTime / magnitude;
-            double diffTheta = Math.abs(desiredState.getAngle().minus(prevState.getAngle()).getRadians());
-            if (diffTheta > allowedAngle) {
-                double t = allowedAngle / diffTheta;
-                ghostStick = prevState.interpolate(desiredState, t);
+        if(currentLinearSpeeds[0]/Math.abs(currentLinearSpeeds[0]) != desiredLinearSpeeds[0]/Math.abs(desiredLinearSpeeds[0])) {
+            desiredLinearSpeeds[0] = 0;
+        }
+        if(currentLinearSpeeds[1]/Math.abs(currentLinearSpeeds[1]) != desiredLinearSpeeds[1]/Math.abs(desiredLinearSpeeds[1])) {
+            desiredLinearSpeeds[1] = 0;
+        }
+
+        double projScalar = (currentLinearSpeeds[0]*desiredLinearSpeeds[0] + currentLinearSpeeds[1]*desiredLinearSpeeds[1])/(currentLinearSpeeds[0]*currentLinearSpeeds[0] + currentLinearSpeeds[1]*currentLinearSpeeds[1]);
+        double[] projDesiredOnCurrent = {projScalar*currentLinearSpeeds[0], projScalar*currentLinearSpeeds[1]};
+        double[] normDesiredOnCurrent = {currentLinearSpeeds[0] - projDesiredOnCurrent[0],  currentLinearSpeeds[1] - projDesiredOnCurrent[1]};
+        double linearEnergyChange = massConstant/2 * (Math.pow(projDesiredOnCurrent[0], 2) + Math.pow(projDesiredOnCurrent[1], 2) - Math.pow(currentLinearSpeeds[0], 2) - Math.pow(currentLinearSpeeds[1], 2));
+        double absProj = Math.sqrt(Math.pow(projDesiredOnCurrent[0], 2) + Math.pow(projDesiredOnCurrent[1], 2));
+        double absNorm = Math.sqrt(Math.pow(normDesiredOnCurrent[0], 2) + Math.pow(normDesiredOnCurrent[1], 2));
+
+        if(projDesiredOnCurrent[0] > currentLinearSpeeds[0]) {
+            if(linearEnergyChange > maxLinearEnergyConstant) {
+                double maxAbsProj = Math.sqrt(maxLinearEnergyConstant + massConstant/2 * (Math.pow(currentLinearSpeeds[0], 2) + Math.pow(currentLinearSpeeds[1], 2)));
+                projDesiredOnCurrent[0] *= maxAbsProj/absProj;
+                projDesiredOnCurrent[1] *= maxAbsProj/absProj;
             }
         }
-        if (magnitude - prevMag > posMagLimit * elapsedTime) {
-            magnitude = prevMag + posMagLimit * elapsedTime;
+
+        if(absNorm > maxCentripetalAcceleration) {
+            normDesiredOnCurrent[0] *= maxCentripetalAcceleration/absNorm;
+            normDesiredOnCurrent[1] *= maxCentripetalAcceleration/absNorm;
         }
-        ghostStick = new Translation2d(magnitude, ghostStick.getAngle());
-        prevState = ghostStick;
-        prevTime = currentTime;
-        return prevState;
+
+        return new Translation2d(projDesiredOnCurrent[0] + normDesiredOnCurrent[0], projDesiredOnCurrent[1] + normDesiredOnCurrent[1]);
     }
     public double getPosOmegaLimit() {
         return posOmegaLimit;

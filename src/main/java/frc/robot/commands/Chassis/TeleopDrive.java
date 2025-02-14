@@ -104,7 +104,7 @@ public class TeleopDrive extends Command {
       // apply dead-band
 
       Translation2d joystick = new Translation2d(x, y);
-      Translation2d ghostTurn = changeInDirectionLimiter.calculate(joystick);
+      Translation2d ghostTurn = changeInDirectionLimiter.calculateLinear(joystick);
 
       // apply slew rate limiter which also converts to m/s and rad.s
       x = ghostTurn.getX() * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond;
