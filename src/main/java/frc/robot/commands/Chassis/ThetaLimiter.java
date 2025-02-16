@@ -20,7 +20,10 @@ public class ThetaLimiter implements Sendable {
     private double posOmegaLimit;
     private Translation2d prevState;
     public double posMagLimit;
+    public static final double mpsScalar = 4;
+    public static final double rpsScalar = 4;
     public static final double massConstant = 65;
+    public static final double RIConstant = 65;
     public static final double maxLinearEnergyConstant = 8;
     public static final double maxRotationalEnergyConstant = 8;
     public static final double maxCentripetalAcceleration = 8;
@@ -36,11 +39,11 @@ public class ThetaLimiter implements Sendable {
         SendableRegistry.addLW(this, name, name);
     }
 
-    public Translation2d calculateLinear(Translation2d desiredState) {
+    public Translation2d calculateLinear(Translation2d desiredStateLinear) {
         
         ChassisSpeeds chassisSpeeds = new Chassis().getRobotRelativeSpeeds();
         double[] currentLinearSpeeds = {chassisSpeeds.vxMetersPerSecond, chassisSpeeds.vyMetersPerSecond};
-        double[] desiredLinearSpeeds = {desiredState.getX(), desiredState.getY()};
+        double[] desiredLinearSpeeds = {desiredStateLinear.getX() * mpsScalar, desiredStateLinear.getY() * mpsScalar};
 
         if(currentLinearSpeeds[0]/Math.abs(currentLinearSpeeds[0]) != desiredLinearSpeeds[0]/Math.abs(desiredLinearSpeeds[0])) {
             desiredLinearSpeeds[0] = 0;
@@ -69,8 +72,27 @@ public class ThetaLimiter implements Sendable {
             normDesiredOnCurrent[1] *= maxCentripetalAcceleration/absNorm;
         }
 
-        return new Translation2d(projDesiredOnCurrent[0] + normDesiredOnCurrent[0], projDesiredOnCurrent[1] + normDesiredOnCurrent[1]);
+        // Scale down
+        return new Translation2d((projDesiredOnCurrent[0] + normDesiredOnCurrent[0])/rpsScalar, (projDesiredOnCurrent[1] + normDesiredOnCurrent[1])/rpsScalar);
     }
+
+    public Translation2d calculateRotational(Translation2d desiredStateRotational) {
+        ChassisSpeeds chassisSpeeds = new Chassis().getRobotRelativeSpeeds();
+        double currentAngularSpeed = chassisSpeeds.omegaRadiansPerSecond;
+        double desiredAngularSpeed = Math.sin(desiredStateRotational.getAngle().getRadians()) * rpsScalar;
+
+        if(currentAngularSpeed/Math.abs(currentAngularSpeed) != desiredAngularSpeed/Math.abs(desiredAngularSpeed)) {
+            desiredAngularSpeed = 0;
+        }
+
+        double rotationalEnergyChange = RIConstant/2 * (Math.pow(desiredAngularSpeed, 2) - Math.pow(currentAngularSpeed, 2));
+        if(rotationalEnergyChange > maxRotationalEnergyConstant) {
+            desiredAngularSpeed = Math.sqrt(maxRotationalEnergyConstant + RIConstant/2 * (Math.pow(currentAngularSpeed, 2) + Math.pow(currentAngularSpeed, 2)));
+        }
+
+        return new Translation2d(1, new Rotation2d(Math.asin(desiredAngularSpeed/rpsScalar)));
+    }
+
     public double getPosOmegaLimit() {
         return posOmegaLimit;
     }
