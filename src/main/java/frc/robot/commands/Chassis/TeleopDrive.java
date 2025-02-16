@@ -20,7 +20,7 @@ public class TeleopDrive extends Command {
   private final CameraSubsystem camera;
 
   private final SlewRateLimiter turningLimiter;
-  private final ThetaLimiter changeInDirectionLimiter;
+  private final PowerLimiter changeInDirectionLimiter;
   private double y;
   private double x;
   private double theta;
@@ -32,7 +32,7 @@ public class TeleopDrive extends Command {
     // Use addRequirements() here to declare subsystem dependencies.
     m_requirements.add(chassis);
 
-    changeInDirectionLimiter = new ThetaLimiter(Constants.Swerve.kMaxThetaChange, .5, new Translation2d(0,0));
+    changeInDirectionLimiter = new PowerLimiter(new Translation2d(0,0));
     turningLimiter = new SlewRateLimiter(Constants.Swerve.kMaxAccelerationAngularDrive);
   }
 
@@ -134,7 +134,7 @@ public class TeleopDrive extends Command {
     return false;
   }
 
-  public ThetaLimiter getThetaLimiter(){
+  public PowerLimiter getThetaLimiter(){
       return changeInDirectionLimiter;
   }
 
