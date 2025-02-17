@@ -15,11 +15,11 @@ public class PowerLimiter implements Sendable {
     private double prevTime;
     private Translation2d prevState;
     public static final double mpsScalar = 1;
-    public static final double rpsScalar = 0.5;
+    public static final double rpsScalar = Math.PI;
     public static final double massConstant = 65;
     public static final double RIConstant = 20;
     public double maxLinearEnergyConstant = 5;
-    public double maxRotationalEnergyConstant = 0.8;
+    public double maxRotationalEnergyConstant = 5;
     public double maxCentripetalAcceleration = 0.4;
 
     public PowerLimiter(Translation2d joyStick){
