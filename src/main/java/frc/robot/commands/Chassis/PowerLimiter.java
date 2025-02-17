@@ -14,6 +14,8 @@ import java.util.Arrays;
 public class PowerLimiter implements Sendable {
     private double prevTime;
     private Translation2d prevState;
+    public static final double linearDeadband = 0;
+    public static final double angularDeadband = 0;
     public static final double mpsScalar = 1;
     public static final double rpsScalar = Math.PI;
     public static final double massConstant = 65;
@@ -36,6 +38,13 @@ public class PowerLimiter implements Sendable {
         ChassisSpeeds chassisSpeeds = new Chassis().getRobotRelativeSpeeds();
         double[] currentLinearSpeeds = {chassisSpeeds.vxMetersPerSecond, chassisSpeeds.vyMetersPerSecond};
         double[] desiredLinearSpeeds = {desiredStateLinear.getX() * mpsScalar, desiredStateLinear.getY() * mpsScalar};
+        if(Math.abs(currentLinearSpeeds[0]) < linearDeadband) {
+            currentLinearSpeeds[0] = 0;
+        }
+        if(Math.abs(currentLinearSpeeds[1]) < linearDeadband) {
+            currentLinearSpeeds[1] = 0;
+        }
+
         if((desiredLinearSpeeds[0] != 0) && (currentLinearSpeeds[0] != 0) && (currentLinearSpeeds[0]/Math.abs(currentLinearSpeeds[0]) != desiredLinearSpeeds[0]/Math.abs(desiredLinearSpeeds[0]))) {
             desiredLinearSpeeds[0] = 0;
         }
@@ -80,6 +89,9 @@ public class PowerLimiter implements Sendable {
         double currentAngularSpeed = chassisSpeeds.omegaRadiansPerSecond;
         double desiredAngularSpeed = Math.cos(desiredStateRotational.getAngle().getRadians()) * rpsScalar;
         System.out.println("\n" + "Desired: " + desiredAngularSpeed);
+        if(Math.abs(currentAngularSpeed) < angularDeadband) {
+            currentAngularSpeed = 0;
+        }
 
         if((desiredAngularSpeed != 0) && (currentAngularSpeed != 0) && (currentAngularSpeed/Math.abs(currentAngularSpeed) != desiredAngularSpeed/Math.abs(desiredAngularSpeed))) {
             desiredAngularSpeed = 0;
