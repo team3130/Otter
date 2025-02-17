@@ -14,13 +14,13 @@ import java.util.Arrays;
 public class PowerLimiter implements Sendable {
     private double prevTime;
     private Translation2d prevState;
-    public static final double mpsScalar = 25;
-    public static final double rpsScalar = 5;
+    public static final double mpsScalar = 1;
+    public static final double rpsScalar = 0.5;
     public static final double massConstant = 65;
     public static final double RIConstant = 20;
-    public double maxLinearEnergyConstant = 5000;
-    public double maxRotationalEnergyConstant = 100;
-    public double maxCentripetalAcceleration = 10;
+    public double maxLinearEnergyConstant = 5;
+    public double maxRotationalEnergyConstant = 0.8;
+    public double maxCentripetalAcceleration = 0.4;
 
     public PowerLimiter(Translation2d joyStick){
         prevState = joyStick;
@@ -34,8 +34,8 @@ public class PowerLimiter implements Sendable {
     // Remove println statements
     public Translation2d calculateLinear(Translation2d desiredStateLinear) {
         ChassisSpeeds chassisSpeeds = new Chassis().getRobotRelativeSpeeds();
-        double[] desiredLinearSpeeds = {desiredStateLinear.getX() * mpsScalar, desiredStateLinear.getY() * mpsScalar};
         double[] currentLinearSpeeds = {chassisSpeeds.vxMetersPerSecond, chassisSpeeds.vyMetersPerSecond};
+        double[] desiredLinearSpeeds = {desiredStateLinear.getX() * mpsScalar, desiredStateLinear.getY() * mpsScalar};
         if((desiredLinearSpeeds[0] != 0) && (currentLinearSpeeds[0] != 0) && (currentLinearSpeeds[0]/Math.abs(currentLinearSpeeds[0]) != desiredLinearSpeeds[0]/Math.abs(desiredLinearSpeeds[0]))) {
             desiredLinearSpeeds[0] = 0;
         }
