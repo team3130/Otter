@@ -14,8 +14,8 @@ import java.util.Arrays;
 public class PowerLimiter implements Sendable {
     private double prevTime;
     private Translation2d prevState;
-    public static final double linearDeadband = 0;
-    public static final double angularDeadband = 0;
+    public static final double linearDeadband = 0.05;
+    public static final double angularDeadband = Math.PI/24;
     public static final double mpsScalar = 1;
     public static final double rpsScalar = Math.PI;
     public static final double massConstant = 65;
