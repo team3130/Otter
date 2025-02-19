@@ -20,9 +20,9 @@ public class PowerLimiter implements Sendable {
     public static final double rpsScalar = Math.PI;
     public static final double massConstant = 65;
     public static final double RIConstant = 20;
-    public double maxLinearEnergyConstant = 5;
-    public double maxRotationalEnergyConstant = 5;
-    public double maxCentripetalAcceleration = 0.4;
+    public double maxLinearEnergyConstant = 1;
+    public double maxRotationalEnergyConstant = 1;
+    public double maxCentripetalAcceleration = 0.1;
 
     public PowerLimiter(Translation2d joyStick){
         prevState = joyStick;

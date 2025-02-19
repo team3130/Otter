@@ -20,7 +20,7 @@ public class TeleopDrive extends Command {
   private final CameraSubsystem camera;
 
   private final SlewRateLimiter turningLimiter;
-  private final PowerLimiter changeInDirectionLimiter;
+  private final PowerLimiter powerLimiter;
   private double y;
   private double x;
   private double theta;
@@ -32,7 +32,7 @@ public class TeleopDrive extends Command {
     // Use addRequirements() here to declare subsystem dependencies.
     m_requirements.add(chassis);
 
-    changeInDirectionLimiter = new PowerLimiter(new Translation2d(0,0));
+    powerLimiter = new PowerLimiter(new Translation2d(0, 0));
     turningLimiter = new SlewRateLimiter(Constants.Swerve.kMaxAccelerationAngularDrive);
   }
 
@@ -104,7 +104,7 @@ public class TeleopDrive extends Command {
       // apply dead-band
 
       Translation2d joystick = new Translation2d(x, y);
-      Translation2d ghostTurn = changeInDirectionLimiter.calculateLinear(joystick);
+      Translation2d ghostTurn = powerLimiter.calculateLinear(joystick);
 
       // apply slew rate limiter which also converts to m/s and rad.s
       x = ghostTurn.getX() * Constants.Swerve.kPhysicalMaxSpeedMetersPerSecond;
@@ -135,7 +135,7 @@ public class TeleopDrive extends Command {
   }
 
   public PowerLimiter getThetaLimiter(){
-      return changeInDirectionLimiter;
+      return powerLimiter;
   }
 
 }
