@@ -106,14 +106,14 @@ public class RobotContainer {
     NamedCommands.registerCommand("AmpHome", new AutoAmpZero(amp));
     NamedCommands.registerCommand("Outtake", new AutoOuttake(indexer, intake));
 
-    configureBindings(); // configure button bindings
-    exportShuffleBoardData(); // export ShuffleBoardData
-
     // Default commands running in the background when other commands not scheduled
     chassis.setDefaultCommand(new TeleopDrive(chassis, driverController, camera));
 
     leftClimber.setDefaultCommand(new ClimberUnlimited(leftClimber, operatorController));
     rightClimber.setDefaultCommand(new ClimberUnlimited(rightClimber, operatorController));
+
+    configureBindings(); // configure button bindings
+    exportShuffleBoardData(); // export ShuffleBoardData
 
     //this.isFieldMirrored = new SendableChooser<>();
     //ally = DriverStation.getAlliance();
@@ -140,6 +140,7 @@ public class RobotContainer {
 
   public void exportShuffleBoardData() {
     if (Constants.debugMode) {
+      TeleopDrive driveCommand = (TeleopDrive) chassis.getDefaultCommand();
       ShuffleboardTab tab = Shuffleboard.getTab("Subsystem Test");
       tab.add(chassis);
       tab.add(shooter);
@@ -148,6 +149,7 @@ public class RobotContainer {
       tab.add(amp);
       tab.add(rightClimber);
       tab.add(camera);
+      tab.add(driveCommand.getThetaLimiter());
 
       chassis.exportSwerveModData(Shuffleboard.getTab("Swerve Modules"));
     }
